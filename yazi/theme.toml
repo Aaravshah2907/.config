@@ -1,3 +1,22 @@
-[flavor]
-dark = "dracula"
-light = "dracula"
+[manager]
+# Border: Using your Bright Cyan for a glowing, structured frame
+border_symbol = "│"
+border_style  = { fg = "#62fdff" } 
+
+[help]
+# Column 1 (Keys): Bright Cyan (Syl's glow)
+on_css      = { fg = "#62fdff", bold = true }
+# Column 2 (Commands): Dim Blue (Recedes into the background)
+run_css     = { fg = "#005ea8" }
+# Column 3 (Description): Pure White (Maximum readability)
+desc_css    = { fg = "#ffffff" }
+# Hover: Deep Blue background with White text
+hovered_css = { fg = "#ffffff", bg = "#2d3f76", bold = true }
+# Footer: Inverted Radiant colors for the status bar
+footer_css  = { fg = "#002b55", bg = "#62fdff" }
+
+[status]
+# Separator colors for the bottom bar
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#2d3f76", bg = "#2d3f76" }

@@ -64,7 +64,7 @@ download = [
 ]
 # Add this new opener for your 3/4 tiling logic
 video_tiled = [
-	{ run = 'bash ~/.config/yazi/scripts/video_tile.sh "$1"', desc = "Play Tiled (3/4)", for = "macos" }
+	{ run = 'bash ~/.config/yazi/scripts/video_tile.sh "$1"', desc = "Play Tiled (3/4)", for = "macos" , orphan = true}
 ]
 
 [open]

@@ -35,7 +35,7 @@ edit = [
 	{ run = "code -w %s",       desc = "code (block)", for = "windows", block = true },
 ]
 play = [
-    { run = 'mpv "$@"', desc = "Play with mpv", for = "macos", orphan = true },
+    { run = 'mpv --no-video --keep-open=no "$@"', desc = "Play with mpv", for = "macos", orphan = true },
 	{ run = "xdg-open %s1",    desc = "Play", for = "linux", orphan = true },
 	{ run = 'start "" %s1',    desc = "Play", for = "windows", orphan = true },
 	{ run = "termux-open %s1", desc = "Play", for = "android" },
@@ -62,9 +62,8 @@ download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
 	{ run = "ya emit download %S",        desc = "Download" },
 ]
-# Add this new opener for your 3/4 tiling logic
-video_tiled = [
-	{ run = 'bash ~/.config/yazi/scripts/video_tile.sh "$1"', desc = "Play Tiled (3/4)", for = "macos" , orphan = true}
+vlc = [
+    { run = 'open -a "VLC" "$@"', desc = "Open in VLC", for = "macos" }
 ]
 
 [open]
@@ -78,7 +77,9 @@ rules = [
 	# Audio
 	{ mime = "audio/*", use = [ "play", "reveal" ] },
 	# Video
-	{ mime = "video/*", use = [ "video_tiled", "reveal" ] },
+	{ mime = "video/*", use = [ "vlc", "reveal" ] },
+    { name = "*.mp4",   use = [ "vlc", "reveal" ] },
+    { name = "*.mkv",   use = [ "vlc", "reveal" ] },
 	# Archive
 	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "reveal" ] },
 	# JSON

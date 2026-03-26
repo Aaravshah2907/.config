@@ -1,0 +1,29 @@
+{
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.11.0-beta.2",
+  "schemes" : [
+    {
+      "if" : {
+        "device" : {
+          "category" : "trackpad",
+          "productID" : "0x0",
+          "productName" : "Apple Internal Keyboard \/ Trackpad",
+          "serialNumber" : "FM7HAP0AB9P0000F93+AEYL",
+          "vendorID" : "0x0"
+        }
+      },
+      "scrolling" : {
+        "modifiers" : {
+          "vertical" : {
+            "command" : {
+              "type" : "preventDefault"
+            }
+          }
+        },
+        "reverse" : {
+          "horizontal" : false,
+          "vertical" : true
+        }
+      }
+    }
+  ]
+}

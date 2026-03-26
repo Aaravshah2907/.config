@@ -364,3 +364,12 @@ records = true
 ##
 ## Make directory expand instead of command:
 # columns = ["duration", "time", { type = "directory", expand = true }, { type = "command", expand = false }]
+
+[colors]
+# Matching your Syl-Cyan and Deep Blue palette
+tag_color = "#62fdff"
+cursor_color = "#62fdff"
+# Using your "Bright White" for the command text
+command_color = "#ffffff"
+# Using your "Blue" for the timestamp
+time_color = "#005ea8"

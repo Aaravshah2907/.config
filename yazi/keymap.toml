@@ -85,7 +85,7 @@ keymap = [
 	{ on = "<C-s>",     run = "escape --search",             desc = "Cancel the ongoing search" },
 	{ on = "z",         run = "plugin fzf",                  desc = "Jump to a file/directory via fzf" },
 	{ on = "Z",         run = "plugin zoxide",               desc = "Jump to a directory via zoxide" },
-
+	
 	# Linemode
 	{ on = [ "m", "s" ], run = "linemode size",        desc = "Linemode: size" },
 	{ on = [ "m", "p" ], run = "linemode permissions", desc = "Linemode: permissions" },
@@ -126,15 +126,17 @@ keymap = [
 
 	# Goto
 	{ on = [ "g", "a" ],       run = "cd \"~/aaravshah0011@gmail.com - Google Drive\"",  desc = "Go AS"},
-	{ on = [ "g", "b" ],       run = "cd \"~/f20231325@pilani.bits-pilani.ac.in - Google Drive\"", desc = "Go BITS"},
+	{ on = [ "g", "B" ],       run = "cd \"~/f20231325@pilani.bits-pilani.ac.in - Google Drive\"", desc = "Go BITS"},
 	{ on = [ "g", "c" ],       run = "cd ~/.config",     desc = "Go ~/.config" },
-	{ on = [ "g", "d" ],       run = "cd ~/Downloads",   desc = "Go ~/Downloads" },
-	{ on = [ "g", "D" ],       run = "cd ~/Documents",   desc = "Go ~/Documents" },
+	{ on = [ "g", "D" ],       run = "cd ~/Downloads",   desc = "Go ~/Downloads" },
+	{ on = [ "g", "d" ],       run = "cd ~/Documents",   desc = "Go ~/Documents" },
 	{ on = [ "g", "f" ],       run = "follow",           desc = "Follow hovered symlink" },
 	# Version Control & Process Management
     { on = [ "g", "G" ], run = 'shell "lazygit" --block', desc = "Open lazygit" },
     { on = [ "g", "h" ],       run = "cd ~",             desc = "Go home" },
     { on = [ "g", "k" ], run = 'shell "pkill -9 mpv; pkill -9 VLC" --block', desc = "Kill all media processes" },
+    { on = [ "g", "L" ], run = 'shell "~/.local/bin/lazyGit-lister.sh" --block --confirm', desc = "fzf for LazyGit"},
+	{ on = [ "g", "l" ],       run = "cd ~/.local/bin",  desc = "Go ~/.local/bin"},
     # Help
     { on = [ "g", "?" ],         run = 'shell "bat ~/.config/yazi/keymap.toml | fzf --height 40% --reverse" --block', desc = "Peek at keymap" },
     { on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },

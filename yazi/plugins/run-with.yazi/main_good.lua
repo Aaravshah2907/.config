@@ -32,32 +32,31 @@ return {
 		local script_path = scripts[idx]
 		local script_name = script_path:match("([^/]+)$")
 
-		-- 3. Fetch Help flag output
+		-- 3. Fetch Help flag output internally
 		local h_handle = io.popen(script_path .. " -h 2>&1")
 		local help_text = h_handle:read("*a")
 		h_handle:close()
 		
-		-- Handle empty help output
-		local help_content = (help_text == nil or help_text:gsub("%s+", "") == "") 
-			and "No help flag command detected" 
-			or help_text
+		if help_text == "" then help_text = "No help documentation found for this script." end
 
-		-- 4. Notify Help and immediately ask for Mode (Unified Step)
-		ya.notify({ 
-			title = "Help: " .. script_name, 
-			content = help_content, 
-			timeout = 10 
+		-- 4. Display Help and confirm proceeding
+		local confirmed = ya.confirm({
+			pos = { "center", w = 60, h = 15 },
+			title = "Help: " .. script_name,
+			body = help_text .. "\n\nProceed to execution?",
 		})
+		if not confirmed then return end
 
+		-- 5. Select Execution Mode
 		local mode_idx = ya.which({
 			cands = {
-				{ on = "b", desc = "Batch (All files at once)" },
-				{ on = "i", desc = "Individual (One by one)" },
+				{ on = "b", desc = "Batch (Execute once with all files)" },
+				{ on = "i", desc = "Individual (Execute once per file)" },
 				{ on = "c", desc = "Cancel" },
 			}
 		})
 
-		-- 5. Execute based on selection
+		-- 6. Execute based on selection
 		if mode_idx == 1 then -- Batch
 			local shell_cmd = string.format(
 				'clear; printf "\\033[1;36m==> Executing Batch:\\033[0m %s\\n\\n"; "%s" "$@"; printf "\\n\\033[1;90mPress Enter to return to Yazi...\\033[0m"; read',

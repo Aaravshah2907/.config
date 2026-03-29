@@ -8,6 +8,11 @@ use = "boydaihungst/simple-tag"
 rev = "a971d5a"
 hash = "bd921661ea2be141a1ff182ed81d7012"
 
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:preview-git"
+rev = "1d28640"
+hash = "52f20cafe2faf4901910ef77da8956e8"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"
 rev = "ca61658"

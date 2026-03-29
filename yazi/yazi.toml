@@ -106,8 +106,10 @@ prepend_previewers = [
 	{ mime = "audio/*", run = "exifaudio" },
 ]
 prepend_fetchers = [
-    {id  = "mactag", url = "*/", run = "mactag"},
-    {id  = "mactag", url = "*/", run = "mactag"},
+    #{id  = "mactag", url = "*/", run = "mactag"},
+    #{id  = "mactag", url = "*/", run = "mactag"},
+    { id = "simple-tag", url = "*", run = "simple-tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag" },
 ]
 fetchers = [
 	# Mimetype

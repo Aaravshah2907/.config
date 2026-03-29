@@ -144,7 +144,7 @@ keymap = [
     { on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },
 	
 	# Tabs
-	{ on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
+	{ on = "T", run = "tab_create --current", desc = "Create a new tab with CWD" },
 
 	{ on = "1", run = "tab_switch 0", desc = "Switch to first tab" },
 	{ on = "2", run = "tab_switch 1", desc = "Switch to second tab" },
@@ -162,9 +162,75 @@ keymap = [
 	{ on = "{", run = "tab_swap -1", desc = "Swap current tab with previous tab" },
 	{ on = "}", run = "tab_swap 1",  desc = "Swap current tab with next tab" },
 
-	# Tags
-	{ on   = [ "b", "a" ], run  = "plugin mactag add", desc = "Tag selected files"},
-	{ on   = [ "b", "r" ], run  = "plugin mactag remove", desc = "Untag selected files"},
+	# Simple - Tags
+	#─────────────────────────── TOGGLE TAG(S) ────────────────────────────
+    # Toggle a tag (press any tag key)
+    # A tag hint window will show up.
+    # Simply press any tag key to toggle that tag for selected or hovered files/folders.
+    { on = [ "t", "t", "k" ], run = "plugin simple-tag -- toggle-tag", desc = "Toggle a tag" },
+
+    # Toggle tag(s) with value from input box.
+    # A tag hint window and an input box will show up.
+    # Simply input tag key(s) to toggle that tags for selected or hovered files/folders.
+    # Do not input any delimiter.
+    { on = [ "t", "t", "i" ], run = "plugin simple-tag -- toggle-tag --input", desc = "Toggle tag(s) input box" },
+
+    # Simply press any new tag key to add to selected or hovered files/folders.
+    { on = [ "t", "a", "k" ], run = "plugin simple-tag -- add-tag", desc = "Add a tag" },
+
+    # A tag hint window and an input box will show up.
+    # Simply input new tag key(s) to add to selected or hovered files/folders.
+    # Do not input any delimiter.
+    { on = [ "t", "a", "i" ], run = "plugin simple-tag -- add-tag --input", desc = "Add tag(s) input box" },
+
+    # Simply press any tag key to be removed from selected or hovered files/folders.
+    { on = [ "t", "d", "k" ], run = "plugin simple-tag -- remove-tag", desc = "Remove a tag" },
+
+    # Do not input any delimiter.
+    { on = [ "t", "d", "i" ], run = "plugin simple-tag -- remove-tag --input", desc = "Remove tag(s) input box" },
+
+    # Simply press any new tag key to filter files/folders containing that tag in current directory.
+    { on = [ "t", "f" ], run = "plugin simple-tag -- filter", desc = "Filter files/folders by a tag" },
+
+    # For example: Input value or --keys=!1q -> filter any files/folders contain all of these tags (! and 1 and q) in current directory.
+    { on = [ "t", "F" ], run = "plugin simple-tag -- filter --input", desc = "Filter files/folders by tag(s) (input box)" },
+
+    #  ─────────────────────── VISUAL SELECT FILES/FOLDERS BY TAGS: ───────────────────────
+
+    # Available selection actions:
+    # replace → Replaces the current selection list with files/folders that have the selected tag.
+    # unite → Combines the currently selected files/folders with those that have the selected tag.
+    # intersect → Keeps only the files/folders that are present in both the current selection and the tagged items.
+    # subtract → Deselects files/folders that have the selected tag from the current selection.
+    # exclude → Combines the currently selected files/folders with the tagged items, then deselects any overlapping items between the current selection and the tagged items.
+    # undo → Undos or redoes the last selection action.
+
+    # which_key will popup to choose selection mode
+    # And a tag hint window will show up.
+    # Simply select a selection mode then press any tag key to select files/folders
+    { on = [ "t", "s", "t" ], run = "plugin simple-tag -- toggle-select", desc = "Select a selection action then select a tag key (toggle-select)" },
+
+    # Run action on files/folders by a tag.
+    # A tag hint window will show up.
+    # Simply press any tag key to do the following action:
+    { on = [ "t", "s", "r" ], run = "plugin simple-tag -- replace-select", desc = "replace-select" },
+    { on = [ "t", "s", "u" ], run = "plugin simple-tag -- unite-select", desc = "unite-select" },
+    { on = [ "t", "s", "i" ], run = "plugin simple-tag -- intersect-select", desc = "intersect-select" },
+    { on = [ "t", "s", "s" ], run = "plugin simple-tag -- subtract-select", desc = "subtract-select" },
+    { on = [ "t", "s", "e" ], run = "plugin simple-tag -- exclude-select", desc = "exclude-select" },
+
+    # Run action on files/folders by tag(s) with value from input box.
+    # A tag hint window will show up.
+    # Simply input tag key(s) to do the following action:
+    { on = [ "t", "s", "R" ], run = "plugin simple-tag -- replace-select --input", desc = "replace-select --input" },
+    { on = [ "t", "s", "U" ], run = "plugin simple-tag -- unite-select --input", desc = "unite-select --input" },
+    { on = [ "t", "s", "I" ], run = "plugin simple-tag -- intersect-select --input", desc = "intersect-select --input" },
+    { on = [ "t", "s", "S" ], run = "plugin simple-tag -- subtract-select --input", desc = "subtract-select --input" },
+    { on = [ "t", "s", "E" ], run = "plugin simple-tag -- exclude-select --input", desc = "exclude-select --input" },
+    
+	# Mac - Tags
+	#{ on   = [ "b", "a" ], run  = "plugin mactag add", desc = "Tag selected files"},
+	#{ on   = [ "b", "r" ], run  = "plugin mactag remove", desc = "Untag selected files"},
 	
 	# Tasks
 	{ on = "w", run = "tasks:show", desc = "Show task manager" },

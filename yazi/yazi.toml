@@ -53,7 +53,7 @@ reveal = [
 	{ run = "open -R %s1",          desc = "Reveal", for = "macos" },
 	{ run = "explorer /select,%s1", desc = "Reveal", for = "windows", orphan = true },
 	{ run = "termux-open %d1",      desc = "Reveal", for = "android" },
-	{ run = "clear; exiftool %s1; echo 'Press enter to exit'; read _", desc = "Show EXIF", for = "unix", block = true },
+	# { run = "clear; exiftool %s1; echo 'Press enter to exit'; read _", desc = "Show EXIF", for = "unix", block = true },
 ]
 extract = [
 	{ run = "ya pub extract --list %s", desc = "Extract here" },
@@ -105,6 +105,7 @@ suppress_preload = false
 prepend_previewers = [
 	{ mime = "audio/*", run = "exifaudio" },
 	{ url = '**/.git/', run = 'preview-git' },
+	{ mime = '', run = 'preview-epub' },
 ]
 prepend_fetchers = [
     #{id  = "mactag", url = "*/", run = "mactag"},
@@ -119,7 +120,8 @@ fetchers = [
 	{ id = "mime", url = "remote://*", run = "mime.remote", prio = "high" },
 ]
 spotters = [
-	{ url = "*/", run = "folder" },
+	#{ url = "*/", run = "folder" }, # use default
+	{ url = "*/", run = "spot" },
 	# Code
 	{ mime = "text/*", run = "code" },
 	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
@@ -127,14 +129,18 @@ spotters = [
 	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
 	{ mime = "image/svg+xml", run = "svg" },
 	{ mime = "image/*", run = "image" },
+	# Audio
+	{ mime = 'audio/mpegurl', run = 'file' }, # ignore .m3u files
+	{ mime = "audio/*", run = "spot-audio" },
 	# Video
-	{ mime = "video/*", run = "video" },
+	{ mime = "video/*", run = "spot-video" },
 	# Virtual file system
 	{ mime = "vfs/*", run = "vfs" },
 	# Error
 	{ mime = "null/*", run = "null" },
 	# Fallback
-	{ url = "*", run = "file" },
+	# { url = "*", run = "file" }, # Default
+	{ url = "*", run = "spot" },
 ]
 preloaders = [
 	# Image
@@ -148,6 +154,8 @@ preloaders = [
 	# Font
 	{ mime = "font/*", run = "font" },
 	{ mime = "application/ms-opentype", run = "font" },
+	# Epubs
+	{ mime = '', run = 'preview-epub' },
 ]
 previewers = [
 	{ url = "*/", run = "folder" },

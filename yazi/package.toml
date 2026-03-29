@@ -13,6 +13,21 @@ use = "AminurAlam/yazi-plugins:preview-git"
 rev = "1d28640"
 hash = "52f20cafe2faf4901910ef77da8956e8"
 
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:spot"
+rev = "1d28640"
+hash = "854227f2312a6287c7872726e74f8de3"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:spot-audio"
+rev = "1d28640"
+hash = "5f55cfa8993d3cb94ed217ffabda9366"
+
+[[plugin.deps]]
+use = "AminurAlam/yazi-plugins:spot-video"
+rev = "1d28640"
+hash = "3e437d65ebb31ac1ce2e1a20c93f3357"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"
 rev = "ca61658"

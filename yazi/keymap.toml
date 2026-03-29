@@ -126,8 +126,10 @@ keymap = [
 	{ on = [ ",", "r" ], run = "sort random --reverse=no",                       desc = "Sort randomly" },
 
 	# Goto
+	{ on = [ "g", "A" ], run = "cd \"~/Documents/Personal/Audiobooks\"", desc = "Go Audiobooks"},
 	{ on = [ "g", "a" ],       run = "cd \"~/aaravshah0011@gmail.com - Google Drive\"",  desc = "Go AS"},
 	{ on = [ "g", "B" ],       run = "cd \"~/f20231325@pilani.bits-pilani.ac.in - Google Drive\"", desc = "Go BITS"},
+	{ on = [ "g", "b" ],       run = "cd \"~/Documents/Personal/Books\"", desc = "Go Books"},
 	{ on = [ "g", "c" ],       run = "cd ~/.config",     desc = "Go ~/.config" },
 	{ on = [ "g", "D" ],       run = "cd ~/Downloads",   desc = "Go ~/Downloads" },
 	{ on = [ "g", "d" ],       run = "cd ~/Documents",   desc = "Go ~/Documents" },
@@ -138,6 +140,9 @@ keymap = [
     { on = [ "g", "k" ], run = 'shell "pkill -9 mpv; pkill -9 VLC" --block', desc = "Kill all media processes" },
     { on = [ "g", "L" ], run = 'shell "~/.local/bin/lazyGit-lister.sh" --block --confirm', desc = "fzf for LazyGit"},
 	{ on = [ "g", "l" ],       run = "cd ~/.local/bin",  desc = "Go ~/.local/bin"},
+	{ on = [ "g", "m" ], run = "cd \"~/Documents/Personal/Yt-Music\"", desc = "Go Yt-Music"},
+	{ on = [ "g", "v" ], run = "cd \"~/Documents/Personal/Yt-Videos\"", desc = "Go Yt-Videos"},
+	
 
 	# Help
     { on = [ "g", "?" ],         run = 'shell "bat ~/.config/yazi/keymap.toml | fzf --height 40% --reverse" --block', desc = "Peek at keymap" },

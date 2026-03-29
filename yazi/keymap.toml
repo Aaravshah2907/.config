@@ -99,7 +99,8 @@ keymap = [
 	{ on = [ "c", "d" ], run = "copy dirname",          desc = "Copy the directory path" },
 	{ on = [ "c", "f" ], run = "copy filename",         desc = "Copy the filename" },
 	{ on = [ "c", "n" ], run = "copy name_without_ext", desc = "Copy the filename without extension" },
-
+	{ on = [ "c", "m" ], run = "plugin chmod",          desc = "Chmod on files"},
+	
 	# Filter
 	{ on = "f", run = "filter --smart", desc = "Filter files" },
 
@@ -137,7 +138,8 @@ keymap = [
     { on = [ "g", "k" ], run = 'shell "pkill -9 mpv; pkill -9 VLC" --block', desc = "Kill all media processes" },
     { on = [ "g", "L" ], run = 'shell "~/.local/bin/lazyGit-lister.sh" --block --confirm', desc = "fzf for LazyGit"},
 	{ on = [ "g", "l" ],       run = "cd ~/.local/bin",  desc = "Go ~/.local/bin"},
-    # Help
+
+	# Help
     { on = [ "g", "?" ],         run = 'shell "bat ~/.config/yazi/keymap.toml | fzf --height 40% --reverse" --block', desc = "Peek at keymap" },
     { on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },
 	
@@ -160,6 +162,10 @@ keymap = [
 	{ on = "{", run = "tab_swap -1", desc = "Swap current tab with previous tab" },
 	{ on = "}", run = "tab_swap 1",  desc = "Swap current tab with next tab" },
 
+	# Tags
+	{ on   = [ "b", "a" ], run  = "plugin mactag add", desc = "Tag selected files"},
+	{ on   = [ "b", "r" ], run  = "plugin mactag remove", desc = "Untag selected files"},
+	
 	# Tasks
 	{ on = "w", run = "tasks:show", desc = "Show task manager" },
 

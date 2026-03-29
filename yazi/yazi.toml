@@ -6,7 +6,7 @@
 ratio          = [ 2, 4, 4 ]
 sort_by        = "alphabetical"
 sort_sensitive = false
-sort_reverse 	 = false
+sort_reverse   = false
 sort_dir_first = true
 sort_translit  = false
 linemode       = "none"
@@ -14,10 +14,10 @@ show_hidden    = true
 show_symlink   = true
 scrolloff      = 5
 mouse_events   = [ "click", "scroll" ]
-title_format   = "Terminal File Viewer: {cwd}"
+title_format   = "📁Terminal File Viewer: {cwd}"
 
 [preview]
-wrap            = "no"
+wrap            = "yes"
 tab_size        = 2
 max_width       = 1000
 max_height      = 1200
@@ -103,7 +103,11 @@ suppress_preload = false
 
 [plugin]
 prepend_previewers = [
-	{ mime = "audio/*", run = "exifaudio" }
+	{ mime = "audio/*", run = "exifaudio" },
+]
+prepend_fetchers = [
+    {id  = "mactag", url = "*/", run = "mactag"},
+    {id  = "mactag", url = "*/", run = "mactag"},
 ]
 fetchers = [
 	# Mimetype

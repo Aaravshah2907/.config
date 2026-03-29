@@ -1,5 +1,12 @@
-[plugin]
-deps = []
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "1962818"
+hash = "f0c8c378184d5f8abd1b095a443d336d"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mactag"
+rev = "1962818"
+hash = "e617e9570226ba22d43325796f73b85"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"

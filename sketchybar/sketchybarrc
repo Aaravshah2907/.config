@@ -1,277 +1,131 @@
-# This is a demo config to showcase some of the most important commands.
-# It is meant to be changed and configured, as it is intentionally kept sparse.
-# For a (much) more advanced configuration example see my dotfiles:
-# https://github.com/FelixKratz/dotfiles
-
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
-##### Bar Appearance #####
-sketchybar --bar position=top height=40 blur_radius=30 sticky=on
+##### Core Bar Appearance (Radiant Unified Bar) #####
+sketchybar --bar position=top \
+                height=40 \
+                blur_radius=30 \
+                sticky=on \
+                color=$RADIANT_PURPLE \
+                margin=0 \
+                y_offset=0 \
+                padding_left=10 \
+                padding_right=10 \
+                border_width=1 \
+                border_color=$RADIANT_GOLD
 
-##### Changing Defaults #####
-default=(
-  padding_left=4
-  padding_right=4
-  icon.font="Hack Nerd Font:Bold:15.0"
-  label.font="JetBrainsMono Nerd Font:Bold:12.0"
-  icon.color=$WHITE
-  label.color=$WHITE
-  icon.padding_left=8
-  icon.padding_right=0
-  label.padding_left=8
-  label.padding_right=0
-  background.corner_radius=5
-  background.height=24
-)
-sketchybar --default "${default[@]}"
+##### Global Defaults (Applying to all items) #####
+sketchybar --default \
+  padding_left=8 \
+  padding_right=8 \
+  icon.font="Hack Nerd Font:Bold:16.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:15.0" \
+  icon.color=$WHITE \
+  label.color=$WHITE \
+  icon.padding_left=8 \
+  icon.padding_right=8 \
+  label.padding_left=8 \
+  label.padding_right=5 \
+  background.drawing=off \
+  popup.background.color=$RADIANT_PURPLE \
+  popup.background.border_color=$RADIANT_GOLD \
+  popup.background.border_width=2 \
+  popup.background.corner_radius=10 \
+  popup.blur_radius=25
 
-##### Apple Menu & Front App #####
+##### LEFT SIDE ITEMS #####
 sketchybar --add item apple left \
            --set apple icon= \
                        label.drawing=off \
-                       icon.padding_right=1 \
-                       icon.padding_left=1 \
-                       icon.font="Hack Nerd Font:Bold:18.0" \
-                       click_script="osascript -e 'tell application \"System Events\" to tell (first process whose frontmost is true) to click menu bar item 1 of menu bar 1'" \
-           \
-           --add item front_app left \
-           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh"  \
-           --subscribe front_app front_app_switched
+                       click_script="open -a iTerm" \
+  \
+  --add item front_app left \
+    --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+    --subscribe front_app front_app_switched
 
-##### Mission Control Space Indicators #####
 SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
 for sid in "${SPACE_SIDS[@]}"
 do
-  sketchybar --add space space.$sid left                                 \
-             --set space.$sid space=$sid                                 \
-                              icon=$sid                                  \
-                              label.font="Hack Nerd Font:Regular:16.0" \
-                              label.padding_right=9                     \
-                              label.y_offset=-1                          \
-                              script="$PLUGIN_DIR/space.sh"              
+  # Using large padding to absolutely clear any clipping issues between the number and app icons
+  sketchybar --add space space.$sid left \
+             --set space.$sid space=$sid \
+                              icon=$sid \
+                              script="$PLUGIN_DIR/space.sh" \
+                              label.padding_right=9 \
+                              label.y_offset=-1 \
+                              padding_left=8 \
+                              padding_right=8 \
+             --subscribe space.$sid space_windows_change
 done
 
-sketchybar --add item space_separator left                             \
-           --set space_separator icon=""                                \
-                                 icon.color=$ACCENT_COLOR \
-                                 icon.padding_left=4                   \
-                                 label.drawing=off                     \
-                                 background.drawing=off                \
-                                 script="$PLUGIN_DIR/space_windows.sh" \
-           --subscribe space_separator space_windows_change
+##### RIGHT SIDE ITEMS #####
 
-##### Music & Media #####
-sketchybar --add item music left \
-           --set music \
-                script="$PLUGIN_DIR/music.sh" \
-                icon= \
-                label.padding_left=0 \
-                icon.padding_right=8 \
-                label.color=0xffa6e3a1 \
-                icon.color=0xffa6e3a1 \
-                label="Not Playing" \
-                click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-                update_freq=2 \
-                drawing=on \
-                popup.align=left \
-                popup.background.color=0xe61e1e2e \
-                popup.background.border_color=0xfff9e2af \
-                popup.background.border_width=2 \
-                popup.background.corner_radius=8 \
-                popup.blur_radius=20 \
+# Music
+sketchybar --add item music right \
+           --set music icon= label="Loading..." script="$PLUGIN_DIR/music.sh" click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            --subscribe music media_change \
-           \
-           --add item media.control_icon popup.music \
-           --set media.control_icon icon=󰎆 label="Current Track" label.font="JetBrainsMono Nerd Font:Bold:14.0" icon.color=0xfff9e2af \
-           \
-           --add item media.prev popup.music \
-           --set media.prev icon=󰒮 label="Previous Track" click_script="nowplaying-cli previous" icon.color=0xffa6e3a1 \
-           \
-           --add item media.play popup.music \
-           --set media.play icon=󰐊 label="Play / Pause" click_script="nowplaying-cli togglePlayPause" icon.color=0xffa6e3a1 \
-           \
-           --add item media.next popup.music \
-           --set media.next icon=󰒭 label="Next Track" click_script="nowplaying-cli next" icon.color=0xffa6e3a1
+           popup.align=right \
+  \
+  --add item media.header popup.music \
+    --set media.header icon= label="MUSIC" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+  \
+  --add item media.play popup.music --set media.play icon=󰐊 label="Play/Pause" click_script="nowplaying-cli togglePlayPause" \
+  --add item media.next popup.music --set media.next icon=󰒭 label="Next" click_script="nowplaying-cli next"
 
-##### Right Items (Added Right-to-Left) #####
+# Notifications
+sketchybar --add item notifications right \
+           --set notifications icon=󰂚 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           popup.align=right \
+  \
+  --add item notif.header popup.notifications \
+    --set notif.header icon=󰂚 label="NOTIFICATIONS" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+  \
+  --add item notif.github popup.notifications  --set notif.github script="$PLUGIN_DIR/github.sh" icon=󰊤 update_freq=60 click_script="open 'https://github.com/notifications'; sketchybar --set notifications popup.drawing=off" \
+  --add item notif.whatsapp popup.notifications --set notif.whatsapp script="$PLUGIN_DIR/whatsapp.sh" icon=󰖣 update_freq=60 click_script="open -a WhatsApp; sketchybar --set notifications popup.drawing=off" \
+  --add item notif.mail popup.notifications     --set notif.mail     script="$PLUGIN_DIR/mail.sh" icon=󰇮 update_freq=60 click_script="open -a Mail; sketchybar --set notifications popup.drawing=off"
 
-sketchybar \
-  --add item clock right \
-    --set clock \
-      update_freq=10 \
-      icon=􀉉 \
-      script="$PLUGIN_DIR/clock.sh" \
-      click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-      popup.align=right \
-      popup.background.color=0xe61e1e2e \
-      popup.background.border_color=0xfff9e2af \
-      popup.background.border_width=2 \
-      popup.background.corner_radius=8 \
-      popup.blur_radius=20 \
+# System Stats
+sketchybar --add item system right \
+           --set system icon=󰍛 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           popup.align=right \
   \
-  --add item clock.date popup.clock \
-    --set clock.date \
-      icon=󰃭 \
-      icon.padding_right=8 \
-      label="$(date '+%A, %B %d')" \
-      update_freq=60 \
-      script="sketchybar --set \$NAME label=\"\$(date '+%A, %B %d')\"" \
-      click_script="open -a 'Google Calendar'; sketchybar --set clock popup.drawing=off" \
+  --add item system.header popup.system \
+    --set system.header icon=󰍛 label="SYSTEM" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item clock.calendar popup.clock \
-    --set clock.calendar \
-      icon=󰃤 \
-      icon.padding_right=8 \
-      update_freq=60 \
-      script="$PLUGIN_DIR/calendar.sh" \
-      click_script="open -a 'Google Calendar'; sketchybar --set clock popup.drawing=off" \
+  --add item system.ram.text popup.system --set system.ram.text label="RAM Usage" icon.drawing=off \
+  --add item system.disk popup.system     --set system.disk icon= label="Disk Capacity" \
+  --add item system.updater right          --set system.updater script="$PLUGIN_DIR/system.sh" update_freq=3 drawing=off
+
+# Volume & Battery
+sketchybar --add item volume right --set volume script="$PLUGIN_DIR/volume.sh" --subscribe volume volume_change
+sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke
+
+# Clock
+sketchybar --add item clock right \
+           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="sketchybar --set \$NAME popup.drawing=toggle" icon=􀉉 \
+           --subscribe clock mouse.entered mouse.exited \
+           popup.align=right \
   \
-  --add item clock.weather popup.clock \
-    --set clock.weather \
-      icon= \
-      icon.padding_right=8 \
-      update_freq=300 \
-      script="$PLUGIN_DIR/weather.sh" \
-      click_script="open -a Weather; sketchybar --set clock popup.drawing=off" \
+  --add item clock.header popup.clock \
+    --set clock.header icon=󰃤 label="CALENDAR" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item clock.weather.feels_like popup.clock \
-    --set clock.weather.feels_like icon="󰔅" label="--°C" icon.color=$PURPLE \
+  --add item clock.date popup.clock --set clock.date icon=󰃭 label="Date Loading..." \
+  --add item clock.events popup.clock --set clock.events label="Upcoming Events" \
+  --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh"
+
+# Control Center
+sketchybar --add item control_center right \
+           --set control_center icon=󰒄 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           popup.align=right \
   \
-  --add item clock.weather.humidity popup.clock \
-    --set clock.weather.humidity icon="" label="--%" icon.color=0xff89b4fa \
+  --add item cc.header popup.control_center \
+    --set cc.header icon=󰒄 label="CONNECTIVITY" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item clock.weather.wind popup.clock \
-    --set clock.weather.wind icon="󰖝" label="-- km/h" icon.color=0xffa6e3a1 \
-  \
-  --add item clock.weather.rain popup.clock \
-    --set clock.weather.rain icon="" label="--%" icon.color=0xff89dceb \
-  \
-  --add item volume right \
-    --set volume \
-      script="$PLUGIN_DIR/volume.sh" \
-      padding_right=4 \
-      --subscribe volume volume_change power_source_change \
-  \
-  --add item battery right \
-    --set battery \
-      update_freq=120 \
-      script="$PLUGIN_DIR/battery.sh" \
-      padding_right=4 \
-      --subscribe battery system_woke power_source_change \
-  \
-  --add item system right \
-    --set system \
-      icon=󰍛 \
-      update_freq=-1 \
-      popup.align=right \
-      click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-      label.drawing=off \
-      popup.background.color=0xe61e1e2e \
-      popup.background.border_color=0xfff9e2af \
-      popup.background.border_width=2 \
-      popup.background.corner_radius=8 \
-      popup.blur_radius=20 \
-  \
-  --add graph system.ram.graph popup.system 50 \
-    --set system.ram.graph \
-      graph.color=0xffa6e3a1 \
-      graph.fill_color=0x44a6e3a1 \
-      icon=󰘚 \
-      label.drawing=off \
-  \
-  --add item system.ram.text popup.system \
-    --set system.ram.text \
-      label="RAM: Loading..." \
-      icon.drawing=off \
-  \
-  --add item system.disk popup.system \
-    --set system.disk \
-      icon= \
-      label="Disk: Loading..." \
-  \
-  --add item system.updater right \
-    --set system.updater \
-      script="$PLUGIN_DIR/system.sh" \
-      update_freq=3 \
-      drawing=off \
-  \
-  --add item control_center right \
-    --set control_center \
-      icon=󰒄 \
-      update_freq=-1 \
-      popup.align=right \
-      click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-      label.drawing=off \
-      popup.background.color=0xe61e1e2e \
-      popup.background.border_color=0xfff9e2af \
-      popup.background.border_width=2 \
-      popup.background.corner_radius=8 \
-      popup.blur_radius=20 \
-  \
-  --add item cc.network.ssid popup.control_center \
-    --set cc.network.ssid \
-      icon=󰤨 \
-      label="Loading..." \
-      click_script="open x-apple.systempreferences:com.apple.preference.network; sketchybar --set control_center popup.drawing=off" \
-  \
-  --add item cc.network.speed popup.control_center \
-    --set cc.network.speed \
-      icon=󰓅 \
-      label="Loading..." \
-      click_script="open x-apple.systempreferences:com.apple.preference.network; sketchybar --set control_center popup.drawing=off" \
-  \
-  --add item cc.bt.none popup.control_center \
-    --set cc.bt.none drawing=off \
-  --add item cc.bt.0 popup.control_center \
-    --set cc.bt.0 drawing=off \
-  --add item cc.bt.1 popup.control_center \
-    --set cc.bt.1 drawing=off \
-  --add item cc.bt.2 popup.control_center \
-    --set cc.bt.2 drawing=off \
-  --add item cc.bt.3 popup.control_center \
-    --set cc.bt.3 drawing=off \
-  --add item cc.bt.4 popup.control_center \
-    --set cc.bt.4 drawing=off \
-  \
-  --add item cc.network.updater right \
-    --set cc.network.updater \
-      script="$PLUGIN_DIR/network.sh" \
-      update_freq=10 \
-      drawing=off \
-  \
-  --add item cc.bluetooth.updater right \
-    --set cc.bluetooth.updater \
-      script="$PLUGIN_DIR/bluetooth.sh" \
-      update_freq=10 \
-      drawing=off \
-  \
-  --add item notifications right \
-    --set notifications \
-      icon=󰂚 \
-      update_freq=-1 \
-      popup.align=right \
-      click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-      label.drawing=off \
-      popup.background.color=0xe61e1e2e \
-      popup.background.border_color=0xfff9e2af \
-      popup.background.border_width=2 \
-      popup.background.corner_radius=8 \
-      popup.blur_radius=20 \
-  \
-  --add item notif.github popup.notifications \
-    --set notif.github \
-      script="$PLUGIN_DIR/github.sh" \
-      icon=󰊤 \
-      update_freq=60 \
-      click_script="open https://github.com/notifications; sketchybar --set notifications popup.drawing=off" \
-  \
-  --add item notif.whatsapp popup.notifications \
-    --set notif.whatsapp \
-      script="$PLUGIN_DIR/whatsapp.sh" \
-      icon=󰖣 \
-      update_freq=60 \
-      click_script="open -a WhatsApp; sketchybar --set notifications popup.drawing=off"
+  --add item cc.net.0.ssid popup.control_center    --set cc.net.0.ssid icon=󰤨 \
+  --add item cc.net.0.speed popup.control_center   --set cc.net.0.speed icon=󰓅 \
+  --add item cc.network.updater right              --set cc.network.updater script="$PLUGIN_DIR/network.sh" update_freq=10 drawing=off
 
 ##### Finalize #####
 sketchybar --update
+sketchybar --trigger space_windows_change
+sketchybar --trigger front_app_switched

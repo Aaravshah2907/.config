@@ -22,3 +22,10 @@ export ORANGE=0xffff9e64
 
 # Soulcaster Violet - For secondary accents (Jasnah's theme)
 export PURPLE=0xffbb9af7
+
+# Radiant Radiant Gold - The main gold highlight for borders and icons
+export RADIANT_GOLD=0xfff9e2af
+
+# Radiant Radiant Purple/Navy - The main bar background color
+export RADIANT_PURPLE=0xcc1e1e2e
+

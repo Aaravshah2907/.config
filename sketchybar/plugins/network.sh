@@ -1,58 +1,63 @@
 #!/usr/bin/env bash
 
-# Clear existing network items from the popup
-sketchybar --remove '/cc\.net\..*/'
+# Function to safely update sketchybar items only if they exist
+safe_set() {
+  local item="$1"
+  shift
+  if sketchybar --query "$item" >/dev/null 2>&1; then
+    sketchybar --set "$item" "$@"
+  fi
+}
 
-# Find all active interfaces (those with an inet address)
+# Clear existing entries
+safe_set cc.net.0.ssid drawing=off
+safe_set cc.net.0.speed drawing=off
+safe_set cc.net.1.ssid drawing=off
+safe_set cc.net.1.speed drawing=off
+
 INTERFACES=$(ifconfig -u | grep -E "^[a-z0-9]+:" | cut -d: -f1)
 INDEX=0
+TOTAL_TX_RATE=0
 
 for INTERFACE in $INTERFACES; do
-  # Skip loopback and other non-standard interfaces
-  if [[ "$INTERFACE" == "lo"* ]] || [[ "$INTERFACE" == "awdl"* ]] || [[ "$INTERFACE" == "llw"* ]] || [[ "$INTERFACE" == "utun"* ]] || [[ "$INTERFACE" == "bridge"* ]]; then
-    continue
-  fi
+  if [[ "$INTERFACE" == "lo"* ]] || [[ "$INTERFACE" == "awdl"* ]] || [[ "$INTERFACE" == "utun"* ]]; then continue; fi
 
-  # Check if interface has an IP (actually active)
   IP=$(ifconfig "$INTERFACE" 2>/dev/null | grep "inet " | awk '{print $2}')
   if [ -z "$IP" ]; then continue; fi
 
-  # Try to get SSID from ipconfig
   SSID=$(ipconfig getsummary "$INTERFACE" 2>/dev/null | awk -F' : ' '/ SSID :/ {print $2}')
   
   if [ -n "$SSID" ]; then
-    # Mapping for Campus SSIDs
     case "$SSID" in
       "<redacted>") SSID="Campus Link" ;;
       "eduroam") SSID="󰖟 University" ;;
     esac
     
-    # Get speed
     SPEED=$(wdutil info 2>/dev/null | awk -F' : ' '/Tx Rate :/ {print $2}' | sed 's/ Mbps//')
-    [ -z "$SPEED" ] && SPEED="Connected" || SPEED="${SPEED} Mbps"
-    
+    [ -z "$SPEED" ] && SPEED_VAL=0 || SPEED_VAL=$SPEED
+    SPEED_LABEL="${SPEED_VAL} Mbps"
     ICON=󰤨
     LABEL="$SSID"
+    TOTAL_TX_RATE=$((TOTAL_TX_RATE + SPEED_VAL))
   else
-    # Ethernet or Other Hardware
     SERVICE=$(networksetup -listallhardwareports 2>/dev/null | grep -B 1 "Device: $INTERFACE" | head -n 1 | sed 's/Hardware Port: //')
     LABEL="${SERVICE:-Ethernet}"
     ICON=󰈀
-    SPEED="Connected"
+    SPEED_LABEL="LAN"
   fi
 
-  # Add to popup
-  sketchybar --add item cc.net.ssid.$INDEX popup.control_center \
-             --set cc.net.ssid.$INDEX label="$LABEL" icon="$ICON" \
-                   click_script="open x-apple.systempreferences:com.apple.preference.network; sketchybar --set control_center popup.drawing=off" \
-             --add item cc.net.speed.$INDEX popup.control_center \
-             --set cc.net.speed.$INDEX label="$SPEED" icon=󰓅 \
-                   click_script="open x-apple.systempreferences:com.apple.preference.network; sketchybar --set control_center popup.drawing=off" 
-
+  # Only push to the slots we have defined in sketchybarrc
+  safe_set "cc.net.$INDEX.ssid" label="$LABEL" icon="$ICON" drawing=on
+  safe_set "cc.net.$INDEX.speed" label="$SPEED_LABEL" drawing=on
+  
   INDEX=$((INDEX + 1))
 done
 
+# Push tx rate to graph (scaled for visualization)
+safe_set cc.net.graph graph.push="$TOTAL_TX_RATE"
+
 if [ "$INDEX" -eq 0 ]; then
-  sketchybar --add item cc.net.none popup.control_center \
-             --set cc.net.none label="Disconnected" icon=󰤭
+  safe_set cc.net.none label="Disconnected" icon=󰤭 drawing=on
+else
+  safe_set cc.net.none drawing=off
 fi

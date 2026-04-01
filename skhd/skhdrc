@@ -1,0 +1,82 @@
+# ================================
+# Window Focus (vim-style)
+# ================================
+
+alt - j : /opt/homebrew/bin/yabai -m window --focus south || /opt/homebrew/bin/yabai -m display --focus south
+alt - k : /opt/homebrew/bin/yabai -m window --focus north || /opt/homebrew/bin/yabai -m display --focus north
+alt - h : /opt/homebrew/bin/yabai -m window --focus west  || /opt/homebrew/bin/yabai -m display --focus west
+alt - l : /opt/homebrew/bin/yabai -m window --focus east  || /opt/homebrew/bin/yabai -m display --focus east
+
+# Focus displays directly
+alt - s : /opt/homebrew/bin/yabai -m display --focus west
+alt - g : /opt/homebrew/bin/yabai -m display --focus east
+
+
+# ================================
+# Layout Modifications
+# ================================
+
+shift + alt - r : /opt/homebrew/bin/yabai -m space --rotate 270
+shift + alt - y : /opt/homebrew/bin/yabai -m space --mirror y-axis
+shift + alt - x : /opt/homebrew/bin/yabai -m space --mirror x-axis
+
+# toggle float (centered)
+shift + alt - t : /opt/homebrew/bin/yabai -m window --toggle float; /opt/homebrew/bin/yabai -m window --grid 4:4:1:1:2:2
+
+
+# ================================
+# Window Size / Layout
+# ================================
+
+shift + alt - m : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen
+shift + alt - e : /opt/homebrew/bin/yabai -m space --balance
+
+
+# ================================
+# Moving / Swapping Windows
+# ================================
+
+# swap
+shift + alt - j : /opt/homebrew/bin/yabai -m window --swap south
+shift + alt - k : /opt/homebrew/bin/yabai -m window --swap north
+shift + alt - h : /opt/homebrew/bin/yabai -m window --swap west
+shift + alt - l : /opt/homebrew/bin/yabai -m window --swap east
+
+# warp (move + follow focus)
+ctrl + alt - j : /opt/homebrew/bin/yabai -m window --warp south
+ctrl + alt - k : /opt/homebrew/bin/yabai -m window --warp north
+ctrl + alt - h : /opt/homebrew/bin/yabai -m window --warp west
+ctrl + alt - l : /opt/homebrew/bin/yabai -m window --warp east
+
+
+# ================================
+# Move Windows Across Displays
+# ================================
+
+shift + alt - s : /opt/homebrew/bin/yabai -m window --display west;  /opt/homebrew/bin/yabai -m display --focus west
+shift + alt - g : /opt/homebrew/bin/yabai -m window --display east;  /opt/homebrew/bin/yabai -m display --focus east
+
+
+# ================================
+# Move Windows Across Spaces
+# ================================
+
+shift + alt - p : /opt/homebrew/bin/yabai -m window --space prev; /opt/homebrew/bin/yabai -m space --focus prev
+shift + alt - n : /opt/homebrew/bin/yabai -m window --space next; /opt/homebrew/bin/yabai -m space --focus next
+
+shift + alt - 1 : /opt/homebrew/bin/yabai -m window --space 1; /opt/homebrew/bin/yabai -m space --focus 1
+shift + alt - 2 : /opt/homebrew/bin/yabai -m window --space 2; /opt/homebrew/bin/yabai -m space --focus 2
+shift + alt - 3 : /opt/homebrew/bin/yabai -m window --space 3; /opt/homebrew/bin/yabai -m space --focus 3
+shift + alt - 4 : /opt/homebrew/bin/yabai -m window --space 4; /opt/homebrew/bin/yabai -m space --focus 4
+shift + alt - 5 : /opt/homebrew/bin/yabai -m window --space 5; /opt/homebrew/bin/yabai -m space --focus 5
+shift + alt - 6 : /opt/homebrew/bin/yabai -m window --space 6; /opt/homebrew/bin/yabai -m space --focus 6
+shift + alt - 7 : /opt/homebrew/bin/yabai -m window --space 7; /opt/homebrew/bin/yabai -m space --focus 7
+
+
+# ================================
+# Yabai Service Control
+# ================================
+
+ctrl + alt - q : brew services stop yabai
+ctrl + alt - s : brew services start yabai
+ctrl + alt - r : brew services restart yabai

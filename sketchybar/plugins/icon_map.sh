@@ -24,6 +24,9 @@ case "$APP_NAME" in
   "Firefox" | "Firefox Developer Edition")
     icon="󰈹"
     ;;
+  "Finder")
+    icon="󰀶"
+    ;;
   "Messages")
     icon="󰍦"
     ;;
@@ -32,6 +35,9 @@ case "$APP_NAME" in
     ;;
   "Music" | "Spotify" | "Apple Music")
     icon="󰓇"
+    ;;
+  "mpv" | "mpv.player" | "io.mpv")
+    icon=""
     ;;
   "Code" | "Visual Studio Code" | "VSCodium")
     icon="󰨞"

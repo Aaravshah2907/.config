@@ -62,8 +62,8 @@ done
 
 # Music
 sketchybar --add item music right \
-           --set music icon= label="Loading..." script="$PLUGIN_DIR/music.sh" click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-           --subscribe music media_change \
+           --set music icon= label="Loading..." script="$PLUGIN_DIR/music.sh" update_freq=2 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           --subscribe music media_change system_woke front_app_switched\
            popup.align=right \
   \
   --add item media.header popup.music \

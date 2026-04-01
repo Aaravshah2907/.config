@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Function to safely update sketchybar items
+UPDATED=0
 safe_set() {
   local item="$1"
   shift
@@ -29,7 +30,8 @@ update_bar() {
   fi
 
   safe_set "$NAME" drawing=on label="$label" icon="$icon"
-  exit 0
+  UPDATED=1
+  return 0
 }
 
 hide_bar() {
@@ -96,4 +98,6 @@ if [ "$SPOTIFY_RUNNING" = "true" ]; then
   fi
 fi
 
-hide_bar
+if [ "$UPDATED" -eq 0 ]; then
+  hide_bar
+fi

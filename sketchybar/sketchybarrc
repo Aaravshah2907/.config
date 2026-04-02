@@ -72,33 +72,21 @@ sketchybar --add item music right \
   --add item media.play popup.music --set media.play icon=󰐊 label="Play/Pause" click_script="nowplaying-cli togglePlayPause" \
   --add item media.next popup.music --set media.next icon=󰒭 label="Next" click_script="nowplaying-cli next"
 
-# Notifications
-sketchybar --add item notifications right \
-           --set notifications icon=󰂚 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-           popup.align=right \
-  \
-  --add item notif.header popup.notifications \
-    --set notif.header icon=󰂚 label="NOTIFICATIONS" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
-  \
-  --add item notif.github popup.notifications  --set notif.github script="$PLUGIN_DIR/github.sh" icon=󰊤 update_freq=60 click_script="open 'https://github.com/notifications'; sketchybar --set notifications popup.drawing=off" \
-  --add item notif.whatsapp popup.notifications --set notif.whatsapp script="$PLUGIN_DIR/whatsapp.sh" icon=󰖣 update_freq=60 click_script="open -a WhatsApp; sketchybar --set notifications popup.drawing=off" \
-  --add item notif.mail popup.notifications     --set notif.mail     script="$PLUGIN_DIR/mail.sh" icon=󰇮 update_freq=60 click_script="open -a Mail; sketchybar --set notifications popup.drawing=off"
-
-# System Stats
-sketchybar --add item system right \
-           --set system icon=󰍛 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-           popup.align=right \
-  \
-  --add item system.header popup.system \
-    --set system.header icon=󰍛 label="SYSTEM" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
-  \
-  --add item system.ram.text popup.system --set system.ram.text label="RAM Usage" icon.drawing=off \
-  --add item system.disk popup.system     --set system.disk icon= label="Disk Capacity" \
-  --add item system.updater right          --set system.updater script="$PLUGIN_DIR/system.sh" update_freq=3 drawing=off
-
-# Volume & Battery
-sketchybar --add item volume right --set volume script="$PLUGIN_DIR/volume.sh" --subscribe volume volume_change
+# Battery
 sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke
+
+# Control Center
+sketchybar --add item control_center right \
+           --set control_center icon=󰒄 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           popup.align=right \
+  \
+  --add item cc.header popup.control_center \
+    --set cc.header icon=󰒄 label="CONNECTIVITY" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+  \
+  --add item cc.net.0.ssid popup.control_center    --set cc.net.0.ssid icon=󰤨 \
+  --add item cc.net.0.speed popup.control_center   --set cc.net.0.speed icon=󰓅 \
+  --add item cc.network.updater right              --set cc.network.updater script="$PLUGIN_DIR/network.sh" update_freq=10 drawing=off
+
 
 # Clock
 sketchybar --add item clock right \
@@ -113,17 +101,20 @@ sketchybar --add item clock right \
   --add item clock.events popup.clock --set clock.events label="Upcoming Events" \
   --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh"
 
-# Control Center
-sketchybar --add item control_center right \
-           --set control_center icon=󰒄 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+# Volume
+sketchybar --add item volume right --set volume script="$PLUGIN_DIR/volume.sh" --subscribe volume volume_change
+
+# System Stats
+sketchybar --add item system right \
+           --set system icon=󰍛 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            popup.align=right \
   \
-  --add item cc.header popup.control_center \
-    --set cc.header icon=󰒄 label="CONNECTIVITY" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+  --add item system.header popup.system \
+    --set system.header icon=󰍛 label="SYSTEM" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item cc.net.0.ssid popup.control_center    --set cc.net.0.ssid icon=󰤨 \
-  --add item cc.net.0.speed popup.control_center   --set cc.net.0.speed icon=󰓅 \
-  --add item cc.network.updater right              --set cc.network.updater script="$PLUGIN_DIR/network.sh" update_freq=10 drawing=off
+  --add item system.ram.text popup.system --set system.ram.text label="RAM Usage" icon.drawing=off \
+  --add item system.disk popup.system     --set system.disk icon= label="Disk Capacity" \
+  --add item system.updater right          --set system.updater script="$PLUGIN_DIR/system.sh" update_freq=3 drawing=off
 
 ##### Finalize #####
 sketchybar --update

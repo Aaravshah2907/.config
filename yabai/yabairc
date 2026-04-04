@@ -10,9 +10,10 @@ yabai -m config window_placement second_child
 
 # auto balance splits
 yabai -m config auto_balance on
+yabai -m config split_ratio 0.50
 
 # focus follows mouse (feels natural)
-yabai -m config focus_follows_mouse autoraise
+yabai -m config focus_follows_mouse autofocus
 
 # mouse follows focus (optional but nice)
 yabai -m config mouse_follows_focus on
@@ -21,9 +22,9 @@ yabai -m config mouse_follows_focus on
 
 yabai -m config top_padding 12
 yabai -m config bottom_padding 12
-yabai -m config left_padding 12
-yabai -m config right_padding 12
-yabai -m config window_gap 12
+yabai -m config left_padding 8
+yabai -m config right_padding 8
+yabai -m config window_gap 8
 
 # --- Mouse controls ---
 
@@ -42,6 +43,12 @@ yabai -m rule --add app="^mpv$" manage=off
 
 # --- IMPORTANT: force all spaces to bsp (fixes your earlier issue) ---
 
-for i in $(yabai -m query --spaces | jq '.[].index'); do
-  yabai -m space $i --layout bsp
-done
+yabai -m config window_opacity on
+yabai -m config active_window_opacity 1.0
+yabai -m config normal_window_opacity 0.9
+
+# ensure every NEW space is bsp
+yabai -m signal --add event=space_created action="yabai -m space --layout bsp"
+yabai -m signal --add event=space_changed action="yabai -m space --layout bsp"
+
+echo "YABAI LOADED" > /tmp/yabai.log

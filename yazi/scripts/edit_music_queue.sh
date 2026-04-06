@@ -23,15 +23,10 @@ while true; do
 
     # Get current queue
     list=$(/opt/homebrew/bin/python3 "$PYTHON_SCRIPT" list)
-    if [ -z "$list" ]; then
-        echo "Musical silence... (Queue is empty)"
-        echo "Press any key to exit."
-        read -n 1
-        break
-    fi
     
     # fzf with enhanced UI and Rearrange (Ctrl-j/k)
     # Using multiple delete bindings: del, backspace, ctrl-d, ctrl-x
+    # If list is empty, fzf will show nothing but still allow Ctrl-O
     choice=$(echo "$list" | fzf \
         --ansi \
         --reverse --height=100% --border=rounded \
@@ -54,12 +49,15 @@ while true; do
         --bind "enter:accept" \
         --color='header:italic:yellow,prompt:bold:blue,pointer:bold:red,hl:bold:green')
     
-    # If no choice made (ESC)
+    # If no choice made (ESC) or empty choice
     if [ -z "$choice" ]; then
         break
     fi
     
     # Switch to the selected song
     index=$(echo "$choice" | awk '{print $1}')
-    /opt/homebrew/bin/python3 "$PYTHON_SCRIPT" play_index "$index"
+    # Only try to play if index is a number
+    if [[ "$index" =~ ^[0-9]+$ ]]; then
+        /opt/homebrew/bin/python3 "$PYTHON_SCRIPT" play_index "$index"
+    fi
 done

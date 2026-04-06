@@ -1,10 +1,28 @@
 #!/bin/bash
 # ~/.config/yazi/scripts/edit_music_queue.sh
 PYTHON_SCRIPT="/Users/aaravshah2975/.config/yazi/scripts/music_queue.py"
+JQ="/opt/homebrew/bin/jq"
 
 while true; do
+    # Get current playback status for the header
+    status_json=$(/opt/homebrew/bin/python3 "$PYTHON_SCRIPT" status_json)
+    is_running=$(echo "$status_json" | "$JQ" -r '.running')
+    
+    if [ "$is_running" == "true" ]; then
+        title=$(echo "$status_json" | "$JQ" -r '.title')
+        paused=$(echo "$status_json" | "$JQ" -r '.paused')
+        if [ "$paused" == "true" ]; then
+            indicator="󰏤 Paused"
+        else
+            indicator=" Playing"
+        fi
+        status_line="Current: $indicator - $title"
+    else
+        status_line="Status: 󰓛 Idle"
+    fi
+
     # Get current queue
-    list=$($PYTHON_SCRIPT list)
+    list=$(/opt/homebrew/bin/python3 "$PYTHON_SCRIPT" list)
     if [ -z "$list" ]; then
         echo "Musical silence... (Queue is empty)"
         echo "Press any key to exit."
@@ -12,16 +30,29 @@ while true; do
         break
     fi
     
-    # Selection format: " 0 | * | Song Title"
-    # Using fzf for interactive selection and deletion
-    # {1} is the index
+    # fzf with enhanced UI and Rearrange (Ctrl-j/k)
+    # Using multiple delete bindings: del, backspace, ctrl-d, ctrl-x
     choice=$(echo "$list" | fzf \
         --ansi \
-    --header="[ENTER] Switch to track | [DEL] Remove from queue | [ESC] Exit" \
-        --prompt="🎵 Music Queue > " \
-        --reverse --height=100% \
-        --bind "del:execute-silent($PYTHON_SCRIPT remove {1})+reload($PYTHON_SCRIPT list)" \
-        --bind "enter:accept")
+        --reverse --height=100% --border=rounded \
+        --header-first --header=" $status_line"$'\n'" [ENT] Play | [C-D] Del | [C-J/K] Move | [C-R] Rand | [C-U] Sort"$'\n'" [C-S] Save | [C-O] Load | [C-F] Sync | [?] Toggle Info" \
+        --prompt="󰎆 Music Queue > " \
+        --preview="/opt/homebrew/bin/python3 $PYTHON_SCRIPT info {1}" \
+        --preview-window="right:25%:wrap:border-left:hidden" \
+        --bind "?:toggle-preview" \
+        --bind "del:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT remove {1})+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "backspace:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT remove {1})+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-d:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT remove {1})+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-x:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT remove {1})+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-j:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT move {1} 1)+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)+down" \
+        --bind "ctrl-k:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT move {1} -1)+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)+up" \
+        --bind "ctrl-r:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT shuffle)+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-u:execute-silent(/opt/homebrew/bin/python3 $PYTHON_SCRIPT sort)+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-f:reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-s:execute(/Users/aaravshah2975/.config/yazi/scripts/save_playlist.sh)+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "ctrl-o:execute(/Users/aaravshah2975/.config/yazi/scripts/load_playlist.sh)+reload(/opt/homebrew/bin/python3 $PYTHON_SCRIPT list)" \
+        --bind "enter:accept" \
+        --color='header:italic:yellow,prompt:bold:blue,pointer:bold:red,hl:bold:green')
     
     # If no choice made (ESC)
     if [ -z "$choice" ]; then
@@ -30,5 +61,5 @@ while true; do
     
     # Switch to the selected song
     index=$(echo "$choice" | awk '{print $1}')
-    $PYTHON_SCRIPT play_index "$index"
+    /opt/homebrew/bin/python3 "$PYTHON_SCRIPT" play_index "$index"
 done

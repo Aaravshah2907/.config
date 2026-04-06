@@ -93,12 +93,95 @@ def main():
 
         print(json.dumps(out))
 
+    elif cmd == "move":
+        if len(sys.argv) > 3:
+            idx = int(sys.argv[2])
+            offset = int(sys.argv[3])
+            res = send_command(["get_property", "playlist-count"])
+            if res and res.get("data"):
+                count = res["data"]
+                new_idx = idx + offset
+                if 0 <= new_idx < count:
+                    send_command(["playlist-move", idx, new_idx])
+
+    elif cmd == "info":
+        if len(sys.argv) > 2:
+            idx = int(sys.argv[2])
+            res = send_command(["get_property", "playlist"])
+            if res and res.get("data") and idx < len(res["data"]):
+                item = res["data"][idx]
+                filename = item.get("filename")
+                if filename:
+                    # Run ffprobe to get metadata
+                    try:
+                        probe = subprocess.check_output([
+                            "/opt/homebrew/bin/ffprobe", 
+                            "-v", "quiet", 
+                            "-print_format", "json", 
+                            "-show_format", "-show_streams", 
+                            filename
+                        ], universal_newlines=True)
+                        data = json.loads(probe)
+                        fmt = data.get("format", {})
+                        tags = fmt.get("tags", {})
+                        
+                        print(f"Title:    {tags.get('title') or os.path.basename(filename)}")
+                        print(f"Artist:   {tags.get('artist', 'Unknown')}")
+                        print(f"Album:    {tags.get('album', 'Unknown')}")
+                        print(f"Genre:    {tags.get('genre', 'Unknown')}")
+                        duration = float(fmt.get("duration", 0))
+                        print(f"Duration: {int(duration // 60):02d}:{int(duration % 60):02d}")
+                        print(f"Size:     {int(fmt.get('size', 0)) // 1024} KB")
+                    except Exception:
+                        print("No metadata available.")
+
     elif cmd == "play_index":
         if len(sys.argv) > 2:
-            send_command(["set_property", "playlist-pos", int(sys.argv[2])])
+            idx = int(sys.argv[2])
+            res = send_command(["get_property", "playlist-pos"])
+            if res and res.get("data") == idx:
+                send_command(["cycle", "pause"])
+            else:
+                send_command(["set_property", "playlist-pos", idx])
+                send_command(["set_property", "pause", False])
+
+    elif cmd == "save":
+        if len(sys.argv) > 2:
+            name = sys.argv[2]
+            if not name.endswith(".m3u"):
+                name += ".m3u"
+            path = os.path.join("/Users/aaravshah2975/.config/mpv/playlists", name)
+            res = send_command(["get_property", "playlist"])
+            if res and res.get("data"):
+                with open(path, "w") as f:
+                    for item in res["data"]:
+                        fname = item.get("filename")
+                        if fname:
+                            f.write(fname + "\n")
+                print(f"Saved to {path}")
+
+    elif cmd == "load":
+        if len(sys.argv) > 2:
+            path = sys.argv[2]
+            if not os.path.isabs(path):
+                path = os.path.join("/Users/aaravshah2975/.config/mpv/playlists", path)
+                if not path.endswith(".m3u") and not os.path.exists(path):
+                    path += ".m3u"
+            
+            # Start if not running
+            if not is_running():
+                os.system(f"/opt/homebrew/bin/mpv --no-video --keep-open=no --input-ipc-server={SOCKET_PATH} --idle=yes '{path}' &")
+            else:
+                send_command(["loadlist", path, "replace"])
 
     elif cmd == "toggle":
         send_command(["cycle", "pause"])
+
+    elif cmd == "shuffle":
+        send_command(["playlist-shuffle"])
+
+    elif cmd == "sort":
+        send_command(["playlist-sort", "filename"])
 
     elif cmd == "next":
         send_command(["playlist-next"])

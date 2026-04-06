@@ -41,6 +41,22 @@ hide_bar() {
 
 # --- Detection Logic ---
 
+# 0. Yazi-mpv instance (Prioritized)
+YAZI_SCRIPT="/Users/aaravshah2975/.config/yazi/scripts/music_queue.py"
+MPV_STATUS=$(/opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
+if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.running') == "true" ]]; then
+  TITLE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.title')
+  PAUSED=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.paused')
+  ICON=""
+  if [ "$PAUSED" == "true" ]; then
+    ICON="󰏤"
+  fi
+  update_bar "$TITLE" "mpv"
+  # Override icon after update_bar sets it default
+  safe_set "$NAME" icon="$ICON"
+  exit 0
+fi
+
 # 1. Native NowPlaying support (via nowplaying-cli)
 if command -v nowplaying-cli &>/dev/null; then
   STATE=$(nowplaying-cli get playbackRate 2>/dev/null)

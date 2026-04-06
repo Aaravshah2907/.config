@@ -93,6 +93,9 @@ keymap = [
 	{ on = [ "m", "m" ], run = "linemode mtime",       desc = "Linemode: mtime" },
 	{ on = [ "m", "o" ], run = "linemode owner",       desc = "Linemode: owner" },
 	{ on = [ "m", "n" ], run = "linemode none",        desc = "Linemode: none" },
+	{ on = [ "m", "q" ], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/edit_music_queue.sh" --block', desc = "Edit Music Queue" },
+	{ on = [ "m", "j" ], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_queue.py next"', desc = "Next Track" },
+	{ on = [ "m", "k" ], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_queue.py prev"', desc = "Previous Track" },
 
 	# Copy
 	{ on = [ "c", "c" ], run = "copy path",             desc = "Copy the file path" },

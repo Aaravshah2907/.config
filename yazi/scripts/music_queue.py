@@ -99,10 +99,50 @@ def cmd_sort():
     send_command(["playlist-sort", "filename"])
 
 def cmd_next():
+    # Get current index and title for comparison
+    old_pos = send_command(["get_property", "playlist-pos"])
+    old_idx = old_pos.get("data") if old_pos else -1
+    old_t = send_command(["get_property", "media-title"])
+    old_title = old_t.get("data") if old_t else ""
+
     send_command(["playlist-next", "force"])
+    
+    # Poll for change (max 1.0s total)
+    for _ in range(20):
+        time.sleep(0.05)
+        curr_pos = send_command(["get_property", "playlist-pos"])
+        curr_idx = curr_pos.get("data") if curr_pos else -1
+        curr_t = send_command(["get_property", "media-title"])
+        curr_title = curr_t.get("data") if curr_t else ""
+        
+        # Break if position changed OR title changed
+        if curr_idx != old_idx or curr_title != old_title:
+            break
+    
+    signal_refresh()
 
 def cmd_prev():
+    # Get current index and title for comparison
+    old_pos = send_command(["get_property", "playlist-pos"])
+    old_idx = old_pos.get("data") if old_pos else -1
+    old_t = send_command(["get_property", "media-title"])
+    old_title = old_t.get("data") if old_t else ""
+
     send_command(["playlist-prev", "force"])
+    
+    # Poll for change (max 1.0s total)
+    for _ in range(20):
+        time.sleep(0.05)
+        curr_pos = send_command(["get_property", "playlist-pos"])
+        curr_idx = curr_pos.get("data") if curr_pos else -1
+        curr_t = send_command(["get_property", "media-title"])
+        curr_title = curr_t.get("data") if curr_t else ""
+        
+        # Break if position changed OR title changed
+        if curr_idx != old_idx or curr_title != old_title:
+            break
+    
+    signal_refresh()
 
 def cmd_clear():
     send_command(["playlist-clear"])
@@ -153,6 +193,11 @@ def cmd_loop():
         # All -> Off
         send_command(["set_property", "loop-file", "no"])
         send_command(["set_property", "loop-playlist", "no"])
+    
+    # Small delay to ensure mpv has updated the state before the UI redraws
+    # Higher delay for transitions that set multiple properties
+    time.sleep(0.2)
+    signal_refresh()
 
 def cmd_status():
     if not is_running():
@@ -261,9 +306,9 @@ if __name__ == "__main__":
     elif cmd == "move": cmd_move(int(sys.argv[2]), int(sys.argv[3])); signal_refresh()
     elif cmd == "shuffle": cmd_shuffle(); signal_refresh()
     elif cmd == "sort": cmd_sort(); signal_refresh()
-    elif cmd == "next": cmd_next(); signal_refresh()
-    elif cmd == "prev": cmd_prev(); signal_refresh()
-    elif cmd == "loop": cmd_loop(); signal_refresh()
+    elif cmd == "next": cmd_next()
+    elif cmd == "prev": cmd_prev()
+    elif cmd == "loop": cmd_loop()
     elif cmd == "clear": cmd_clear(); signal_refresh()
     elif cmd == "save": cmd_save(sys.argv[2] if len(sys.argv) > 2 else "")
     elif cmd == "load": cmd_load(sys.argv[2]); signal_refresh()

@@ -17,13 +17,13 @@ case "$cmd" in
         ;;
     next)
         /opt/homebrew/bin/python3 "$PY" next
-        sleep 0.1
+        sleep 0.5
         ya emit redraw
         ya pub music-update
         ;;
     prev)
         /opt/homebrew/bin/python3 "$PY" prev
-        sleep 0.1
+        sleep 0.5
         ya emit redraw
         ya pub music-update
         ;;

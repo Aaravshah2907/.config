@@ -66,6 +66,9 @@ download = [
 vlc = [
     { run = 'open -a "VLC" "$@"', desc = "Open in VLC", for = "macos" }
 ]
+playlist = [
+    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/yazi/scripts/music_queue.py load "$@"', desc = "Load Playlist", for = "macos", orphan = true }
+]
 
 [open]
 rules = [
@@ -92,6 +95,8 @@ rules = [
 	{ mime = "vfs/{absent,stale}", use = "download" },
 	# Fallback
 	{ url = "*", use = [ "open", "reveal" ] },
+	# Playlist
+	{ name = "*.m3u", use = [ "playlist" ] },
 ]
 
 [tasks]
@@ -131,7 +136,7 @@ spotters = [
 	{ mime = "image/svg+xml", run = "svg" },
 	{ mime = "image/*", run = "image" },
 	# Audio
-	{ mime = 'audio/mpegurl', run = 'file' }, # ignore .m3u files
+	{ mime = 'audio/mpegurl', run = 'file' },
 	{ mime = "audio/*", run = "spot-audio" },
 	# Video
 	{ mime = "video/*", run = "spot-video" },

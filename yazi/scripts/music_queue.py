@@ -4,201 +4,228 @@ import json
 import sys
 import os
 import subprocess
+import time
 
 SOCKET_PATH = "/tmp/mpv-yazi.sock"
 
-def send_command(cmd_list):
+
+def send_command(cmd):
     if not os.path.exists(SOCKET_PATH):
         return None
     try:
-        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
-            client.settimeout(1)
-            client.connect(SOCKET_PATH)
-            client.sendall(json.dumps({"command": cmd_list}).encode() + b"\n")
-            response = b""
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.settimeout(1)  # 🔥 IMPORTANT
+            s.connect(SOCKET_PATH)
+            s.send((json.dumps({"command": cmd}) + "\n").encode())
+
+            data = b""
             while True:
-                chunk = client.recv(4096)
-                if not chunk: break
-                response += chunk
-                if b"\n" in chunk: break
-            return json.loads(response.decode())
+                chunk = s.recv(4096)
+                if not chunk:
+                    break
+                data += chunk
+                if b"\n" in chunk:
+                    break
+
+            return json.loads(data.decode().strip())
     except Exception:
         return None
 
 def is_running():
-    return os.path.exists(SOCKET_PATH) and send_command(["get_property", "playlist"]) is not None
+    return send_command(["get_property", "playlist"]) is not None
 
-def main():
-    if len(sys.argv) < 2:
+def ensure_mpv(files=None):
+    if is_running():
         return
 
-    cmd = sys.argv[1]
-    
-    if cmd == "play":
-        files = sys.argv[2:]
-        if not files:
-            return
-        
-        # If not running, start it
-        if not is_running():
-            # Remove old socket if any
-            if os.path.exists(SOCKET_PATH):
-                os.remove(SOCKET_PATH)
-            
-            # Start mpv in background
-            # We use absolute paths to ensure mpv can find them if triggered from different dirs
-            abs_files = [os.path.abspath(f) for f in files]
-            subprocess.Popen([
-                "/opt/homebrew/bin/mpv", 
-                "--no-video", 
-                "--keep-open=no", 
-                f"--input-ipc-server={SOCKET_PATH}",
-                "--idle=yes",
-                *abs_files
-            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-            # Append to current playlist
-            for f in files:
-                abs_f = os.path.abspath(f)
-                send_command(["loadfile", abs_f, "append-play"])
+    if os.path.exists(SOCKET_PATH):
+        os.remove(SOCKET_PATH)
 
-    elif cmd == "current":
-        res = send_command(["get_property", "media-title"])
-        if res and res.get("data"):
-            print(res["data"])
-        else:
-            res = send_command(["get_property", "filename"])
-            if res and res.get("data"):
-                # Strip extension
-                print(os.path.splitext(res["data"])[0])
+    cmd = [
+        "/opt/homebrew/bin/mpv",
+        "--no-video",
+        "--idle=yes",
+        f"--input-ipc-server={SOCKET_PATH}"
+    ]
 
-    elif cmd == "status_json":
-        if not is_running():
-            print(json.dumps({"running": False}))
-            return
-        
-        title = send_command(["get_property", "media-title"])
-        if not title or not title.get("data"):
-            title = send_command(["get_property", "filename"])
-        paused = send_command(["get_property", "pause"])
-        
-        out = {
-            "running": True,
-            "title": title.get("data") if title else "mpv",
-            "paused": paused.get("data") if paused else False
-        }
-        # Strip extension if title is a filename
-        if out["title"] and not title.get("media-title") and "." in out["title"]:
-             out["title"] = os.path.splitext(out["title"])[0]
+    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(0.5)
 
-        print(json.dumps(out))
+# ---------- COMMANDS ----------
 
-    elif cmd == "move":
-        if len(sys.argv) > 3:
-            idx = int(sys.argv[2])
-            offset = int(sys.argv[3])
-            res = send_command(["get_property", "playlist-count"])
-            if res and res.get("data"):
-                count = res["data"]
-                new_idx = idx + offset
-                if 0 <= new_idx < count:
-                    send_command(["playlist-move", idx, new_idx])
+def cmd_play(files):
+    ensure_mpv()
+    for f in files:
+        send_command(["loadfile", os.path.abspath(f), "append-play"])
 
-    elif cmd == "info":
-        if len(sys.argv) > 2:
-            idx = int(sys.argv[2])
-            res = send_command(["get_property", "playlist"])
-            if res and res.get("data") and idx < len(res["data"]):
-                item = res["data"][idx]
-                filename = item.get("filename")
-                if filename:
-                    # Run ffprobe to get metadata
-                    try:
-                        probe = subprocess.check_output([
-                            "/opt/homebrew/bin/ffprobe", 
-                            "-v", "quiet", 
-                            "-print_format", "json", 
-                            "-show_format", "-show_streams", 
-                            filename
-                        ], universal_newlines=True)
-                        data = json.loads(probe)
-                        fmt = data.get("format", {})
-                        tags = fmt.get("tags", {})
-                        
-                        print(f"Title:    {tags.get('title') or os.path.basename(filename)}")
-                        print(f"Artist:   {tags.get('artist', 'Unknown')}")
-                        print(f"Album:    {tags.get('album', 'Unknown')}")
-                        print(f"Genre:    {tags.get('genre', 'Unknown')}")
-                        duration = float(fmt.get("duration", 0))
-                        print(f"Duration: {int(duration // 60):02d}:{int(duration % 60):02d}")
-                        print(f"Size:     {int(fmt.get('size', 0)) // 1024} KB")
-                    except Exception:
-                        print("No metadata available.")
+def cmd_list():
+    res = send_command(["get_property", "playlist"])
+    pos = send_command(["get_property", "playlist-pos"])
 
-    elif cmd == "play_index":
-        if len(sys.argv) > 2:
-            idx = int(sys.argv[2])
-            res = send_command(["get_property", "playlist-pos"])
-            if res and res.get("data") == idx:
-                send_command(["cycle", "pause"])
-            else:
-                send_command(["set_property", "playlist-pos", idx])
-                send_command(["set_property", "pause", False])
+    if not res or not res.get("data"):
+        return
 
-    elif cmd == "save":
-        if len(sys.argv) > 2:
-            name = sys.argv[2]
-            if not name.endswith(".m3u"):
-                name += ".m3u"
-            path = os.path.join("/Users/aaravshah2975/.config/mpv/playlists", name)
-            res = send_command(["get_property", "playlist"])
-            if res and res.get("data"):
-                with open(path, "w") as f:
-                    for item in res["data"]:
-                        fname = item.get("filename")
-                        if fname:
-                            f.write(fname + "\n")
-                print(f"Saved to {path}")
+    current_idx = pos.get("data") if pos else -1
 
-    elif cmd == "load":
-        if len(sys.argv) > 2:
-            path = sys.argv[2]
-            if not os.path.isabs(path):
-                path = os.path.join("/Users/aaravshah2975/.config/mpv/playlists", path)
-                if not path.endswith(".m3u") and not os.path.exists(path):
-                    path += ".m3u"
-            
-            # Start if not running
-            if not is_running():
-                os.system(f"/opt/homebrew/bin/mpv --no-video --keep-open=no --input-ipc-server={SOCKET_PATH} --idle=yes '{path}' &")
-            else:
-                send_command(["loadlist", path, "replace"])
+    for i, item in enumerate(res["data"]):
+        name = item.get("title") or os.path.basename(item.get("filename"))
+        marker = "▶" if i == current_idx else " "
+        print(f"{i} | {marker} | {name}")
 
-    elif cmd == "toggle":
+def cmd_play_index(idx):
+    cur = send_command(["get_property", "playlist-pos"])
+    paused = send_command(["get_property", "pause"])
+
+    cur_idx = cur.get("data") if cur else None
+    is_paused = paused.get("data") if paused else True
+
+    if cur_idx == idx:
+        # toggle pause
         send_command(["cycle", "pause"])
+    else:
+        # switch track
+        send_command(["set_property", "playlist-pos", idx])
+        time.sleep(0.05)  # 🔥 allow mpv to switch
+        send_command(["set_property", "pause", False])
 
-    elif cmd == "shuffle":
-        send_command(["playlist-shuffle"])
+def cmd_remove(idx):
+    send_command(["playlist-remove", idx])
 
-    elif cmd == "sort":
-        send_command(["playlist-sort", "filename"])
+def cmd_move(idx, offset):
+    res = send_command(["get_property", "playlist-count"])
+    if not res: return
+    new = idx + offset
+    if 0 <= new < res["data"]:
+        send_command(["playlist-move", idx, new])
 
-    elif cmd == "next":
-        send_command(["playlist-next"])
-    elif cmd == "prev":
-        send_command(["playlist-prev"])
-    elif cmd == "clear":
-        send_command(["playlist-clear"])
-    elif cmd == "list":
-        res = send_command(["get_property", "playlist"])
-        if res and res.get("data"):
-            for i, item in enumerate(res["data"]):
-                current = "*" if item.get("current") else " "
-                name = item.get('title') or os.path.basename(item.get('filename') or "Unknown")
-                print(f"{i:2} | {current} | {name}")
-    elif cmd == "remove":
-        if len(sys.argv) > 2:
-            send_command(["playlist-remove", int(sys.argv[2])])
+def cmd_shuffle():
+    send_command(["playlist-shuffle"])
+
+def cmd_sort():
+    send_command(["playlist-sort", "filename"])
+
+def cmd_next():
+    send_command(["playlist-next", "force"])
+
+def cmd_prev():
+    send_command(["playlist-prev", "force"])
+
+def cmd_clear():
+    send_command(["playlist-clear"])
+
+def cmd_save(name):
+    if not name:
+        return
+
+    if not name.endswith(".m3u"):
+        name += ".m3u"
+
+    path = os.path.expanduser(f"~/.config/mpv/playlists/{name}")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    res = send_command(["get_property", "playlist"])
+    if not res: return
+
+    with open(path, "w") as f:
+        for item in res["data"]:
+            fname = item.get("filename")
+            if fname:
+                f.write(os.path.realpath(fname) + "\n")
+
+
+def cmd_load(name):
+    path = os.path.expanduser(f"~/.config/mpv/playlists/{name}")
+
+    ensure_mpv()
+
+    send_command(["loadlist", path, "replace"])
+
+    # 🔥 wait until playlist actually exists
+    for _ in range(10):
+        pl = send_command(["get_property", "playlist"])
+        if pl and pl.get("data"):
+            break
+        time.sleep(0.1)
+
+    # 🔥 now safely start playback
+    send_command(["set_property", "playlist-pos", 0])
+    send_command(["set_property", "pause", False])
+
+
+
+def cmd_status():
+    if not is_running():
+        print("󰓛 Idle")
+        return
+
+    title = send_command(["get_property", "media-title"])
+    paused = send_command(["get_property", "pause"])
+    pos = send_command(["get_property", "time-pos"])
+    dur = send_command(["get_property", "duration"])
+
+    title = title.get("data") if title else "Unknown"
+    paused = paused.get("data") if paused else True
+    pos = pos.get("data") if pos else None
+    dur = dur.get("data") if dur else None
+
+    def fmt(t):
+        if t is None:
+            return "00:00"
+        try:
+            return f"{int(t//60):02d}:{int(t%60):02d}"
+        except:
+            return "00:00"
+
+    bar_len = 20
+    if not pos or not dur or dur == 0:
+        progress = 0
+    else:
+        progress = int((pos / dur) * bar_len)
+
+    bar = "█" * progress + "░" * (bar_len - progress)
+
+    state = "󰏤 Paused" if paused else " Playing"
+
+    print(f"{state} | {title}")
+    print(f"[{bar}] {fmt(pos)} / {fmt(dur)}")
+
+def cmd_toggle():
+    send_command(["cycle", "pause"])
+
+# ---------- MAIN ----------
 
 if __name__ == "__main__":
-    main()
+    cmd = sys.argv[1] if len(sys.argv) > 1 else ""
+
+    if cmd == "play":
+        cmd_play(sys.argv[2:])
+    elif cmd == "list":
+        cmd_list()
+    elif cmd == "play_index":
+        cmd_play_index(int(sys.argv[2]))
+    elif cmd == "remove":
+        cmd_remove(int(sys.argv[2]))
+    elif cmd == "move":
+        cmd_move(int(sys.argv[2]), int(sys.argv[3]))
+    elif cmd == "shuffle":
+        cmd_shuffle()
+    elif cmd == "sort":
+        cmd_sort()
+    elif cmd == "next":
+        cmd_next()
+    elif cmd == "prev":
+        cmd_prev()
+    elif cmd == "clear":
+        cmd_clear()
+    elif cmd == "current_index":
+        res = send_command(["get_property", "playlist-pos"])
+        if res and res.get("data") is not None:
+            print(res["data"])
+    elif cmd == "save":
+        cmd_save(sys.argv[2] if len(sys.argv) > 2 else "")
+    elif cmd == "load":
+        cmd_load(sys.argv[2])
+    elif cmd == "status":
+        cmd_status()
+    elif cmd == "toggle":
+        cmd_toggle()

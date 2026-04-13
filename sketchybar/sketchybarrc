@@ -3,117 +3,119 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 ##### Core Bar Appearance (Radiant Unified Bar) #####
 sketchybar --bar position=top \
-                height=40 \
-                blur_radius=30 \
+                height=42 \
+                blur_radius=35 \
                 color=$RADIANT_PURPLE \
                 margin=0 \
                 y_offset=0 \
-                padding_left=10 \
-                padding_right=10 \
-                border_width=1 \
-                border_color=$RADIANT_GOLD
+                padding_left=15 \
+                padding_right=15 \
+                border_width=2 \
+                border_color=$SAPPHIRE
 
 ##### Global Defaults (Applying to all items) #####
 sketchybar --default \
-  padding_left=8 \
-  padding_right=8 \
-  icon.font="Hack Nerd Font:Bold:16.0" \
+  padding_left=10 \
+  padding_right=10 \
+  icon.font="Hack Nerd Font:Bold:17.0" \
   label.font="JetBrainsMono Nerd Font:Bold:15.0" \
   icon.color=$WHITE \
   label.color=$WHITE \
-  icon.padding_left=8 \
-  icon.padding_right=8 \
-  label.padding_left=8 \
-  label.padding_right=5 \
+  icon.padding_left=10 \
+  icon.padding_right=10 \
+  label.padding_left=10 \
+  label.padding_right=7 \
   background.drawing=off \
   popup.background.color=$RADIANT_PURPLE \
-  popup.background.border_color=$RADIANT_GOLD \
+  popup.background.border_color=$SAPPHIRE \
   popup.background.border_width=2 \
-  popup.background.corner_radius=10 \
-  popup.blur_radius=25
+  popup.background.corner_radius=12 \
+  popup.blur_radius=30
 
 ##### LEFT SIDE ITEMS #####
 sketchybar --add item apple left \
            --set apple icon= \
+                       icon.color=$SAPPHIRE \
                        label.drawing=off \
                        click_script="open -a iTerm" \
   \
   --add item front_app left \
-    --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+    --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" label.color=$RADIANT_GOLD \
     --subscribe front_app front_app_switched
 
 SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
 for sid in "${SPACE_SIDS[@]}"
 do
-  # Using large padding to absolutely clear any clipping issues between the number and app icons
   sketchybar --add space space.$sid left \
              --set space.$sid space=$sid \
-                              icon=$sid \
-                              script="$PLUGIN_DIR/space.sh" \
-                              label.padding_right=9 \
-                              label.y_offset=-1 \
-                              padding_left=8 \
-                              padding_right=8 \
+                               icon=$sid \
+                               icon.color=$WHITE \
+                               icon.highlight_color=$SAPPHIRE \
+                               script="$PLUGIN_DIR/space.sh" \
+                               label.padding_right=9 \
+                               label.y_offset=-1 \
+                               padding_left=8 \
+                               padding_right=8 \
              --subscribe space.$sid space_windows_change
 done
 
 ##### RIGHT SIDE ITEMS #####
 
-# Music
+# Music: The Radiant Song
 sketchybar --add item music right \
-           --set music icon= label="Loading..." script="$PLUGIN_DIR/music.sh" update_freq=2 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           --set music icon= label="Lashing..." script="$PLUGIN_DIR/music.sh" update_freq=2 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            --subscribe music media_change system_woke front_app_switched\
            popup.align=right \
   \
   --add item media.header popup.music \
-    --set media.header icon= label="MUSIC" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+    --set media.header icon=󰎈 label="THE RADIANT SONG" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item media.prev popup.music --set media.prev icon=󰒮 label="Prev" click_script="$PLUGIN_DIR/media_control.sh prev" \
-  --add item media.play popup.music --set media.play icon=󰐊 label="Play/Pause" click_script="$PLUGIN_DIR/media_control.sh toggle" \
-  --add item media.next popup.music --set media.next icon=󰒭 label="Next" click_script="$PLUGIN_DIR/media_control.sh next"
+  --add item media.prev popup.music --set media.prev icon=󰒮 label="Retreat" click_script="$PLUGIN_DIR/media_control.sh prev" \
+  --add item media.play popup.music --set media.play icon=󰐊 label="Lash/Rest" click_script="$PLUGIN_DIR/media_control.sh toggle" \
+  --add item media.next popup.music --set media.next icon=󰒭 label="Lash Forward" click_script="$PLUGIN_DIR/media_control.sh next"
 
-# Battery
+# Battery: Stormlight Reserve
 sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke
 
-# Control Center
+# Control Center: Spren Bond
 sketchybar --add item control_center right \
            --set control_center icon=󰒄 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            popup.align=right \
   \
   --add item cc.header popup.control_center \
-    --set cc.header icon=󰒄 label="CONNECTIVITY" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+    --set cc.header icon=󱐋 label="SPREN BOND" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
   --add item cc.net.0.ssid popup.control_center    --set cc.net.0.ssid icon=󰤨 \
   --add item cc.net.0.speed popup.control_center   --set cc.net.0.speed icon=󰓅 \
   --add item cc.network.updater right              --set cc.network.updater script="$PLUGIN_DIR/network.sh" update_freq=10 drawing=off
 
 
-# Clock
+# Clock: Chronicles
 sketchybar --add item clock right \
-           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="sketchybar --set \$NAME popup.drawing=toggle" icon=􀉉 \
+           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="sketchybar --set \$NAME popup.drawing=toggle" icon=󰃭 \
            --subscribe clock mouse.entered mouse.exited \
            popup.align=right \
   \
   --add item clock.header popup.clock \
-    --set clock.header icon=󰃤 label="CALENDAR" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+    --set clock.header icon=󰃤 label="CHRONICLES" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item clock.date popup.clock --set clock.date icon=󰃭 label="Date Loading..." \
-  --add item clock.events popup.clock --set clock.events label="Upcoming Events" \
+  --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
+  --add item clock.events popup.clock --set clock.events label="Destiny" \
   --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh"
 
-# Volume
+# Volume: Resonance
 sketchybar --add item volume right --set volume script="$PLUGIN_DIR/volume.sh" --subscribe volume volume_change
 
-# System Stats
+# System Stats: Radiant Core
 sketchybar --add item system right \
            --set system icon=󰍛 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            popup.align=right \
   \
   --add item system.header popup.system \
-    --set system.header icon=󰍛 label="SYSTEM" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+    --set system.header icon=󰍛 label="RADIANT CORE" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
   \
-  --add item system.ram.text popup.system --set system.ram.text label="RAM Usage" icon.drawing=off \
-  --add item system.disk popup.system     --set system.disk icon= label="Disk Capacity" \
+  --add item system.ram.text popup.system --set system.ram.text label="Investiture" icon.drawing=off \
+  --add item system.disk popup.system     --set system.disk icon= label="Material World" \
   --add item system.updater right          --set system.updater script="$PLUGIN_DIR/system.sh" update_freq=3 drawing=off
 
 ##### Finalize #####

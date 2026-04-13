@@ -1,31 +1,22 @@
 #!/bin/bash
 
-# --- Radiant / Stormlight Archive Theme ---
+# ====================================================================
+# WINDRUNNER COLOR PALETTE (Infused with Stormlight)
+# ====================================================================
 
-# Pure White for text/icons
+# Core Colors
 export WHITE=0xffffffff
+export SAPPHIRE=0xff00BFFF   # Pure Windrunner Sapphire
+export HONOR_GOLD=0xffFFD700 # Radiance of the Oaths
+export SLATE=0xff708090     # Rosharan Surface
+export DEEP_NIGHT=0xcc001a33 # Dark Sapphire Depths (Translucent)
 
-# Deep Void Navy - Taken from the darkest parts of the wallpaper (Semi-transparent)
-export BAR_COLOR=0xcc1a1b26
-
-# Kholin Blue - A muted slate blue for item backgrounds
-export ITEM_BG_COLOR=0xff24283b
-
-# Stormlight Cyan - The primary accent, matching your iTerm2 'Radiant' profile
-export ACCENT_COLOR=0xff7dcfff
-
-# Everstorm Crimson - For alerts or high-priority items
-export RED=0xfff7768e
-
-# Glyph Gold / Amber - Inspired by the Shardplate and sunset highlights
-export ORANGE=0xffff9e64
-
-# Soulcaster Violet - For secondary accents (Jasnah's theme)
-export PURPLE=0xffbb9af7
-
-# Radiant Radiant Gold - The main gold highlight for borders and icons
-export RADIANT_GOLD=0xfff9e2af
-
-# Radiant Radiant Purple/Navy - The main bar background color
-export RADIANT_PURPLE=0xcc1e1e2e
-
+# Theme Mapping (Standardized for sketchybarrc)
+export BAR_COLOR=$DEEP_NIGHT
+export ITEM_BG_COLOR=0xff003366
+export ACCENT_COLOR=$SAPPHIRE
+export RED=0xffed8796         # Odium's Touch (Warning)
+export ORANGE=$HONOR_GOLD
+export PURPLE=0xff8989ff      # Shardblade Violet
+export RADIANT_GOLD=$HONOR_GOLD
+export RADIANT_PURPLE=$DEEP_NIGHT

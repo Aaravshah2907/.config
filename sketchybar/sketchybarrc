@@ -79,7 +79,7 @@ sketchybar --add item battery right --set battery update_freq=120 script="$PLUGI
 
 # Control Center: Spren Bond
 sketchybar --add item control_center right \
-           --set control_center icon=󰒄 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           --set control_center icon=󱐋 script="$PLUGIN_DIR/network.sh" update_freq=10 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            popup.align=right \
   \
   --add item cc.header popup.control_center \
@@ -87,7 +87,6 @@ sketchybar --add item control_center right \
   \
   --add item cc.net.0.ssid popup.control_center    --set cc.net.0.ssid icon=󰤨 \
   --add item cc.net.0.speed popup.control_center   --set cc.net.0.speed icon=󰓅 \
-  --add item cc.network.updater right              --set cc.network.updater script="$PLUGIN_DIR/network.sh" update_freq=10 drawing=off
 
 
 # Clock: Chronicles

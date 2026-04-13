@@ -3,3 +3,4 @@ yazi/tags/
 yazi/scripts/*.log
 yazi/scripts/*.json
 *.lock
+todolist.md

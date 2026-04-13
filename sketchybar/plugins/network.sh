@@ -1,63 +1,60 @@
 #!/usr/bin/env bash
 
-# Function to safely update sketchybar items only if they exist
-safe_set() {
-  local item="$1"
-  shift
-  if sketchybar --query "$item" >/dev/null 2>&1; then
-    sketchybar --set "$item" "$@"
-  fi
-}
+# WINDRUNNER - Spren Bond (Network) Plugin
+# Monitors the connection to the physical and spiritual realms
 
-# Clear existing entries
-safe_set cc.net.0.ssid drawing=off
-safe_set cc.net.0.speed drawing=off
-safe_set cc.net.1.ssid drawing=off
-safe_set cc.net.1.speed drawing=off
+# Find the Wi-Fi interface specifically
+WIFI_INTERFACE=$(networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | grep "Device:" | awk '{print $2}')
+[ -z "$WIFI_INTERFACE" ] && WIFI_INTERFACE="en0"
 
-INTERFACES=$(ifconfig -u | grep -E "^[a-z0-9]+:" | cut -d: -f1)
-INDEX=0
-TOTAL_TX_RATE=0
+# Get SSID for Wi-Fi
+SSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F' : ' '/ SSID :/ {print $2}')
 
-for INTERFACE in $INTERFACES; do
-  if [[ "$INTERFACE" == "lo"* ]] || [[ "$INTERFACE" == "awdl"* ]] || [[ "$INTERFACE" == "utun"* ]]; then continue; fi
+# --- HONOR MAPPING (Translate redacted/hidden SSIDs) ---
+# Add your known redacted SSIDs or BSSIDs here
+case "$SSID" in
+    "<redacted>"|""|"Hidden") 
+        # Check BSSID if SSID is hidden (optional but more precise)
+        BSSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F' : ' '/ BSSID :/ {print $2}')
+        SSID="󰖟 University"
+        ;;
+    "eduroam")
+        SSID="󰖟 eduroam"
+        ;;
+esac
 
-  IP=$(ifconfig "$INTERFACE" 2>/dev/null | grep "inet " | awk '{print $2}')
-  if [ -z "$IP" ]; then continue; fi
-
-  SSID=$(ipconfig getsummary "$INTERFACE" 2>/dev/null | awk -F' : ' '/ SSID :/ {print $2}')
-  
-  if [ -n "$SSID" ]; then
-    case "$SSID" in
-      "<redacted>") SSID="Campus Link" ;;
-      "eduroam") SSID="󰖟 University" ;;
-    esac
+# Fallback to general interface if no SSID after mapping
+if [ -z "$SSID" ]; then
+    CURRENT_INT=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
+    if [ -z "$CURRENT_INT" ]; then
+        sketchybar --set control_center icon=󰤭 label="Disconnected"
+        sketchybar --set cc.net.0.ssid label="No Bond" icon=󰤭
+        sketchybar --set cc.net.0.speed label="0 Mbps"
+        exit 0
+    fi
     
-    SPEED=$(wdutil info 2>/dev/null | awk -F' : ' '/Tx Rate :/ {print $2}' | sed 's/ Mbps//')
-    [ -z "$SPEED" ] && SPEED_VAL=0 || SPEED_VAL=$SPEED
-    SPEED_LABEL="${SPEED_VAL} Mbps"
-    ICON=󰤨
-    LABEL="$SSID"
-    TOTAL_TX_RATE=$((TOTAL_TX_RATE + SPEED_VAL))
-  else
-    SERVICE=$(networksetup -listallhardwareports 2>/dev/null | grep -B 1 "Device: $INTERFACE" | head -n 1 | sed 's/Hardware Port: //')
-    LABEL="${SERVICE:-Ethernet}"
+    # Check if this interface has an IP
+    HAS_IP=$(ifconfig "$CURRENT_INT" 2>/dev/null | grep "inet ")
+    if [ -z "$HAS_IP" ]; then
+        sketchybar --set control_center icon=󰤭 label="Searching..."
+        exit 0
+    fi
+
     ICON=󰈀
-    SPEED_LABEL="LAN"
-  fi
-
-  # Only push to the slots we have defined in sketchybarrc
-  safe_set "cc.net.$INDEX.ssid" label="$LABEL" icon="$ICON" drawing=on
-  safe_set "cc.net.$INDEX.speed" label="$SPEED_LABEL" drawing=on
-  
-  INDEX=$((INDEX + 1))
-done
-
-# Push tx rate to graph (scaled for visualization)
-safe_set cc.net.graph graph.push="$TOTAL_TX_RATE"
-
-if [ "$INDEX" -eq 0 ]; then
-  safe_set cc.net.none label="Disconnected" icon=󰤭 drawing=on
+    LABEL="Ethernet"
+    SSID="Physical Link"
 else
-  safe_set cc.net.none drawing=off
+    ICON=󱐋
+    LABEL="$SSID"
 fi
+
+# Get Link Speed (Tx Rate) using wdutil safely
+SPEED=$(wdutil info 2>/dev/null | grep "Tx Rate" | head -n 1 | awk '{print $4}')
+[ -z "$SPEED" ] && SPEED="0"
+
+# Update Main Bar (Spren Bond)
+sketchybar --set control_center icon="$ICON" label="$LABEL" label.drawing=on
+
+# Update Popup Details
+sketchybar --set cc.net.0.ssid label="$SSID" icon="$ICON"
+sketchybar --set cc.net.0.speed label="${SPEED} Mbps"

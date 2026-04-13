@@ -10,6 +10,18 @@ import random
 # Configuration
 SOCKET_PATH = "/tmp/mpv-yazi.sock"
 
+# Colors (Radiant / Stormlight Theme)
+BOLD = "\033[1m"
+DIM = "\033[2m"
+CYAN = "\033[38;5;81m"     # Stormlight Glow (Sapphire)
+MAGENTA = "\033[38;5;141m"  # Shardblade (Violet)
+GREEN = "\033[38;5;121m"    # Lifebound (Emerald)
+YELLOW = "\033[38;5;220m"   # Honor's Gold (Heliodor)
+BLUE = "\033[38;5;69m"      # Windrunner Blue
+RED = "\033[38;5;160m"      # Voidlight / Odium
+GRAY = "\033[38;5;240m"     # Rosharan Slate
+NC = "\033[0m"
+
 def is_running():
     return os.path.exists(SOCKET_PATH)
 
@@ -201,40 +213,40 @@ def cmd_loop():
 
 def cmd_status():
     if not is_running():
-        print("󰓛 Idle")
+        print(f"  {DIM}󰓛 Idle{NC}")
         return
-    title = send_command(["get_property", "media-title"])
-    paused = send_command(["get_property", "pause"])
-    pos = send_command(["get_property", "time-pos"])
-    dur = send_command(["get_property", "duration"])
+    
+    title = send_command(["get_property", "media-title"]).get("data", "Unknown")
+    paused = send_command(["get_property", "pause"]).get("data", True)
+    pos = send_command(["get_property", "time-pos"]).get("data", 0)
+    dur = send_command(["get_property", "duration"]).get("data", 1)
+    
     loop_file = send_command(["get_property", "loop-file"])
     loop_playlist = send_command(["get_property", "loop-playlist"])
-    
-    title = title.get("data") if title else "Unknown"
-    paused = paused.get("data") if paused else True
-    pos = pos.get("data") if pos else None
-    dur = dur.get("data") if dur else None
-    
     lf = loop_file.get("data") if loop_file else "no"
     lp = loop_playlist.get("data") if loop_playlist else "no"
     is_loop_file = lf not in ["no", False, 0]
     is_loop_playlist = lp not in ["no", False, 0]
 
-    def fmt(t):
+    def fmt_time(t):
         if t is None: return "00:00"
         try: return f"{int(t//60):02d}:{int(t%60):02d}"
         except: return "00:00"
 
-    bar_len = 20
-    progress = int((pos / dur) * bar_len) if pos and dur and dur > 0 else 0
-    bar = "█" * progress + "░" * (bar_len - progress)
-    state = "󰏤 Paused" if paused else " Playing"
+    state_icon = "󰏤 Paused" if paused else " Playing"
+    state_color = YELLOW if paused else GREEN
     
-    loop_label = "󰑗 Off"
-    if is_loop_file: loop_label = "󰑘¹ Single"
-    elif is_loop_playlist: loop_label = "󰑖∞ All"
+    loop_label = f"{GRAY}󰑗 Off{NC}"
+    if is_loop_file: loop_label = f"{YELLOW}󰑘¹ Single{NC}"
+    elif is_loop_playlist: loop_label = f"{MAGENTA}󰑖∞ All{NC}"
     
-    print(f"{state} | {title} [{loop_label}]\n[{bar}] {fmt(pos)} / {fmt(dur)}")
+    # Progress Bar
+    width = 30
+    progress = int((pos / dur) * width) if pos and dur and dur > 0 else 0
+    bar = f"{CYAN}{'━' * progress}{GRAY}{'─' * (width - progress)}{NC}"
+
+    print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{title}{NC}")
+    print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
 
 def cmd_short_status():
     if not is_running(): return

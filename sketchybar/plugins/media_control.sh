@@ -1,7 +1,7 @@
 #!/bin/bash
 # ~/.config/sketchybar/plugins/media_control.sh
 ACTION=$1 # toggle, next, prev
-YAZI_SCRIPT="/Users/aaravshah2975/.config/yazi/scripts/music_queue.py"
+YAZI_SCRIPT="/Users/aaravshah2975/.config/radiant-player/queue.py"
 
 # If mpv-yazi is running, control it
 if /opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json | grep -q '"running": true'; then

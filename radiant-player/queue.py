@@ -339,26 +339,34 @@ def cmd_status_json():
     if not is_running():
         print(json.dumps({"running": False}))
         return
-    title = send_command(["get_property", "media-title"])
+        
+    title_res = send_command(["get_property", "media-title"])
+    title = title_res.get("data") if title_res else None
+
     if title is None:
-        print(json.dumps({"running": False}))
-        return
+        # Running but idle
+        data = {
+            "running": True,
+            "title": "Resting",
+            "paused": True,
+            "loop": "off"
+        }
+    else:
+        paused = send_command(["get_property", "pause"])
+        loop_file = send_command(["get_property", "loop-file"])
+        loop_playlist = send_command(["get_property", "loop-playlist"])
 
-    paused = send_command(["get_property", "pause"])
-    loop_file = send_command(["get_property", "loop-file"])
-    loop_playlist = send_command(["get_property", "loop-playlist"])
+        lf = loop_file.get("data") if loop_file else "no"
+        lp = loop_playlist.get("data") if loop_playlist else "no"
+        is_loop_file = lf not in ["no", False, 0]
+        is_loop_playlist = lp not in ["no", False, 0]
 
-    lf = loop_file.get("data") if loop_file else "no"
-    lp = loop_playlist.get("data") if loop_playlist else "no"
-    is_loop_file = lf not in ["no", False, 0]
-    is_loop_playlist = lp not in ["no", False, 0]
-
-    data = {
-        "running": True,
-        "title": title.get("data") if title else "Unknown",
-        "paused": paused.get("data") if paused else True,
-        "loop": "single" if is_loop_file else "playlist" if is_loop_playlist else "off"
-    }
+        data = {
+            "running": True,
+            "title": title,
+            "paused": paused.get("data") if paused else True,
+            "loop": "single" if is_loop_file else "playlist" if is_loop_playlist else "off"
+        }
     print(json.dumps(data))
 
 def cmd_toggle():

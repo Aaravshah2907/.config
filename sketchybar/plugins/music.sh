@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
+source "$HOME/.config/sketchybar/colors.sh"
 
 # Function to safely update sketchybar items
 UPDATED=0
+echo "$(date) NAME=$NAME SENDER=$SENDER" >> /tmp/sketchybar_music.log
 safe_set() {
   local item="$1"
   shift
-  sketchybar --query "$item" >/dev/null 2>&1 && sketchybar --set "$item" "$@"
+  /opt/homebrew/bin/sketchybar --query "$item" >/dev/null 2>&1 && /opt/homebrew/bin/sketchybar --set "$item" "$@"
 }
 
 update_bar() {
@@ -26,17 +28,30 @@ update_bar() {
 
   # Truncate labels that are excessively long to prevent bar layout issues
   if [ ${#label} -gt 40 ]; then
-    label="$(echo "$label" | cut -c 1-37)..."
+    label="$(echo "$label" | /usr/bin/cut -c 1-37)..."
   fi
 
-  safe_set "$NAME" drawing=on label="$label" icon="$icon"
+  safe_set "$NAME" drawing=on \
+                   icon.drawing=on \
+                   label.drawing=on \
+                   label="$label" \
+                   icon="$icon" \
+                   label.color="$WHITE" \
+                   icon.color="$PURPLE"
   UPDATED=1
   return 0
 }
 
 hide_bar() {
   # Default View: Radiant Symbol
-  safe_set "$NAME" label="" icon="󱐌" icon.color=$SAPPHIRE
+  # ensures it doesn't just 'ignore rendering' when idle
+  /opt/homebrew/bin/sketchybar --set "$NAME" drawing=on \
+                   icon.drawing=on \
+                   label.drawing=on \
+                   label="Resting" \
+                   icon="󰋋" \
+                   icon.color="$SAPPHIRE" \
+                   label.color="$SAPPHIRE"
   exit 0
 }
 
@@ -66,24 +81,28 @@ fi
 # 1. Native NowPlaying support (via nowplaying-cli)
 if command -v nowplaying-cli &>/dev/null; then
   STATE=$(nowplaying-cli get playbackRate 2>/dev/null)
-  if [ "$STATE" = "1" ]; then
-    CLIENT=$(nowplaying-cli get clientIdentifier 2>/dev/null)
-    # Check if client matches our allowed players
-    if [[ "$CLIENT" =~ (Spotify|Music|VLC|mpv) ]]; then
-      TITLE=$(nowplaying-cli get title 2>/dev/null)
-      ARTIST=$(nowplaying-cli get artist 2>/dev/null)
-      
-      # Better mpv info handling via window title fallback
-      if [[ ("$TITLE" == "mpv" || -z "$TITLE") && "$CLIENT" =~ mpv ]]; then
-        TITLE=$(osascript -e 'tell application "System Events" to tell process "mpv" to return name of window 1' 2>/dev/null)
-      fi
-      
-      # Build label based on available info
-      if [[ -n "$TITLE" && -n "$ARTIST" && "$TITLE" != "$ARTIST" ]]; then
-        update_bar "$TITLE — $ARTIST" "$CLIENT"
-      else
-        update_bar "${TITLE:-Something}" "$CLIENT"
-      fi
+  CLIENT=$(nowplaying-cli get clientIdentifier 2>/dev/null)
+  # Check if client matches our allowed players
+  if [[ "$CLIENT" =~ (Spotify|Music|VLC|mpv) ]]; then
+    TITLE=$(nowplaying-cli get title 2>/dev/null)
+    ARTIST=$(nowplaying-cli get artist 2>/dev/null)
+    
+    # Better mpv info handling via window title fallback
+    if [[ ("$TITLE" == "mpv" || -z "$TITLE") && "$CLIENT" =~ mpv ]]; then
+      TITLE=$(osascript -e 'tell application "System Events" to tell process "mpv" to return name of window 1' 2>/dev/null)
+    fi
+    
+    # Build label based on available info
+    LABEL="${TITLE:-Something}"
+    if [[ -n "$TITLE" && -n "$ARTIST" && "$TITLE" != "$ARTIST" ]]; then
+      LABEL="$TITLE — $ARTIST"
+    fi
+
+    update_bar "$LABEL" "$CLIENT"
+    
+    # If paused, override icon
+    if [ "$STATE" != "1" ]; then
+      safe_set "$NAME" icon="󰏤"
     fi
   fi
 fi
@@ -113,10 +132,12 @@ fi
 SPOTIFY_RUNNING=$(osascript -e 'tell application "System Events" to (exists process "Spotify")' 2>/dev/null)
 if [ "$SPOTIFY_RUNNING" = "true" ]; then
   PROPER_STATE=$(osascript -e 'tell application "Spotify" to get player state' 2>/dev/null)
-  if [ "$PROPER_STATE" = "playing" ]; then
-    TRACK=$(osascript -e 'tell application "Spotify" to get name of current track' 2>/dev/null)
-    ARTIST=$(osascript -e 'tell application "Spotify" to get artist of current track' 2>/dev/null)
-    update_bar "$TRACK — $ARTIST" "Spotify"
+  TRACK=$(osascript -e 'tell application "Spotify" to get name of current track' 2>/dev/null)
+  ARTIST=$(osascript -e 'tell application "Spotify" to get artist of current track' 2>/dev/null)
+  update_bar "$TRACK — $ARTIST" "Spotify"
+  
+  if [ "$PROPER_STATE" != "playing" ]; then
+    safe_set "$NAME" icon="󰏤"
   fi
 fi
 

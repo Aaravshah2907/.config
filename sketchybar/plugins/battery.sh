@@ -28,17 +28,17 @@ if [[ "$CHARGING" != "" ]]; then
   ICON="􀢋"
 fi
 
-# red at <=10%, orange at <=20%, white otherwise
-if [ "$PERCENTAGE" -le 10 ]; then
+# Battery Color Palette (Stormlight Reserve Levels)
+if [ "$PERCENTAGE" -le 15 ]; then
   COLOR="$RED"
-elif [ "$PERCENTAGE" -le 20 ]; then
-  COLOR="$SLATE"
-elif [ "$PERCENTAGE" -le 50 ]; then
-  COLOR="$SAPPHIRE"
-elif [ "$PERCENTAGE" -le 80 ]; then
-  COLOR="$WHITE"
+elif [ "$PERCENTAGE" -le 35 ]; then
+  COLOR="$AMBER" # Transitioning to Void/Empty
+elif [ "$PERCENTAGE" -le 60 ]; then
+  COLOR="$HONOR_GOLD" # Balanced Reserve
+elif [ "$PERCENTAGE" -le 85 ]; then
+  COLOR="$EMERALD" # Healthy Stormlight
 else
-  COLOR="$HONOR_GOLD"
+  COLOR="$SAPPHIRE" # Windrunner Peak
 fi
 
 sketchybar --set "$NAME" \

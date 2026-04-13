@@ -17,7 +17,7 @@ update_bar() {
     *[Ss]potify*) icon=""; app_name="Spotify" ;;
     *[Aa]pple*[Mm]usic*) icon="󰎆"; app_name="Music" ;;
     *[Vv][Ll][Cc]*) icon="󰕼"; app_name="VLC" ;;
-    *mpv*) icon=""; app_name="mpv" ;;
+    *mpv*) icon=""; app_name="mpv" ;;
     *) 
       # Filter: restrict to designated music apps
       return 
@@ -47,7 +47,7 @@ MPV_STATUS=$(/opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
 if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.running') == "true" ]]; then
   TITLE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.title')
   PAUSED=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.paused')
-  ICON=""
+  ICON=""
   if [ "$PAUSED" == "true" ]; then
     ICON="󰏤"
   fi

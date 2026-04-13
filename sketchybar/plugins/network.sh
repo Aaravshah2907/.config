@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-# WINDRUNNER - Spren Bond (Network) Plugin
-# Monitors the connection to the physical and spiritual realms
+source "$HOME/.config/sketchybar/colors.sh"
 
 # Find the Wi-Fi interface specifically
 WIFI_INTERFACE=$(networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | grep "Device:" | awk '{print $2}')
@@ -27,16 +25,16 @@ esac
 if [ -z "$SSID" ]; then
     CURRENT_INT=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
     if [ -z "$CURRENT_INT" ]; then
-        sketchybar --set control_center icon=󰤭 label="Disconnected"
-        sketchybar --set cc.net.0.ssid label="No Bond" icon=󰤭
-        sketchybar --set cc.net.0.speed label="0 Mbps"
+        /opt/homebrew/bin/sketchybar --set control_center icon=󰤭 label="Disconnected" icon.color="$RED" label.color="$RED"
+        /opt/homebrew/bin/sketchybar --set cc.net.0.ssid label="No Bond" icon=󰤭
+        /opt/homebrew/bin/sketchybar --set cc.net.0.speed label="0 Mbps"
         exit 0
     fi
     
     # Check if this interface has an IP
     HAS_IP=$(ifconfig "$CURRENT_INT" 2>/dev/null | grep "inet ")
     if [ -z "$HAS_IP" ]; then
-        sketchybar --set control_center icon=󰤭 label="Searching..."
+        /opt/homebrew/bin/sketchybar --set control_center icon=󰤭 label="Searching..." icon.color="$AMBER" label.color="$AMBER"
         exit 0
     fi
 
@@ -52,9 +50,6 @@ fi
 SPEED=$(wdutil info 2>/dev/null | grep "Tx Rate" | head -n 1 | awk '{print $4}')
 [ -z "$SPEED" ] && SPEED="0"
 
-# Update Main Bar (Spren Bond)
-sketchybar --set control_center icon="$ICON" label="$LABEL" label.drawing=on
-
-# Update Popup Details
-sketchybar --set cc.net.0.ssid label="$SSID" icon="$ICON"
-sketchybar --set cc.net.0.speed label="${SPEED} Mbps"
+/opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label="$LABEL" label.drawing=on icon.color="$SAPPHIRE" label.color="$SAPPHIRE"
+/opt/homebrew/bin/sketchybar --set cc.net.0.ssid label="$SSID" icon="$ICON"
+/opt/homebrew/bin/sketchybar --set cc.net.0.speed label="${SPEED} Mbps"

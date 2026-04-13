@@ -1,21 +1,19 @@
 #!/bin/sh
-
-# The volume_change event supplies a $INFO variable in which the current volume
-# percentage is passed to the script.
+source "$HOME/.config/sketchybar/colors.sh"
 
 if [ "$SENDER" = "volume_change" ]; then
   VOLUME="$INFO"
 
   case "$VOLUME" in
-    [6-9][0-9]|100) ICON="󰕾" ;;
-    [3-5][0-9])     ICON="󰖀" ;;
-    [1-9]|[1-2][0-9]) ICON="󰕿" ;;
-    *)              ICON="󰖁" ;;
+    [6-9][0-9]|100) ICON="󰕾"; COLOR="$EMERALD" ;;
+    [3-5][0-9])     ICON="󰖀"; COLOR="$SAPPHIRE" ;;
+    [1-9]|[1-2][0-9]) ICON="󰕿"; COLOR="$AMBER" ;;
+    *)              ICON="󰖁"; COLOR="$RED" ;;
   esac
 
   if [ "$VOLUME" -ne 0 ]; then
-    sketchybar --set "$NAME" icon="$ICON" label="$VOLUME%" drawing=on
+    /opt/homebrew/bin/sketchybar --set "$NAME" icon="$ICON" label="$VOLUME%" drawing=on icon.color="$COLOR" label.color="$COLOR"
   else
-    sketchybar --set "$NAME" drawing=off
+    /opt/homebrew/bin/sketchybar --set "$NAME" icon="$ICON" drawing=on icon.color="$RED" label.drawing=off
   fi
 fi

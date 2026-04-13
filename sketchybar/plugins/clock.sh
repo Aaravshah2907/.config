@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
+source "$HOME/.config/sketchybar/colors.sh"
 
 # Handle hover for Clock (Peek mode)
 if [ "$SENDER" = "mouse.entered" ]; then
-  sketchybar --set "$NAME" popup.drawing=on
-  # Force update of calendar and weather when hovering
+  /opt/homebrew/bin/sketchybar --set "$NAME" popup.drawing=on
   bash "$HOME/.config/sketchybar/plugins/calendar.sh"
   bash "$HOME/.config/sketchybar/plugins/weather.sh"
   exit 0
 fi
 
 if [ "$SENDER" = "mouse.exited" ]; then
-  sketchybar --set "$NAME" popup.drawing=off
+  /opt/homebrew/bin/sketchybar --set "$NAME" popup.drawing=off
   exit 0
 fi
 
-# Update core clock time (on the bar)
-sketchybar --set "$NAME" label="$(date '+%I:%M %p')"
-
-# Update the sub-date item (inside the popup)
-sketchybar --set clock.date label="$(date '+%A, %d %B')"
+/opt/homebrew/bin/sketchybar --set "$NAME" label="$(date '+%I:%M %p')" label.color="$HONOR_GOLD" icon.color="$HONOR_GOLD"
+/opt/homebrew/bin/sketchybar --set clock.date label="$(date '+%A, %d %B')"

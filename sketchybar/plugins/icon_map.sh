@@ -39,6 +39,9 @@ case "$APP_NAME" in
   "mpv" | "mpv.player" | "io.mpv")
     icon=""
     ;;
+  "VLC" | "vlc" | "VLC Player")
+    icon="󰕼"
+    ;;
   "Code" | "Visual Studio Code" | "VSCodium")
     icon="󰨞"
     ;;

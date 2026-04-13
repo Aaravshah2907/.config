@@ -186,8 +186,11 @@ def cmd_status():
 
     state = "󰏤 Paused" if paused else " Playing"
 
-    print(f"{state} | {title}")
-    print(f"[{bar}] {fmt(pos)} / {fmt(dur)}")
+    sys.stdout.write(f"{state} | {title}\n")
+    sys.stdout.write(f"[{bar}] {fmt(pos)} / {fmt(dur)}\n")
+    sys.stdout.flush()
+
+
 
 def cmd_toggle():
     send_command(["cycle", "pause"])
@@ -233,10 +236,6 @@ if __name__ == "__main__":
         send_command(["seek", int(sys.argv[2]), "relative"])
     elif cmd == "volume":
         send_command(["add", "volume", int(sys.argv[2])])
-    elif cmd == "next":
-        send_command(["playlist-next"])
-    elif cmd == "prev":
-        send_command(["playlist-prev"])
     elif cmd == "get_volume":
         res = send_command(["get_property", "volume"])
         if res and res.get("data") is not None:

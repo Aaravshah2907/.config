@@ -40,7 +40,7 @@ draw() {
     echo "[d] Delete  [j/k] Move"
     echo "[s] Shuffle  [r] Refresh"
     echo "[Ctrl+S] Save  [Ctrl+L] Load"
-    echo "[q] Quit"
+    echo "[/] Fuzzy View [q] Quit"
 }
 
 # ---------- INIT ----------
@@ -66,16 +66,21 @@ while true; do
                 "[C") $PY seek 5 ;;             # right →
                 "[D") $PY seek -5 ;;            # left ←
             esac
+            load_queue
             ;;
 
         # ENTER
         "")
             current=$($PY current_index 2>/dev/null)
+
             if [ "$selected" == "$current" ]; then
                 $PY toggle
             else
                 $PY play_index "$selected"
+                selected=$($PY current_index 2>/dev/null)
             fi
+            load_queue
+            selected=$($PY current_index 2>/dev/null)
             ;;
 
         # Bigger seek
@@ -100,11 +105,13 @@ while true; do
         n)
             $PY next
             load_queue
+            selected=$($PY current_index 2>/dev/null)
             ;;
 
         p)
             $PY prev
             load_queue
+            selected=$($PY current_index 2>/dev/null)
             ;;
 
         d)
@@ -131,6 +138,13 @@ while true; do
 
         r)
             load_queue
+            ;;
+
+        "/")
+            choice=$(printf "%s\n" "${lines[@]}" | fzf --prompt="Search > ")
+            if [ -n "$choice" ]; then
+                selected=$(echo "$choice" | awk '{print $1}')
+            fi
             ;;
 
         # Ctrl+S

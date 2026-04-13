@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# WINDRUNNER - Stormlight Reserve (Battery) Plugin
+# Monitors the Investiture level of your Gemstones
+
 source "$HOME/.config/sketchybar/colors.sh"
 
 PERCENTAGE="$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)"
@@ -29,9 +32,13 @@ fi
 if [ "$PERCENTAGE" -le 10 ]; then
   COLOR="$RED"
 elif [ "$PERCENTAGE" -le 20 ]; then
-  COLOR="$ORANGE"
-else
+  COLOR="$SLATE"
+elif [ "$PERCENTAGE" -le 50 ]; then
+  COLOR="$SAPPHIRE"
+elif [ "$PERCENTAGE" -le 80 ]; then
   COLOR="$WHITE"
+else
+  COLOR="$HONOR_GOLD"
 fi
 
 sketchybar --set "$NAME" \

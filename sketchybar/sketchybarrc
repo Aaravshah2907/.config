@@ -8,23 +8,23 @@ sketchybar --bar position=top \
                 color=$RADIANT_PURPLE \
                 margin=0 \
                 y_offset=0 \
-                padding_left=15 \
-                padding_right=15 \
+                padding_left=5 \
+                padding_right=5 \
                 border_width=2 \
                 border_color=$SAPPHIRE
 
 ##### Global Defaults (Applying to all items) #####
 sketchybar --default \
-  padding_left=10 \
-  padding_right=10 \
-  icon.font="Hack Nerd Font:Bold:17.0" \
-  label.font="JetBrainsMono Nerd Font:Bold:15.0" \
+  padding_left=5 \
+  padding_right=5 \
+  icon.font="Hack Nerd Font:Bold:16.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   icon.color=$WHITE \
   label.color=$WHITE \
-  icon.padding_left=10 \
-  icon.padding_right=10 \
-  label.padding_left=10 \
-  label.padding_right=7 \
+  icon.padding_left=6 \
+  icon.padding_right=6 \
+  label.padding_left=6 \
+  label.padding_right=4 \
   background.drawing=off \
   popup.background.color=$RADIANT_PURPLE \
   popup.background.border_color=$SAPPHIRE \
@@ -35,14 +35,15 @@ sketchybar --default \
 ##### LEFT SIDE ITEMS #####
 sketchybar --add item apple left \
            --set apple icon= \
-                       icon.color=$SAPPHIRE \
+                       icon.color=$HONOR_GOLD \
                        label.drawing=off \
                        click_script="open -a iTerm" \
   \
   --add item front_app left \
-    --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" label.color=$RADIANT_GOLD \
+    --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE \
     --subscribe front_app front_app_switched
 
+# Spaces
 SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
 for sid in "${SPACE_SIDS[@]}"
 do
@@ -63,7 +64,7 @@ done
 
 # Music: The Radiant Song
 sketchybar --add item music right \
-           --set music icon= label="Lashing..." script="$PLUGIN_DIR/music.sh" update_freq=2 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+           --set music icon= icon.color=$PURPLE label="Lashing..."  label.color=$PURPLE script="$PLUGIN_DIR/music.sh" update_freq=2 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
            --subscribe music media_change system_woke front_app_switched\
            popup.align=right \
   \

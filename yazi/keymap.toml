@@ -87,15 +87,16 @@ keymap = [
 	{ on = "Z",         run = "plugin zoxide",               desc = "Jump to a directory via zoxide" },
 	
 	# Linemode
-	{ on = [ "m", "s" ], run = "linemode size",        desc = "Linemode: size" },
-	{ on = [ "m", "p" ], run = "linemode permissions", desc = "Linemode: permissions" },
-	{ on = [ "m", "b" ], run = "linemode btime",       desc = "Linemode: btime" },
-	{ on = [ "m", "m" ], run = "linemode mtime",       desc = "Linemode: mtime" },
-	{ on = [ "m", "o" ], run = "linemode owner",       desc = "Linemode: owner" },
-	{ on = [ "m", "n" ], run = "linemode none",        desc = "Linemode: none" },
+	{ on = [ "m", "S" ], run = "linemode size",        desc = "Linemode: size" },
+	{ on = [ "m", "P" ], run = "linemode permissions", desc = "Linemode: permissions" },
+	{ on = [ "m", "B" ], run = "linemode btime",       desc = "Linemode: btime" },
+	{ on = [ "m", "M" ], run = "linemode mtime",       desc = "Linemode: mtime" },
+	{ on = [ "m", "O" ], run = "linemode owner",       desc = "Linemode: owner" },
+	{ on = [ "m", "N" ], run = "linemode none",        desc = "Linemode: none" },
 	{ on = [ "m", "q" ], run = 'shell --block "/Users/aaravshah2975/.config/yazi/scripts/music_dashboard.sh"', desc = "Music Queue", block = true },
 	{ on = [ "m", "j" ], run = 'shell "/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/yazi/scripts/music_queue.py next"', desc = "Next Track" },
 	{ on = [ "m", "k" ], run = 'shell "/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/yazi/scripts/music_queue.py prev"', desc = "Previous Track" },
+	{ on = [ "m", "p" ], run = 'shell --block "/Users/aaravshah2975/.config/yazi/scripts/mini_player.sh"', desc = "Mini Player"},
 
 	# Copy
 	{ on = [ "c", "c" ], run = "copy path",             desc = "Copy the file path" },

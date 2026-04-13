@@ -93,7 +93,7 @@ keymap = [
 	{ on = [ "m", "m" ], run = "linemode mtime",       desc = "Linemode: mtime" },
 	{ on = [ "m", "o" ], run = "linemode owner",       desc = "Linemode: owner" },
 	{ on = [ "m", "n" ], run = "linemode none",        desc = "Linemode: none" },
-	{ on = [ "m", "q" ], run = 'shell --block "/Users/aaravshah2975/.config/yazi/scripts/edit_music_queue.sh"', desc = "Edit Music Queue" },
+	{ on = [ "m", "q" ], run = 'shell --block "/Users/aaravshah2975/.config/yazi/scripts/music_dashboard.sh"', desc = "Music Queue", block = true },
 	{ on = [ "m", "j" ], run = 'shell "/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/yazi/scripts/music_queue.py next"', desc = "Next Track" },
 	{ on = [ "m", "k" ], run = 'shell "/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/yazi/scripts/music_queue.py prev"', desc = "Previous Track" },
 

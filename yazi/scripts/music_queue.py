@@ -1,55 +1,50 @@
-#!/usr/bin/env python3
+import os
+import sys
 import socket
 import json
-import sys
-import os
 import subprocess
 import time
+import random
 
+# Configuration
 SOCKET_PATH = "/tmp/mpv-yazi.sock"
 
+def is_running():
+    return os.path.exists(SOCKET_PATH)
 
 def send_command(cmd):
-    if not os.path.exists(SOCKET_PATH):
+    if not is_running():
         return None
     try:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
-            s.settimeout(1)  # 🔥 IMPORTANT
             s.connect(SOCKET_PATH)
-            s.send((json.dumps({"command": cmd}) + "\n").encode())
-
-            data = b""
-            while True:
-                chunk = s.recv(4096)
-                if not chunk:
-                    break
-                data += chunk
-                if b"\n" in chunk:
-                    break
-
-            return json.loads(data.decode().strip())
-    except Exception:
+            payload = json.dumps({"command": cmd}) + "\n"
+            s.sendall(payload.encode())
+            
+            # Read response
+            s.settimeout(0.5)
+            response = s.recv(4096).decode()
+            if response:
+                return json.loads(response.split('\n')[0])
+    except:
         return None
+    return None
 
-def is_running():
-    return send_command(["get_property", "playlist"]) is not None
+def ensure_mpv():
+    if not is_running():
+        if os.path.exists(SOCKET_PATH):
+            os.remove(SOCKET_PATH)
 
-def ensure_mpv(files=None):
-    if is_running():
-        return
+        cmd = [
+            "/opt/homebrew/bin/mpv",
+            "--no-video",
+            "--idle=yes",
+            "--title=${media-title}",
+            f"--input-ipc-server={SOCKET_PATH}"
+        ]
 
-    if os.path.exists(SOCKET_PATH):
-        os.remove(SOCKET_PATH)
-
-    cmd = [
-        "/opt/homebrew/bin/mpv",
-        "--no-video",
-        "--idle=yes",
-        f"--input-ipc-server={SOCKET_PATH}"
-    ]
-
-    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    time.sleep(0.5)
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(0.5)
 
 # ---------- COMMANDS ----------
 
@@ -80,12 +75,10 @@ def cmd_play_index(idx):
     is_paused = paused.get("data") if paused else True
 
     if cur_idx == idx:
-        # toggle pause
         send_command(["cycle", "pause"])
     else:
-        # switch track
         send_command(["set_property", "playlist-pos", idx])
-        time.sleep(0.05)  # 🔥 allow mpv to switch
+        time.sleep(0.05)
         send_command(["set_property", "pause", False])
 
 def cmd_remove(idx):
@@ -114,111 +107,75 @@ def cmd_clear():
     send_command(["playlist-clear"])
 
 def cmd_save(name):
-    if not name:
-        return
-
-    if not name.endswith(".m3u"):
-        name += ".m3u"
-
+    if not name: return
+    if not name.endswith(".m3u"): name += ".m3u"
     path = os.path.expanduser(f"~/.config/mpv/playlists/{name}")
     os.makedirs(os.path.dirname(path), exist_ok=True)
-
     res = send_command(["get_property", "playlist"])
     if not res: return
-
     with open(path, "w") as f:
         for item in res["data"]:
             fname = item.get("filename")
-            if fname:
-                f.write(os.path.realpath(fname) + "\n")
-
+            if fname: f.write(os.path.realpath(fname) + "\n")
 
 def cmd_load(name):
     path = os.path.expanduser(f"~/.config/mpv/playlists/{name}")
-
     ensure_mpv()
-
     send_command(["loadlist", path, "replace"])
-
-    # 🔥 wait until playlist actually exists
     for _ in range(10):
         pl = send_command(["get_property", "playlist"])
-        if pl and pl.get("data"):
-            break
+        if pl and pl.get("data"): break
         time.sleep(0.1)
-
-    # 🔥 now safely start playback
     send_command(["set_property", "playlist-pos", 0])
     send_command(["set_property", "pause", False])
-
-
 
 def cmd_status():
     if not is_running():
         print("󰓛 Idle")
         return
-
     title = send_command(["get_property", "media-title"])
     paused = send_command(["get_property", "pause"])
     pos = send_command(["get_property", "time-pos"])
     dur = send_command(["get_property", "duration"])
-
+    
     title = title.get("data") if title else "Unknown"
     paused = paused.get("data") if paused else True
     pos = pos.get("data") if pos else None
     dur = dur.get("data") if dur else None
 
     def fmt(t):
-        if t is None:
-            return "00:00"
-        try:
-            return f"{int(t//60):02d}:{int(t%60):02d}"
-        except:
-            return "00:00"
+        if t is None: return "00:00"
+        try: return f"{int(t//60):02d}:{int(t%60):02d}"
+        except: return "00:00"
 
     bar_len = 20
-    if not pos or not dur or dur == 0:
-        progress = 0
-    else:
-        progress = int((pos / dur) * bar_len)
-
+    progress = int((pos / dur) * bar_len) if pos and dur and dur > 0 else 0
     bar = "█" * progress + "░" * (bar_len - progress)
-
     state = "󰏤 Paused" if paused else " Playing"
-
-    sys.stdout.write(f"{state} | {title}\n")
-    sys.stdout.write(f"[{bar}] {fmt(pos)} / {fmt(dur)}\n")
-    sys.stdout.flush()
+    print(f"{state} | {title}\n[{bar}] {fmt(pos)} / {fmt(dur)}")
 
 def cmd_short_status():
-    if not is_running():
-        return
-
+    if not is_running(): return
     title = send_command(["get_property", "media-title"])
     paused = send_command(["get_property", "pause"])
-    pos = send_command(["get_property", "time-pos"])
-    dur = send_command(["get_property", "duration"])
-
     title = title.get("data") if title else "Unknown"
     paused = paused.get("data") if paused else True
-    pos = pos.get("data") if pos else 0
-    dur = dur.get("data") if dur else 0
+    state = "[󰋋]" if paused else "[󰟎]"
+    if len(title) > 30: title = title[:27] + "..."
+    print(f"{state} {title}")
 
-    def fmt(t):
-        try:
-            return f"{int(t//60):02d}:{int(t%60):02d}"
-        except:
-            return "00:00"
-
-    state = "[Paused]" if paused else "[Playing]"
-    # truncated title
-    if len(title) > 30:
-        title = title[:27] + "..."
-
-    sys.stdout.write(f"{state} {title}\n")
-    sys.stdout.flush()
-
-
+def cmd_status_json():
+    if not is_running():
+        print(json.dumps({"running": False}))
+        return
+    title = send_command(["get_property", "media-title"])
+    paused = send_command(["get_property", "pause"])
+    data = {
+        "running": True,
+        "title": title.get("data") if title else "Unknown",
+        "paused": paused.get("data") if paused else True
+    }
+    print(json.dumps(data))
 
 def cmd_toggle():
     send_command(["cycle", "pause"])
@@ -228,65 +185,35 @@ def signal_refresh():
         if os.getenv("YAZI_ID"):
             subprocess.run(["ya", "emit", "redraw"], check=False)
             subprocess.run(["ya", "pub", "music-update"], check=False)
-    except:
-        pass
+    except: pass
 
 # ---------- MAIN ----------
 
 if __name__ == "__main__":
-    cmd = sys.argv[1] if len(sys.argv) > 1 else ""
+    if len(sys.argv) < 2: sys.exit(0)
+    cmd = sys.argv[1]
 
-    if cmd == "play":
-        cmd_play(sys.argv[2:])
-        signal_refresh()
-    elif cmd == "list":
-        cmd_list()
-    elif cmd == "play_index":
-        cmd_play_index(int(sys.argv[2]))
-        signal_refresh()
-    elif cmd == "remove":
-        cmd_remove(int(sys.argv[2]))
-        signal_refresh()
-    elif cmd == "move":
-        cmd_move(int(sys.argv[2]), int(sys.argv[3]))
-        signal_refresh()
-    elif cmd == "shuffle":
-        cmd_shuffle()
-        signal_refresh()
-    elif cmd == "sort":
-        cmd_sort()
-        signal_refresh()
-    elif cmd == "next":
-        cmd_next()
-        signal_refresh()
-    elif cmd == "prev":
-        cmd_prev()
-        signal_refresh()
-    elif cmd == "clear":
-        cmd_clear()
-        signal_refresh()
-    elif cmd == "current_index":
-        res = send_command(["get_property", "playlist-pos"])
-        if res and res.get("data") is not None:
-            print(res["data"])
-    elif cmd == "save":
-        cmd_save(sys.argv[2] if len(sys.argv) > 2 else "")
-    elif cmd == "load":
-        cmd_load(sys.argv[2])
-        signal_refresh()
-    elif cmd == "status":
-        cmd_status()
-    elif cmd == "short_status":
-        cmd_short_status()
-    elif cmd == "toggle":
-        cmd_toggle()
-        signal_refresh()
-    elif cmd == "seek":
-        send_command(["seek", int(sys.argv[2]), "relative"])
-        signal_refresh()
-    elif cmd == "volume":
-        send_command(["add", "volume", int(sys.argv[2])])
+    if cmd == "play": cmd_play(sys.argv[2:]); signal_refresh()
+    elif cmd == "list": cmd_list()
+    elif cmd == "play_index": cmd_play_index(int(sys.argv[2])); signal_refresh()
+    elif cmd == "remove": cmd_remove(int(sys.argv[2])); signal_refresh()
+    elif cmd == "move": cmd_move(int(sys.argv[2]), int(sys.argv[3])); signal_refresh()
+    elif cmd == "shuffle": cmd_shuffle(); signal_refresh()
+    elif cmd == "sort": cmd_sort(); signal_refresh()
+    elif cmd == "next": cmd_next(); signal_refresh()
+    elif cmd == "prev": cmd_prev(); signal_refresh()
+    elif cmd == "clear": cmd_clear(); signal_refresh()
+    elif cmd == "save": cmd_save(sys.argv[2] if len(sys.argv) > 2 else "")
+    elif cmd == "load": cmd_load(sys.argv[2]); signal_refresh()
+    elif cmd == "status": cmd_status()
+    elif cmd == "short_status": cmd_short_status()
+    elif cmd == "status_json": cmd_status_json()
+    elif cmd == "toggle": cmd_toggle(); signal_refresh()
+    elif cmd == "seek": send_command(["seek", int(sys.argv[2]), "relative"]); signal_refresh()
+    elif cmd == "volume": send_command(["add", "volume", int(sys.argv[2])])
     elif cmd == "get_volume":
         res = send_command(["get_property", "volume"])
-        if res and res.get("data") is not None:
-            print(int(res["data"]))
+        if res and res.get("data") is not None: print(int(res["data"]))
+    elif cmd == "current_index":
+        res = send_command(["get_property", "playlist-pos"])
+        if res and res.get("data") is not None: print(res["data"])

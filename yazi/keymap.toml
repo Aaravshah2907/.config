@@ -98,6 +98,7 @@ keymap = [
 	{ on = ["m", "p"], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_control.sh toggle"',  desc = "Play/Pause" },
 	{ on = ["m", "n"], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_control.sh next"', desc = "Next Track" },
 	{ on = ["m", "b"], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_control.sh prev"', desc = "Previous Track" },
+	{ on = ["m", "r"], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_queue.py loop"', desc = "Cycle Loop Mode" },
 	{ on = ["m", "l"], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_control.sh seekf"', desc = "Seek Forward" },
 	{ on = ["m", "h"], run = 'shell "/Users/aaravshah2975/.config/yazi/scripts/music_control.sh seekb"', desc = "Seek Backward" },
 	

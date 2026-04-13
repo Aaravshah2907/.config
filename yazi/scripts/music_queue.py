@@ -130,6 +130,30 @@ def cmd_load(name):
     send_command(["set_property", "playlist-pos", 0])
     send_command(["set_property", "pause", False])
 
+def cmd_loop():
+    loop_file = send_command(["get_property", "loop-file"])
+    loop_playlist = send_command(["get_property", "loop-playlist"])
+
+    # Handle various mpv return types (inf, no, yes, True, False, 0)
+    lf = loop_file.get("data") if loop_file else "no"
+    lp = loop_playlist.get("data") if loop_playlist else "no"
+
+    is_loop_file = lf not in ["no", False, 0]
+    is_loop_playlist = lp not in ["no", False, 0]
+
+    if not is_loop_file and not is_loop_playlist:
+        # Off -> Single
+        send_command(["set_property", "loop-file", "inf"])
+        send_command(["set_property", "loop-playlist", "no"])
+    elif is_loop_file:
+        # Single -> All
+        send_command(["set_property", "loop-file", "no"])
+        send_command(["set_property", "loop-playlist", "inf"])
+    else:
+        # All -> Off
+        send_command(["set_property", "loop-file", "no"])
+        send_command(["set_property", "loop-playlist", "no"])
+
 def cmd_status():
     if not is_running():
         print("󰓛 Idle")
@@ -138,11 +162,18 @@ def cmd_status():
     paused = send_command(["get_property", "pause"])
     pos = send_command(["get_property", "time-pos"])
     dur = send_command(["get_property", "duration"])
+    loop_file = send_command(["get_property", "loop-file"])
+    loop_playlist = send_command(["get_property", "loop-playlist"])
     
     title = title.get("data") if title else "Unknown"
     paused = paused.get("data") if paused else True
     pos = pos.get("data") if pos else None
     dur = dur.get("data") if dur else None
+    
+    lf = loop_file.get("data") if loop_file else "no"
+    lp = loop_playlist.get("data") if loop_playlist else "no"
+    is_loop_file = lf not in ["no", False, 0]
+    is_loop_playlist = lp not in ["no", False, 0]
 
     def fmt(t):
         if t is None: return "00:00"
@@ -153,17 +184,37 @@ def cmd_status():
     progress = int((pos / dur) * bar_len) if pos and dur and dur > 0 else 0
     bar = "█" * progress + "░" * (bar_len - progress)
     state = "󰏤 Paused" if paused else " Playing"
-    print(f"{state} | {title}\n[{bar}] {fmt(pos)} / {fmt(dur)}")
+    
+    loop_label = "󰑗 Off"
+    if is_loop_file: loop_label = "󰑘¹ Single"
+    elif is_loop_playlist: loop_label = "󰑖∞ All"
+    
+    print(f"{state} | {title} [{loop_label}]\n[{bar}] {fmt(pos)} / {fmt(dur)}")
 
 def cmd_short_status():
     if not is_running(): return
     title = send_command(["get_property", "media-title"])
     paused = send_command(["get_property", "pause"])
+    loop_file = send_command(["get_property", "loop-file"])
+    loop_playlist = send_command(["get_property", "loop-playlist"])
+    
     title = title.get("data") if title else "Unknown"
     paused = paused.get("data") if paused else True
-    state = "[󰋋]" if paused else "[󰟎]"
-    if len(title) > 30: title = title[:27] + "..."
-    print(f"{state} {title}")
+    
+    lf = loop_file.get("data") if loop_file else "no"
+    lp = loop_playlist.get("data") if loop_playlist else "no"
+    is_loop_file = lf not in ["no", False, 0]
+    is_loop_playlist = lp not in ["no", False, 0]
+    
+    state = "󰋋" if paused else "󰟎"
+    
+    loop_icon = "󰑗"
+    if is_loop_file: loop_icon = "󰑘¹"
+    elif is_loop_playlist: loop_icon = "󰑖∞"
+    
+    if len(title) > 25: title = title[:22] + "..."
+    # Format: [STATE] LOOP_ICON TITLE
+    print(f"[{state}] {loop_icon} {title}")
 
 def cmd_status_json():
     if not is_running():
@@ -171,10 +222,19 @@ def cmd_status_json():
         return
     title = send_command(["get_property", "media-title"])
     paused = send_command(["get_property", "pause"])
+    loop_file = send_command(["get_property", "loop-file"])
+    loop_playlist = send_command(["get_property", "loop-playlist"])
+
+    lf = loop_file.get("data") if loop_file else "no"
+    lp = loop_playlist.get("data") if loop_playlist else "no"
+    is_loop_file = lf not in ["no", False, 0]
+    is_loop_playlist = lp not in ["no", False, 0]
+
     data = {
         "running": True,
         "title": title.get("data") if title else "Unknown",
-        "paused": paused.get("data") if paused else True
+        "paused": paused.get("data") if paused else True,
+        "loop": "single" if is_loop_file else "playlist" if is_loop_playlist else "off"
     }
     print(json.dumps(data))
 
@@ -203,6 +263,7 @@ if __name__ == "__main__":
     elif cmd == "sort": cmd_sort(); signal_refresh()
     elif cmd == "next": cmd_next(); signal_refresh()
     elif cmd == "prev": cmd_prev(); signal_refresh()
+    elif cmd == "loop": cmd_loop(); signal_refresh()
     elif cmd == "clear": cmd_clear(); signal_refresh()
     elif cmd == "save": cmd_save(sys.argv[2] if len(sys.argv) > 2 else "")
     elif cmd == "load": cmd_load(sys.argv[2]); signal_refresh()

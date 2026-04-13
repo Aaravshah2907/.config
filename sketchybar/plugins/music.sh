@@ -47,11 +47,16 @@ MPV_STATUS=$(/opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
 if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.running') == "true" ]]; then
   TITLE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.title')
   PAUSED=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.paused')
+  LOOP=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.loop')
+  
+  LICON=""
+  if [ "$LOOP" == "single" ]; then LICON="󰑘 "; elif [ "$LOOP" == "playlist" ]; then LICON="󰑖 "; fi
+  
   ICON=""
   if [ "$PAUSED" == "true" ]; then
     ICON="󰏤"
   fi
-  update_bar "$TITLE" "mpv"
+  update_bar "$LICON$TITLE" "mpv"
   # Override icon after update_bar sets it default
   safe_set "$NAME" icon="$ICON"
   exit 0

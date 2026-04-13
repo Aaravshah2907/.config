@@ -20,7 +20,29 @@ end
 Header:children_add(function()
 	local info = get_music_info()
 	if info == "" then return ui.Span("") end
-	return ui.Span("   " .. info .. " "):fg("#7da4dd")
+
+	-- info format: [STATE] LOOP_ICON TITLE
+	local state, loop, title = info:match("^%[(.-)%]%s+(.-)%s+(.*)$")
+	if not state then 
+		-- Try simplified match if first failed
+		state, title = info:match("^%[(.-)%]%s+(.*)$")
+		if not state then return ui.Span("   " .. info .. " "):fg("#7da4dd") end
+		loop = "󰑗"
+	end
+
+	local loop_color = "#939ab7"
+	if loop:match("󰑘") then loop_color = "#f5a97f" -- Single (Orange)
+	elseif loop:match("󰑖") then loop_color = "#c6a0f6" -- All (Purple)
+	end
+
+	return ui.Line({
+		ui.Span("   "):fg("#a6da95"),
+		ui.Span("["):fg("#939ab7"),
+		ui.Span(state):fg("#7da4dd"),
+		ui.Span("] "):fg("#939ab7"),
+		ui.Span(loop .. " "):fg(loop_color),
+		ui.Span(title .. " "):fg("#cad3f5"),
+	})
 end, 1000, Header.RIGHT or 1)
 
 return {}

@@ -13,34 +13,41 @@ load_queue() {
     done < <($PY list 2>/dev/null)
 }
 
+# ---------- COLORS ----------
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
 # ---------- DRAW ----------
 draw() {
     clear
 
-    echo "🎵 Now Playing"
+    echo -e "${CYAN}🎵 Now Playing${NC}"
     echo "--------------------------------"
     $PY status 2>/dev/null
     echo ""
 
-    echo "📜 Queue"
+    echo -e "${BLUE}📜 Queue${NC}"
     echo "--------------------------------"
 
     for i in "${!lines[@]}"; do
         if [ "$i" -eq "$selected" ]; then
-            echo "> ${lines[$i]}"
+            echo -e "${YELLOW}> ${lines[$i]}${NC}"
         else
             echo "  ${lines[$i]}"
         fi
     done
 
     echo ""
-    echo "[↑/↓] Move  [ENTER] Play/Pause"
-    echo "[←/→] Seek ±5s  [[/]] ±10s"
-    echo "[+/-] Volume  [n/p] Next/Prev"
-    echo "[d] Delete  [j/k] Move"
-    echo "[s] Shuffle  [r] Refresh"
-    echo "[Ctrl+S] Save  [Ctrl+L] Load"
-    echo "[/] Fuzzy View [q] Quit"
+    echo -e "${GREEN}[↑/↓]${NC} Move  ${GREEN}[ENTER]${NC} Play/Pause"
+    echo -e "${GREEN}[←/→]${NC} Seek ±5s  ${GREEN}[[ / ]]${NC} ±10s"
+    echo -e "${GREEN}[+/-]${NC} Volume  ${GREEN}[n/p]${NC} Next/Prev  ${GREEN}[l]${NC} Loop"
+    echo -e "${GREEN}[d]${NC} Delete  ${GREEN}[j/k]${NC} Move        ${GREEN}[s]${NC} Shuffle"
+    echo -e "${GREEN}[r]${NC} Refresh ${GREEN}[Ctrl+S]${NC} Save     ${GREEN}[Ctrl+L]${NC} Load"
+    echo -e "${GREEN}[/]${NC} Fuzzy View  ${RED}[q]${NC} Quit"
 }
 
 # ---------- INIT ----------
@@ -131,6 +138,10 @@ while true; do
             load_queue
             ;;
 
+        l)
+            $PY loop
+            load_queue
+            ;;
         s)
             $PY shuffle
             load_queue

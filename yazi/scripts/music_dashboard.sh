@@ -129,7 +129,18 @@ while true; do
         k)  $PY move "$selected" -1; ((selected--)); load_queue ;;
         l)  $PY loop;   load_queue ;;
         s)  $PY shuffle; load_queue ;;
-        r)  load_queue ;;
+        r)
+            # Highstorm Refresh Effect
+            echo -ne "${CYAN}${BOLD}"
+            for i in {1..4}; do
+                printf "\r  󱐌  STORM GATHERING... %s" "$(printf ' %.0s' {1..20} | sed 's/ /·/g')"
+                sleep 0.05
+                printf "\r  󱐌  STORM GATHERING... %s" "$(printf ' %.0s' {1..20} | sed 's/ /󱐋/g')"
+                sleep 0.05
+            done
+            echo -e "${NC}"
+            load_queue
+            ;;
         
         "/")
             choice=$(printf "%s\n" "${lines[@]}" | fzf --prompt="🔍 Search > " --height 10 --reverse)

@@ -220,6 +220,7 @@ def cmd_status():
     paused = send_command(["get_property", "pause"]).get("data", True)
     pos = send_command(["get_property", "time-pos"]).get("data", 0)
     dur = send_command(["get_property", "duration"]).get("data", 1)
+    percent = (pos / dur) * 100 if dur > 0 else 0
     
     loop_file = send_command(["get_property", "loop-file"])
     loop_playlist = send_command(["get_property", "loop-playlist"])
@@ -227,6 +228,16 @@ def cmd_status():
     lp = loop_playlist.get("data") if loop_playlist else "no"
     is_loop_file = lf not in ["no", False, 0]
     is_loop_playlist = lp not in ["no", False, 0]
+
+    # Ideals Logic
+    IDEALS = [
+        "First Ideal: Life before death. Strength before weakness. Journey before destination.",
+        "Second Ideal: I will protect those who cannot protect themselves.",
+        "Third Ideal: I will protect even those I hate, so long as it is right.",
+        "Fourth Ideal: I accept that there will be those I cannot protect.",
+        "Fifth Ideal: (The final truth yet to be spoken...)"
+    ]
+    current_ideal = IDEALS[int(min(percent // 20, 4))]
 
     def fmt_time(t):
         if t is None: return "00:00"
@@ -242,11 +253,12 @@ def cmd_status():
     
     # Progress Bar
     width = 30
-    progress = int((pos / dur) * width) if pos and dur and dur > 0 else 0
+    progress = int((percent * width) / 100)
     bar = f"{CYAN}{'━' * progress}{GRAY}{'─' * (width - progress)}{NC}"
 
     print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{title}{NC}")
     print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
+    print(f"\n    {BOLD}{CYAN}󱐋 {current_ideal}{NC}")
 
 def cmd_short_status():
     if not is_running(): return

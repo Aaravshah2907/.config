@@ -1,2 +1,5 @@
 mpv/playlists/*
 yazi/tags/
+yazi/scripts/*.log
+yazi/scripts/*.json
+*.lock

@@ -1,22 +1,41 @@
 [manager]
-# Border: Using your Bright Cyan for a glowing, structured frame
+# Border: Sapphire Glow of Stormlight
 border_symbol = "│"
-border_style  = { fg = "#62fdff" } 
-
-[help]
-# Column 1 (Keys): Bright Cyan (Syl's glow)
-on_css      = { fg = "#62fdff", bold = true }
-# Column 2 (Commands): Dim Blue (Recedes into the background)
-run_css     = { fg = "#005ea8" }
-# Column 3 (Description): Pure White (Maximum readability)
-desc_css    = { fg = "#ffffff" }
-# Hover: Deep Blue background with White text
-hovered_css = { fg = "#ffffff", bg = "#2d3f76", bold = true }
-# Footer: Inverted Radiant colors for the status bar
-footer_css  = { fg = "#002b55", bg = "#62fdff" }
+border_style  = { fg = "#00BFFF" } 
 
 [status]
-# Separator colors for the bottom bar
+# Progress bar and status icons
 separator_open  = ""
 separator_close = ""
-separator_style = { fg = "#2d3f76", bg = "#2d3f76" }
+main_css = { fg = "#ffffff", bg = "#004488" }
+alt_css  = { fg = "#ffffff", bg = "#708090" } # Slate
+
+[help]
+# Column 1 (Keys): Honor's Gold
+on_css      = { fg = "#FFD700", bold = true }
+# Column 2 (Commands): Stormlight Sapphire
+run_css     = { fg = "#00BFFF" }
+# Column 3 (Description): Pure White
+desc_css    = { fg = "#ffffff" }
+# Hover: Deep Windrunner Blue background
+hovered_css = { fg = "#ffffff", bg = "#003366", bold = true }
+# Footer: Gold and Sapphire
+footer_css  = { fg = "#ffffff", bg = "#00BFFF" }
+
+[input]
+border_style = { fg = "#00BFFF" }
+title_style  = { fg = "#FFD700", bold = true }
+
+[select]
+border_style = { fg = "#00BFFF" }
+active_style = { fg = "#FFD700", bold = true }
+
+[notify]
+# Notification Toast: Windrunner Sapphire and Gold
+title_info  = { fg = "#00BFFF", bold = true }
+title_warn  = { fg = "#FFD700", bold = true }
+title_error = { fg = "#ff5555", bold = true }
+
+icon_info  = "󱐌" # Sylphrena (Windspren)
+icon_warn  = "󰊠" # Infused Gemstone
+icon_error = "󱐋" # Highstorm Bolt

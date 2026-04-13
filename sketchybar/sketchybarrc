@@ -64,16 +64,33 @@ done
 
 # Music: The Radiant Song
 sketchybar --add item music right \
-           --set music icon= icon.color=$PURPLE label="Lashing..."  label.color=$PURPLE script="$PLUGIN_DIR/music.sh" update_freq=2 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-           --subscribe music media_change system_woke front_app_switched\
-           popup.align=right \
+           --set music icon= \
+                       icon.color=$PURPLE \
+                       label="Lashing..." \
+                       label.color=$PURPLE \
+                       script="$PLUGIN_DIR/music.sh" \
+                       update_freq=2 \
+                       click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+                       popup.align=right \
+                       popup.y_offset=10 \
+           --subscribe music media_change system_woke front_app_switched
+
+sketchybar --add item media.header popup.music \
+           --set media.header icon=󰎈 label="THE RADIANT SONG" \
+                              label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                              label.color=$RADIANT_GOLD \
+                              icon.color=$RADIANT_GOLD \
   \
-  --add item media.header popup.music \
-    --set media.header icon=󰎈 label="THE RADIANT SONG" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+           --add item media.prev popup.music \
+           --set media.prev icon=󰒮 label="Retreat" click_script="$PLUGIN_DIR/media_control.sh prev" \
   \
-  --add item media.prev popup.music --set media.prev icon=󰒮 label="Retreat" click_script="$PLUGIN_DIR/media_control.sh prev" \
-  --add item media.play popup.music --set media.play icon=󰐊 label="Lash/Rest" click_script="$PLUGIN_DIR/media_control.sh toggle" \
-  --add item media.next popup.music --set media.next icon=󰒭 label="Lash Forward" click_script="$PLUGIN_DIR/media_control.sh next"
+           --add item media.play popup.music \
+           --set media.play icon=󰐊 label="Lash/Rest" click_script="$PLUGIN_DIR/media_control.sh toggle" \
+  \
+           --add item media.next popup.music \
+           --set media.next icon=󰒭 label="Lash Forward" click_script="$PLUGIN_DIR/media_control.sh next"
+
+
 
 # Battery: Stormlight Reserve
 sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke

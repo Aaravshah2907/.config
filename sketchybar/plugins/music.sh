@@ -79,34 +79,35 @@ if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.runni
   exit 0
 fi
 
-# 1. Native NowPlaying support (via nowplaying-cli)
-if command -v nowplaying-cli &>/dev/null; then
-  STATE=$(nowplaying-cli get playbackRate 2>/dev/null)
-  CLIENT=$(nowplaying-cli get clientIdentifier 2>/dev/null)
-  # Check if client matches our allowed players
-  if [[ "$CLIENT" =~ (Spotify|Music|VLC|mpv) ]]; then
-    TITLE=$(nowplaying-cli get title 2>/dev/null)
-    ARTIST=$(nowplaying-cli get artist 2>/dev/null)
+    # 1. Native NowPlaying support (via nowplaying-cli)
+    NOWPLAYING="/opt/homebrew/bin/nowplaying-cli"
+    if [ -f "$NOWPLAYING" ]; then
+      STATE=$($NOWPLAYING get playbackRate 2>/dev/null)
+      CLIENT=$($NOWPLAYING get clientIdentifier 2>/dev/null)
+      # Check if client matches our allowed players
+      if [[ "$CLIENT" =~ (Spotify|Music|VLC|mpv) ]]; then
+        TITLE=$($NOWPLAYING get title 2>/dev/null)
+        ARTIST=$($NOWPLAYING get artist 2>/dev/null)
+        
+        # Better mpv info handling via window title fallback
+        if [[ ("$TITLE" == "mpv" || -z "$TITLE") && "$CLIENT" =~ mpv ]]; then
+          TITLE=$(osascript -e 'tell application "System Events" to tell process "mpv" to return name of window 1' 2>/dev/null)
+        fi
+        
+        # Build label based on available info
+        LABEL="${TITLE:-Something}"
+        if [[ -n "$TITLE" && -n "$ARTIST" && "$TITLE" != "$ARTIST" ]]; then
+          LABEL="$TITLE — $ARTIST"
+        fi
     
-    # Better mpv info handling via window title fallback
-    if [[ ("$TITLE" == "mpv" || -z "$TITLE") && "$CLIENT" =~ mpv ]]; then
-      TITLE=$(osascript -e 'tell application "System Events" to tell process "mpv" to return name of window 1' 2>/dev/null)
+        update_bar "$LABEL" "$CLIENT"
+        
+        # If paused, override icon
+        if [ "$STATE" != "1" ]; then
+          safe_set "$NAME" icon="󰏤"
+        fi
+      fi
     fi
-    
-    # Build label based on available info
-    LABEL="${TITLE:-Something}"
-    if [[ -n "$TITLE" && -n "$ARTIST" && "$TITLE" != "$ARTIST" ]]; then
-      LABEL="$TITLE — $ARTIST"
-    fi
-
-    update_bar "$LABEL" "$CLIENT"
-    
-    # If paused, override icon
-    if [ "$STATE" != "1" ]; then
-      safe_set "$NAME" icon="󰏤"
-    fi
-  fi
-fi
 
 # 2. mpv Process Check (fallback for non-integrated mpv instances)
 if pgrep -x "mpv" >/dev/null; then

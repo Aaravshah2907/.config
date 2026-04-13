@@ -2,5 +2,7 @@ mpv/playlists/*
 yazi/tags/
 yazi/scripts/*.log
 yazi/scripts/*.json
+radiant-player/*.json
+radiant-player/*.log
 *.lock
 todolist.md

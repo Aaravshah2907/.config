@@ -1,7 +1,7 @@
 return {
 	entry = function(_, job)
 		-- Absolute path to the notification bridge file
-		local bridge_file = os.getenv("HOME") .. "/.config/yazi/scripts/music_notify.json"
+		local bridge_file = os.getenv("HOME") .. "/.config/radiant-player/notify.json"
 		
 		local f = io.open(bridge_file, "r")
 		if not f then return end

@@ -190,10 +190,45 @@ def cmd_status():
     sys.stdout.write(f"[{bar}] {fmt(pos)} / {fmt(dur)}\n")
     sys.stdout.flush()
 
+def cmd_short_status():
+    if not is_running():
+        return
+
+    title = send_command(["get_property", "media-title"])
+    paused = send_command(["get_property", "pause"])
+    pos = send_command(["get_property", "time-pos"])
+    dur = send_command(["get_property", "duration"])
+
+    title = title.get("data") if title else "Unknown"
+    paused = paused.get("data") if paused else True
+    pos = pos.get("data") if pos else 0
+    dur = dur.get("data") if dur else 0
+
+    def fmt(t):
+        try:
+            return f"{int(t//60):02d}:{int(t%60):02d}"
+        except:
+            return "00:00"
+
+    state = "[Paused]" if paused else "[Playing]"
+    # truncated title
+    if len(title) > 30:
+        title = title[:27] + "..."
+
+    sys.stdout.write(f"{state} {title}\n")
+    sys.stdout.flush()
+
 
 
 def cmd_toggle():
     send_command(["cycle", "pause"])
+
+def signal_refresh():
+    try:
+        if os.getenv("YAZI_ID"):
+            subprocess.run(["ya", "emit", "redraw"], check=False)
+    except:
+        pass
 
 # ---------- MAIN ----------
 
@@ -202,24 +237,33 @@ if __name__ == "__main__":
 
     if cmd == "play":
         cmd_play(sys.argv[2:])
+        signal_refresh()
     elif cmd == "list":
         cmd_list()
     elif cmd == "play_index":
         cmd_play_index(int(sys.argv[2]))
+        signal_refresh()
     elif cmd == "remove":
         cmd_remove(int(sys.argv[2]))
+        signal_refresh()
     elif cmd == "move":
         cmd_move(int(sys.argv[2]), int(sys.argv[3]))
+        signal_refresh()
     elif cmd == "shuffle":
         cmd_shuffle()
+        signal_refresh()
     elif cmd == "sort":
         cmd_sort()
+        signal_refresh()
     elif cmd == "next":
         cmd_next()
+        signal_refresh()
     elif cmd == "prev":
         cmd_prev()
+        signal_refresh()
     elif cmd == "clear":
         cmd_clear()
+        signal_refresh()
     elif cmd == "current_index":
         res = send_command(["get_property", "playlist-pos"])
         if res and res.get("data") is not None:
@@ -228,12 +272,17 @@ if __name__ == "__main__":
         cmd_save(sys.argv[2] if len(sys.argv) > 2 else "")
     elif cmd == "load":
         cmd_load(sys.argv[2])
+        signal_refresh()
     elif cmd == "status":
         cmd_status()
+    elif cmd == "short_status":
+        cmd_short_status()
     elif cmd == "toggle":
         cmd_toggle()
+        signal_refresh()
     elif cmd == "seek":
         send_command(["seek", int(sys.argv[2]), "relative"])
+        signal_refresh()
     elif cmd == "volume":
         send_command(["add", "volume", int(sys.argv[2])])
     elif cmd == "get_volume":

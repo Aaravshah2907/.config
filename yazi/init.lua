@@ -1,3 +1,5 @@
+require("music-widget")
+
 require("simple-tag"):setup({
   -- UI display mode (icon, text, hidden)
   ui_mode = "icon", -- (Optional)
@@ -47,7 +49,7 @@ require("simple-tag"):setup({
   -- More icon from nerd fonts: https://www.nerdfonts.com/cheat-sheet
   icons = { -- (Optional)
     -- default icon
-		default = "󰚋",
+    default = "󰚋",
 
     -- format: [tag key] = "tag icon"
 		["x"] = "",
@@ -64,7 +66,6 @@ require("simple-tag"):setup({
 		["m"] = "󰽴",
 		["v"] = "󰎁",
   },
-
 })
 
 require('spot'):setup {

@@ -6,3 +6,5 @@ radiant-player/*.json
 radiant-player/*.log
 *.lock
 todolist.md
+*.svg
+*.png

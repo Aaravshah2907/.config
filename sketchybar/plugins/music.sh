@@ -18,8 +18,8 @@ update_bar() {
   
   case "$app" in
     *[Ss]potify*) icon=""; app_name="Spotify"; icon_color="$EMERALD" ;;
-    *[Aa]pple*[Mm]usic*) icon="󰎆"; app_name="Music"; icon_color="$PURPLE" ;;
-    *[Vv][Ll][Cc]*) icon="󰕼"; app_name="VLC"; icon_color="$ORANGE" ;;
+    *[ Aa]pple*[Mm]usic*) icon="󰎆"; app_name="Music"; icon_color="$PURPLE" ;;
+    *[Vv][Ll][Cc]*) icon="󰕼"; app_name="VLC"; icon_color="$AMBER" ;;
     *mpv*) icon=""; app_name="mpv"; icon_color="$SAPPHIRE" ;;
     *) 
       # Filter: restrict to designated music apps
@@ -37,8 +37,9 @@ update_bar() {
                    label.drawing=on \
                    label="$label" \
                    icon="$icon" \
-                   label.color="$WHITE" \
+                   label.color="$LABEL_COLOR" \
                    icon.color="$icon_color"
+
   UPDATED=1
   return 0
 }

@@ -11,9 +11,10 @@ if [ "$SELECTED" = "true" ]; then
                            icon.color=$ITEM_BG_COLOR
 else
   sketchybar --set "$NAME" background.drawing=off \
-                           label.color=$WHITE \
-                           icon.color=$WHITE
+                           label.color=$LABEL_COLOR \
+                           icon.color=$LABEL_COLOR
 fi
+
 
 # 2. Update window icons if the sender is space_windows_change
 # INFO contains {"space": 1, "apps": {"Spotify": 1, "Code": 1}}

@@ -8,3 +8,6 @@ radiant-player/*.log
 todolist.md
 *.svg
 *.png
+*.jpg
+*.jpeg
+*.txt

@@ -229,3 +229,15 @@ if __name__ == "__main__":
         cmd_status()
     elif cmd == "toggle":
         cmd_toggle()
+    elif cmd == "seek":
+        send_command(["seek", int(sys.argv[2]), "relative"])
+    elif cmd == "volume":
+        send_command(["add", "volume", int(sys.argv[2])])
+    elif cmd == "next":
+        send_command(["playlist-next"])
+    elif cmd == "prev":
+        send_command(["playlist-prev"])
+    elif cmd == "get_volume":
+        res = send_command(["get_property", "volume"])
+        if res and res.get("data") is not None:
+            print(int(res["data"]))

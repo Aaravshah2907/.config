@@ -35,6 +35,8 @@ draw() {
 
     echo ""
     echo "[↑/↓] Move  [ENTER] Play/Pause"
+    echo "[←/→] Seek ±5s  [[/]] ±10s"
+    echo "[+/-] Volume  [n/p] Next/Prev"
     echo "[d] Delete  [j/k] Move"
     echo "[s] Shuffle  [r] Refresh"
     echo "[Ctrl+S] Save  [Ctrl+L] Load"
@@ -49,30 +51,60 @@ draw
 while true; do
     read -rsn1 key
 
-    case "$key" in
+        case "$key" in
         q)
             clear
             exit
             ;;
 
-        # Arrow keys
+        # Arrow keys (UP/DOWN + LEFT/RIGHT)
         $'\x1b')
             read -rsn2 key2
             case "$key2" in
-                "[A") ((selected--)) ;;
-                "[B") ((selected++)) ;;
+                "[A") ((selected--)) ;;         # up
+                "[B") ((selected++)) ;;         # down
+                "[C") $PY seek 5 ;;             # right →
+                "[D") $PY seek -5 ;;            # left ←
             esac
             ;;
 
         # ENTER
         "")
             current=$($PY current_index 2>/dev/null)
-
             if [ "$selected" == "$current" ]; then
                 $PY toggle
             else
                 $PY play_index "$selected"
             fi
+            ;;
+
+        # Bigger seek
+        "[")
+            $PY seek -10
+            ;;
+
+        "]")
+            $PY seek 10
+            ;;
+
+        # Volume
+        "+")
+            $PY volume 5
+            ;;
+
+        "-")
+            $PY volume -5
+            ;;
+
+        # Track navigation
+        n)
+            $PY next
+            load_queue
+            ;;
+
+        p)
+            $PY prev
+            load_queue
             ;;
 
         d)
@@ -98,7 +130,6 @@ while true; do
             ;;
 
         r)
-            # manual refresh only
             load_queue
             ;;
 

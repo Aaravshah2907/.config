@@ -1,44 +1,37 @@
 #!/usr/bin/env bash
+source "$HOME/.config/sketchybar/colors.sh"
 
-# Hide all slots first
-sketchybar --set cc.bt.none drawing=off \
-           --set cc.bt.0 drawing=off \
-           --set cc.bt.1 drawing=off \
-           --set cc.bt.2 drawing=off \
-           --set cc.bt.3 drawing=off \
-           --set cc.bt.4 drawing=off
+# Blueutil check
+CONNECTED_DEVICES=$(/opt/homebrew/bin/blueutil --connected)
+COUNT=$(echo "$CONNECTED_DEVICES" | grep -c "address" | xargs)
 
-DEVICES=$(blueutil --connected --format json 2>/dev/null)
-COUNT=$(echo "$DEVICES" | jq '. | length' 2>/dev/null || echo "0")
-
-if [ -z "$DEVICES" ] || [ "$COUNT" -eq 0 ]; then
-  sketchybar --set cc.bt.none drawing=on icon="󰂲" label="No Devices Connected" \
-                   click_script="open x-apple.systempreferences:com.apple.preference.bluetooth; sketchybar --set control_center popup.drawing=off"
-  exit 0
+ICON="󰂯"
+if [ "$COUNT" -gt 0 ]; then
+    ICON="󰂱"
+    COLOR=$SAPPHIRE
+    LABEL="$COUNT"
+else
+    COLOR=$WHITE
+    LABEL=""
 fi
 
-INDEX=0
-echo "$DEVICES" | jq -c '.[]' | while read -r device; do
-  if [ "$INDEX" -ge 5 ]; then break; fi
-  
-  NAME=$(echo "$device" | jq -r '.name')
-  
-  # Determine icon based on name
-  ICON="󰂯"
-  if echo "$NAME" | grep -iq "airpods\|earpods\|headphone\|buds\|audio"; then
-    ICON="󰋋"
-  elif echo "$NAME" | grep -iq "mouse\|trackpad"; then
-    ICON="󰍽"
-  elif echo "$NAME" | grep -iq "keyboard"; then
-    ICON="󰌌"
-  elif echo "$NAME" | grep -iq "watch"; then
-    ICON="󰥔"
-  elif echo "$NAME" | grep -iq "speaker"; then
-    ICON="󰓃"
-  fi
+/opt/homebrew/bin/sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" label="$LABEL" label.color="$COLOR"
 
-  sketchybar --set cc.bt.$INDEX drawing=on icon="$ICON" label="$NAME" \
-                   click_script="open x-apple.systempreferences:com.apple.preference.bluetooth; sketchybar --set control_center popup.drawing=off"
-  
-  INDEX=$((INDEX + 1))
-done
+# Clear popup
+/opt/homebrew/bin/sketchybar --remove '/bluetooth\.device\..*/'
+
+# Add devices to popup
+if [ "$COUNT" -gt 0 ]; then
+    COUNTER=0
+    while read -r line; do
+        NAME=$(echo "$line" | awk -F', ' '{print $1}' | awk -F': ' '{print $2}' | sed 's/"//g')
+        [ -z "$NAME" ] && continue
+        
+        /opt/homebrew/bin/sketchybar --add item bluetooth.device.$COUNTER popup.bluetooth \
+                                   --set bluetooth.device.$COUNTER label="$NAME" icon=󰂱
+        COUNTER=$((COUNTER + 1))
+    done <<< "$CONNECTED_DEVICES"
+else
+    /opt/homebrew/bin/sketchybar --add item bluetooth.none popup.bluetooth \
+                               --set bluetooth.none label="No devices Bonded" icon=󰂯
+fi

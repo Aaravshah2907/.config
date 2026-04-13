@@ -1,55 +1,37 @@
 #!/usr/bin/env bash
 source "$HOME/.config/sketchybar/colors.sh"
 
-# Find the Wi-Fi interface specifically
+# Find the Wi-Fi interface
 WIFI_INTERFACE=$(networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | grep "Device:" | awk '{print $2}')
 [ -z "$WIFI_INTERFACE" ] && WIFI_INTERFACE="en0"
 
-# Get SSID for Wi-Fi
+# Get SSID
 SSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F' : ' '/ SSID :/ {print $2}')
 
-# --- HONOR MAPPING (Translate redacted/hidden SSIDs) ---
-# Add your known redacted SSIDs or BSSIDs here
-case "$SSID" in
-    "<redacted>"|""|"Hidden") 
-        # Check BSSID if SSID is hidden (optional but more precise)
-        BSSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F' : ' '/ BSSID :/ {print $2}')
-        SSID="󰖟 University"
-        ;;
-    "eduroam")
-        SSID="󰖟 eduroam"
-        ;;
-esac
+# Detect internal IP for BITS Pilani mapping
+INTERNAL_IP=$(ifconfig "$WIFI_INTERFACE" 2>/dev/null | grep "inet " | awk '{print $2}')
 
-# Fallback to general interface if no SSID after mapping
-if [ -z "$SSID" ]; then
-    CURRENT_INT=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
-    if [ -z "$CURRENT_INT" ]; then
-        /opt/homebrew/bin/sketchybar --set control_center icon=󰤭 label="Disconnected" icon.color="$RED" label.color="$RED"
-        /opt/homebrew/bin/sketchybar --set cc.net.0.ssid label="No Bond" icon=󰤭
-        /opt/homebrew/bin/sketchybar --set cc.net.0.speed label="0 Mbps"
-        exit 0
+# General Location/SSID Logic
+if [[ "$INTERNAL_IP" =~ ^172\.1[6789]\. ]] || [[ "$INTERNAL_IP" =~ ^172\.2[0-7]\. ]] || [[ "$INTERNAL_IP" =~ ^172\.31\. ]] || [[ "$INTERNAL_IP" =~ ^10\. ]]; then
+    LOCATION="BITS Pilani"
+elif [ -n "$SSID" ]; then
+    # Handle redacted or hidden SSIDs
+    if [[ "$SSID" == "<redacted>" || "$SSID" == "" ]]; then
+        LOCATION="University"
+    else
+        LOCATION="$SSID"
     fi
-    
-    # Check if this interface has an IP
-    HAS_IP=$(ifconfig "$CURRENT_INT" 2>/dev/null | grep "inet ")
-    if [ -z "$HAS_IP" ]; then
-        /opt/homebrew/bin/sketchybar --set control_center icon=󰤭 label="Searching..." icon.color="$AMBER" label.color="$AMBER"
-        exit 0
-    fi
-
-    ICON=󰈀
-    LABEL="Ethernet"
-    SSID="Physical Link"
 else
-    ICON=󱐋
-    LABEL="$SSID"
+    LOCATION="Severed Bond"
 fi
 
-# Get Link Speed (Tx Rate) using wdutil safely
-SPEED=$(wdutil info 2>/dev/null | grep "Tx Rate" | head -n 1 | awk '{print $4}')
-[ -z "$SPEED" ] && SPEED="0"
+# Icon and Color Logic
+ICON="󰤨"
+COLOR="$SAPPHIRE"
 
-/opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label="$LABEL" label.drawing=on icon.color="$SAPPHIRE" label.color="$SAPPHIRE"
-/opt/homebrew/bin/sketchybar --set cc.net.0.ssid label="$SSID" icon="$ICON"
-/opt/homebrew/bin/sketchybar --set cc.net.0.speed label="${SPEED} Mbps"
+if [ "$LOCATION" = "Severed Bond" ]; then
+    ICON="󰤭"
+    COLOR="$RED"
+fi
+
+/opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label="$LOCATION" icon.color="$COLOR" label.color="$COLOR"

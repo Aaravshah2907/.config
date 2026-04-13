@@ -1,19 +1,16 @@
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
-##### Core Bar Appearance (Radiant Unified Bar) #####
+##### Core Bar Appearance (Radiant Floating Bar) #####
 sketchybar --bar position=top \
                 height=42 \
-                blur_radius=35 \
-                color=$RADIANT_PURPLE \
-                margin=0 \
-                y_offset=0 \
-                padding_left=5 \
-                padding_right=5 \
-                border_width=2 \
-                border_color=$SAPPHIRE
+                blur_radius=30 \
+                color=$DEEP_NIGHT \
+                corner_radius=35 \
+                border_width=1 \
+                border_color=$SAPPHIRE_TRANSLUCENT
 
-##### Global Defaults (Applying to all items) #####
+##### Global Defaults #####
 sketchybar --default \
   padding_left=5 \
   padding_right=5 \
@@ -21,16 +18,17 @@ sketchybar --default \
   label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   icon.color=$WHITE \
   label.color=$WHITE \
-  icon.padding_left=6 \
-  icon.padding_right=6 \
-  label.padding_left=6 \
+  icon.padding_left=4 \
+  icon.padding_right=4 \
+  label.padding_left=4 \
   label.padding_right=4 \
   background.drawing=off \
-  popup.background.color=$RADIANT_PURPLE \
+  popup.background.color=$DEEP_NIGHT \
   popup.background.border_color=$SAPPHIRE \
   popup.background.border_width=2 \
   popup.background.corner_radius=12 \
   popup.blur_radius=30
+
 
 ##### LEFT SIDE ITEMS #####
 sketchybar --add item apple left \
@@ -41,7 +39,14 @@ sketchybar --add item apple left \
   \
   --add item front_app left \
     --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE \
-    --subscribe front_app front_app_switched
+    --subscribe front_app front_app_switched \
+  \
+  --add bracket apple.pill apple front_app \
+  --set apple.pill background.color=$BAR_COLOR \
+                  background.border_color=$SAPPHIRE_TRANSLUCENT \
+                  background.border_width=1 \
+                  background.corner_radius=10 \
+                  background.drawing=on
 
 # Spaces
 SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
@@ -53,12 +58,22 @@ do
                                icon.color=$WHITE \
                                icon.highlight_color=$SAPPHIRE \
                                script="$PLUGIN_DIR/space.sh" \
-                               label.padding_right=9 \
+                               label.padding_right=8 \
                                label.y_offset=-1 \
-                               padding_left=8 \
-                               padding_right=8 \
+                               padding_left=4 \
+                               padding_right=4 \
+                               background.corner_radius=8 \
+                               background.height=26 \
              --subscribe space.$sid space_windows_change
 done
+
+sketchybar --add bracket spaces.pill "/space\..*/" \
+           --set spaces.pill background.color=$BAR_COLOR \
+                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
+
 
 ##### RIGHT SIDE ITEMS #####
 
@@ -67,19 +82,26 @@ sketchybar --add item music right \
            --set music icon= \
                        icon.color=$PURPLE \
                        label="Lashing..." \
-                       label.color=$PURPLE \
+                       label.color=$WHITE \
                        script="$PLUGIN_DIR/music.sh" \
                        update_freq=2 \
                        click_script="sketchybar --set \$NAME popup.drawing=toggle" \
                        popup.align=right \
-                       popup.y_offset=10 \
-           --subscribe music media_change system_woke front_app_switched
+                       popup.y_offset=12 \
+           --subscribe music media_change system_woke front_app_switched \
+  \
+           --add bracket music.pill music \
+           --set music.pill background.color=$SAPPHIRE_TRANSLUCENT \
+                            background.border_color=$HONOR_GOLD \
+                            background.border_width=1 \
+                            background.corner_radius=12 \
+                            background.drawing=on
 
 sketchybar --add item media.header popup.music \
            --set media.header icon=󰎈 label="THE RADIANT SONG" \
-                              label.font="JetBrainsMono Nerd Font:Bold:14.0" \
-                              label.color=$RADIANT_GOLD \
-                              icon.color=$RADIANT_GOLD \
+                               label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                               label.color=$RADIANT_GOLD \
+                               icon.color=$RADIANT_GOLD \
   \
            --add item media.prev popup.music \
            --set media.prev icon=󰒮 label="Retreat" click_script="$PLUGIN_DIR/media_control.sh prev" \
@@ -90,21 +112,42 @@ sketchybar --add item media.header popup.music \
            --add item media.next popup.music \
            --set media.next icon=󰒭 label="Lash Forward" click_script="$PLUGIN_DIR/media_control.sh next"
 
+# Control Center: Spren Bond (Wifi)
+sketchybar --add item control_center right \
+           --set control_center icon=󰤨 \
+                       script="$PLUGIN_DIR/network.sh" \
+                       update_freq=10 \
+  \
+           --add bracket net.pill control_center \
+           --set net.pill background.color=$BAR_COLOR \
+                          background.border_color=$SAPPHIRE_TRANSLUCENT \
+                          background.border_width=1 \
+                          background.corner_radius=10 \
+                          background.drawing=on
 
+# Bluetooth: Spiritweb
+sketchybar --add item bluetooth right \
+           --set bluetooth update_freq=60 \
+                           script="$PLUGIN_DIR/bluetooth.sh" \
+                           click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+                           popup.align=right \
+  \
+           --add bracket bluetooth.pill bluetooth \
+           --set bluetooth.pill background.color=$BAR_COLOR \
+                               background.border_color=$SAPPHIRE_TRANSLUCENT \
+                               background.border_width=1 \
+                               background.corner_radius=10 \
+                               background.drawing=on
 
 # Battery: Stormlight Reserve
-sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke
-
-# Control Center: Spren Bond
-sketchybar --add item control_center right \
-           --set control_center icon=󱐋 script="$PLUGIN_DIR/network.sh" update_freq=10 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-           popup.align=right \
+sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke \
   \
-  --add item cc.header popup.control_center \
-    --set cc.header icon=󱐋 label="SPREN BOND" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
-  \
-  --add item cc.net.0.ssid popup.control_center    --set cc.net.0.ssid icon=󰤨 \
-  --add item cc.net.0.speed popup.control_center   --set cc.net.0.speed icon=󰓅 \
+           --add bracket battery.pill battery \
+           --set battery.pill background.color=$BAR_COLOR \
+                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
 
 
 # Clock: Chronicles
@@ -118,24 +161,52 @@ sketchybar --add item clock right \
   \
   --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
   --add item clock.events popup.clock --set clock.events label="Destiny" \
-  --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh"
-
-# Volume: Resonance
-sketchybar --add item volume right --set volume script="$PLUGIN_DIR/volume.sh" --subscribe volume volume_change
-
-# System Stats: Radiant Core
-sketchybar --add item system right \
-           --set system icon=󰍛 label.drawing=off click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-           popup.align=right \
+  --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh" \
   \
-  --add item system.header popup.system \
-    --set system.header icon=󰍛 label="RADIANT CORE" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+           --add bracket clock.pill clock \
+           --set clock.pill background.color=$BAR_COLOR \
+                            background.border_color=$SAPPHIRE_TRANSLUCENT \
+                            background.border_width=1 \
+                            background.corner_radius=10 \
+                            background.drawing=on
+
+# Volume: Resonance (Interactive Slider)
+sketchybar --add item volume right \
+           --set volume script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume volume_change mouse.entered mouse.exited \
   \
-  --add item system.ram.text popup.system --set system.ram.text label="Investiture" icon.drawing=off \
-  --add item system.disk popup.system     --set system.disk icon= label="Material World" \
-  --add item system.updater right          --set system.updater script="$PLUGIN_DIR/system.sh" update_freq=3 drawing=off
+           --add slider volume_slider right \
+           --set volume_slider slider.width=0 \
+                               slider.background.height=6 \
+                               slider.background.corner_radius=3 \
+                               slider.background.color=$ITEM_BG_COLOR \
+                               slider.highlight_color=$SAPPHIRE \
+                               slider.knob=󰝥 \
+                               script="$PLUGIN_DIR/volume_click.sh" \
+           --subscribe volume_slider mouse.exited \
+  \
+           --add bracket volume.pill volume volume_slider \
+           --set volume.pill background.color=$BAR_COLOR \
+                            background.border_color=$SAPPHIRE_TRANSLUCENT \
+                            background.border_width=1 \
+                            background.corner_radius=10 \
+                            background.drawing=on
+
+# Notification: Spren Message
+sketchybar --add item notif right \
+           --set notif update_freq=30 \
+                       script="$PLUGIN_DIR/notif.sh" \
+  \
+           --add bracket notif.pill notif \
+           --set notif.pill background.color=$BAR_COLOR \
+                           background.border_color=$SAPPHIRE_TRANSLUCENT \
+                           background.border_width=1 \
+                           background.corner_radius=10 \
+                           background.drawing=on
 
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change
 sketchybar --trigger front_app_switched
+sketchybar --trigger volume_change
+

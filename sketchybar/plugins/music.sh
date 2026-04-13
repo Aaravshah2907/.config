@@ -51,8 +51,8 @@ hide_bar() {
                    label.drawing=on \
                    label="Resting" \
                    icon="󰋋" \
-                   icon.color="$SAPPHIRE" \
-                   label.color="$SAPPHIRE"
+                   icon.color="$HONOR_GOLD" \
+                   label.color="$HONOR_GOLD"
   exit 0
 }
 

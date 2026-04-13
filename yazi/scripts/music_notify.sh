@@ -3,14 +3,6 @@
 # Ensure ya and other tools are in path
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
-# LOGGING FOR DEBUG
-LOGFILE="$HOME/.config/yazi/scripts/music_notify.log"
-{
-  echo "[$(date)] Event: $1, Track: $2"
-  which ya
-  echo "YAZI_ID: $YAZI_ID"
-} >> "$LOGFILE"
-
 # SYLPHRENA - Your personal Windspren
 # Journey before destination, Bridgeboy.
 
@@ -85,7 +77,19 @@ fi
 # Yazi TUI Notification
 TITLE="Sylphrena 󱐌"
 LEVEL="info"
-TIMEOUT=5
+TIMEOUT=3
+
+# COOLDOWN LOGIC (Prevent spamming multiple notifications within 0.7s)
+LOCKFILE="/tmp/yazi_music_notify.lock"
+LAST_TIME=$(cat "$LOCKFILE" 2>/dev/null || echo 0)
+NOW=$(date +%s%N | cut -b1-13) # Milliseconds
+DIFF=$((NOW - LAST_TIME))
+
+if [ $DIFF -lt 700 ]; then
+    echo "[$(date)] Cooldown active: skipping notification" >> "$LOGFILE"
+    exit 0
+fi
+echo "$NOW" > "$LOCKFILE"
 
 # Format content for Yazi notification
 # Strip ANSI escape codes from track title for clean display
@@ -106,9 +110,10 @@ echo "$JSON_PAYLOAD" > "$BRIDGE_FILE"
 
 # Try Yazi internal notification via Plugin (Rock-solid File Bridge)
 if command -v ya >/dev/null 2>&1; then
-    ya emit plugin syl-notify >> "$LOGFILE" 2>&1 && exit 0
+    ya emit plugin syl-notify >/dev/null 2>&1 && exit 0
 fi
 
-# Final Fallback to system osascript
-FINAL_MSG=$(echo -e "$CONTENT" | sed 's/"/\\"/g' | sed 's/\\n/\r/g')
-osascript -e "display notification \"$FINAL_MSG\" with title \"$TITLE\""
+# Final Fallback (Log only if plugin failed)
+if [ $? -ne 0 ]; then
+    echo "[$(date)] Plugin notification failed" >> "$LOGFILE"
+fi

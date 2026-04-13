@@ -14,10 +14,6 @@ return {
 			ya.notify { title = "Syl-Notify Error", content = "Mangled bridge file", level = "error" }
 			return
 		end
-		if not ok then
-			ya.notify { title = "Syl-Notify Error", content = "Invalid JSON payload", level = "error" }
-			return
-		end
 		
 		local title = data.title or "Sylphrena"
 		local content = data.content or "Journey before destination."

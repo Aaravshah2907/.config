@@ -235,7 +235,7 @@ def cmd_status():
         "Second Ideal: I will protect those who cannot protect themselves.",
         "Third Ideal: I will protect even those I hate, so long as it is right.",
         "Fourth Ideal: I accept that there will be those I cannot protect.",
-        "Fifth Ideal: (The final truth yet to be spoken...)"
+        "Fifth Ideal: I will protect myself, so that I may continue to protect others."
     ]
     current_ideal = IDEALS[int(min(percent // 20, 4))]
 

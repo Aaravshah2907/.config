@@ -15,7 +15,7 @@ notify_syl() {
 case "$cmd" in
     toggle)
         /opt/homebrew/bin/python3 "$PY" toggle
-        sleep 0.1; ya emit redraw
+        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         # Check if now playing or paused
         is_paused=$($PY status_json 2>/dev/null | /opt/homebrew/bin/jq -r '.paused')
         if [ "$is_paused" == "true" ]; then
@@ -26,21 +26,21 @@ case "$cmd" in
         ;;
     next)
         /opt/homebrew/bin/python3 "$PY" next
-        sleep 0.2; ya emit redraw
+        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         notify_syl "Playing"
         ;;
     prev)
         /opt/homebrew/bin/python3 "$PY" prev
-        sleep 0.2; ya emit redraw
+        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         notify_syl "Playing"
         ;;
     seekf)
         /opt/homebrew/bin/python3 "$PY" seek 5
-        sleep 0.1; ya emit redraw
+        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         ;;
     seekb)
         /opt/homebrew/bin/python3 "$PY" seek -5
-        sleep 0.1; ya emit redraw
+        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         ;;
 esac
 

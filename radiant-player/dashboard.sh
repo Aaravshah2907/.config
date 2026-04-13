@@ -23,7 +23,7 @@ load_queue() {
     lines=()
     while IFS= read -r line; do
         lines+=("$line")
-    done < <($PY list 2>/dev/null)
+    done < <($PY list)
 }
 
 hide_cursor() { printf "\033[?25l"; }

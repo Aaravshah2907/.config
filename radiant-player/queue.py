@@ -23,7 +23,15 @@ GRAY = "\033[38;5;240m"     # Rosharan Slate
 NC = "\033[0m"
 
 def is_running():
-    return os.path.exists(SOCKET_PATH)
+    if not os.path.exists(SOCKET_PATH):
+        return False
+    try:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.settimeout(0.2)
+            s.connect(SOCKET_PATH)
+            return True
+    except:
+        return False
 
 def send_command(cmd):
     if not is_running():
@@ -31,22 +39,37 @@ def send_command(cmd):
     try:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
             s.connect(SOCKET_PATH)
-            payload = json.dumps({"command": cmd}) + "\n"
+            req_id = random.randint(1, 10000)
+            payload = json.dumps({"command": cmd, "request_id": req_id}) + "\n"
             s.sendall(payload.encode())
             
-            # Read response
-            s.settimeout(0.5)
-            response = s.recv(4096).decode()
-            if response:
-                return json.loads(response.split('\n')[0])
+            s.settimeout(2.0)
+            response = b""
+            while True:
+                chunk = s.recv(65536)
+                if not chunk: break
+                response += chunk
+                if b"\n" in response:
+                    # Use safe decoding to prevent crashes on weird characters
+                    lines = response.decode('utf-8', 'replace').split("\n")
+                    for line in lines:
+                        if not line.strip(): continue
+                        try:
+                            data = json.loads(line)
+                            if data.get("request_id") == req_id:
+                                return data
+                        except: continue
+                if len(response) > 1024 * 1024: break 
     except:
         return None
     return None
 
 def ensure_mpv():
     if not is_running():
+        # Clean up stale socket
         if os.path.exists(SOCKET_PATH):
-            os.remove(SOCKET_PATH)
+            try: os.remove(SOCKET_PATH)
+            except: pass
 
         cmd = [
             "/opt/homebrew/bin/mpv",
@@ -57,7 +80,11 @@ def ensure_mpv():
         ]
 
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(0.5)
+        
+        # Wait up to 2 seconds for socket to appear
+        for _ in range(20):
+            if is_running(): break
+            time.sleep(0.1)
 
 # ---------- COMMANDS ----------
 
@@ -172,13 +199,27 @@ def cmd_save(name):
             if fname: f.write(os.path.realpath(fname) + "\n")
 
 def cmd_load(name):
+    if not name: return
+    # Try with and without .m3u extension
     path = os.path.expanduser(f"~/.config/mpv/playlists/{name}")
+    if not os.path.exists(path) and not name.endswith(".m3u"):
+        path += ".m3u"
+    
+    if not os.path.exists(path):
+        print(f"Error: Playlist {path} not found")
+        return
+
     ensure_mpv()
-    send_command(["loadlist", path, "replace"])
-    for _ in range(10):
+    # Path must be absolute for mpv loadlist
+    abs_path = os.path.abspath(path)
+    send_command(["loadlist", abs_path, "replace"])
+    
+    # Wait for playlist to populate
+    for _ in range(20):
         pl = send_command(["get_property", "playlist"])
         if pl and pl.get("data"): break
         time.sleep(0.1)
+    
     send_command(["set_property", "playlist-pos", 0])
     send_command(["set_property", "pause", False])
 
@@ -216,10 +257,19 @@ def cmd_status():
         print(f"  {DIM}󰓛 Idle{NC}")
         return
     
-    title = send_command(["get_property", "media-title"]).get("data", "Unknown")
-    paused = send_command(["get_property", "pause"]).get("data", True)
-    pos = send_command(["get_property", "time-pos"]).get("data", 0)
-    dur = send_command(["get_property", "duration"]).get("data", 1)
+    status_t = send_command(["get_property", "media-title"])
+    status_p = send_command(["get_property", "pause"])
+    status_pos = send_command(["get_property", "time-pos"])
+    status_dur = send_command(["get_property", "duration"])
+
+    if not status_t:
+        print(f"  {DIM}󰓛 Communicating...{NC}")
+        return
+
+    title = status_t.get("data", "Unknown")
+    paused = status_p.get("data", True) if status_p else True
+    pos = status_pos.get("data", 0) if status_pos else 0
+    dur = status_dur.get("data", 1) if status_dur else 1
     percent = (pos / dur) * 100 if dur > 0 else 0
     
     loop_file = send_command(["get_property", "loop-file"])
@@ -290,6 +340,10 @@ def cmd_status_json():
         print(json.dumps({"running": False}))
         return
     title = send_command(["get_property", "media-title"])
+    if title is None:
+        print(json.dumps({"running": False}))
+        return
+
     paused = send_command(["get_property", "pause"])
     loop_file = send_command(["get_property", "loop-file"])
     loop_playlist = send_command(["get_property", "loop-playlist"])
@@ -313,8 +367,8 @@ def cmd_toggle():
 def signal_refresh():
     try:
         if os.getenv("YAZI_ID"):
-            subprocess.run(["ya", "emit", "redraw"], check=False)
-            subprocess.run(["ya", "pub", "music-update"], check=False)
+            subprocess.run(["ya", "emit", "redraw"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+            subprocess.run(["ya", "pub", "music-update"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
     except: pass
 
 # ---------- MAIN ----------

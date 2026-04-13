@@ -35,14 +35,15 @@ update_bar() {
 }
 
 hide_bar() {
-  safe_set "$NAME" label="Not Playing" drawing=on
+  # Default View: Radiant Symbol
+  safe_set "$NAME" label="" icon="󱐌" icon.color=$SAPPHIRE
   exit 0
 }
 
 # --- Detection Logic ---
 
 # 0. Yazi-mpv instance (Prioritized)
-YAZI_SCRIPT="/Users/aaravshah2975/.config/yazi/scripts/music_queue.py"
+YAZI_SCRIPT="/Users/aaravshah2975/.config/radiant-player/queue.py"
 MPV_STATUS=$(/opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
 if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.running') == "true" ]]; then
   TITLE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.title')

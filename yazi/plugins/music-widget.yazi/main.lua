@@ -24,10 +24,14 @@ Header:children_add(function()
 	-- info format: [STATE] LOOP_ICON TITLE
 	local state, loop, title = info:match("^%[(.-)%]%s+(.-)%s+(.*)$")
 	if not state then 
-		-- Try simplified match if first failed
-		state, title = info:match("^%[(.-)%]%s+(.*)$")
-		if not state then return ui.Span("   " .. info .. " "):fg("#7da4dd") end
-		loop = "󰑗"
+		return ui.Span(" 󱇊 " .. info .. " "):fg("#00BFFF")
+	end
+
+	local state_icon = "󱇊" -- Resting (Diamond)
+	local state_color = "#939ab7" -- Slate
+	if state == "LASHING" then
+		state_icon = "󱐌" -- Lashing (Lightning)
+		state_color = "#00BFFF" -- Sapphire
 	end
 
 	local loop_color = "#939ab7"
@@ -36,12 +40,12 @@ Header:children_add(function()
 	end
 
 	return ui.Line({
-		ui.Span("   "):fg("#a6da95"),
+		ui.Span(" " .. state_icon .. " "):fg(state_color),
 		ui.Span("["):fg("#939ab7"),
-		ui.Span(state):fg("#7da4dd"),
+		ui.Span(state):fg(state_color),
 		ui.Span("] "):fg("#939ab7"),
 		ui.Span(loop .. " "):fg(loop_color),
-		ui.Span(title .. " "):fg("#cad3f5"),
+		ui.Span(title .. " "):fg("#FFD700"), -- Honor's Gold
 	})
 end, 1000, Header.RIGHT or 1)
 

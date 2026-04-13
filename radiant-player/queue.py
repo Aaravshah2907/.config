@@ -317,7 +317,7 @@ def cmd_short_status():
     loop_file = send_command(["get_property", "loop-file"])
     loop_playlist = send_command(["get_property", "loop-playlist"])
     
-    title = title.get("data") if title else "Unknown"
+    title = title.get("data") if title else "Resting"
     paused = paused.get("data") if paused else True
     
     lf = loop_file.get("data") if loop_file else "no"
@@ -328,10 +328,11 @@ def cmd_short_status():
     state = "󰋋" if paused else "󰟎"
     
     loop_icon = "󰑗"
-    if is_loop_file: loop_icon = "󰑘¹"
-    elif is_loop_playlist: loop_icon = "󰑖∞"
+    if is_loop_file: loop_icon = "󰑘"
+    elif is_loop_playlist: loop_icon = "󰑖"
     
-    if len(title) > 25: title = title[:22] + "..."
+    # Truncate title for the bar
+    if len(title) > 28: title = title[:25] + "..."
     # Format: [STATE] LOOP_ICON TITLE
     print(f"[{state}] {loop_icon} {title}")
 

@@ -227,6 +227,7 @@ def signal_refresh():
     try:
         if os.getenv("YAZI_ID"):
             subprocess.run(["ya", "emit", "redraw"], check=False)
+            subprocess.run(["ya", "pub", "music-update"], check=False)
     except:
         pass
 

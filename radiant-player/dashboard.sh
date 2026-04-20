@@ -79,7 +79,7 @@ draw() {
     echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
     echo -e "  ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop"
     echo -e "  ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf"
-    echo -e "  ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del    ${DIM}[r]${NC} Refresh ${DIM}[/]${NC} Find  ${DIM}[C-s/l]${NC} Save/Load ${RED}[q]${NC} Quit"
+    echo -e "  ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del ${DIM}[a]${NC} Add- ${DIM}[o]${NC} Open- ${DIM}[r]${NC} Refresh ${DIM}[/]${NC} Find ${DIM}[C-s/l]${NC} Save/Load ${RED}[q]${NC} Quit"
 }
 
 # ---------- INIT ----------
@@ -126,6 +126,20 @@ while true; do
         n)  $PY next;   load_queue; selected=$($PY current_index 2>/dev/null) ;;
         p)  $PY prev;   load_queue; selected=$($PY current_index 2>/dev/null) ;;
         d)  $PY remove "$selected"; load_queue ;;
+        a)
+            spotify_uri=$(printf "" | fzf --prompt=" Spotify URI/URL > " --print-query --height 10 --reverse | awk 'END{print}')
+            if [ -n "$spotify_uri" ]; then
+                $PY add_spotify "$spotify_uri"
+                load_queue
+            fi
+            ;;
+        o)
+            show_cursor
+            clear
+            spotify_player
+            hide_cursor
+            load_queue
+            ;;
         j)  $PY move "$selected" 1; ((selected++)); load_queue ;;
         k)  $PY move "$selected" -1; ((selected--)); load_queue ;;
         l)  $PY loop;   load_queue ;;

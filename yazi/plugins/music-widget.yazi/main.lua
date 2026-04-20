@@ -21,7 +21,7 @@ Header:children_add(function()
 	local info = get_music_info()
 	if info == "" then return ui.Span("") end
 
-	-- info format: [STATE] LOOP_ICON TITLE
+	-- info format: [STATE] LOOP_ICON SOURCE_ICON TITLE
 	local state, loop, title = info:match("^%[(.-)%]%s+(.-)%s+(.*)$")
 	if not state then 
 		return ui.Span(" 󱇊 " .. info .. " "):fg("#00BFFF")
@@ -39,13 +39,20 @@ Header:children_add(function()
 	elseif loop:match("󰑖") then loop_color = "#c6a0f6" -- All (Purple)
 	end
 
+	local source_color = "#FFD700"
+	if title:match("^") then
+		source_color = "#9ece6a"
+	elseif title:match("^󰎈") then
+		source_color = "#7aa2f7"
+	end
+
 	return ui.Line({
 		ui.Span(" " .. state_icon .. " "):fg(state_color),
 		ui.Span("["):fg("#939ab7"),
 		ui.Span(state):fg(state_color),
 		ui.Span("] "):fg("#939ab7"),
 		ui.Span(loop .. " "):fg(loop_color),
-		ui.Span(title .. " "):fg("#FFD700"), -- Honor's Gold
+		ui.Span(title .. " "):fg(source_color),
 	})
 end, 1000, Header.RIGHT or 1)
 

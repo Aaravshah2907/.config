@@ -4,6 +4,7 @@ yazi/scripts/*.log
 yazi/scripts/*.json
 radiant-player/*.json
 radiant-player/*.log
+spotify-player/app.toml
 *.lock
 todolist.md
 *.svg

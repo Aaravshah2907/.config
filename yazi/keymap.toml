@@ -94,6 +94,7 @@ keymap = [
 	{ on = [ "m", "O" ], run = "linemode owner",       desc = "Linemode: owner" },
 	{ on = [ "m", "N" ], run = "linemode none",        desc = "Linemode: none" },
 	{ on = [ "m", "q" ], run = 'shell --block "/Users/aaravshah2975/.config/radiant-player/dashboard.sh"', desc = "Enter the Highstorm Dashboard", block = true },
+	{ on = [ "m", "a", "s" ], run = 'shell --block "/bin/zsh -lc '\''read -r \"uri? Spotify URI/URL: \"; [ -n \"$uri\" ] && /opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py add_spotify \"$uri\"'\''"', desc = "Add Spotify URI to queue" },
 	{ on = [ "m", "s" ], run = "redraw", desc = "Refresh Stormlight" },
 	{ on = ["m", "p"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/control.sh toggle"',  desc = "Infuse/Extinguish Stormlight" },
 	{ on = ["m", "n"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/control.sh next"', desc = "Lash Forward" },

@@ -63,17 +63,28 @@ YAZI_SCRIPT="/Users/aaravshah2975/.config/radiant-player/queue.py"
 MPV_STATUS=$(/opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
 if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.running') == "true" ]]; then
   TITLE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.title')
+  ARTIST=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.artist // empty')
   PAUSED=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.paused')
   LOOP=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.loop')
+  SOURCE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.source // "local"')
   
   LICON=""
   if [ "$LOOP" == "single" ]; then LICON="󰑘 "; elif [ "$LOOP" == "playlist" ]; then LICON="󰑖 "; fi
   
   ICON=""
+  APP="mpv"
+  if [ "$SOURCE" == "spotify" ]; then
+    ICON=""
+    APP="Spotify"
+  fi
   if [ "$PAUSED" == "true" ]; then
     ICON="󰏤"
   fi
-  update_bar "$LICON$TITLE" "mpv"
+  DISPLAY="$TITLE"
+  if [ -n "$ARTIST" ]; then
+    DISPLAY="$TITLE — $ARTIST"
+  fi
+  update_bar "$LICON$DISPLAY" "$APP"
   # Override icon after update_bar sets it default
   safe_set "$NAME" icon="$ICON"
   exit 0

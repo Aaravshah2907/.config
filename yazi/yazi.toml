@@ -69,6 +69,9 @@ vlc = [
 playlist = [
     { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py load "$@"', desc = "Load Playlist", for = "macos", orphan = true }
 ]
+spotify_add = [
+    { run = '/bin/zsh -lc "uri=$(awk \"NF{print; exit}\" \"$1\"); /opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py add_spotify \"$uri\""', desc = "Add Spotify URI to queue", for = "macos", orphan = true }
+]
 
 [open]
 rules = [
@@ -97,6 +100,9 @@ rules = [
 	{ url = "*", use = [ "open", "reveal" ] },
 	# Playlist
 	{ name = "*.m3u", use = [ "playlist" ] },
+	# Spotify pointer files
+	{ name = "*.spotify", use = [ "spotify_add" ] },
+	{ name = "*.spot", use = [ "spotify_add" ] },
 ]
 
 [tasks]

@@ -214,14 +214,34 @@ draw() {
     tput civis # Hide cursor
     clear
 
+    local term_cols
+    term_cols=$(tput cols 2>/dev/null || echo 80)
+    local width=$((term_cols - 12))
+    # Ensure minimum width covers the First Ideal quote (~91 chars + padding)
+    if ((width < 96)); then width=96; fi
+
+    # inner_width is the distance between the two vertical borders (│ ... │)
+    local inner_width=$((width + 2))
+    local hline=$(printf '─%.0s' $(seq 1 $width))
+
     # Header / Branding
-    echo -e "  ${MAGENTA}${BOLD}┌─────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "  ${MAGENTA}${BOLD}│${NC}  ${CYAN}󱐌 ${BOLD}THE KNIGHTS RADIANT${NC} ${DIM}│ Journey before destination...${NC}   ${MAGENTA}${BOLD}│${NC}"
-    echo -e "  ${MAGENTA}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
+    local header_text="  󱐌 THE KNIGHTS RADIANT │ Journey before destination...  "
+    local header_len=${#header_text}
+    local header_padding=$((inner_width - header_len))
+    ((header_padding < 0)) && header_padding=0
+    
+    echo -e "  ${MAGENTA}${BOLD}┌─${hline}─┐${NC}"
+    echo -e "  ${MAGENTA}${BOLD}│${NC}${header_text}${MAGENTA}${BOLD}$(printf '%*s' "$header_padding" "")│${NC}"
+    echo -e "  ${MAGENTA}${BOLD}└─${hline}─┘${NC}"
     echo ""
 
     # Box 1: Infused Record (Now Playing)
-    echo -e "  ${BLUE}${BOLD}┌── INFUSED RECORD ───────────────────────────────────────────┐${NC}"
+    local label1=" INFUSED RECORD "
+    local label1_len=${#label1}
+    # Top border: ┌── (2) label (len) hline1 (len) ──┐ (3) = total width inner_width+2
+    local hline1_len=$((inner_width - label1_len - 4))
+    local hline1=$(printf '─%.0s' $(seq 1 $hline1_len))
+    echo -e "  ${BLUE}${BOLD}┌──${label1}${hline1}──┐${NC}"
     
     local status_raw
     local -a status_lines=()
@@ -231,22 +251,25 @@ draw() {
     done < <(printf "%s\n" "$status_raw")
     
     for line in "${status_lines[@]}"; do
-        # Manual padding for the box
-        # We assume status_lines are roughly formatted to fit. 
-        # PY status_fast usually returns lines with ANSI.
-        printf "  ${BLUE}${BOLD}│${NC}  %-64b ${BLUE}${BOLD}│${NC}\n" "$line"
+        local plain_line=$(echo -e "$line" | sed 's/\x1b\[[0-9;]*m//g')
+        local visible_len=$(( ${#plain_line} + 2 )) # account for "  " prefix
+        local padding=$((inner_width - visible_len))
+        ((padding < 0)) && padding=0
+        printf "  ${BLUE}${BOLD}│${NC}  %b%*s${BLUE}${BOLD}│${NC}\n" "$line" "$padding" ""
     done
-    echo -e "  ${BLUE}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
+    echo -e "  ${BLUE}${BOLD}└─${hline}─┘${NC}"
     echo ""
 
     # Box 2: Highstorm Queue
-    echo -e "  ${GREEN}${BOLD}┌── THE HIGHSTORM QUEUE ${DIM}(${#lines[@]} spheres)${GREEN}${BOLD} ───────────────┐${NC}"
+    local label2=" THE HIGHSTORM SCHEDULE (${#lines[@]} spheres) "
+    local label2_len=${#label2}
+    local hline2_len=$((inner_width - label2_len - 4))
+    local hline2=$(printf '─%.0s' $(seq 1 $hline2_len))
+    echo -e "  ${GREEN}${BOLD}┌──${label2}${hline2}──┐${NC}"
     
     local term_rows
     term_rows=$(tput lines 2>/dev/null || echo 40)
     local nowplaying_rows=${#status_lines[@]}
-    # Calculate space left for queue. 
-    # Header(3) + InfusedHeader(1) + InfusedLines + InfusedFooter(1) + Spacing(2) + QueueHeader(1) + QueueFooter(1) + CommandDeck(5) + Spacing(1)
     local max_queue_rows=$((term_rows - nowplaying_rows - 16))
     ((max_queue_rows < 4)) && max_queue_rows=4
     ((max_queue_rows > 16)) && max_queue_rows=16
@@ -266,22 +289,29 @@ draw() {
         local marker=$(echo "$line" | cut -d'|' -f2 | xargs)
         local name=$(echo "$line" | cut -d'|' -f3- | sed 's/^ //')
         
-        # Truncate name to avoid breaking the box
-        local short_name="${name:0:50}"
+        local name_limit=$((inner_width - 10))
+        local short_name="${name:0:$name_limit}"
         
+        local display_line=""
         if [ "$i" -eq "$selected" ]; then
-            printf "  ${GREEN}${BOLD}│${NC} ${YELLOW}${BOLD}󱐋 %2d │ %s %-50s${NC} ${GREEN}${BOLD}│${NC}\n" "$idx" "$marker" "$short_name"
+            display_line=$(printf " ${YELLOW}${BOLD}󱐋 %2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
         else
-            printf "  ${GREEN}${BOLD}│${NC}    ${DIM}%2d │${NC} %s %-50s ${GREEN}${BOLD}│${NC}\n" "$idx" "$marker" "$short_name"
+            display_line=$(printf "    %2d │ %s %-${name_limit}s" "$idx" "$marker" "$short_name")
         fi
+
+        local plain_display=$(echo -e "$display_line" | sed 's/\x1b\[[0-9;]*m//g')
+        local visible_len=${#plain_display}
+        local padding=$((inner_width - visible_len))
+        ((padding < 0)) && padding=0
+        printf "  ${GREEN}${BOLD}│${NC}%b%*s${GREEN}${BOLD}│${NC}\n" "$display_line" "$padding" ""
     done
 
     # Fill empty space if queue is short
     local current_lines=$((end - start))
     for ((i=current_lines; i<max_queue_rows; i++)); do
-        printf "  ${GREEN}${BOLD}│${NC} %-60s ${GREEN}${BOLD}│${NC}\n" ""
+        printf "  ${GREEN}${BOLD}│${NC}%*s${GREEN}${BOLD}│${NC}\n" "$inner_width" ""
     done
-    echo -e "  ${GREEN}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
+    echo -e "  ${GREEN}${BOLD}└─${hline}─┘${NC}"
     
     if [ "$sorted_mode" -eq 1 ]; then
         echo -e "      ${YELLOW}${DIM}Sort Mode: Name (press [t] to restore original queue order)${NC}"
@@ -289,13 +319,30 @@ draw() {
     echo ""
 
     # Box 3: Command Deck (Shortcuts)
-    echo -e "  ${CYAN}${BOLD}┌── COMMAND DECK ─────────────────────────────────────────────┐${NC}"
-    printf "  ${CYAN}${BOLD}│${NC} ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop      ${CYAN}${BOLD}│${NC}\n"
-    printf "  ${CYAN}${BOLD}│${NC} ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf      ${CYAN}${BOLD}│${NC}\n"
-    printf "  ${CYAN}${BOLD}│${NC} ${GREEN}${NC} ${BOLD}SPO${NC} ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify    ${CYAN}${BOLD}│${NC}\n"
-    printf "  ${CYAN}${BOLD}│${NC} ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} Clear  ${DIM}[t]${NC} Sort  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find ${RED}[q]${NC} Quit ${CYAN}${BOLD}│${NC}\n"
-    echo -e "  ${CYAN}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
+    local label3=" SURGE DECK "
+    local label3_len=${#label3}
+    local hline3_len=$((inner_width - label3_len - 4))
+    local hline3=$(printf '─%.0s' $(seq 1 $hline3_len))
+    echo -e "  ${CYAN}${BOLD}┌──${label3}${hline3}──┐${NC}"
+    
+    local -a cmd_rows=(
+        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop"
+        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf"
+        " ${GREEN}${NC} ${BOLD}SPO${NC} ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify"
+        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} Clear  ${DIM}[t]${NC} Sort  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find ${RED}[q]${NC} Quit"
+    )
+    
+    for row in "${cmd_rows[@]}"; do
+        local plain_row=$(echo -e "$row" | sed 's/\x1b\[[0-9;]*m//g')
+        local visible_len=${#plain_row}
+        local padding=$((inner_width - visible_len))
+        ((padding < 0)) && padding=0
+        printf "  ${CYAN}${BOLD}│${NC}%b%*s${CYAN}${BOLD}│${NC}\n" "$row" "$padding" ""
+    done
+    echo -e "  ${CYAN}${BOLD}└─${hline}─┘${NC}"
 }
+
+
 
 # ---------- INIT ----------
 ORIG_STTY=$(stty -g 2>/dev/null || true)

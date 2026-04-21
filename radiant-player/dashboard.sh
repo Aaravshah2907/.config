@@ -215,47 +215,39 @@ draw() {
     clear
 
     # Header / Branding
-    echo -e "${MAGENTA}${BOLD}┌─────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${MAGENTA}${BOLD}│${NC}  ${CYAN}󱐌 ${BOLD}THE KNIGHTS RADIANT${NC} ${DIM}│ Journey before destination...${NC}   ${MAGENTA}${BOLD}│${NC}"
-    echo -e "${MAGENTA}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
+    echo -e "  ${MAGENTA}${BOLD}┌─────────────────────────────────────────────────────────────┐${NC}"
+    echo -e "  ${MAGENTA}${BOLD}│${NC}  ${CYAN}󱐌 ${BOLD}THE KNIGHTS RADIANT${NC} ${DIM}│ Journey before destination...${NC}   ${MAGENTA}${BOLD}│${NC}"
+    echo -e "  ${MAGENTA}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
     echo ""
 
-    # Now Playing Card
-    echo -e "  ${BLUE}${BOLD}󰊠 INFUSED RECORD${NC}"
-    echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
+    # Box 1: Infused Record (Now Playing)
+    echo -e "  ${BLUE}${BOLD}┌── INFUSED RECORD ───────────────────────────────────────────┐${NC}"
+    
     local status_raw
     local -a status_lines=()
-    local -a art_lines=()
-    local status_col_width=64
-    local col_gap="   "
     status_raw=$($PY status_fast 2>/dev/null)
     while IFS= read -r line; do
-        status_lines+=("$line")
+        [ -n "$line" ] && status_lines+=("$line")
     done < <(printf "%s\n" "$status_raw")
-    if command -v chafa >/dev/null 2>&1; then
-        while IFS= read -r line; do
-            art_lines+=("$line")
-        done < <($PY current_art_fast 2>/dev/null)
-    fi
-    local status_count=${#status_lines[@]}
-    local art_count=${#art_lines[@]}
-    local nowplaying_rows=$status_count
-    ((art_count > nowplaying_rows)) && nowplaying_rows=$art_count
-    ((nowplaying_rows < 1)) && nowplaying_rows=1
-    for ((i=0; i<nowplaying_rows; i++)); do
-        local s="${status_lines[$i]}"
-        local a="${art_lines[$i]}"
-        printf "  %-${status_col_width}b%s%b\n" "$s" "$col_gap" "$a"
+    
+    for line in "${status_lines[@]}"; do
+        # Manual padding for the box
+        # We assume status_lines are roughly formatted to fit. 
+        # PY status_fast usually returns lines with ANSI.
+        printf "  ${BLUE}${BOLD}│${NC}  %-64b ${BLUE}${BOLD}│${NC}\n" "$line"
     done
+    echo -e "  ${BLUE}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
     echo ""
 
-    # Queue List
-    echo -e "  ${GREEN}${BOLD}󰒺 THE HIGHSTORM QUEUE${NC} ${DIM}(${#lines[@]} spheres)${NC}"
-    echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
-
+    # Box 2: Highstorm Queue
+    echo -e "  ${GREEN}${BOLD}┌── THE HIGHSTORM QUEUE ${DIM}(${#lines[@]} spheres)${GREEN}${BOLD} ───────────────┐${NC}"
+    
     local term_rows
     term_rows=$(tput lines 2>/dev/null || echo 40)
-    local max_queue_rows=$((term_rows - nowplaying_rows - 14 - (sorted_mode == 1 ? 1 : 0)))
+    local nowplaying_rows=${#status_lines[@]}
+    # Calculate space left for queue. 
+    # Header(3) + InfusedHeader(1) + InfusedLines + InfusedFooter(1) + Spacing(2) + QueueHeader(1) + QueueFooter(1) + CommandDeck(5) + Spacing(1)
+    local max_queue_rows=$((term_rows - nowplaying_rows - 16))
     ((max_queue_rows < 4)) && max_queue_rows=4
     ((max_queue_rows > 16)) && max_queue_rows=16
 
@@ -270,31 +262,39 @@ draw() {
 
     for ((i=start; i<end; i++)); do
         local line="${lines[$i]}"
-        # Format: i | marker | name
         local idx=$(echo "$line" | cut -d'|' -f1 | xargs)
         local marker=$(echo "$line" | cut -d'|' -f2 | xargs)
         local name=$(echo "$line" | cut -d'|' -f3- | sed 's/^ //')
-
+        
+        # Truncate name to avoid breaking the box
+        local short_name="${name:0:50}"
+        
         if [ "$i" -eq "$selected" ]; then
-            printf "  ${YELLOW}${BOLD}󱐋 %2d │ %s %-50s${NC}\n" "$idx" "$marker" "$name"
+            printf "  ${GREEN}${BOLD}│${NC} ${YELLOW}${BOLD}󱐋 %2d │ %s %-50s${NC} ${GREEN}${BOLD}│${NC}\n" "$idx" "$marker" "$short_name"
         else
-            printf "    ${DIM}%2d │${NC} %s %-50s\n" "$idx" "$marker" "$name"
+            printf "  ${GREEN}${BOLD}│${NC}    ${DIM}%2d │${NC} %s %-50s ${GREEN}${BOLD}│${NC}\n" "$idx" "$marker" "$short_name"
         fi
     done
 
     # Fill empty space if queue is short
     local current_lines=$((end - start))
-    for ((i=current_lines; i<max_queue_rows; i++)); do echo ""; done
-
-    # Legend / Shortcuts
-    echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
-    echo -e "  ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop"
-    echo -e "  ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf"
-    echo -e "  ${GREEN}${NC} ${BOLD}SPO${NC} ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist Tracks  ${DIM}[o]${NC} Open spotify_player"
-    echo -e "  ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} ClearQ  ${DIM}[t]${NC} Sort  ${DIM}[r]${NC} Refresh  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find  ${DIM}[C-s/l]${NC} Save/Load  ${RED}[q]${NC} Quit"
+    for ((i=current_lines; i<max_queue_rows; i++)); do
+        printf "  ${GREEN}${BOLD}│${NC} %-60s ${GREEN}${BOLD}│${NC}\n" ""
+    done
+    echo -e "  ${GREEN}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
+    
     if [ "$sorted_mode" -eq 1 ]; then
         echo -e "      ${YELLOW}${DIM}Sort Mode: Name (press [t] to restore original queue order)${NC}"
     fi
+    echo ""
+
+    # Box 3: Command Deck (Shortcuts)
+    echo -e "  ${CYAN}${BOLD}┌── COMMAND DECK ─────────────────────────────────────────────┐${NC}"
+    printf "  ${CYAN}${BOLD}│${NC} ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop      ${CYAN}${BOLD}│${NC}\n"
+    printf "  ${CYAN}${BOLD}│${NC} ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf      ${CYAN}${BOLD}│${NC}\n"
+    printf "  ${CYAN}${BOLD}│${NC} ${GREEN}${NC} ${BOLD}SPO${NC} ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify    ${CYAN}${BOLD}│${NC}\n"
+    printf "  ${CYAN}${BOLD}│${NC} ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} Clear  ${DIM}[t]${NC} Sort  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find ${RED}[q]${NC} Quit ${CYAN}${BOLD}│${NC}\n"
+    echo -e "  ${CYAN}${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
 }
 
 # ---------- INIT ----------

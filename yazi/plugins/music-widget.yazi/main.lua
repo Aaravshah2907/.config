@@ -3,10 +3,36 @@
 -- ====================================================================
 
 local music_info = ""
+local last_fetch_s = 0
+local FETCH_INTERVAL_S = 2
+local FORCE_REFRESH_S = 6
+local TICK_FILE = "/tmp/radiant-music-update.tick"
+local last_tick = ""
+
+local read_tick = function()
+	local handle = io.open(TICK_FILE, "r")
+	if not handle then return "" end
+	local content = handle:read("*a") or ""
+	handle:close()
+	return content:gsub("%s+$", "")
+end
 
 -- DATA FETCH (Always fetch fresh on render for absolute accuracy)
 local get_music_info = function()
-	local cmd = "/opt/homebrew/bin/python3 " .. os.getenv("HOME") .. "/.config/yazi/scripts/music_queue.py short_status 2>/dev/null"
+	local now_s = os.time()
+	local tick = read_tick()
+	local tick_changed = tick ~= "" and tick ~= last_tick
+	if not tick_changed and (now_s - last_fetch_s) < FETCH_INTERVAL_S then
+		return music_info
+	end
+	if not tick_changed and (now_s - last_fetch_s) < FORCE_REFRESH_S and music_info ~= "" then
+		return music_info
+	end
+
+	last_tick = tick
+	last_fetch_s = now_s
+
+	local cmd = "/opt/homebrew/bin/python3 " .. os.getenv("HOME") .. "/.config/yazi/scripts/music_queue.py short_status_fast 2>/dev/null"
 	local handle = io.popen(cmd)
 	if handle then
 		music_info = handle:read("*a"):gsub("\n$", "")

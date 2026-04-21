@@ -12,3 +12,4 @@ todolist.md
 *.jpg
 *.jpeg
 *.txt
+*/__pycache__/*

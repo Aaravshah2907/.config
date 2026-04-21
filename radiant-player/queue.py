@@ -6,8 +6,10 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
+import fcntl
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib import error as urlerror
@@ -18,6 +20,10 @@ SOCKET_PATH = "/tmp/mpv-yazi.sock"
 STATE_PATH = Path(os.path.expanduser("~/.config/radiant-player/queue_state.json"))
 PLAYLIST_DIR = Path(os.path.expanduser("~/.config/mpv/playlists"))
 LOCK_PATH = Path("/tmp/radiant-player.lock")
+SPOTIFY_STATUS_CACHE_PATH = Path("/tmp/radiant-spotify-status.json")
+MUSIC_TICK_PATH = Path("/tmp/radiant-music-update.tick")
+STATUS_SNAPSHOT_PATH = Path("/tmp/radiant-now-playing.json")
+DEBUG_LOG_PATH = Path("/tmp/radiant-player.log")
 
 BOLD = "\033[1m"
 DIM = "\033[2m"
@@ -49,12 +55,14 @@ DEFAULT_STATE = {
     "loop_mode": "off",  # off | single | playlist
     "shuffle": False,
     "active_source": None,  # local | spotify
+    "source_lock": "auto",  # auto | local | spotify
     "last_status": {
         "running": False,
         "paused": True,
         "title": "Resting",
         "artist": "",
         "source": None,
+        "track_id": "",
         "loop": "off",
         "position": 0,
         "duration": 0,
@@ -64,6 +72,17 @@ DEFAULT_STATE = {
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat()
+
+
+def debug_log(message):
+    if os.getenv("RADIANT_DEBUG", "").lower() not in {"1", "true", "yes", "on"}:
+        return
+    try:
+        DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with DEBUG_LOG_PATH.open("a", encoding="utf-8") as f:
+            f.write(f"{datetime.now().isoformat()} {message}\n")
+    except Exception:
+        pass
 
 
 def resolve_bin(name):
@@ -82,6 +101,8 @@ def resolve_bin(name):
 MPV_BIN = resolve_bin("mpv")
 SPOTIFY_PLAYER_BIN = resolve_bin("spotify_player")
 LIBRESPOT_BIN = resolve_bin("librespot")
+SPOTIFY_STATUS_CACHE = {"ts": 0.0, "data": None}
+LOCK_WAIT_TIMEOUT_SEC = 2.0
 
 
 def _deep_merge(base, extra):
@@ -186,14 +207,20 @@ def shell_ok(cmd):
 def spotify_cmd(args):
     if not shell_ok(f"command -v {SPOTIFY_PLAYER_BIN} >/dev/null 2>&1"):
         return False, "spotify_player missing"
-    p = subprocess.run(
-        [SPOTIFY_PLAYER_BIN, *args],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=False,
-    )
-    return p.returncode == 0, (p.stdout or p.stderr).strip()
+    try:
+        p = subprocess.run(
+            [SPOTIFY_PLAYER_BIN, *args],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+            timeout=3,
+        )
+        return p.returncode == 0, (p.stdout or p.stderr).strip()
+    except KeyboardInterrupt:
+        return False, "spotify_player command interrupted"
+    except subprocess.TimeoutExpired:
+        return False, "spotify_player command timed out"
 
 
 def spotify_pause():
@@ -280,6 +307,21 @@ def spotify_cached_access_token():
     return ""
 
 
+def spotify_api_get(path):
+    token = spotify_cached_access_token()
+    if not token:
+        return None
+    req = urlrequest.Request(
+        f"https://api.spotify.com{path}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    try:
+        with urlrequest.urlopen(req, timeout=6) as resp:
+            return json.loads(resp.read().decode("utf-8", "replace"))
+    except (urlerror.URLError, json.JSONDecodeError, TimeoutError):
+        return None
+
+
 def spotify_track_metadata(uri):
     uri = normalize_spotify_uri(uri)
     kind = spotify_kind_from_uri(uri)
@@ -309,30 +351,124 @@ def spotify_track_metadata(uri):
             pass
 
     # Fallback: direct web API from cached token.
-    token = spotify_cached_access_token()
-    if not token:
+    payload = spotify_api_get(f"/v1/tracks/{sid}")
+    if not payload:
         return {}
-    req = urlrequest.Request(
-        f"https://api.spotify.com/v1/tracks/{sid}",
-        headers={"Authorization": f"Bearer {token}"},
-    )
+    title = payload.get("name") or sid
+    artists = payload.get("artists") or []
+    artist = ", ".join(a.get("name", "") for a in artists if isinstance(a, dict)).strip(", ")
+    album = (payload.get("album") or {}).get("name", "")
+    duration_sec = int((payload.get("duration_ms") or 0) / 1000) if payload.get("duration_ms") else None
+    return {
+        "spotify_id": sid,
+        "title": title,
+        "artist": artist,
+        "album": album,
+        "duration_sec": duration_sec,
+    }
+
+
+def spotify_playlist_tracks(uri, max_items=300):
+    sid = spotify_id_from_uri(uri)
+    if not sid:
+        return []
+    out = []
+    path = f"/v1/playlists/{sid}/tracks?limit=100&offset=0"
+    while path and len(out) < max_items:
+        payload = spotify_api_get(path.replace("https://api.spotify.com", ""))
+        if not payload:
+            break
+        for row in payload.get("items", []):
+            track = row.get("track") or {}
+            track_id = track.get("id")
+            if not track_id:
+                continue
+            artists = track.get("artists") or []
+            artist = ", ".join(a.get("name", "") for a in artists if isinstance(a, dict)).strip(", ")
+            duration_sec = int((track.get("duration_ms") or 0) / 1000) if track.get("duration_ms") else None
+            out.append(
+                {
+                    "id": str(uuid.uuid4()),
+                    "source": "spotify",
+                    "title": track.get("name") or track_id,
+                    "artist": artist,
+                    "album": (track.get("album") or {}).get("name", ""),
+                    "local_path": "",
+                    "spotify_uri": f"spotify:track:{track_id}",
+                    "spotify_id": track_id,
+                    "duration_sec": duration_sec,
+                    "added_at": now_iso(),
+                }
+            )
+            if len(out) >= max_items:
+                break
+        path = payload.get("next")
+    return out
+
+
+def spotify_playlist_track_choices(uri, max_items=300):
+    """Return lightweight track rows for interactive selection UIs."""
+    rows = spotify_playlist_tracks(uri, max_items=max_items)
+    out = []
+    for row in rows:
+        out.append(
+            {
+                "spotify_id": row.get("spotify_id", ""),
+                "title": row.get("title", ""),
+                "artist": row.get("artist", ""),
+                "album": row.get("album", ""),
+                "duration_sec": row.get("duration_sec"),
+            }
+        )
+    return out
+
+
+def spotify_track_image_url(track_id):
+    payload = spotify_api_get(f"/v1/tracks/{track_id}")
+    if not payload:
+        return "", "", ""
+    title = payload.get("name", "")
+    artists = payload.get("artists") or []
+    artist = ", ".join(a.get("name", "") for a in artists if isinstance(a, dict)).strip(", ")
+    images = (payload.get("album") or {}).get("images") or []
+    image_url = images[1].get("url") if len(images) > 1 else (images[0].get("url") if images else "")
+    return image_url, title, artist
+
+
+def cmd_spotify_art(track_id):
+    tid = (track_id or "").strip()
+    if not tid:
+        return
+    image_url, title, artist = spotify_track_image_url(tid)
+    if title:
+        print(f"{title}")
+        if artist:
+            print(f"{artist}")
+        print("")
+    if not image_url:
+        print("No album art found.")
+        return
     try:
-        with urlrequest.urlopen(req, timeout=5) as resp:
-            payload = json.loads(resp.read().decode("utf-8", "replace"))
-        title = payload.get("name") or sid
-        artists = payload.get("artists") or []
-        artist = ", ".join(a.get("name", "") for a in artists if isinstance(a, dict)).strip(", ")
-        album = (payload.get("album") or {}).get("name", "")
-        duration_sec = int((payload.get("duration_ms") or 0) / 1000) if payload.get("duration_ms") else None
-        return {
-            "spotify_id": sid,
-            "title": title,
-            "artist": artist,
-            "album": album,
-            "duration_sec": duration_sec,
-        }
-    except (urlerror.URLError, json.JSONDecodeError, TimeoutError):
-        return {}
+        with urlrequest.urlopen(image_url, timeout=6) as resp:
+            image_data = resp.read()
+    except Exception:
+        print("Unable to fetch album art.")
+        return
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+            tmp.write(image_data)
+            tmp_path = tmp.name
+        cmd = ["chafa", "--size", "36x18", "--animate", "off", tmp_path]
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, check=False)
+        if p.stdout:
+            print(p.stdout.rstrip())
+    finally:
+        try:
+            if tmp_path:
+                os.remove(tmp_path)
+        except Exception:
+            pass
 
 
 def spotify_play_uri(uri):
@@ -374,18 +510,42 @@ def spotify_play_uri(uri):
     return False, uri
 
 
-def spotify_status():
+def spotify_status(max_age_sec=0.0):
     """
     Best-effort adapter for multiple spotify_player versions.
     """
+    now = time.time()
+    if max_age_sec > 0 and SPOTIFY_STATUS_CACHE_PATH.exists():
+        try:
+            with SPOTIFY_STATUS_CACHE_PATH.open("r", encoding="utf-8") as f:
+                payload = json.load(f)
+            ts = float(payload.get("ts", 0))
+            data = payload.get("data")
+            if data and (now - ts) < max_age_sec:
+                return dict(data)
+        except Exception:
+            pass
+
+    if max_age_sec > 0 and SPOTIFY_STATUS_CACHE["data"] and (now - SPOTIFY_STATUS_CACHE["ts"]) < max_age_sec:
+        return dict(SPOTIFY_STATUS_CACHE["data"])
+
     paused = False
     title = None
     artist = ""
     position = 0
     duration = 0
+    track_id = ""
     running = shell_ok(f"command -v {SPOTIFY_PLAYER_BIN} >/dev/null 2>&1")
     if not running:
-        return {"running": False, "paused": True, "title": None, "artist": "", "position": 0, "duration": 0}
+        data = {"running": False, "paused": True, "title": None, "artist": "", "position": 0, "duration": 0, "track_id": ""}
+        SPOTIFY_STATUS_CACHE["ts"] = now
+        SPOTIFY_STATUS_CACHE["data"] = dict(data)
+        try:
+            with SPOTIFY_STATUS_CACHE_PATH.open("w", encoding="utf-8") as f:
+                json.dump({"ts": now, "data": data}, f)
+        except Exception:
+            pass
+        return data
 
     # try JSON first (spotify_player v0.20+ CLI shape)
     ok, out = spotify_cmd(["get", "key", "playback"])
@@ -399,7 +559,25 @@ def spotify_status():
             paused = not bool(data.get("is_playing", data.get("playing", True)))
             position = int((data.get("progress_ms") or 0) / 1000)
             duration = int((data.get("item", {}).get("duration_ms") or data.get("duration_ms") or 0) / 1000)
-            return {"running": True, "paused": paused, "title": title, "artist": artist, "position": position, "duration": duration}
+            item_obj = data.get("item", {}) if isinstance(data.get("item"), dict) else {}
+            track_id = item_obj.get("id") or spotify_id_from_uri(item_obj.get("uri", ""))
+            data = {
+                "running": True,
+                "paused": paused,
+                "title": title,
+                "artist": artist,
+                "position": position,
+                "duration": duration,
+                "track_id": track_id or "",
+            }
+            SPOTIFY_STATUS_CACHE["ts"] = now
+            SPOTIFY_STATUS_CACHE["data"] = dict(data)
+            try:
+                with SPOTIFY_STATUS_CACHE_PATH.open("w", encoding="utf-8") as f:
+                    json.dump({"ts": now, "data": data}, f)
+            except Exception:
+                pass
+            return data
         except Exception:
             pass
 
@@ -414,7 +592,15 @@ def spotify_status():
             if " - " in title:
                 parts = title.split(" - ", 1)
                 title, artist = parts[0].strip(), parts[1].strip()
-    return {"running": True, "paused": paused, "title": title, "artist": artist, "position": position, "duration": duration}
+    data = {"running": True, "paused": paused, "title": title, "artist": artist, "position": position, "duration": duration, "track_id": track_id}
+    SPOTIFY_STATUS_CACHE["ts"] = now
+    SPOTIFY_STATUS_CACHE["data"] = dict(data)
+    try:
+        with SPOTIFY_STATUS_CACHE_PATH.open("w", encoding="utf-8") as f:
+            json.dump({"ts": now, "data": data}, f)
+    except Exception:
+        pass
+    return data
 
 
 def spotify_health():
@@ -423,6 +609,75 @@ def spotify_health():
         "librespot": shell_ok(f"command -v {LIBRESPOT_BIN} >/dev/null 2>&1"),
     }
     print(json.dumps(data))
+
+
+def nowplaying_spotify_snapshot():
+    nowplaying_bin = "/opt/homebrew/bin/nowplaying-cli"
+    if not os.path.exists(nowplaying_bin):
+        return None
+    try:
+        client = subprocess.run(
+            [nowplaying_bin, "get", "clientIdentifier"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=1.5,
+            check=False,
+        ).stdout.strip()
+        client_l = (client or "").strip().lower()
+        client_unknown = client_l in {"", "null", "(null)", "none"}
+
+        title = subprocess.run(
+            [nowplaying_bin, "get", "title"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=1.5,
+            check=False,
+        ).stdout.strip()
+        artist = subprocess.run(
+            [nowplaying_bin, "get", "artist"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=1.5,
+            check=False,
+        ).stdout.strip()
+        playback_rate = subprocess.run(
+            [nowplaying_bin, "get", "playbackRate"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=1.5,
+            check=False,
+        ).stdout.strip()
+
+        if not title:
+            return None
+        # Prefer explicit Spotify identity, but allow null/unknown clientIdentifier
+        # because some setups still expose valid title/artist while returning "null".
+        if (not re.search(r"spotify", client_l, re.IGNORECASE)) and (not client_unknown):
+            return None
+        return {
+            "running": True,
+            "paused": playback_rate != "1",
+            "title": title,
+            "artist": artist,
+            "position": 0,
+            "duration": 0,
+        }
+    except Exception:
+        return None
+
+
+def external_spotify_snapshot(max_age_sec=3.0):
+    st = spotify_status(max_age_sec=max_age_sec)
+    if st.get("running") and st.get("title"):
+        return st
+    np = nowplaying_spotify_snapshot()
+    if np:
+        return np
+    return None
 
 
 def entry_title(entry):
@@ -447,6 +702,20 @@ def ensure_index(state):
         state["current_index"] = len(q) - 1
 
 
+def normalize_queue_item(item):
+    if not isinstance(item, dict):
+        return
+    if item.get("source") != "spotify":
+        return
+    uri = (item.get("spotify_uri") or "").strip()
+    sid = (item.get("spotify_id") or "").strip()
+    if uri and not sid:
+        item["spotify_id"] = spotify_id_from_uri(uri)
+        return
+    if (not uri) and sid:
+        item["spotify_uri"] = f"spotify:track:{sid}"
+
+
 def stop_inactive_source(source):
     if source == "spotify":
         mpv_send(["set_property", "pause", True])
@@ -454,17 +723,54 @@ def stop_inactive_source(source):
         spotify_pause()
 
 
-def update_last_status(state, running=False, paused=True, title="Resting", artist="", source=None, position=0, duration=0):
+def update_last_status(state, running=False, paused=True, title="Resting", artist="", source=None, position=0, duration=0, track_id=""):
     state["last_status"] = {
         "running": running,
         "paused": paused,
         "title": title or "Resting",
         "artist": artist or "",
         "source": source,
+        "track_id": track_id or "",
         "loop": state.get("loop_mode", "off"),
         "position": position or 0,
         "duration": duration or 0,
     }
+    try:
+        payload = {
+            "ts": time.time(),
+            "data": {
+                "running": state["last_status"]["running"],
+                "paused": state["last_status"]["paused"],
+                "title": state["last_status"]["title"],
+                "artist": state["last_status"]["artist"],
+                "source": state["last_status"]["source"],
+                "track_id": state["last_status"]["track_id"],
+                "loop": state.get("loop_mode", "off"),
+                "position": state["last_status"]["position"],
+                "duration": state["last_status"]["duration"],
+            },
+        }
+        with STATUS_SNAPSHOT_PATH.open("w", encoding="utf-8") as f:
+            json.dump(payload, f)
+    except Exception:
+        pass
+
+
+def read_status_snapshot(max_age_sec=15):
+    if not STATUS_SNAPSHOT_PATH.exists():
+        return None
+    try:
+        with STATUS_SNAPSHOT_PATH.open("r", encoding="utf-8") as f:
+            payload = json.load(f)
+        ts = float(payload.get("ts", 0))
+        data = payload.get("data") or {}
+        if max_age_sec > 0 and (time.time() - ts) > max_age_sec:
+            return None
+        if not data:
+            return None
+        return data
+    except Exception:
+        return None
 
 
 def play_current(state):
@@ -473,6 +779,7 @@ def play_current(state):
         update_last_status(state)
         return
     item = state["queue"][state["current_index"]]
+    normalize_queue_item(item)
     source = item.get("source", "local")
     stop_inactive_source(source)
 
@@ -508,6 +815,7 @@ def play_current(state):
                 source="spotify",
                 position=st.get("position", 0),
                 duration=st.get("duration", item.get("duration_sec", 0)),
+                track_id=st.get("track_id") or item.get("spotify_id", ""),
             )
         else:
             update_last_status(
@@ -517,21 +825,55 @@ def play_current(state):
                 title=item.get("spotify_id") or item.get("title", "Spotify item"),
                 artist=item.get("artist", ""),
                 source="spotify",
+                track_id=item.get("spotify_id", ""),
             )
     state["active_source"] = source
 
 
 def refresh_live_status(state):
+    if maybe_reconcile_external_spotify(state):
+        idx = state.get("current_index", -1)
+        q = state.get("queue", [])
+        if idx < 0 or idx >= len(q) or q[idx].get("source") != "local":
+            return
     idx = state.get("current_index", -1)
     q = state.get("queue", [])
     if idx < 0 or idx >= len(q):
-        update_last_status(state)
+        ext = external_spotify_snapshot()
+        if ext:
+            update_last_status(
+                state,
+                running=True,
+                paused=ext.get("paused", True),
+                title=ext.get("title", "Spotify"),
+                artist=ext.get("artist", ""),
+                source="spotify",
+                position=ext.get("position", 0),
+                duration=ext.get("duration", 0),
+                track_id=ext.get("track_id", ""),
+            )
+        else:
+            update_last_status(state)
         return
     item = q[idx]
     source = item.get("source", "local")
     if source == "local":
         if not is_mpv_running():
-            update_last_status(state, running=False, paused=True, title=item.get("title", "Resting"), artist=item.get("artist", ""), source="local")
+            ext = external_spotify_snapshot()
+            if ext:
+                update_last_status(
+                    state,
+                    running=True,
+                    paused=ext.get("paused", True),
+                    title=ext.get("title", "Spotify"),
+                    artist=ext.get("artist", ""),
+                    source="spotify",
+                    position=ext.get("position", 0),
+                    duration=ext.get("duration", 0),
+                    track_id=ext.get("track_id", ""),
+                )
+            else:
+                update_last_status(state, running=False, paused=True, title=item.get("title", "Resting"), artist=item.get("artist", ""), source="local")
             return
         title = mpv_send(["get_property", "media-title"])
         paused = mpv_send(["get_property", "pause"])
@@ -558,34 +900,170 @@ def refresh_live_status(state):
                 item["spotify_id"] = meta.get("spotify_id") or item.get("spotify_id")
                 if meta.get("duration_sec"):
                     item["duration_sec"] = meta.get("duration_sec")
-        st = spotify_status()
+        st = spotify_status(max_age_sec=5.0)
+        title_candidate = st.get("title")
+        # If Spotify returns an opaque ID-like token, prefer queue metadata title.
+        if isinstance(title_candidate, str) and re.fullmatch(r"[A-Za-z0-9]{22}", title_candidate):
+            title_candidate = item.get("title") or title_candidate
         update_last_status(
             state,
             running=st["running"],
             paused=st["paused"],
-            title=st.get("title") or item.get("spotify_id") or item.get("title", "Spotify"),
+            title=title_candidate or item.get("spotify_id") or item.get("title", "Spotify"),
             artist=st.get("artist") or item.get("artist", ""),
             source="spotify",
             position=st.get("position", 0),
             duration=st.get("duration", 0),
+            track_id=st.get("track_id") or item.get("spotify_id", ""),
         )
 
 
-def with_lock():
+def extrapolate_progress(st, snapshot_ts):
+    if not st:
+        return st
+    out = dict(st)
+    if out.get("paused", True):
+        return out
+    dur = int(out.get("duration", 0) or 0)
+    if dur <= 0:
+        return out
+    pos = int(out.get("position", 0) or 0)
+    elapsed = max(0, int(time.time() - float(snapshot_ts or 0)))
+    out["position"] = min(dur, pos + elapsed)
+    return out
+
+
+def read_status_snapshot_with_ts(max_age_sec=15):
+    if not STATUS_SNAPSHOT_PATH.exists():
+        return None, None
+    try:
+        with STATUS_SNAPSHOT_PATH.open("r", encoding="utf-8") as f:
+            payload = json.load(f)
+        ts = float(payload.get("ts", 0))
+        data = payload.get("data") or {}
+        if max_age_sec > 0 and (time.time() - ts) > max_age_sec:
+            return None, ts
+        if not data:
+            return None, ts
+        return data, ts
+    except Exception:
+        return None, None
+
+
+def status_from_snapshot_or_state(state, max_age_sec=20):
+    snap, snap_ts = read_status_snapshot_with_ts(max_age_sec=max_age_sec)
+    st = snap or (state.get("last_status", {}) or {})
+    if snap_ts:
+        st = extrapolate_progress(st, snap_ts)
+    return st
+
+
+def is_external_spotify_active(max_age_sec=2.0):
+    st = external_spotify_snapshot(max_age_sec=max_age_sec)
+    return bool(st and st.get("running") and st.get("title"))
+
+
+def maybe_reconcile_external_spotify(state):
+    if state.get("source_lock") == "local":
+        return False
+    st = external_spotify_snapshot(max_age_sec=2.0)
+    if not (st and st.get("running") and st.get("title")):
+        return False
+    state["active_source"] = "spotify"
+    if state.get("queue"):
+        target = -1
+        live_id = (st.get("track_id") or "").strip()
+        live_title = (st.get("title") or "").strip().lower()
+        live_artist = (st.get("artist") or "").strip().lower()
+        for i, item in enumerate(state.get("queue", [])):
+            if item.get("source") != "spotify":
+                continue
+            if live_id and (item.get("spotify_id") == live_id):
+                target = i
+                break
+            it_title = (item.get("title") or "").strip().lower()
+            it_artist = (item.get("artist") or "").strip().lower()
+            if it_title and it_title == live_title and (not live_artist or not it_artist or it_artist == live_artist):
+                target = i
+                break
+        if target >= 0:
+            state["current_index"] = target
+    update_last_status(
+        state,
+        running=True,
+        paused=st.get("paused", True),
+        title=st.get("title", "Spotify"),
+        artist=st.get("artist", ""),
+        source="spotify",
+        position=st.get("position", 0),
+        duration=st.get("duration", 0),
+        track_id=st.get("track_id", ""),
+    )
+    debug_log(f"reconciled spotify track_id={st.get('track_id','')} title={st.get('title','')}")
+    return True
+
+
+def should_prefer_external_spotify(state):
+    return state.get("source_lock", "auto") != "local"
+
+
+def pick_active_source_for_controls(state):
+    lock = state.get("source_lock", "auto")
+    if lock == "local":
+        return "local" if is_mpv_running() else None
+    if lock == "spotify":
+        return "spotify" if is_external_spotify_active(max_age_sec=2.0) else None
+    if is_external_spotify_active(max_age_sec=2.0) and not is_mpv_running():
+        return "spotify"
+    src = state.get("active_source")
+    if src in ("local", "spotify"):
+        return src
+    return "spotify" if is_external_spotify_active(max_age_sec=2.0) else ("local" if is_mpv_running() else None)
+
+
+def with_lock(timeout_sec=LOCK_WAIT_TIMEOUT_SEC):
     LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(str(LOCK_PATH), os.O_CREAT | os.O_RDWR, 0o600)
-    if hasattr(os, "lockf"):
-        os.lockf(fd, os.F_LOCK, 0)
+    start = time.time()
+    while True:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except BlockingIOError:
+            if (time.time() - start) >= timeout_sec:
+                os.close(fd)
+                raise TimeoutError("radiant-player lock busy")
+            time.sleep(0.05)
+
+    try:
+        payload = json.dumps(
+            {
+                "pid": os.getpid(),
+                "ts": time.time(),
+                "cmd": " ".join(sys.argv[:3]),
+            }
+        )
+        os.ftruncate(fd, 0)
+        os.lseek(fd, 0, os.SEEK_SET)
+        os.write(fd, payload.encode("utf-8"))
+    except Exception:
+        pass
     return fd
 
 
 def unlock(fd):
-    if hasattr(os, "lockf"):
-        os.lockf(fd, os.F_ULOCK, 0)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+    except Exception:
+        pass
     os.close(fd)
 
 
 def signal_refresh():
+    try:
+        MUSIC_TICK_PATH.write_text(str(time.time()), encoding="utf-8")
+    except Exception:
+        pass
     try:
         if os.getenv("YAZI_ID"):
             subprocess.run(["ya", "emit", "redraw"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
@@ -624,9 +1102,23 @@ def cmd_play(files):
 
 def cmd_add_spotify(raw):
     uri = normalize_spotify_uri(raw)
+    kind = spotify_kind_from_uri(uri)
     sid = spotify_id_from_uri(uri)
-    meta = spotify_track_metadata(uri)
     state = load_state()
+
+    if kind == "playlist":
+        tracks = spotify_playlist_tracks(uri)
+        if tracks:
+            state["queue"].extend(tracks)
+            if state["current_index"] == -1:
+                state["current_index"] = 0
+            save_state(state)
+            print(f"Added {SPOTIFY_ICON} playlist ({len(tracks)} tracks)")
+            return
+        print("Failed to fetch playlist tracks; nothing added.")
+        return
+
+    meta = spotify_track_metadata(uri)
     state["queue"].append(
         {
             "id": str(uuid.uuid4()),
@@ -645,6 +1137,44 @@ def cmd_add_spotify(raw):
         state["current_index"] = 0
     save_state(state)
     print(f"Added {SPOTIFY_ICON} {uri}")
+
+
+def cmd_spotify_playlist_tracks(uri):
+    uri = normalize_spotify_uri(uri)
+    if spotify_kind_from_uri(uri) != "playlist":
+        print("[]")
+        return
+    rows = spotify_playlist_track_choices(uri, max_items=500)
+    print(json.dumps(rows))
+
+
+def cmd_add_spotify_playlist_selected(uri, selected_ids_csv):
+    uri = normalize_spotify_uri(uri)
+    if spotify_kind_from_uri(uri) != "playlist":
+        print("Failed: not a playlist URI.")
+        return
+
+    selected_ids = {
+        x.strip()
+        for x in (selected_ids_csv or "").split(",")
+        if x.strip()
+    }
+    if not selected_ids:
+        print("No tracks selected.")
+        return
+
+    tracks = spotify_playlist_tracks(uri, max_items=500)
+    picked = [t for t in tracks if t.get("spotify_id") in selected_ids]
+    if not picked:
+        print("No matching tracks selected.")
+        return
+
+    state = load_state()
+    state["queue"].extend(picked)
+    if state["current_index"] == -1:
+        state["current_index"] = 0
+    save_state(state)
+    print(f"Added {SPOTIFY_ICON} selected tracks ({len(picked)})")
 
 
 def cmd_resolve_spotify_meta(raw):
@@ -765,10 +1295,30 @@ def _step(delta):
 
 
 def cmd_next():
+    state = load_state()
+    lock = state.get("source_lock", "auto")
+    if lock == "spotify" and is_external_spotify_active(max_age_sec=2.0):
+        if spotify_next():
+            maybe_reconcile_external_spotify(state)
+        return
+    if lock != "local" and is_external_spotify_active(max_age_sec=2.0) and not is_mpv_running():
+        if spotify_next():
+            maybe_reconcile_external_spotify(state)
+        return
     _step(1)
 
 
 def cmd_prev():
+    state = load_state()
+    lock = state.get("source_lock", "auto")
+    if lock == "spotify" and is_external_spotify_active(max_age_sec=2.0):
+        if spotify_prev():
+            maybe_reconcile_external_spotify(state)
+        return
+    if lock != "local" and is_external_spotify_active(max_age_sec=2.0) and not is_mpv_running():
+        if spotify_prev():
+            maybe_reconcile_external_spotify(state)
+        return
     _step(-1)
 
 
@@ -862,12 +1412,69 @@ def cmd_load(name):
         state["queue"] = data.get("queue", [])
         state["current_index"] = data.get("current_index", 0 if state["queue"] else -1)
         state["loop_mode"] = data.get("loop_mode", "off")
+    for item in state.get("queue", []):
+        normalize_queue_item(item)
     ensure_index(state)
     if state["current_index"] >= 0:
         play_current(state)
     else:
         update_last_status(state)
     save_state(state)
+
+
+def migrate_playlist_file(path):
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return False
+    changed = False
+    queue = data.get("queue", [])
+    if isinstance(queue, list):
+        for item in queue:
+            before = json.dumps(item, sort_keys=True, ensure_ascii=False)
+            normalize_queue_item(item)
+            after = json.dumps(item, sort_keys=True, ensure_ascii=False)
+            if before != after:
+                changed = True
+    if data.get("source_lock") not in {"auto", "local", "spotify"}:
+        data["source_lock"] = "auto"
+        changed = True
+    if not changed:
+        return False
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    return True
+
+
+def cmd_migrate_playlists():
+    PLAYLIST_DIR.mkdir(parents=True, exist_ok=True)
+    changed = 0
+    scanned = 0
+    for path in PLAYLIST_DIR.glob("*.rpl.json"):
+        scanned += 1
+        if migrate_playlist_file(path):
+            changed += 1
+    print(f"Migrated {changed}/{scanned} playlists.")
+
+
+def cmd_source_lock(mode=None):
+    state = load_state()
+    current = state.get("source_lock", "auto")
+    if not mode:
+        print(current)
+        return
+    mode = mode.strip().lower()
+    if mode == "toggle":
+        order = ["auto", "local", "spotify"]
+        mode = order[(order.index(current) + 1) % len(order)] if current in order else "auto"
+    if mode not in {"auto", "local", "spotify"}:
+        print("Usage: source_lock [auto|local|spotify|toggle]")
+        return
+    state["source_lock"] = mode
+    save_state(state)
+    debug_log(f"source_lock set to {mode}")
+    print(mode)
 
 
 def cmd_loop():
@@ -896,7 +1503,6 @@ def fmt_time(t):
 def cmd_status():
     state = load_state()
     refresh_live_status(state)
-    save_state(state)
     st = state.get("last_status", {})
     if not st.get("running"):
         print(f"  {DIM}{REST_ICON} Idle{NC}")
@@ -929,10 +1535,69 @@ def cmd_status():
     print(f"\n    {BOLD}{CYAN}󱐋 {current_ideal}{NC}")
 
 
+def cmd_status_fast():
+    """
+    Fast status path for high-frequency dashboard redraws.
+    Uses cached state and optional cached spotify snapshot only.
+    """
+    state = load_state()
+    st = status_from_snapshot_or_state(state, max_age_sec=20)
+
+    if not st.get("running"):
+        try:
+            if SPOTIFY_STATUS_CACHE_PATH.exists():
+                with SPOTIFY_STATUS_CACHE_PATH.open("r", encoding="utf-8") as f:
+                    payload = json.load(f)
+                ts = float(payload.get("ts", 0))
+                data = payload.get("data") or {}
+                if data.get("running") and data.get("title") and (time.time() - ts) < 20:
+                    st = {
+                        "running": True,
+                        "paused": data.get("paused", True),
+                        "title": data.get("title", "Spotify"),
+                        "artist": data.get("artist", ""),
+                        "source": "spotify",
+                        "position": data.get("position", 0),
+                        "duration": data.get("duration", 0),
+                    }
+        except Exception:
+            pass
+
+    if not st.get("running"):
+        print(f"  {DIM}{REST_ICON} Idle{NC}")
+        return
+
+    title = st.get("title", "Unknown")
+    artist = st.get("artist", "")
+    source = st.get("source")
+    paused = st.get("paused", True)
+    pos = st.get("position", 0)
+    dur = st.get("duration", 0)
+    percent = (pos / dur) * 100 if dur else 0
+    current_ideal = IDEALS[int(min(percent // 20, 4))]
+    state_icon = "󰏤 Paused" if paused else " Playing"
+    state_color = YELLOW if paused else GREEN
+    loop_mode = state.get("loop_mode", "off")
+    loop_label = f"{GRAY}󰑗 Off{NC}"
+    if loop_mode == "single":
+        loop_label = f"{YELLOW}󰑘¹ Single{NC}"
+    elif loop_mode == "playlist":
+        loop_label = f"{MAGENTA}󰑖∞ All{NC}"
+    width = 30
+    progress = int((percent * width) / 100) if dur else 0
+    bar = f"{CYAN}{'━' * progress}{GRAY}{'─' * (width - progress)}{NC}"
+    src_icon = source_icon(source) if source else REST_ICON
+    pretty = f"{src_icon} {title}"
+    if artist:
+        pretty += f" — {artist}"
+    print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
+    print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
+    print(f"\n    {BOLD}{CYAN}󱐋 {current_ideal}{NC}")
+
+
 def cmd_short_status():
     state = load_state()
     refresh_live_status(state)
-    save_state(state)
     st = state.get("last_status", {})
     if not st.get("running"):
         return
@@ -954,11 +1619,60 @@ def cmd_short_status():
     print(f"[{state_icon}] {loop_icon} {src} {title}")
 
 
+def cmd_short_status_fast():
+    """
+    Fast status path for UI render loops (Yazi header):
+    - no refresh_live_status()
+    - no spotify_player subprocess calls
+    - optional lightweight fallback from cached spotify status file
+    """
+    state = load_state()
+    st = status_from_snapshot_or_state(state, max_age_sec=20)
+
+    if not st.get("running"):
+        try:
+            if SPOTIFY_STATUS_CACHE_PATH.exists():
+                with SPOTIFY_STATUS_CACHE_PATH.open("r", encoding="utf-8") as f:
+                    payload = json.load(f)
+                ts = float(payload.get("ts", 0))
+                data = payload.get("data") or {}
+                if data.get("running") and data.get("title") and (time.time() - ts) < 20:
+                    st = {
+                        "running": True,
+                        "paused": data.get("paused", True),
+                        "title": data.get("title", "Spotify"),
+                        "artist": data.get("artist", ""),
+                        "source": "spotify",
+                    }
+        except Exception:
+            pass
+
+    if not st.get("running"):
+        return
+
+    paused = st.get("paused", True)
+    state_icon = "󰋋" if paused else "󰟎"
+    loop_mode = state.get("loop_mode", "off")
+    loop_icon = "󰑗"
+    if loop_mode == "single":
+        loop_icon = "󰑘"
+    elif loop_mode == "playlist":
+        loop_icon = "󰑖"
+    src = source_icon(st.get("source"))
+    title = st.get("title", "Resting")
+    artist = st.get("artist", "")
+    if artist:
+        title = f"{title} — {artist}"
+    if len(title) > 28:
+        title = title[:25] + "..."
+    print(f"[{state_icon}] {loop_icon} {src} {title}")
+
+
 def cmd_status_json():
     state = load_state()
     refresh_live_status(state)
-    save_state(state)
-    st = state.get("last_status", {})
+    maybe_reconcile_external_spotify(state)
+    st = status_from_snapshot_or_state(state, max_age_sec=15)
     if not st.get("running"):
         print(json.dumps({"running": False}))
         return
@@ -969,6 +1683,7 @@ def cmd_status_json():
         "paused": st.get("paused", True),
         "loop": state.get("loop_mode", "off"),
         "source": st.get("source"),
+        "track_id": st.get("track_id", ""),
         "position": st.get("position", 0),
         "duration": st.get("duration", 0),
     }
@@ -977,37 +1692,33 @@ def cmd_status_json():
 
 def cmd_toggle():
     state = load_state()
-    idx = state.get("current_index", -1)
-    q = state.get("queue", [])
-    if idx < 0 or idx >= len(q):
+    source = pick_active_source_for_controls(state)
+    if source is None:
         return
-    item = q[idx]
-    source = item.get("source", "local")
     if source == "local":
         ensure_mpv()
         mpv_send(["cycle", "pause"])
     else:
         spotify_toggle()
     refresh_live_status(state)
-    save_state(state)
 
 
 def cmd_seek(delta):
     state = load_state()
-    if state.get("active_source") == "local":
+    source = pick_active_source_for_controls(state)
+    if source == "local":
         mpv_send(["seek", int(delta), "relative"])
-    elif state.get("active_source") == "spotify":
+    elif source == "spotify":
         # Some spotify_player versions support this syntax.
         spotify_cmd(["playback", "seek", str(delta)])
-    refresh_live_status(state)
-    save_state(state)
 
 
 def cmd_volume(delta):
     state = load_state()
-    if state.get("active_source") == "local":
+    source = pick_active_source_for_controls(state)
+    if source == "local":
         mpv_send(["add", "volume", int(delta)])
-    else:
+    elif source == "spotify":
         # spotify_player volume verbs can vary by version; keep best-effort.
         spotify_cmd(["playback", "volume", "offset", str(delta)])
 
@@ -1034,7 +1745,34 @@ def main():
     if len(sys.argv) < 2:
         return
     cmd = sys.argv[1]
-    fd = with_lock()
+
+    # Read-only commands should never block the whole player stack.
+    lock_needed = cmd in {
+        "play",
+        "add_spotify",
+        "add_spotify_search",
+        "add_spotify_playlist_selected",
+        "play_index",
+        "remove",
+        "move",
+        "shuffle",
+        "sort",
+        "next",
+        "prev",
+        "loop",
+        "clear",
+        "save",
+        "load",
+        "source_lock",
+        "migrate_playlists",
+    }
+
+    try:
+        fd = with_lock() if lock_needed else None
+    except TimeoutError:
+        # Fail fast instead of freezing the TUI when another writer is active.
+        print("Lock busy, please retry.")
+        return
     try:
         if cmd == "play":
             cmd_play(sys.argv[2:])
@@ -1046,8 +1784,18 @@ def main():
             # placeholder command surface (phase-2); treat input as URI if provided
             cmd_add_spotify(sys.argv[2] if len(sys.argv) > 2 else "")
             signal_refresh()
+        elif cmd == "spotify_playlist_tracks":
+            cmd_spotify_playlist_tracks(sys.argv[2] if len(sys.argv) > 2 else "")
+        elif cmd == "add_spotify_playlist_selected":
+            cmd_add_spotify_playlist_selected(
+                sys.argv[2] if len(sys.argv) > 2 else "",
+                sys.argv[3] if len(sys.argv) > 3 else "",
+            )
+            signal_refresh()
         elif cmd == "resolve_spotify_meta":
             cmd_resolve_spotify_meta(sys.argv[2] if len(sys.argv) > 2 else "")
+        elif cmd == "spotify_art":
+            cmd_spotify_art(sys.argv[2] if len(sys.argv) > 2 else "")
         elif cmd == "list":
             cmd_list()
         elif cmd == "play_index":
@@ -1084,8 +1832,12 @@ def main():
             signal_refresh()
         elif cmd == "status":
             cmd_status()
+        elif cmd == "status_fast":
+            cmd_status_fast()
         elif cmd == "short_status":
             cmd_short_status()
+        elif cmd == "short_status_fast":
+            cmd_short_status_fast()
         elif cmd == "status_json":
             cmd_status_json()
         elif cmd == "toggle":
@@ -1102,8 +1854,16 @@ def main():
             cmd_current_index()
         elif cmd == "spotify_health":
             cmd_spotify_health()
+        elif cmd == "source_lock":
+            cmd_source_lock(sys.argv[2] if len(sys.argv) > 2 else "")
+        elif cmd == "migrate_playlists":
+            cmd_migrate_playlists()
+    except KeyboardInterrupt:
+        # Avoid noisy tracebacks when user aborts dashboard/player interactions.
+        return
     finally:
-        unlock(fd)
+        if fd is not None:
+            unlock(fd)
 
 
 if __name__ == "__main__":

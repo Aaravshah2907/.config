@@ -24,6 +24,8 @@ SPOTIFY_STATUS_CACHE_PATH = Path("/tmp/radiant-spotify-status.json")
 MUSIC_TICK_PATH = Path("/tmp/radiant-music-update.tick")
 STATUS_SNAPSHOT_PATH = Path("/tmp/radiant-now-playing.json")
 DEBUG_LOG_PATH = Path("/tmp/radiant-player.log")
+ART_CACHE_SIG_PATH = Path("/tmp/radiant-art-cache.sig")
+ART_CACHE_RENDER_PATH = Path("/tmp/radiant-art-cache.ansi")
 
 BOLD = "\033[1m"
 DIM = "\033[2m"
@@ -463,6 +465,119 @@ def cmd_spotify_art(track_id):
         p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, check=False)
         if p.stdout:
             print(p.stdout.rstrip())
+    finally:
+        try:
+            if tmp_path:
+                os.remove(tmp_path)
+        except Exception:
+            pass
+
+
+def cmd_local_art(path):
+    ap = os.path.abspath(os.path.expanduser((path or "").strip()))
+    if not ap or not os.path.exists(ap):
+        print("Local track not found.")
+        return
+    if not shell_ok("command -v chafa >/dev/null 2>&1"):
+        print("chafa is not installed.")
+        return
+    if not shell_ok("command -v ffmpeg >/dev/null 2>&1"):
+        print("ffmpeg is not installed.")
+        return
+    print(Path(ap).stem)
+    print("")
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+            tmp_path = tmp.name
+        p = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", ap, "-an", "-vframes", "1", tmp_path],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=8,
+        )
+        if p.returncode != 0 or not os.path.exists(tmp_path) or os.path.getsize(tmp_path) == 0:
+            print("No embedded cover art found for this local track.")
+            return
+        out = subprocess.run(
+            ["chafa", "--size", "36x18", "--animate", "off", tmp_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False,
+        )
+        if out.stdout:
+            print(out.stdout.rstrip())
+    except subprocess.TimeoutExpired:
+        print("Album art extraction timed out.")
+    finally:
+        try:
+            if tmp_path:
+                os.remove(tmp_path)
+        except Exception:
+            pass
+
+
+def render_image_with_chafa(image_path):
+    p = subprocess.run(
+        ["chafa", "--size", "36x18", "--animate", "off", image_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return (p.stdout or "").rstrip()
+
+
+def render_spotify_art_text(track_id):
+    tid = (track_id or "").strip()
+    if not tid:
+        return ""
+    image_url, _, _ = spotify_track_image_url(tid)
+    if not image_url:
+        return ""
+    try:
+        with urlrequest.urlopen(image_url, timeout=6) as resp:
+            image_data = resp.read()
+    except Exception:
+        return ""
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+            tmp.write(image_data)
+            tmp_path = tmp.name
+        return render_image_with_chafa(tmp_path)
+    finally:
+        try:
+            if tmp_path:
+                os.remove(tmp_path)
+        except Exception:
+            pass
+
+
+def render_local_art_text(path):
+    ap = os.path.abspath(os.path.expanduser((path or "").strip()))
+    if not ap or not os.path.exists(ap):
+        return ""
+    if not shell_ok("command -v ffmpeg >/dev/null 2>&1"):
+        return ""
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+            tmp_path = tmp.name
+        p = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", ap, "-an", "-vframes", "1", tmp_path],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=8,
+        )
+        if p.returncode != 0 or not os.path.exists(tmp_path) or os.path.getsize(tmp_path) == 0:
+            return ""
+        return render_image_with_chafa(tmp_path)
+    except subprocess.TimeoutExpired:
+        return ""
     finally:
         try:
             if tmp_path:
@@ -1737,8 +1852,104 @@ def cmd_current_index():
     print(state.get("current_index", -1))
 
 
+def cmd_current_item_json():
+    state = load_state()
+    ensure_index(state)
+    idx = state.get("current_index", -1)
+    q = state.get("queue", [])
+    if idx < 0 or idx >= len(q):
+        print("{}")
+        return
+    item = dict(q[idx] or {})
+    normalize_queue_item(item)
+    item["current_index"] = idx
+    print(json.dumps(item))
+
+
+def cmd_current_art_fast():
+    if not shell_ok("command -v chafa >/dev/null 2>&1"):
+        return
+    state = load_state()
+    st = status_from_snapshot_or_state(state, max_age_sec=20)
+    if not st.get("running"):
+        return
+    source = st.get("source")
+    sig = ""
+    rendered = ""
+    if source == "spotify":
+        track_id = (st.get("track_id") or "").strip()
+        if not track_id:
+            return
+        sig = f"spotify:{track_id}"
+        rendered = render_spotify_art_text(track_id)
+    elif source == "local":
+        ensure_index(state)
+        idx = state.get("current_index", -1)
+        q = state.get("queue", [])
+        if idx < 0 or idx >= len(q):
+            return
+        item = q[idx] or {}
+        local_path = (item.get("local_path") or "").strip()
+        if not local_path:
+            return
+        try:
+            mtime = int(os.path.getmtime(local_path))
+        except Exception:
+            mtime = 0
+        sig = f"local:{local_path}:{mtime}"
+        rendered = render_local_art_text(local_path)
+    if not sig:
+        return
+    try:
+        cached_sig = ART_CACHE_SIG_PATH.read_text(encoding="utf-8").strip() if ART_CACHE_SIG_PATH.exists() else ""
+        if cached_sig == sig and ART_CACHE_RENDER_PATH.exists():
+            print(ART_CACHE_RENDER_PATH.read_text(encoding="utf-8"))
+            return
+    except Exception:
+        pass
+    if not rendered:
+        try:
+            ART_CACHE_SIG_PATH.write_text(sig, encoding="utf-8")
+            if ART_CACHE_RENDER_PATH.exists():
+                ART_CACHE_RENDER_PATH.unlink()
+        except Exception:
+            pass
+        return
+    try:
+        ART_CACHE_SIG_PATH.write_text(sig, encoding="utf-8")
+        ART_CACHE_RENDER_PATH.write_text(rendered, encoding="utf-8")
+    except Exception:
+        pass
+    print(rendered)
+
+
 def cmd_spotify_health():
     spotify_health()
+
+
+def cmd_health():
+    state = load_state()
+    st = read_status_snapshot(max_age_sec=30) or (state.get("last_status", {}) or {})
+    spotify_st = spotify_status(max_age_sec=10)
+    payload = {
+        "mpv_running": is_mpv_running(),
+        "socket_path_exists": os.path.exists(SOCKET_PATH),
+        "spotify_player": shell_ok(f"command -v {SPOTIFY_PLAYER_BIN} >/dev/null 2>&1"),
+        "librespot": shell_ok(f"command -v {LIBRESPOT_BIN} >/dev/null 2>&1"),
+        "source_lock": state.get("source_lock", "auto"),
+        "active_source": state.get("active_source"),
+        "queue_size": len(state.get("queue", [])),
+        "current_index": state.get("current_index", -1),
+        "running": st.get("running", False),
+        "source": st.get("source"),
+        "title": st.get("title", ""),
+        "artist": st.get("artist", ""),
+        "spotify_running": spotify_st.get("running", False),
+        "spotify_title": spotify_st.get("title", ""),
+        "spotify_artist": spotify_st.get("artist", ""),
+        "spotify_track_id": spotify_st.get("track_id", ""),
+    }
+    print(json.dumps(payload))
 
 
 def main():
@@ -1796,6 +2007,8 @@ def main():
             cmd_resolve_spotify_meta(sys.argv[2] if len(sys.argv) > 2 else "")
         elif cmd == "spotify_art":
             cmd_spotify_art(sys.argv[2] if len(sys.argv) > 2 else "")
+        elif cmd == "local_art":
+            cmd_local_art(sys.argv[2] if len(sys.argv) > 2 else "")
         elif cmd == "list":
             cmd_list()
         elif cmd == "play_index":
@@ -1852,8 +2065,14 @@ def main():
             cmd_get_volume()
         elif cmd == "current_index":
             cmd_current_index()
+        elif cmd == "current_item_json":
+            cmd_current_item_json()
+        elif cmd == "current_art_fast":
+            cmd_current_art_fast()
         elif cmd == "spotify_health":
             cmd_spotify_health()
+        elif cmd == "health":
+            cmd_health()
         elif cmd == "source_lock":
             cmd_source_lock(sys.argv[2] if len(sys.argv) > 2 else "")
         elif cmd == "migrate_playlists":

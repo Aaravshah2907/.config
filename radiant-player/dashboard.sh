@@ -165,6 +165,40 @@ quick_spotify_playlist_pick() {
     sleep 0.8
 }
 
+show_health_panel() {
+    local hjson
+    hjson=$($PY health 2>/dev/null)
+    show_cursor
+    clear
+    echo -e "${MAGENTA}${BOLD}Radiant Health Report${NC}"
+    echo -e "${GRAY}───────────────────────────────────────────────────────${NC}"
+    if [ -z "$hjson" ]; then
+        echo -e "${RED}Unable to read health status.${NC}"
+    else
+        printf "%s" "$hjson" | /opt/homebrew/bin/jq -r '
+            "mpv_running      : \(.mpv_running)\n" +
+            "socket_exists    : \(.socket_path_exists)\n" +
+            "spotify_player   : \(.spotify_player)\n" +
+            "librespot        : \(.librespot)\n" +
+            "source_lock      : \(.source_lock)\n" +
+            "active_source    : \(.active_source)\n" +
+            "queue_size       : \(.queue_size)\n" +
+            "current_index    : \(.current_index)\n" +
+            "running          : \(.running)\n" +
+            "source           : \(.source)\n" +
+            "title            : \(.title)\n" +
+            "artist           : \(.artist)\n" +
+            "spotify_running  : \(.spotify_running)\n" +
+            "spotify_title    : \(.spotify_title)\n" +
+            "spotify_artist   : \(.spotify_artist)\n" +
+            "spotify_track_id : \(.spotify_track_id)"
+        '
+    fi
+    echo ""
+    read -rsn1 -p "Press any key to return..."
+    hide_cursor
+}
+
 hide_cursor() { printf "\033[?25l"; }
 show_cursor() { printf "\033[?25h"; }
 restore_tty() {
@@ -189,18 +223,50 @@ draw() {
     # Now Playing Card
     echo -e "  ${BLUE}${BOLD}󰊠 INFUSED RECORD${NC}"
     echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
-    # Indent the status output
-    $PY status_fast 2>/dev/null | sed 's/^/  /'
+    local status_raw
+    local -a status_lines=()
+    local -a art_lines=()
+    local status_col_width=64
+    local col_gap="   "
+    status_raw=$($PY status_fast 2>/dev/null)
+    while IFS= read -r line; do
+        status_lines+=("$line")
+    done < <(printf "%s\n" "$status_raw")
+    if command -v chafa >/dev/null 2>&1; then
+        while IFS= read -r line; do
+            art_lines+=("$line")
+        done < <($PY current_art_fast 2>/dev/null)
+    fi
+    local status_count=${#status_lines[@]}
+    local art_count=${#art_lines[@]}
+    local nowplaying_rows=$status_count
+    ((art_count > nowplaying_rows)) && nowplaying_rows=$art_count
+    ((nowplaying_rows < 1)) && nowplaying_rows=1
+    for ((i=0; i<nowplaying_rows; i++)); do
+        local s="${status_lines[$i]}"
+        local a="${art_lines[$i]}"
+        printf "  %-${status_col_width}b%s%b\n" "$s" "$col_gap" "$a"
+    done
     echo ""
 
     # Queue List
     echo -e "  ${GREEN}${BOLD}󰒺 THE HIGHSTORM QUEUE${NC} ${DIM}(${#lines[@]} spheres)${NC}"
     echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
 
-    local start=$((selected - 5))
+    local term_rows
+    term_rows=$(tput lines 2>/dev/null || echo 40)
+    local max_queue_rows=$((term_rows - nowplaying_rows - 14 - (sorted_mode == 1 ? 1 : 0)))
+    ((max_queue_rows < 4)) && max_queue_rows=4
+    ((max_queue_rows > 16)) && max_queue_rows=16
+
+    local start=$((selected - (max_queue_rows / 2)))
     ((start < 0)) && start=0
-    local end=$((start + 12))
-    ((end > ${#lines[@]})) && end=${#lines[@]}
+    local end=$((start + max_queue_rows))
+    if (( end > ${#lines[@]} )); then
+        end=${#lines[@]}
+        start=$((end - max_queue_rows))
+        ((start < 0)) && start=0
+    fi
 
     for ((i=start; i<end; i++)); do
         local line="${lines[$i]}"
@@ -218,14 +284,14 @@ draw() {
 
     # Fill empty space if queue is short
     local current_lines=$((end - start))
-    for ((i=current_lines; i<12; i++)); do echo ""; done
+    for ((i=current_lines; i<max_queue_rows; i++)); do echo ""; done
 
     # Legend / Shortcuts
     echo -e "  ${GRAY}───────────────────────────────────────────────────────${NC}"
     echo -e "  ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop"
     echo -e "  ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf"
     echo -e "  ${GREEN}${NC} ${BOLD}SPO${NC} ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist Tracks  ${DIM}[o]${NC} Open spotify_player"
-    echo -e "  ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} ClearQ  ${DIM}[t]${NC} Sort  ${DIM}[r]${NC} Refresh  ${DIM}[/]${NC} Find  ${DIM}[C-s/l]${NC} Save/Load  ${RED}[q]${NC} Quit"
+    echo -e "  ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} ClearQ  ${DIM}[t]${NC} Sort  ${DIM}[r]${NC} Refresh  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find  ${DIM}[C-s/l]${NC} Save/Load  ${RED}[q]${NC} Quit"
     if [ "$sorted_mode" -eq 1 ]; then
         echo -e "      ${YELLOW}${DIM}Sort Mode: Name (press [t] to restore original queue order)${NC}"
     fi
@@ -299,6 +365,9 @@ while true; do
             ;;
         P)
             quick_spotify_playlist_pick
+            ;;
+        H)
+            show_health_panel
             ;;
         t)
             if [ "$sorted_mode" -eq 1 ]; then

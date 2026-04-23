@@ -1834,8 +1834,8 @@ def cmd_volume(delta):
     if source == "local":
         mpv_send(["add", "volume", int(delta)])
     elif source == "spotify":
-        # spotify_player volume verbs can vary by version; keep best-effort.
-        spotify_cmd(["playback", "volume", "offset", str(delta)])
+        # correct syntax for spotify_player 0.23.0+ is using --offset flag
+        spotify_cmd(["playback", "volume", "--offset", str(delta)])
 
 
 def cmd_get_volume():

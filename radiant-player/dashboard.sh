@@ -388,7 +388,7 @@ while true; do
 
         "[") $PY seek -10 ;;
         "]") $PY seek 10 ;;
-        "+") $PY volume 5 ;;
+        "+" | "=") $PY volume 5 ;;
         "-") $PY volume -5 ;;
         
         n)  $PY next;   load_queue; selected=$($PY current_index 2>/dev/null) ;;

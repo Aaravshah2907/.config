@@ -107,6 +107,16 @@ SPOTIFY_STATUS_CACHE = {"ts": 0.0, "data": None}
 LOCK_WAIT_TIMEOUT_SEC = 2.0
 
 
+def is_pid_running(pid):
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except (ProcessLookupError, OSError):
+        return False
+
+
 def _deep_merge(base, extra):
     out = dict(base)
     for k, v in extra.items():
@@ -209,48 +219,114 @@ def shell_ok(cmd):
 def spotify_cmd(args):
     if not shell_ok(f"command -v {SPOTIFY_PLAYER_BIN} >/dev/null 2>&1"):
         return False, "spotify_player missing"
-    try:
-        p = subprocess.run(
-            [SPOTIFY_PLAYER_BIN, *args],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=False,
-            timeout=3,
-        )
-        return p.returncode == 0, (p.stdout or p.stderr).strip()
-    except KeyboardInterrupt:
-        return False, "spotify_player command interrupted"
-    except subprocess.TimeoutExpired:
-        return False, "spotify_player command timed out"
+    
+    # Retry once on potential transient failures or timeouts
+    for attempt in range(2):
+        try:
+            p = subprocess.run(
+                [SPOTIFY_PLAYER_BIN, *args],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                timeout=4,
+            )
+            if p.returncode == 0:
+                return True, (p.stdout or "").strip()
+            
+            # Fatal error or bad command
+            err = (p.stderr or p.stdout or "").strip()
+            if attempt == 0 and ("File exists" in err or "connection refused" in err.lower()):
+                time.sleep(0.5)
+                continue
+            return False, err
+        except subprocess.TimeoutExpired:
+            if attempt == 0:
+                time.sleep(0.5)
+                continue
+            return False, "spotify_player command timed out"
+        except Exception as e:
+            return False, str(e)
+
+
+def system_media_fallback(cmd):
+    """
+    Fallback to system-level media controls (nowplaying-cli or osascript)
+    if the primary player (spotify_player) is unresponsive.
+    """
+    np_bin = "/opt/homebrew/bin/nowplaying-cli"
+    np_map = {
+        "toggle": "togglePlayPause",
+        "play": "play",
+        "pause": "pause",
+        "next": "next",
+        "prev": "previous",
+        "previous": "previous",
+    }
+    
+    if os.path.exists(np_bin):
+        action = np_map.get(cmd)
+        if action:
+            try:
+                subprocess.run([np_bin, action], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
+                return True
+            except:
+                pass
+                
+    # macOS AppleScript fallback for Spotify specifically
+    scripts = {
+        "toggle": "playpause",
+        "play": "play",
+        "pause": "pause",
+        "next": "next track",
+        "prev": "previous track",
+        "previous": "previous track",
+    }
+    script_action = scripts.get(cmd)
+    if script_action:
+        try:
+            subprocess.run(["osascript", "-e", f'tell application "Spotify" to {script_action}'], 
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
+            return True
+        except:
+            pass
+    return False
 
 
 def spotify_pause():
-    spotify_cmd(["playback", "pause"])
+    ok, _ = spotify_cmd(["playback", "pause"])
+    if not ok:
+        system_media_fallback("pause")
 
 
 def spotify_toggle():
     ok, _ = spotify_cmd(["playback", "toggle"])
     if ok:
         return True
-    # fallback verbs across versions
+    
+    # try legacy verbs
     for args in (["playback", "play-pause"], ["playback", "playpause"]):
         ok, _ = spotify_cmd(args)
         if ok:
             return True
-    return False
+    
+    # system fallback
+    return system_media_fallback("toggle")
 
 
 def spotify_next():
     ok, _ = spotify_cmd(["playback", "next"])
+    if not ok:
+        return system_media_fallback("next")
     return ok
 
 
 def spotify_prev():
     ok, _ = spotify_cmd(["playback", "previous"])
-    if ok:
-        return True
-    ok, _ = spotify_cmd(["playback", "prev"])
+    if not ok:
+        ok, _ = spotify_cmd(["playback", "prev"])
+    if not ok:
+        return system_media_fallback("prev")
     return ok
 
 
@@ -1004,6 +1080,19 @@ def refresh_live_status(state):
             position=(pos or {}).get("data", 0),
             duration=(dur or {}).get("data", 0),
         )
+        
+        # --- AUTO-NEXT LOGIC (Local) ---
+        p = (pos or {}).get("data", 0)
+        d = (dur or {}).get("data", 0)
+        if not (paused or {}).get("data", True) and d > 2 and p >= (d - 1.5):
+            # Use title or path as a unique ID for local tracks
+            track_sig = (title or {}).get("data") or item.get("title")
+            if state.get("last_auto_next_id") != track_sig:
+                debug_log(f"Auto-next triggered for Local: {p}/{d}")
+                state["last_auto_next_id"] = track_sig
+                save_state(state)
+                subprocess.Popen([sys.executable, sys.argv[0], "next"], 
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         # Backfill metadata for older queue entries that only had Spotify IDs.
         if (not item.get("artist")) and item.get("spotify_uri"):
@@ -1031,6 +1120,19 @@ def refresh_live_status(state):
             duration=st.get("duration", 0),
             track_id=st.get("track_id") or item.get("spotify_id", ""),
         )
+
+        # --- AUTO-NEXT LOGIC ---
+        # If we are near the end of a Spotify track and NOT paused, trigger next.
+        pos = st.get("position", 0)
+        dur = st.get("duration", 0)
+        if not st["paused"] and dur > 5 and pos >= (dur - 2):
+            # Only trigger if we haven't already marked this track as 'ending'
+            if state.get("last_auto_next_id") != st.get("track_id"):
+                debug_log(f"Auto-next triggered for Spotify: {pos}/{dur}")
+                state["last_auto_next_id"] = st.get("track_id")
+                save_state(state)
+                subprocess.Popen([sys.executable, sys.argv[0], "next"], 
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def extrapolate_progress(st, snapshot_ts):
@@ -1145,10 +1247,43 @@ def with_lock(timeout_sec=LOCK_WAIT_TIMEOUT_SEC):
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             break
         except BlockingIOError:
-            if (time.time() - start) >= timeout_sec:
-                os.close(fd)
-                raise TimeoutError("radiant-player lock busy")
-            time.sleep(0.05)
+            now = time.time()
+            if (now - start) >= timeout_sec:
+                # BREAK STALE LOCKS
+                try:
+                    os.lseek(fd, 0, os.SEEK_SET)
+                    raw_info = os.read(fd, 512).decode("utf-8", "ignore")
+                    if raw_info:
+                        info = json.loads(raw_info)
+                        owner_pid = info.get("pid")
+                        owner_ts = info.get("ts", 0)
+                        
+                        # Case 1: PID is dead
+                        if owner_pid and not is_pid_running(owner_pid):
+                            debug_log(f"Breaking stale lock: PID {owner_pid} is dead.")
+                            # We can't easily force unlock another process's flock if it's still alive,
+                            # but if is_pid_running is False, the kernel should have released it.
+                            # If we are still blocked, something is deeper, but we'll try to truncate and take it.
+                            pass
+                        
+                        # Case 2: Process is hung (ts > 20s old for a short-lived CLI command)
+                        elif owner_pid and (now - owner_ts) > 20:
+                            debug_log(f"Killing hung lock owner: PID {owner_pid}")
+                            try:
+                                os.kill(owner_pid, 9)
+                                time.sleep(0.1)
+                            except: pass
+                except:
+                    pass
+                
+                # Final attempt after potential cleanup
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except:
+                    os.close(fd)
+                    raise TimeoutError("radiant-player lock busy")
+            time.sleep(0.1)
 
     try:
         payload = json.dumps(

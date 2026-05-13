@@ -7,7 +7,7 @@ echo "$(date) NAME=$NAME SENDER=$SENDER" >> /tmp/sketchybar_music.log
 safe_set() {
   local item="$1"
   shift
-  /opt/homebrew/bin/sketchybar --query "$item" >/dev/null 2>&1 && /opt/homebrew/bin/sketchybar --set "$item" "$@"
+  sketchybar --query "$item" >/dev/null 2>&1 && sketchybar --set "$item" "$@"
 }
 
 update_bar() {
@@ -46,7 +46,7 @@ update_bar() {
 hide_bar() {
   # Default View: Radiant Symbol
   # ensures it doesn't just 'ignore rendering' when idle
-  /opt/homebrew/bin/sketchybar --set "$NAME" drawing=on \
+  sketchybar --set "$NAME" drawing=on \
                    icon.drawing=on \
                    label.drawing=on \
                    label="Resting" \
@@ -60,13 +60,13 @@ hide_bar() {
 
 # 0. Yazi-mpv instance (Prioritized)
 YAZI_SCRIPT="/Users/aaravshah2975/.config/radiant-player/queue.py"
-MPV_STATUS=$(/opt/homebrew/bin/python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
-if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.running') == "true" ]]; then
-  TITLE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.title')
-  ARTIST=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.artist // empty')
-  PAUSED=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.paused')
-  LOOP=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.loop')
-  SOURCE=$(echo "$MPV_STATUS" | /opt/homebrew/bin/jq -r '.source // "local"')
+MPV_STATUS=$(python3 "$YAZI_SCRIPT" status_json 2>/dev/null)
+if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | jq -r '.running') == "true" ]]; then
+  TITLE=$(echo "$MPV_STATUS" | jq -r '.title')
+  ARTIST=$(echo "$MPV_STATUS" | jq -r '.artist // empty')
+  PAUSED=$(echo "$MPV_STATUS" | jq -r '.paused')
+  LOOP=$(echo "$MPV_STATUS" | jq -r '.loop')
+  SOURCE=$(echo "$MPV_STATUS" | jq -r '.source // "local"')
   
   LICON=""
   if [ "$LOOP" == "single" ]; then LICON="󰑘 "; elif [ "$LOOP" == "playlist" ]; then LICON="󰑖 "; fi

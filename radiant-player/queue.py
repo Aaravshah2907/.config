@@ -253,33 +253,21 @@ def spotify_cmd(args):
     if not shell_ok(f"command -v {SPOTIFY_PLAYER_BIN} >/dev/null 2>&1"):
         return False, "spotify_player missing"
     
-    # Retry once on potential transient failures or timeouts
-    for attempt in range(2):
-        try:
-            p = subprocess.run(
-                [SPOTIFY_PLAYER_BIN, *args],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-                timeout=4,
-            )
-            if p.returncode == 0:
-                return True, (p.stdout or "").strip()
-            
-            # Fatal error or bad command
-            err = (p.stderr or p.stdout or "").strip()
-            if attempt == 0 and ("File exists" in err or "connection refused" in err.lower()):
-                time.sleep(0.5)
-                continue
-            return False, err
-        except subprocess.TimeoutExpired:
-            if attempt == 0:
-                time.sleep(0.5)
-                continue
-            return False, "spotify_player command timed out"
-        except Exception as e:
-            return False, str(e)
+    try:
+        p = subprocess.run(
+            [SPOTIFY_PLAYER_BIN, *args],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+            timeout=1.5,
+        )
+        if p.returncode == 0:
+            return True, (p.stdout or "").strip()
+        return False, (p.stderr or "unknown error").strip()
+    except Exception as e:
+        debug_log(f"spotify_cmd exception: {e}")
+        return False, str(e)
 
 
 def system_media_fallback(cmd):
@@ -418,7 +406,26 @@ def spotify_cached_access_token():
     return ""
 
 
-def spotify_api_get(path):
+def apple_script_spotify_control(cmd):
+    """Fallback control for macOS using AppleScript to talk to Spotify Desktop."""
+    script_map = {
+        "toggle": 'tell application "Spotify" to playpause',
+        "next": 'tell application "Spotify" to next track',
+        "prev": 'tell application "Spotify" to previous track',
+        "play": 'tell application "Spotify" to play',
+        "pause": 'tell application "Spotify" to pause',
+    }
+    script = script_map.get(cmd)
+    if not script:
+        return False
+    try:
+        subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+        return True
+    except Exception:
+        return False
+
+
+def spotify_api_get(path, params=None):
     token = spotify_cached_access_token()
     if not token:
         return None
@@ -1085,11 +1092,12 @@ def play_current(state):
                 track_id=st.get("track_id") or item.get("spotify_id", ""),
             )
         else:
+            # If we can't verify it's playing, don't pretend it is.
             update_last_status(
                 state,
-                running=True,
+                running=False,
                 paused=True,
-                title=item.get("spotify_id") or item.get("title", "Spotify item"),
+                title=item.get("title") or "Spotify item",
                 artist=item.get("artist", ""),
                 source="spotify",
                 track_id=item.get("spotify_id", ""),
@@ -1180,16 +1188,17 @@ def refresh_live_status(state):
                 item["spotify_id"] = meta.get("spotify_id") or item.get("spotify_id")
                 if meta.get("duration_sec"):
                     item["duration_sec"] = meta.get("duration_sec")
-        st = spotify_status(max_age_sec=5.0)
+        st = spotify_status(max_age_sec=3.0)
         title_candidate = st.get("title")
-        # If Spotify returns an opaque ID-like token, prefer queue metadata title.
-        if isinstance(title_candidate, str) and re.fullmatch(r"[A-Za-z0-9]{22}", title_candidate):
-            title_candidate = item.get("title") or title_candidate
+        # If Spotify returns an opaque ID-like token or nothing, prefer queue metadata title.
+        if not title_candidate or (isinstance(title_candidate, str) and re.fullmatch(r"[A-Za-z0-9]{22}", title_candidate)):
+            title_candidate = item.get("title") or title_candidate or "Spotify"
+        
         update_last_status(
             state,
-            running=st["running"],
-            paused=st["paused"],
-            title=title_candidate or item.get("spotify_id") or item.get("title", "Spotify"),
+            running=st.get("running", False),
+            paused=st.get("paused", True),
+            title=title_candidate,
             artist=st.get("artist") or item.get("artist", ""),
             source="spotify",
             position=st.get("position", 0),
@@ -1243,7 +1252,7 @@ def read_status_snapshot_with_ts(max_age_sec=15):
         return None, None
 
 
-def status_from_snapshot_or_state(state, max_age_sec=20):
+def status_from_snapshot_or_state(state, max_age_sec=3):
     snap, snap_ts = read_status_snapshot_with_ts(max_age_sec=max_age_sec)
     st = snap or (state.get("last_status", {}) or {})
     if snap_ts:
@@ -1893,7 +1902,7 @@ def cmd_status_fast():
     Uses cached state and optional cached spotify snapshot only.
     """
     state = load_state()
-    st = status_from_snapshot_or_state(state, max_age_sec=20)
+    st = status_from_snapshot_or_state(state, max_age_sec=3)
 
     if not st.get("running"):
         try:
@@ -1902,7 +1911,7 @@ def cmd_status_fast():
                     payload = json.load(f)
                 ts = float(payload.get("ts", 0))
                 data = payload.get("data") or {}
-                if data.get("running") and data.get("title") and (time.time() - ts) < 20:
+                if data.get("running") and data.get("title") and (time.time() - ts) < 5:
                     st = {
                         "running": True,
                         "paused": data.get("paused", True),
@@ -1914,6 +1923,16 @@ def cmd_status_fast():
                     }
         except Exception:
             pass
+
+    # If it's still stale or we are on Spotify, try a quick reconcile
+    if st.get("source") == "spotify" or not st.get("running"):
+        if maybe_reconcile_external_spotify(state):
+            st = state.get("last_status", {})
+            save_state(state)
+        else:
+            # If reconcile fails, and we were on Spotify, we are likely IDLE.
+            if st.get("source") == "spotify":
+                st = {"running": False, "paused": True, "title": "Resting"}
 
     if not st.get("running"):
         print(f"  {DIM}{REST_ICON} Idle{NC}")
@@ -1979,7 +1998,7 @@ def cmd_short_status_fast():
     - optional lightweight fallback from cached spotify status file
     """
     state = load_state()
-    st = status_from_snapshot_or_state(state, max_age_sec=20)
+    st = status_from_snapshot_or_state(state, max_age_sec=3)
 
     if not st.get("running"):
         try:
@@ -2024,7 +2043,7 @@ def cmd_status_json():
     state = load_state()
     refresh_live_status(state)
     maybe_reconcile_external_spotify(state)
-    st = status_from_snapshot_or_state(state, max_age_sec=15)
+    st = status_from_snapshot_or_state(state, max_age_sec=3)
     if not st.get("running"):
         print(json.dumps({"running": False}))
         return
@@ -2107,7 +2126,7 @@ def cmd_current_art_fast():
     if not shell_ok("command -v chafa >/dev/null 2>&1"):
         return
     state = load_state()
-    st = status_from_snapshot_or_state(state, max_age_sec=20)
+    st = status_from_snapshot_or_state(state, max_age_sec=3)
     if not st.get("running"):
         return
     source = st.get("source")

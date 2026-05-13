@@ -12,9 +12,9 @@ SSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F' : ' '/ SSID :
 INTERNAL_IP=$(ifconfig "$WIFI_INTERFACE" 2>/dev/null | grep "inet " | awk '{print $2}')
 
 # General Location/SSID Logic
-if [[ "$INTERNAL_IP" =~ ^172\.1[6789]\. ]] || [[ "$INTERNAL_IP" =~ ^172\.2[0-7]\. ]] || [[ "$INTERNAL_IP" =~ ^172\.31\. ]] || [[ "$INTERNAL_IP" =~ ^10\. ]]; then
-    LOCATION="BITS Pilani"
-elif [ -n "$SSID" ]; then
+#if [[ "$INTERNAL_IP" =~ ^172\.1[6789]\. ]] || [[ "$INTERNAL_IP" =~ ^172\.2[0-7]\. ]] || [[ "$INTERNAL_IP" =~ ^172\.31\. ]] || [[ "$INTERNAL_IP" =~ ^10\. ]]; then
+    #LOCATION="BITS Pilani"
+if [ -n "$SSID" ]; then
     # Handle redacted or hidden SSIDs
     if [[ "$SSID" == "<redacted>" || "$SSID" == "" ]]; then
         LOCATION="University"

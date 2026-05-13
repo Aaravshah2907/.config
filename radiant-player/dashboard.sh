@@ -326,10 +326,11 @@ draw() {
     echo -e "  ${CYAN}${BOLD}┌──${label3}${hline3}──┐${NC}"
     
     local -a cmd_rows=(
-        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC} ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop"
-        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC} ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[j/k]${NC} Move  ${DIM}[s]${NC} Shuf"
-        " ${GREEN}${NC} ${BOLD}SPO${NC} ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify"
-        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC} ${DIM}[d]${NC} Del  ${DIM}[c]${NC} Clear  ${DIM}[t]${NC} Sort  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find ${RED}[q]${NC} Quit"
+        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}  ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop  ${DIM}[s]${NC} Shuffle"
+        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}  ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[[/]]${NC} Jump  ${DIM}[j/k]${NC} Move Item"
+        " ${GREEN}${NC} ${BOLD}SPO${NC}  ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify App"
+        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC} ${DIM}[^S]${NC} Save  ${DIM}[^L]${NC} Load  ${DIM}[r]${NC} Refresh  ${DIM}[t]${NC} Sort Mode"
+        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}  ${DIM}[d]${NC} Del  ${DIM}[c]${NC} Clear  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find  ${RED}[q]${NC} Quit"
     )
     
     for row in "${cmd_rows[@]}"; do

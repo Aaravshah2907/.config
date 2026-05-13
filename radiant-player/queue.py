@@ -740,6 +740,11 @@ def spotify_status(max_age_sec=0.0):
 
     # try JSON first (spotify_player v0.20+ CLI shape)
     ok, out = spotify_cmd(["get", "key", "playback"])
+    if not ok:
+        # Connection wonky? Fallback to cache immediately to avoid "pausing" or 0/0 state.
+        if SPOTIFY_STATUS_CACHE["data"]:
+            return dict(SPOTIFY_STATUS_CACHE["data"])
+    
     if ok and out:
         try:
             data = json.loads(out)
@@ -774,6 +779,10 @@ def spotify_status(max_age_sec=0.0):
 
     # plain fallback
     ok, out = spotify_cmd(["status"])
+    if not ok:
+        if SPOTIFY_STATUS_CACHE["data"]:
+            return dict(SPOTIFY_STATUS_CACHE["data"])
+
     if ok and out:
         body = out.lower()
         paused = "paused" in body and "playing" not in body

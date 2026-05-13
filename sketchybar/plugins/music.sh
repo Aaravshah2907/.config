@@ -142,8 +142,7 @@ if pgrep -x "mpv" >/dev/null; then
 fi
 
 # 3. Spotify Legacy Check (fallback for specific osascript needs)
-SPOTIFY_RUNNING=$(osascript -e 'tell application "System Events" to (exists process "Spotify")' 2>/dev/null)
-if [ "$SPOTIFY_RUNNING" = "true" ]; then
+if pgrep -x "Spotify" >/dev/null; then
   PROPER_STATE=$(osascript -e 'tell application "Spotify" to get player state' 2>/dev/null)
   TRACK=$(osascript -e 'tell application "Spotify" to get name of current track' 2>/dev/null)
   ARTIST=$(osascript -e 'tell application "Spotify" to get artist of current track' 2>/dev/null)

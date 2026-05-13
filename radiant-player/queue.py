@@ -425,6 +425,34 @@ def apple_script_spotify_control(cmd):
         return False
 
 
+def apple_script_spotify_status():
+    """Directly poll the Spotify Mac App for status, bypassing the CLI."""
+    try:
+        # Ask Spotify for its current state
+        script = 'tell application "Spotify" to get {player state, name of current track, artist of current track, player position, duration of current track, id of current track}'
+        res = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=1.5)
+        if res.returncode != 0:
+            return None
+            
+        # osascript returns: playing, Track Name, Artist Name, 12.345, 240000, spotify:track:XYZ
+        raw = res.stdout.strip()
+        parts = [p.strip() for p in raw.split(",")]
+        if len(parts) < 6:
+            return None
+            
+        return {
+            "running": True,
+            "paused": parts[0] != "playing",
+            "title": parts[1],
+            "artist": parts[2],
+            "position": float(parts[3]),
+            "duration": float(parts[4]) / 1000.0, # ms to s
+            "track_id": parts[5].split(":")[-1] if ":" in parts[5] else parts[5],
+        }
+    except Exception:
+        return None
+
+
 def spotify_api_get(path, params=None):
     token = spotify_cached_access_token()
     if not token:
@@ -772,7 +800,19 @@ def spotify_play_uri(uri):
         ok, _ = spotify_cmd(args)
         if ok:
             return True, uri
-    return False, uri
+    # AppleScript Fallback for Mac (handles playlists/albums/tracks)
+    debug_log(f"Falling back to AppleScript for play: {uri}")
+    # For playlists/albums, Spotify AppleScript prefers 'play track "uri"' to start the context
+    script = f'tell application "Spotify" to play track "{uri}"'
+    try:
+        subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+        # Give it a moment to register the change
+        time.sleep(0.5)
+        # Force a status update so the UI syncs immediately
+        apple_script_spotify_status()
+        return True, uri
+    except Exception:
+        return False, uri
 
 
 def spotify_status(max_age_sec=0.0):
@@ -927,9 +967,17 @@ def nowplaying_spotify_snapshot():
 
 
 def external_spotify_snapshot(max_age_sec=3.0):
+    # 1. Try AppleScript first on Mac (it's the most reliable "ground truth" for the Desktop app)
+    app_st = apple_script_spotify_status()
+    if app_st and app_st.get("running") and app_st.get("title"):
+        return app_st
+
+    # 2. Try the CLI (fallback for non-Mac or if app is closed)
     st = spotify_status(max_age_sec=max_age_sec)
     if st.get("running") and st.get("title"):
         return st
+    
+    # 3. Try System Media (Global NowPlaying)
     np = nowplaying_spotify_snapshot()
     if np:
         return np
@@ -1165,18 +1213,13 @@ def refresh_live_status(state):
             duration=(dur or {}).get("data", 0),
         )
         
-        # --- AUTO-NEXT LOGIC (Local) ---
-        p = (pos or {}).get("data", 0)
-        d = (dur or {}).get("data", 0)
-        if not (paused or {}).get("data", True) and d > 2 and p >= (d - 1.5):
-            # Use title or path as a unique ID for local tracks
-            track_sig = (title or {}).get("data") or item.get("title")
-            if state.get("last_auto_next_id") != track_sig:
-                debug_log(f"Auto-next triggered for Local: {p}/{d}")
-                state["last_auto_next_id"] = track_sig
-                save_state(state)
-                subprocess.Popen([sys.executable, sys.argv[0], "next"], 
-                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        check_auto_next(state, {
+            "source": "local",
+            "title": (title or {}).get("data", item.get("title", "Unknown")),
+            "paused": (paused or {}).get("data", True),
+            "position": (pos or {}).get("data", 0),
+            "duration": (dur or {}).get("data", 0)
+        })
     else:
         # Backfill metadata for older queue entries that only had Spotify IDs.
         if (not item.get("artist")) and item.get("spotify_uri"):
@@ -1194,30 +1237,40 @@ def refresh_live_status(state):
         if not title_candidate or (isinstance(title_candidate, str) and re.fullmatch(r"[A-Za-z0-9]{22}", title_candidate)):
             title_candidate = item.get("title") or title_candidate or "Spotify"
         
-        update_last_status(
-            state,
-            running=st.get("running", False),
-            paused=st.get("paused", True),
-            title=title_candidate,
-            artist=st.get("artist") or item.get("artist", ""),
-            source="spotify",
-            position=st.get("position", 0),
-            duration=st.get("duration", 0),
-            track_id=st.get("track_id") or item.get("spotify_id", ""),
-        )
+        status_dict = {
+            "running": st.get("running", False),
+            "paused": st.get("paused", True),
+            "title": title_candidate,
+            "artist": st.get("artist") or item.get("artist", ""),
+            "source": "spotify",
+            "position": st.get("position", 0),
+            "duration": st.get("duration", 0),
+            "track_id": st.get("track_id") or item.get("spotify_id", ""),
+        }
+        update_last_status(state, **status_dict)
+        check_auto_next(state, status_dict)
 
-        # --- AUTO-NEXT LOGIC ---
-        # If we are near the end of a Spotify track and NOT paused, trigger next.
-        pos = st.get("position", 0)
-        dur = st.get("duration", 0)
-        if not st["paused"] and dur > 5 and pos >= (dur - 2):
-            # Only trigger if we haven't already marked this track as 'ending'
-            if state.get("last_auto_next_id") != st.get("track_id"):
-                debug_log(f"Auto-next triggered for Spotify: {pos}/{dur}")
-                state["last_auto_next_id"] = st.get("track_id")
-                save_state(state)
-                subprocess.Popen([sys.executable, sys.argv[0], "next"], 
-                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def check_auto_next(state, st):
+    """Triggers the 'next' command if we are near the end of a track."""
+    if st.get("paused", True):
+        return
+    pos = st.get("position", 0)
+    dur = st.get("duration", 0)
+    source = st.get("source", "local")
+    
+    # Thresholds: Local (2.5s), Spotify (3s)
+    threshold = 3.0 if source == "spotify" else 2.5
+    
+    if dur > 5 and pos >= (dur - threshold):
+        # Unique ID for the track to prevent multiple triggers
+        track_sig = st.get("track_id") or st.get("title")
+        if track_sig and state.get("last_auto_next_id") != track_sig:
+            debug_log(f"Auto-next triggered for {source}: {pos}/{dur}")
+            state["last_auto_next_id"] = track_sig
+            save_state(state)
+            subprocess.Popen([sys.executable, sys.argv[0], "next"], 
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def extrapolate_progress(st, snapshot_ts):
@@ -1271,6 +1324,7 @@ def maybe_reconcile_external_spotify(state):
     st = external_spotify_snapshot(max_age_sec=2.0)
     if not (st and st.get("running") and st.get("title")):
         return False
+    
     state["active_source"] = "spotify"
     if state.get("queue"):
         target = -1
@@ -1289,7 +1343,10 @@ def maybe_reconcile_external_spotify(state):
                 target = i
                 break
         if target >= 0:
-            state["current_index"] = target
+            if state.get("current_index") != target:
+                state["current_index"] = target
+                debug_log(f"Reconciled spotify current_index to {target}")
+                
     update_last_status(
         state,
         running=True,
@@ -1301,8 +1358,50 @@ def maybe_reconcile_external_spotify(state):
         duration=st.get("duration", 0),
         track_id=st.get("track_id", ""),
     )
-    debug_log(f"reconciled spotify track_id={st.get('track_id','')} title={st.get('title','')}")
     return True
+
+
+def maybe_reconcile_local(state):
+    if state.get("source_lock") == "spotify":
+        return False
+    if not is_mpv_running():
+        return False
+    
+    # Try to get the current track info from mpv
+    title_res = mpv_send(["get_property", "media-title"])
+    if not title_res or not title_res.get("data"):
+        return False
+    
+    live_title = str(title_res["data"]).strip().lower()
+    
+    # Also try to get path to be more precise
+    path_res = mpv_send(["get_property", "path"])
+    live_path = str(path_res.get("data", "")).strip() if path_res else ""
+    
+    target = -1
+    for i, item in enumerate(state.get("queue", [])):
+        if item.get("source") != "local":
+            continue
+        
+        # Match by path first (strongest)
+        it_path = item.get("local_path")
+        if live_path and it_path and os.path.abspath(os.path.expanduser(it_path)) == os.path.abspath(os.path.expanduser(live_path)):
+            target = i
+            break
+            
+        # Match by title
+        it_title = (item.get("title") or "").strip().lower()
+        if it_title and it_title == live_title:
+            target = i
+            break
+            
+    if target >= 0:
+        if state.get("current_index") != target:
+            state["current_index"] = target
+            state["active_source"] = "local"
+            debug_log(f"Reconciled local current_index to {target}")
+            return True
+    return False
 
 
 def should_prefer_external_spotify(state):
@@ -1655,29 +1754,39 @@ def _step(delta):
 
 def cmd_next():
     state = load_state()
+    refresh_live_status(state)
     lock = state.get("source_lock", "auto")
-    if lock == "spotify" and is_external_spotify_active(max_age_sec=2.0):
+    
+    # If we have a queue and we are currently "in" it, always use Radiant skipping
+    if state.get("queue") and state.get("current_index", -1) != -1:
+        _step(1)
+        return
+
+    # Fallback: only if queue is empty/inactive, try external skip
+    if lock != "local" and is_external_spotify_active(max_age_sec=2.0):
         if spotify_next():
             maybe_reconcile_external_spotify(state)
         return
-    if lock != "local" and is_external_spotify_active(max_age_sec=2.0) and not is_mpv_running():
-        if spotify_next():
-            maybe_reconcile_external_spotify(state)
-        return
+    
     _step(1)
 
 
 def cmd_prev():
     state = load_state()
+    refresh_live_status(state)
     lock = state.get("source_lock", "auto")
-    if lock == "spotify" and is_external_spotify_active(max_age_sec=2.0):
+
+    # If we have a queue and we are currently "in" it, always use Radiant skipping
+    if state.get("queue") and state.get("current_index", -1) != -1:
+        _step(-1)
+        return
+
+    # Fallback: only if queue is empty/inactive, try external skip
+    if lock != "local" and is_external_spotify_active(max_age_sec=2.0):
         if spotify_prev():
             maybe_reconcile_external_spotify(state)
         return
-    if lock != "local" and is_external_spotify_active(max_age_sec=2.0) and not is_mpv_running():
-        if spotify_prev():
-            maybe_reconcile_external_spotify(state)
-        return
+    
     _step(-1)
 
 
@@ -1929,10 +2038,16 @@ def cmd_status_fast():
         if maybe_reconcile_external_spotify(state):
             st = state.get("last_status", {})
             save_state(state)
+        elif maybe_reconcile_local(state):
+            st = state.get("last_status", {})
+            save_state(state)
         else:
             # If reconcile fails, and we were on Spotify, we are likely IDLE.
             if st.get("source") == "spotify":
                 st = {"running": False, "paused": True, "title": "Resting"}
+
+    if st.get("running"):
+        check_auto_next(state, st)
 
     if not st.get("running"):
         print(f"  {DIM}{REST_ICON} Idle{NC}")

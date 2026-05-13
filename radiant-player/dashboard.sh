@@ -216,8 +216,8 @@ draw() {
 
     # ---------- STORMLIGHT DRAIN (Task 1) ----------
     local state_json=$(cat "$HOME/.config/radiant-player/queue_state.json" 2>/dev/null)
-    local pos=$(echo "$state_json" | jq -r '.last_status.position // 0')
-    local dur=$(echo "$state_json" | jq -r '.last_status.duration // 0')
+    local pos=$(echo "$state_json" | jq -r '(.last_status.position // 0) | floor')
+    local dur=$(echo "$state_json" | jq -r '(.last_status.duration // 0) | floor')
     local percent=0
     if ((dur > 0)); then percent=$((pos * 100 / dur)); fi
 
@@ -367,7 +367,7 @@ draw() {
     echo -e "  ${C_SEC}${BOLD}┌──${label3}${hline3}──┐${NC}"
     
     local -a cmd_rows=(
-        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}  ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop  ${DIM}[s]${NC} Shuffle"
+        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}  ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Next/Prev  ${DIM}[l]${NC} Loop  ${DIM}[s]${NC} Shuffle"
         " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}  ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[[/]]${NC} Jump  ${DIM}[j/k]${NC} Move Item"
         " ${GREEN}${NC} ${BOLD}SPO${NC}  ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify App"
         " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC} ${DIM}[^S]${NC} Save  ${DIM}[^L]${NC} Load  ${DIM}[r]${NC} Refresh  ${DIM}[t]${NC} Sort Mode"
@@ -391,12 +391,23 @@ ORIG_STTY=$(stty -g 2>/dev/null || true)
 stty -ixon 2>/dev/null || true
 hide_cursor
 load_queue
+prev_current=$($PY current_index 2>/dev/null)
+selected=$prev_current
+((selected < 0)) && selected=0
 draw
 
 # ---------- LOOP ----------
 while true; do
+    # Check for song change to snap pointer
+    curr=$($PY current_index 2>/dev/null)
+    if [ "$curr" != "$prev_current" ] && [ "$curr" -ge 0 ]; then
+        load_queue
+        selected=$curr
+        prev_current=$curr
+    fi
+
     key=""
-    if ! read -rsn1 -t 10 key; then
+    if ! read -rsn1 -t 2 key; then
         draw
         continue
     fi

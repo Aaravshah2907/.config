@@ -11,14 +11,23 @@ ORIG_STTY=""
 # ---------- COLORS (Radiant / Stormlight) ----------
 BOLD='\033[1m'
 DIM='\033[2m'
-CYAN='\033[38;5;81m'     # Stormlight Glow (Sapphire)
+CYAN='\033[38;5;81m'     # Stormlight Glow
 MAGENTA='\033[38;5;141m'  # Shardblade (Violet)
 GREEN='\033[38;5;121m'    # Lifebound (Emerald)
 YELLOW='\033[38;5;220m'   # Honor-Gold (Heliodor)
 BLUE='\033[38;5;69m'      # Windrunner Blue
-RED='\033[38;5;160m'      # Voidlight (Odium)
+RED='\033[38;5;160m'      # Voidlight
 GRAY='\033[38;5;240m'     # Rosharan Slate
 NC='\033[0m'
+
+# Gemstone Shades
+RUBY='\033[38;5;196m'     # Infusion
+EMERALD_G='\033[38;5;46m'   # Growth
+SAPPHIRE_G='\033[38;5;27m'  # Translucence
+AMETHYST_G='\033[38;5;129m' # Metal
+DIAMOND_G='\033[38;5;231m'  # Glass
+HELIODOR_G='\033[38;5;226m' # Air
+DUN='\033[38;5;239m'      # Drained Sphere
 
 # ---------- HELPERS ----------
 load_queue() {
@@ -212,7 +221,7 @@ trap restore_tty EXIT
 # ---------- DRAW ----------
 draw() {
     tput civis # Hide cursor
-    clear
+    printf "\033[H" # Move cursor to top instead of clearing (reduces flicker)
 
     # ---------- STORMLIGHT DRAIN (Task 1) ----------
     local state_json=$(cat "$HOME/.config/radiant-player/queue_state.json" 2>/dev/null)
@@ -227,23 +236,6 @@ draw() {
     local C_BRAND=$MAGENTA
     local C_QUEUE=$GREEN
 
-    if ((percent > 92)); then
-        # FLICKER: Stormlight is almost gone!
-        if (( RANDOM % 10 > 6 )); then
-            C_MAIN=$GRAY; C_SEC=$GRAY; C_ACC=$GRAY; C_BRAND=$GRAY; C_QUEUE=$GRAY
-        fi
-    elif ((percent > 80)); then
-        # DRAINED: Dull slate
-        C_MAIN=$GRAY; C_SEC=$GRAY; C_ACC=$GRAY; C_BRAND=$GRAY; C_QUEUE=$GRAY
-    elif ((percent > 50)); then
-        # FADING: Dimmer colors
-        C_MAIN='\033[38;5;246m'
-        C_SEC='\033[38;5;244m'
-        C_ACC='\033[38;5;242m'
-        C_BRAND='\033[38;5;239m'
-        C_QUEUE='\033[38;5;243m'
-    fi
-
     local term_cols
     term_cols=$(tput cols 2>/dev/null || echo 80)
     local width=$((term_cols - 12))
@@ -255,8 +247,8 @@ draw() {
     local hline=$(printf '─%.0s' $(seq 1 $width))
 
     # Header / Branding
-    local header_text="  󱐌 THE KNIGHTS RADIANT │ Journey before destination...  "
-    local header_len=${#header_text}
+    local header_text="  󱐌 THE KNIGHTS RADIANT │ ${HELIODOR_G}Journey before destination...${NC}  "
+    local header_len=${#header_text} # Visible length approx
     local header_padding=$((inner_width - header_len))
     ((header_padding < 0)) && header_padding=0
     
@@ -335,7 +327,7 @@ draw() {
         
         local display_line=""
         if [ "$i" -eq "$selected" ]; then
-            display_line=$(printf " ${C_ACC}${BOLD}󱐋 %2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
+            display_line=$(printf " ${EMERALD_G}${BOLD}󱐋 %2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
         else
             display_line=$(printf "    %2d │ %s %-${name_limit}s" "$idx" "$marker" "$short_name")
         fi
@@ -367,11 +359,11 @@ draw() {
     echo -e "  ${C_SEC}${BOLD}┌──${label3}${hline3}──┐${NC}"
     
     local -a cmd_rows=(
-        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}  ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Next/Prev  ${DIM}[l]${NC} Loop  ${DIM}[s]${NC} Shuffle"
-        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}  ${DIM}[+/-]${NC} Vol   ${DIM}[←/→]${NC} Seek  ${DIM}[[/]]${NC} Jump  ${DIM}[j/k]${NC} Move Item"
-        " ${GREEN}${NC} ${BOLD}SPO${NC}  ${DIM}[a]${NC} Search+Play  ${DIM}[P]${NC} Pick Playlist  ${DIM}[o]${NC} Spotify App"
-        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC} ${DIM}[^S]${NC} Save  ${DIM}[^L]${NC} Load  ${DIM}[r]${NC} Refresh  ${DIM}[t]${NC} Sort Mode"
-        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}  ${DIM}[d]${NC} Del  ${DIM}[c]${NC} Clear  ${DIM}[H]${NC} Health  ${DIM}[/]${NC} Find  ${RED}[q]${NC} Quit"
+        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}   ${SAPPHIRE_G}[↑/↓]${NC} Move      ${SAPPHIRE_G}[ENTER]${NC} Play ${SAPPHIRE_G}[n/p]${NC} Next/Prev  ${SAPPHIRE_G}[l]${NC} Loop        ${SAPPHIRE_G}[s]${NC} Shuffle"
+        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear    ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${RED}[q]${NC} Quit"
+        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}   ${SAPPHIRE_G}[+/-]${NC} Vol       ${SAPPHIRE_G}[←/→]${NC} Seek   ${SAPPHIRE_G}[[/]]${NC} Jump       ${SAPPHIRE_G}[j/k]${NC} Move Item"
+        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC}  ${SAPPHIRE_G}[^S]${NC} Save       ${SAPPHIRE_G}[^L]${NC} Load    ${SAPPHIRE_G}[r]${NC} Refresh      ${SAPPHIRE_G}[t]${NC} Sort Mode"
+        " ${GREEN}${NC} ${BOLD}SPO${NC}   ${SAPPHIRE_G}[a]${NC} Search+Play ${SAPPHIRE_G}[P]${NC} Playlist ${SAPPHIRE_G}[o]${NC} Spotify App"
     )
     
     for row in "${cmd_rows[@]}"; do
@@ -394,23 +386,43 @@ load_queue
 prev_current=$($PY current_index 2>/dev/null)
 selected=$prev_current
 ((selected < 0)) && selected=0
+last_draw_time=$(date +%s)
+clear
 draw
 
 # ---------- LOOP ----------
 while true; do
+    needs_redraw=0
+    # Silent status check to trigger auto-next and reconciliation in backend
+    $PY status_fast > /dev/null 2>&1
+    
     # Check for song change to snap pointer
     curr=$($PY current_index 2>/dev/null)
     if [ "$curr" != "$prev_current" ] && [ "$curr" -ge 0 ]; then
         load_queue
         selected=$curr
         prev_current=$curr
+        needs_redraw=1
+    fi
+    
+    # Periodic redraw every 10 seconds for progress sync
+    now=$(date +%s)
+    if (( now - last_draw_time >= 10 )); then
+        needs_redraw=1
+    fi
+
+    if [ "$needs_redraw" -eq 1 ]; then
+        draw
+        last_draw_time=$now
     fi
 
     key=""
     if ! read -rsn1 -t 2 key; then
-        draw
         continue
     fi
+    
+    # If a key was pressed, handle it and then redraw
+    needs_redraw=1
 
     case "$key" in
         q)  clear; exit ;;
@@ -520,8 +532,10 @@ while true; do
                 printf "\r  󱐌  STORM GATHERING... %s" "$(printf ' %.0s' {1..20} | sed 's/ /󱐋/g')"
                 sleep 0.05
             done
-            echo -e "${NC}"
+            printf "\r\033[K" # Clear the line
+            echo -ne "${NC}"
             load_queue
+            clear # Full clear to ensure no artifacts before redraw
             ;;
         
         "/")
@@ -531,6 +545,7 @@ while true; do
                     [[ "${lines[$i]}" == "$choice" ]] && selected=$i && break
                 done
             fi
+            clear
             ;;
 
         $'\x13') # Ctrl+S (Save)

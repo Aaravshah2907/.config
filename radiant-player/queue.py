@@ -2002,7 +2002,7 @@ def cmd_status():
         pretty += f" — {artist}"
     print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
     print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
-    print(f"\n    {BOLD}{CYAN}󱐋 {current_ideal}{NC}")
+    print(f"\n    {BOLD}{YELLOW}󱐋 {current_ideal}{NC}")
 
 
 def cmd_status_fast():
@@ -2078,7 +2078,7 @@ def cmd_status_fast():
         pretty += f" — {artist}"
     print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
     print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
-    print(f"\n    {BOLD}{CYAN}󱐋 {current_ideal}{NC}")
+    print(f"\n    {BOLD}{YELLOW}󱐋 {current_ideal}{NC}")
 
 
 def cmd_short_status():

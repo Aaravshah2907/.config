@@ -1,8 +1,4 @@
-# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
-# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
-"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
-
-[mgr]
+[manager]
 ratio          = [ 2, 4, 4 ]
 sort_by        = "alphabetical"
 sort_sensitive = false
@@ -85,8 +81,8 @@ rules = [
 	{ mime = "audio/*", use = [ "play", "reveal" ] },
 	# Video
 	{ mime = "video/*", use = [ "vlc", "reveal" ] },
-    { name = "*.mp4",   use = [ "vlc", "reveal" ] },
-    { name = "*.mkv",   use = [ "vlc", "reveal" ] },
+    { mime = "*.mp4",   use = [ "vlc", "reveal" ] },
+    { mime = "*.mkv",   use = [ "vlc", "reveal" ] },
 	# Archive
 	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "reveal" ] },
 	# JSON
@@ -99,10 +95,10 @@ rules = [
 	# Fallback
 	{ url = "*", use = [ "open", "reveal" ] },
 	# Playlist
-	{ name = "*.m3u", use = [ "playlist" ] },
+	{ mime = "*.m3u", use = [ "playlist" ] },
 	# Spotify pointer files
-	{ name = "*.spotify", use = [ "spotify_add" ] },
-	{ name = "*.spot", use = [ "spotify_add" ] },
+	{ mime = "*.spotify", use = [ "spotify_add" ] },
+	{ mime = "*.spot", use = [ "spotify_add" ] },
 ]
 
 [tasks]
@@ -115,94 +111,94 @@ suppress_preload = false
 
 [plugin]
 prepend_previewers = [
-	{ mime = "audio/*", run = "exifaudio" },
-	{ url = '**/.git/', run = 'preview-git' },
-	{ mime = '', run = 'preview-epub' },
+	{ mime = "audio/*", run = "exifaudio", group = "preview" },
+	{ url = '**/.git/', run = 'preview-git', group = "preview" },
+	{ mime = '', run = 'preview-epub', group = "preview" },
 ]
 prepend_fetchers = [
-    #{id  = "mactag", url = "*/", run = "mactag"},
-    #{id  = "mactag", url = "*/", run = "mactag"},
-    { id = "simple-tag", url = "*", run = "simple-tag" },
-    { id = "simple-tag", url = "*/", run = "simple-tag" },
+    #{id  = "mactag", url = "*/", run = "mactag", group = "tag" },
+    #{id  = "mactag", url = "*/", run = "mactag", group = "tag" },
+    { id = "simple-tag", url = "*", run = "simple-tag", group = "tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag", group = "tag" },
 ]
 fetchers = [
 	# Mimetype
-	{ id = "mime", url = "*/",         run = "mime.dir", prio = "high" },
-	{ id = "mime", url = "local://*",  run = "mime.local", prio = "high" },
-	{ id = "mime", url = "remote://*", run = "mime.remote", prio = "high" },
+	{ id = "mime", url = "*/",         run = "mime.dir", prio = "high", group = "mime" },
+	{ id = "mime", url = "local://*",  run = "mime.local", prio = "high", group = "mime" },
+	{ id = "mime", url = "remote://*", run = "mime.remote", prio = "high", group = "mime" },
 ]
 spotters = [
-	#{ url = "*/", run = "folder" }, # use default
-	{ url = "*/", run = "spot" },
+	#{ url = "*/", run = "folder", group = "folder" }, # use default
+	{ url = "*/", run = "spot", group = "folder" },
 	# Code
-	{ mime = "text/*", run = "code" },
-	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
+	{ mime = "text/*", run = "code", group = "code" },
+	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code", group = "code" },
 	# Image
-	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
-	{ mime = "image/svg+xml", run = "svg" },
-	{ mime = "image/*", run = "image" },
+	{ mime = "image/{avif,hei?,jxl}", run = "magick", group = "image" },
+	{ mime = "image/svg+xml", run = "svg", group = "image" },
+	{ mime = "image/*", run = "image", group = "image" },
 	# Audio
-	{ mime = 'audio/mpegurl', run = 'file' },
-	{ mime = "audio/*", run = "spot-audio" },
+	{ mime = 'audio/mpegurl', run = 'file', group = "audio" },
+	{ mime = "audio/*", run = "spot-audio", group = "audio" },
 	# Video
-	{ mime = "video/*", run = "spot-video" },
+	{ mime = "video/*", run = "spot-video", group = "video" },
 	# Virtual file system
-	{ mime = "vfs/*", run = "vfs" },
+	{ mime = "vfs/*", run = "vfs", group = "vfs" },
 	# Error
-	{ mime = "null/*", run = "null" },
+	{ mime = "null/*", run = "null", group = "null" },
 	# Fallback
-	# { url = "*", run = "file" }, # Default
-	{ url = "*", run = "spot" },
+	# { url = "*", run = "file", group = "file" }, # Default
+	{ url = "*", run = "spot", group = "file" },
 ]
 preloaders = [
 	# Image
-	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
-	{ mime = "image/svg+xml", run = "svg" },
-	{ mime = "image/*", run = "image" },
+	{ mime = "image/{avif,hei?,jxl}", run = "magick", group = "image" },
+	{ mime = "image/svg+xml", run = "svg", group = "image" },
+	{ mime = "image/*", run = "image", group = "image" },
 	# Video
-	{ mime = "video/*", run = "video" },
+	{ mime = "video/*", run = "video", group = "video" },
 	# PDF
-	{ mime = "application/pdf", run = "pdf" },
+	{ mime = "application/pdf", run = "pdf", group = "pdf" },
 	# Font
-	{ mime = "font/*", run = "font" },
-	{ mime = "application/ms-opentype", run = "font" },
+	{ mime = "font/*", run = "font", group = "font" },
+	{ mime = "application/ms-opentype", run = "font", group = "font" },
 	# Epubs
-	{ mime = '', run = 'preview-epub' },
+	{ mime = '', run = 'preview-epub', group = "preview-epub" },
 ]
 previewers = [
-	{ url = "*/", run = "folder" },
+	{ url = "*/", run = "folder", group = "folder" },
 	# Code
-	{ mime = "text/*", run = "code" },
-	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
+	{ mime = "text/*", run = "code", group = "code" },
+	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code", group = "code" },
 	# JSON
-	{ mime = "application/{json,ndjson}", run = "json" },
+	{ mime = "application/{json,ndjson}", run = "json", group = "json" },
 	# Image
-	{ mime = "image/{avif,hei?,jxl}", run = "magick" },
-	{ mime = "image/svg+xml", run = "svg" },
-	{ mime = "image/*", run = "image" },
+	{ mime = "image/{avif,hei?,jxl}", run = "magick", group = "image" },
+	{ mime = "image/svg+xml", run = "svg", group = "image" },
+	{ mime = "image/*", run = "image", group = "image" },
 	# Video
-	{ mime = "video/*", run = "video" },
+	{ mime = "video/*", run = "video", group = "video" },
 	# PDF
-	{ mime = "application/pdf", run = "pdf" },
+	{ mime = "application/pdf", run = "pdf", group = "pdf" },
 	# Archive
-	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", run = "archive" },
-	{ mime = "application/{debian*-package,redhat-package-manager,rpm,android.package-archive}", run = "archive" },
-	{ url = "*.{AppImage,appimage}", run = "archive" },
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", run = "archive", group = "archive" },
+	{ mime = "application/{debian*-package,redhat-package-manager,rpm,android.package-archive}", run = "archive", group = "archive" },
+	{ url = "*.{AppImage,appimage}", run = "archive", group = "archive" },
 	# Virtual Disk / Disk Image
-	{ mime = "application/{iso9660-image,qemu-disk,ms-wim,apple-diskimage}", run = "archive" },
-	{ mime = "application/virtualbox-{vhd,vhdx}", run = "archive" },
-	{ url = "*.{img,fat,ext,ext2,ext3,ext4,squashfs,ntfs,hfs,hfsx}", run = "archive" },
+	{ mime = "application/{iso9660-image,qemu-disk,ms-wim,apple-diskimage}", run = "archive", group = "archive" },
+	{ mime = "application/virtualbox-{vhd,vhdx}", run = "archive", group = "archive" },
+	{ url = "*.{img,fat,ext,ext2,ext3,ext4,squashfs,ntfs,hfs,hfsx}", run = "archive", group = "archive" },
 	# Font
-	{ mime = "font/*", run = "font" },
-	{ mime = "application/ms-opentype", run = "font" },
+	{ mime = "font/*", run = "font", group = "font" },
+	{ mime = "application/ms-opentype", run = "font", group = "font" },
 	# Empty file
-	{ mime = "inode/empty", run = "empty" },
+	{ mime = "inode/empty", run = "empty", group = "empty" },
 	# Virtual file system
-	{ mime = "vfs/*", run = "vfs" },
+	{ mime = "vfs/*", run = "vfs", group = "vfs" },
 	# Error
-	{ mime = "null/*", run = "null" },
+	{ mime = "null/*", run = "null", group = "null" },
 	# Fallback
-	{ url = "*", run = "file" },
+	{ url = "*", run = "file", group = "file" },
 ]
 
 [input]

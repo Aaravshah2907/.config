@@ -247,9 +247,9 @@ draw() {
     local hline=$(printf '─%.0s' $(seq 1 $width))
 
     # Header / Branding
-    local header_text="  󱐌 THE KNIGHTS RADIANT │ ${HELIODOR_G}Journey before destination...${NC}  "
+    local header_text=" 󱐌 THE KNIGHTS RADIANT │${HELIODOR_G} Life Before Death. Strength Before Weakness. Journey before destination.${NC} "
     local header_len=${#header_text} # Visible length approx
-    local header_padding=$((inner_width - header_len))
+    local header_padding=$((inner_width-header_len))
     ((header_padding < 0)) && header_padding=0
     
     echo -e "  ${C_BRAND}${BOLD}┌─${hline}─┐${NC}"
@@ -286,9 +286,9 @@ draw() {
     local shuffle_on=$(echo "$state_json" | jq -r '.shuffle // false')
     local indicator=" [LOOP: ${loop_mode}] [SHUFFLE: $( [ "$shuffle_on" == "true" ] && echo ON || echo OFF )] "
     local indicator_len=${#indicator}
-    local indicator_padding=$((inner_width - indicator_len - 2))
+    local indicator_padding=$((inner_width-indicator_len-2))
     ((indicator_padding < 0)) && indicator_padding=0
-    echo -e "  ${C_MAIN}${BOLD}│${NC}  ${DIM}${indicator}${NC}$(printf '%*s' "$indicator_padding" "")${C_MAIN}${BOLD}│${NC}"
+    echo -e "  ${C_MAIN}${BOLD}│${NC}  ${DIAMOND_G}${indicator}${NC}$(printf '%*s' "$indicator_padding" "")${C_MAIN}${BOLD}│${NC}"
 
     echo -e "  ${C_MAIN}${BOLD}└─${hline}─┘${NC}"
     echo ""

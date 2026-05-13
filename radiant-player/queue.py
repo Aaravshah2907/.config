@@ -39,6 +39,14 @@ BLUE = "\033[38;5;69m"      # Windrunner Blue
 RED = "\033[38;5;160m"      # Voidlight / Odium
 GRAY = "\033[38;5;240m"     # Rosharan Slate
 NC = "\033[0m"
+# Gemstone Shades
+RUBY="\033[38;5;196m"     # Infusion
+EMERALD_G="\033[38;5;46m"   # Growth
+SAPPHIRE_G="\033[38;5;27m"  # Translucence
+AMETHYST_G="\033[38;5;129m" # Metal
+DIAMOND_G="\033[38;5;231m"  # Glass
+HELIODOR_G="\033[38;5;226m" # Air
+DUN="\033[38;5;239m"      # Drained Sphere
 
 LOCAL_ICON = "󰎈"
 SPOTIFY_ICON = ""
@@ -189,6 +197,15 @@ def is_mpv_running():
             return True
     except Exception:
         return False
+
+
+def is_mpv_active():
+    """Checks if mpv is running and has a track loaded."""
+    if not is_mpv_running():
+        return False
+    # Check if a track is loaded (media-title is a good proxy)
+    res = mpv_send(["get_property", "media-title"])
+    return bool(res and res.get("data"))
 
 
 def mpv_send(cmd):
@@ -1154,11 +1171,22 @@ def play_current(state):
 
 
 def refresh_live_status(state):
-    if maybe_reconcile_external_spotify(state):
-        idx = state.get("current_index", -1)
-        q = state.get("queue", [])
-        if idx < 0 or idx >= len(q) or q[idx].get("source") != "local":
-            return
+    # Prioritize Local/MPV if it is active
+    mpv_active = False
+    if state.get("source_lock") != "spotify" and is_mpv_active():
+        mpv_active = True
+        maybe_reconcile_local(state)
+        
+    if not mpv_active:
+        # Fallback to Spotify only if mpv is idle or locked out
+        if maybe_reconcile_external_spotify(state):
+            idx = state.get("current_index", -1)
+            q = state.get("queue", [])
+            if idx < 0 or idx >= len(q) or q[idx].get("source") != "local":
+                return
+    
+    # If we are in MPV mode, ensure we don't accidentally fall back later in this function
+    # by checking the current item source
     idx = state.get("current_index", -1)
     q = state.get("queue", [])
     if idx < 0 or idx >= len(q):
@@ -1396,9 +1424,11 @@ def maybe_reconcile_local(state):
             break
             
     if target >= 0:
-        if state.get("current_index") != target:
+        if state.get("current_index") != target or state.get("active_source") != "local":
             state["current_index"] = target
             state["active_source"] = "local"
+            # Update status partially for immediate UI feedback in fast paths
+            update_last_status(state, running=True, title=item.get("title", "Local"), artist=item.get("artist", ""), source="local")
             debug_log(f"Reconciled local current_index to {target}")
             return True
     return False
@@ -1414,12 +1444,15 @@ def pick_active_source_for_controls(state):
         return "local" if is_mpv_running() else None
     if lock == "spotify":
         return "spotify" if is_external_spotify_active(max_age_sec=2.0) else None
-    if is_external_spotify_active(max_age_sec=2.0) and not is_mpv_running():
+    
+    # Priority: mpv first if it has a track loaded
+    if is_mpv_active():
+        return "local"
+        
+    if is_external_spotify_active(max_age_sec=2.0):
         return "spotify"
-    src = state.get("active_source")
-    if src in ("local", "spotify"):
-        return src
-    return "spotify" if is_external_spotify_active(max_age_sec=2.0) else ("local" if is_mpv_running() else None)
+        
+    return "local" if is_mpv_running() else None
 
 
 def with_lock(timeout_sec=LOCK_WAIT_TIMEOUT_SEC):
@@ -1997,7 +2030,7 @@ def cmd_status():
     progress = int((percent * width) / 100) if dur else 0
     bar = f"{CYAN}{'━' * progress}{GRAY}{'─' * (width - progress)}{NC}"
     src_icon = source_icon(source) if source else REST_ICON
-    pretty = f"{src_icon} {title}"
+    pretty = f"{src_icon} {title.split('|')[0].strip() if '|' in title else title}"
     if artist:
         pretty += f" — {artist}"
     print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
@@ -2033,18 +2066,26 @@ def cmd_status_fast():
         except Exception:
             pass
 
-    # If it's still stale or we are on Spotify, try a quick reconcile
-    if st.get("source") == "spotify" or not st.get("running"):
-        if maybe_reconcile_external_spotify(state):
+    # Priority Reconcile: Try local first if it seems active
+    mpv_active = False
+    if state.get("source_lock") != "spotify" and is_mpv_active():
+        mpv_active = True
+        maybe_reconcile_local(state)
+        # Ensure 'st' reflects the local state even if index didn't change
+        if st.get("source") != "local":
             st = state.get("last_status", {})
             save_state(state)
-        elif maybe_reconcile_local(state):
-            st = state.get("last_status", {})
-            save_state(state)
-        else:
-            # If reconcile fails, and we were on Spotify, we are likely IDLE.
-            if st.get("source") == "spotify":
-                st = {"running": False, "paused": True, "title": "Resting"}
+    
+    # Fallback Reconcile: Try Spotify ONLY if local is idle
+    if not mpv_active:
+        if st.get("source") == "spotify" or not st.get("running"):
+            if maybe_reconcile_external_spotify(state):
+                st = state.get("last_status", {})
+                save_state(state)
+            else:
+                # If reconcile fails, and we were on Spotify, we are likely IDLE.
+                if st.get("source") == "spotify":
+                    st = {"running": False, "paused": True, "title": "Resting"}
 
     if st.get("running"):
         check_auto_next(state, st)
@@ -2073,12 +2114,12 @@ def cmd_status_fast():
     progress = int((percent * width) / 100) if dur else 0
     bar = f"{CYAN}{'━' * progress}{GRAY}{'─' * (width - progress)}{NC}"
     src_icon = source_icon(source) if source else REST_ICON
-    pretty = f"{src_icon} {title}"
+    pretty = f"{src_icon} {title.split('|')[0].strip() if '|' in title else title}"
     if artist:
         pretty += f" — {artist}"
-    print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
-    print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
-    print(f"\n    {BOLD}{YELLOW}󱐋 {current_ideal}{NC}")
+    print(f" {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
+    print(f" {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
+    print(f"\n {BOLD}{AMETHYST_G}󱐋 {current_ideal}{NC}")
 
 
 def cmd_short_status():
@@ -2157,7 +2198,7 @@ def cmd_short_status_fast():
 def cmd_status_json():
     state = load_state()
     refresh_live_status(state)
-    maybe_reconcile_external_spotify(state)
+    # Redundant call removed to maintain mpv priority
     st = status_from_snapshot_or_state(state, max_age_sec=3)
     if not st.get("running"):
         print(json.dumps({"running": False}))

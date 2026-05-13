@@ -2,6 +2,7 @@
 
 # Ensure ya and other tools are in path
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+LOGFILE="/tmp/radiant-player-notify.log"
 
 # SYLPHRENA - Your personal Windspren
 # Journey before destination, Bridgeboy.
@@ -121,7 +122,7 @@ TRACK=$(echo "$2" | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g')
 CONTENT="󰎈 $TRACK\n\n$QUOTE"
 
 # Construct JSON safely using jq (Compact mode for better CLI transmission)
-JSON_PAYLOAD=$(/opt/homebrew/bin/jq -n -c \
+JSON_PAYLOAD=$(jq -n -c \
   --arg t "$TITLE" \
   --arg c "$CONTENT" \
   --arg l "$LEVEL" \

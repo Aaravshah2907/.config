@@ -14,32 +14,30 @@ notify_syl() {
 
 case "$cmd" in
     toggle)
-        /opt/homebrew/bin/python3 "$PY" toggle
+        python3 "$PY" toggle
         [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
-        # Check if now playing or paused
-        is_paused=$($PY status_json 2>/dev/null | /opt/homebrew/bin/jq -r '.paused')
-        if [ "$is_paused" == "true" ]; then
-            notify_syl "Paused"
-        else
-            notify_syl "Playing"
-        fi
+        # Call status_json once to get both state and title
+        status_json=$(python3 "$PY" status_json 2>/dev/null)
+        is_paused=$(echo "$status_json" | jq -r '.paused')
+        title=$(echo "$status_json" | jq -r '.title // ""')
+        bash "$NOTIFY" "$([ "$is_paused" == "true" ] && echo Paused || echo Playing)" "$title"
         ;;
     next)
-        /opt/homebrew/bin/python3 "$PY" next
+        python3 "$PY" next
         [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         notify_syl "Playing"
         ;;
     prev)
-        /opt/homebrew/bin/python3 "$PY" prev
+        python3 "$PY" prev
         [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         notify_syl "Playing"
         ;;
     seekf)
-        /opt/homebrew/bin/python3 "$PY" seek 5
+        python3 "$PY" seek 5
         [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         ;;
     seekb)
-        /opt/homebrew/bin/python3 "$PY" seek -5
+        python3 "$PY" seek -5
         [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         ;;
 esac

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-PY="$(dirname "$(realpath "$0")")/queue.py"
+PY="python3 $(dirname "$(realpath "$0")")/queue.py"
 NOTIFY="$(dirname "$(realpath "$0")")/notify.sh"
 selected=0
 lines=()
@@ -68,7 +68,7 @@ quick_spotify_pick() {
     [ -z "$query" ] && return
 
     results=$(spotify_player search "$query" 2>/dev/null)
-    options=$(printf "%s" "$results" | /opt/homebrew/bin/jq -r '.tracks[]? | "\(.name) — \((.artists // [] | map(.name) | join(", ")))\t\(.id)"')
+    options=$(printf "%s" "$results" | jq -r '.tracks[]? | "\(.name) — \((.artists // [] | map(.name) | join(", ")))\t\(.id)"')
     [ -z "$options" ] && return
 
     picked=$(printf "%s\n" "$options" | fzf \
@@ -114,7 +114,7 @@ quick_spotify_playlist_pick() {
     [ -z "$query" ] && return
 
     results=$(spotify_player search "$query" 2>/dev/null)
-    options=$(printf "%s" "$results" | /opt/homebrew/bin/jq -r '.playlists[]? | "\(.id)\t\(.name) — by \((.owner // [] | join(", ")))"')
+    options=$(printf "%s" "$results" | jq -r '.playlists[]? | "\(.id)\t\(.name) — by \((.owner // [] | join(", ")))"')
     [ -z "$options" ] && return
 
     picked=$(printf "%s\n" "$options" | fzf --prompt=" Pick Playlist > " --height 14 --reverse)
@@ -125,7 +125,7 @@ quick_spotify_playlist_pick() {
     [ -z "$playlist_id" ] && return
 
     track_json=$($PY spotify_playlist_tracks "spotify:playlist:$playlist_id" 2>/dev/null)
-    track_options=$(printf "%s" "$track_json" | /opt/homebrew/bin/jq -r '.[]? | "\(.title) — \(.artist)  [\(.album)]\t\(.spotify_id)"')
+    track_options=$(printf "%s" "$track_json" | jq -r '.[]? | "\(.title) — \(.artist)  [\(.album)]\t\(.spotify_id)"')
     [ -z "$track_options" ] && {
         echo -e "\n  ${RED}󰔹 Could not fetch playlist tracks${NC}"
         sleep 0.8
@@ -175,7 +175,7 @@ show_health_panel() {
     if [ -z "$hjson" ]; then
         echo -e "${RED}Unable to read health status.${NC}"
     else
-        printf "%s" "$hjson" | /opt/homebrew/bin/jq -r '
+        printf "%s" "$hjson" | jq -r '
             "mpv_running      : \(.mpv_running)\n" +
             "socket_exists    : \(.socket_path_exists)\n" +
             "spotify_player   : \(.spotify_player)\n" +
@@ -257,6 +257,17 @@ draw() {
         ((padding < 0)) && padding=0
         printf "  ${BLUE}${BOLD}│${NC}  %b%*s${BLUE}${BOLD}│${NC}\n" "$line" "$padding" ""
     done
+
+    # Loop/Shuffle Indicator line (Task 11)
+    local state_json=$(cat "$HOME/.config/radiant-player/queue_state.json" 2>/dev/null)
+    local loop_mode=$(echo "$state_json" | jq -r '.loop_mode // "off"')
+    local shuffle_on=$(echo "$state_json" | jq -r '.shuffle // false')
+    local indicator=" [LOOP: ${loop_mode}] [SHUFFLE: $( [ "$shuffle_on" == "true" ] && echo ON || echo OFF )] "
+    local indicator_len=${#indicator}
+    local indicator_padding=$((inner_width - indicator_len - 2))
+    ((indicator_padding < 0)) && indicator_padding=0
+    echo -e "  ${BLUE}${BOLD}│${NC}  ${DIM}${indicator}${NC}$(printf '%*s' "$indicator_padding" "")${BLUE}${BOLD}│${NC}"
+
     echo -e "  ${BLUE}${BOLD}└─${hline}─┘${NC}"
     echo ""
 
@@ -392,8 +403,8 @@ while true; do
         "+" | "=") $PY volume 5 ;;
         "-") $PY volume -5 ;;
         
-        n)  $PY next;   load_queue; selected=$($PY current_index 2>/dev/null) ;;
-        p)  $PY prev;   load_queue; selected=$($PY current_index 2>/dev/null) ;;
+        n)  $PY next;   load_queue; selected=$(jq -r '.current_index' "$HOME/.config/radiant-player/queue_state.json" 2>/dev/null || echo 0) ;;
+        p)  $PY prev;   load_queue; selected=$(jq -r '.current_index' "$HOME/.config/radiant-player/queue_state.json" 2>/dev/null || echo 0) ;;
         d)
             target_idx=$(selected_queue_index)
             if [ "$target_idx" -ge 0 ] 2>/dev/null; then
@@ -402,10 +413,15 @@ while true; do
             fi
             ;;
         c)
-            $PY clear
-            selected=0
-            load_queue
-            echo -e "\n  ${BLUE}󰃢 Queue cleared${NC}"
+            read -rsn1 -p "  Clear queue? [y/N]: " confirm
+            if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
+                $PY clear
+                selected=0
+                load_queue
+                echo -e "\n  ${BLUE}󰃢 Queue cleared${NC}"
+            else
+                echo -e "\n  ${DIM}Cancelled${NC}"
+            fi
             sleep 0.4
             ;;
         a)
@@ -468,9 +484,11 @@ while true; do
             ;;
         
         "/")
-            choice=$(printf "%s\n" "${lines[@]}" | fzf --prompt="🔍 Search > " --height 10 --reverse)
+            choice=$(printf "%s\n" "${lines[@]}" | fzf --prompt="🔍 Search > " --height 10 --reverse --ansi)
             if [ -n "$choice" ]; then
-                selected=$(echo "$choice" | awk '{print $1}')
+                for i in "${!lines[@]}"; do
+                    [[ "${lines[$i]}" == "$choice" ]] && selected=$i && break
+                done
             fi
             ;;
 

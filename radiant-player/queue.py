@@ -10,6 +10,8 @@ import tempfile
 import time
 import uuid
 import fcntl
+import copy
+import concurrent.futures
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib import error as urlerror
@@ -87,17 +89,48 @@ def debug_log(message):
         pass
 
 
+BIN_CACHE_PATH = Path("/tmp/radiant-bin-cache.json")
+
 def resolve_bin(name):
+    # Cache lookup
+    if BIN_CACHE_PATH.exists():
+        try:
+            with BIN_CACHE_PATH.open("r") as f:
+                cache = json.load(f)
+                if name in cache and os.path.exists(cache[name]):
+                    return cache[name]
+        except Exception:
+            pass
+
+    resolved = name
     for candidate in (f"/opt/homebrew/bin/{name}", f"/usr/local/bin/{name}", name):
         if os.path.isabs(candidate):
             if os.path.exists(candidate):
-                return candidate
+                resolved = candidate
+                break
         else:
             if subprocess.run(
                 ["bash", "-lc", f"command -v {candidate} >/dev/null 2>&1"], check=False
             ).returncode == 0:
-                return candidate
-    return name
+                # Get the actual path
+                p = subprocess.run(["bash", "-lc", f"command -v {candidate}"], capture_output=True, text=True).stdout.strip()
+                if p:
+                    resolved = p
+                    break
+
+    # Update cache
+    try:
+        cache = {}
+        if BIN_CACHE_PATH.exists():
+            with BIN_CACHE_PATH.open("r") as f:
+                cache = json.load(f)
+        cache[name] = resolved
+        with BIN_CACHE_PATH.open("w") as f:
+            json.dump(cache, f)
+    except Exception:
+        pass
+
+    return resolved
 
 
 MPV_BIN = resolve_bin("mpv")
@@ -129,13 +162,13 @@ def _deep_merge(base, extra):
 
 def load_state():
     if not STATE_PATH.exists():
-        return json.loads(json.dumps(DEFAULT_STATE))
+        return copy.deepcopy(DEFAULT_STATE)
     try:
         with STATE_PATH.open("r", encoding="utf-8") as f:
             raw = json.load(f)
-        return _deep_merge(json.loads(json.dumps(DEFAULT_STATE)), raw)
+        return _deep_merge(copy.deepcopy(DEFAULT_STATE), raw)
     except Exception:
-        return json.loads(json.dumps(DEFAULT_STATE))
+        return copy.deepcopy(DEFAULT_STATE)
 
 
 def save_state(state):
@@ -446,7 +479,7 @@ def spotify_track_metadata(uri):
     }
 
 
-def spotify_playlist_tracks(uri, max_items=300):
+def spotify_playlist_tracks(uri, max_items=1000):
     sid = spotify_id_from_uri(uri)
     if not sid:
         return []
@@ -479,6 +512,7 @@ def spotify_playlist_tracks(uri, max_items=300):
                 }
             )
             if len(out) >= max_items:
+                print(f"Warning: Playlist truncated at {max_items} tracks.", file=sys.stderr)
                 break
         path = payload.get("next")
     return out
@@ -816,46 +850,28 @@ def nowplaying_spotify_snapshot():
     if not os.path.exists(nowplaying_bin):
         return None
     try:
-        client = subprocess.run(
-            [nowplaying_bin, "get", "clientIdentifier"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            text=True,
-            timeout=1.5,
-            check=False,
-        ).stdout.strip()
+        # Task 5: Run nowplaying-cli calls concurrently
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            f_client = executor.submit(subprocess.run, [nowplaying_bin, "get", "clientIdentifier"], 
+                                      stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+            f_title = executor.submit(subprocess.run, [nowplaying_bin, "get", "title"], 
+                                     stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+            f_artist = executor.submit(subprocess.run, [nowplaying_bin, "get", "artist"], 
+                                      stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+            f_rate = executor.submit(subprocess.run, [nowplaying_bin, "get", "playbackRate"], 
+                                    stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+
+            client = f_client.result().stdout.strip()
+            title = f_title.result().stdout.strip()
+            artist = f_artist.result().stdout.strip()
+            playback_rate = f_rate.result().stdout.strip()
+
         client_l = (client or "").strip().lower()
         client_unknown = client_l in {"", "null", "(null)", "none"}
-
-        title = subprocess.run(
-            [nowplaying_bin, "get", "title"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            text=True,
-            timeout=1.5,
-            check=False,
-        ).stdout.strip()
-        artist = subprocess.run(
-            [nowplaying_bin, "get", "artist"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            text=True,
-            timeout=1.5,
-            check=False,
-        ).stdout.strip()
-        playback_rate = subprocess.run(
-            [nowplaying_bin, "get", "playbackRate"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            text=True,
-            timeout=1.5,
-            check=False,
-        ).stdout.strip()
 
         if not title:
             return None
         # Prefer explicit Spotify identity, but allow null/unknown clientIdentifier
-        # because some setups still expose valid title/artist while returning "null".
         if (not re.search(r"spotify", client_l, re.IGNORECASE)) and (not client_unknown):
             return None
         return {
@@ -1357,6 +1373,29 @@ def cmd_play(files):
         state["current_index"] = 0
         play_current(state)
     save_state(state)
+
+
+def cmd_add_spotify_search(query):
+    """Actual search implementation (Task 2)."""
+    if not query:
+        return
+    ok, out = spotify_cmd(["search", query])
+    if not ok or not out:
+        print(f"No results for '{query}'")
+        return
+    try:
+        data = json.loads(out)
+        tracks = data.get("tracks", [])
+        if not tracks:
+            print(f"No tracks found for '{query}'")
+            return
+        # Just add the first result for simplicity in CLI
+        first = tracks[0]
+        uri = first.get("uri") or f"spotify:track:{first.get('id')}"
+        cmd_add_spotify(uri)
+    except Exception as e:
+        # Fallback to direct add if JSON parsing fails (e.g. old spotify_player version)
+        cmd_add_spotify(query)
 
 
 def cmd_add_spotify(raw):
@@ -2136,8 +2175,7 @@ def main():
             cmd_add_spotify(sys.argv[2] if len(sys.argv) > 2 else "")
             signal_refresh()
         elif cmd == "add_spotify_search":
-            # placeholder command surface (phase-2); treat input as URI if provided
-            cmd_add_spotify(sys.argv[2] if len(sys.argv) > 2 else "")
+            cmd_add_spotify_search(sys.argv[2] if len(sys.argv) > 2 else "")
             signal_refresh()
         elif cmd == "spotify_playlist_tracks":
             cmd_spotify_playlist_tracks(sys.argv[2] if len(sys.argv) > 2 else "")
@@ -2156,14 +2194,23 @@ def main():
         elif cmd == "list":
             cmd_list()
         elif cmd == "play_index":
-            cmd_play_index(int(sys.argv[2]))
-            signal_refresh()
+            try:
+                cmd_play_index(int(sys.argv[2]))
+                signal_refresh()
+            except (ValueError, IndexError):
+                pass
         elif cmd == "remove":
-            cmd_remove(int(sys.argv[2]))
-            signal_refresh()
+            try:
+                cmd_remove(int(sys.argv[2]))
+                signal_refresh()
+            except (ValueError, IndexError):
+                pass
         elif cmd == "move":
-            cmd_move(int(sys.argv[2]), int(sys.argv[3]))
-            signal_refresh()
+            try:
+                cmd_move(int(sys.argv[2]), int(sys.argv[3]))
+                signal_refresh()
+            except (ValueError, IndexError):
+                pass
         elif cmd == "shuffle":
             cmd_shuffle()
             signal_refresh()

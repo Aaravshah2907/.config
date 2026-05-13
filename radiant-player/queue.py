@@ -629,6 +629,39 @@ def cmd_local_art(path):
             pass
 
 
+def extract_local_metadata(path):
+    """Use ffprobe to extract rich metadata from local files."""
+    try:
+        # Resolve path
+        ap = os.path.abspath(os.path.expanduser(path))
+        if not os.path.exists(ap):
+            return {"title": Path(path).stem}
+        
+        cmd = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", ap]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=2.0)
+        if res.returncode != 0:
+            return {"title": Path(ap).stem}
+            
+        data = json.loads(res.stdout)
+        fmt = data.get("format", {})
+        tags = fmt.get("tags", {})
+        
+        # Try to find title/artist with case-insensitive keys if standard fails
+        title = tags.get("title") or tags.get("TITLE") or Path(ap).stem
+        artist = tags.get("artist") or tags.get("ARTIST") or tags.get("album_artist") or ""
+        album = tags.get("album") or tags.get("ALBUM") or ""
+        duration = float(fmt.get("duration") or 0)
+        
+        return {
+            "title": title,
+            "artist": artist,
+            "album": album,
+            "duration_sec": duration if duration > 0 else None
+        }
+    except Exception:
+        return {"title": Path(path).stem}
+
+
 def render_image_with_chafa(image_path):
     p = subprocess.run(
         ["chafa", "--size", "36x18", "--animate", "off", image_path],
@@ -951,6 +984,15 @@ def update_last_status(state, running=False, paused=True, title="Resting", artis
         "position": position or 0,
         "duration": duration or 0,
     }
+    
+    # Auto-Resume: Update position in the queue item
+    idx = state.get("current_index", -1)
+    if running and idx >= 0 and idx < len(state["queue"]):
+        item = state["queue"][idx]
+        # Only update if it matches (to avoid cross-track pollution)
+        if source == item.get("source"):
+            item["last_pos"] = position
+
     try:
         payload = {
             "ts": time.time(),
@@ -1005,6 +1047,15 @@ def play_current(state):
             return
         ensure_mpv()
         mpv_send(["loadfile", path, "replace"])
+        
+        # Auto-Resume logic for local tracks
+        last_pos = item.get("last_pos")
+        if last_pos and last_pos > 1:
+            # If we are very close to the end, don't resume there
+            dur = item.get("duration_sec") or 0
+            if dur <= 0 or last_pos < (dur - 3):
+                mpv_send(["set_property", "time-pos", last_pos])
+
         mpv_send(["set_property", "pause", False])
         pos = mpv_send(["get_property", "time-pos"])
         dur = mpv_send(["get_property", "duration"])
@@ -1351,19 +1402,20 @@ def cmd_play(files):
     state = load_state()
     was_empty = len(state["queue"]) == 0
     for f in files:
-        ap = os.path.abspath(f)
-        title = Path(ap).stem
+        ap = os.path.abspath(os.path.expanduser(f))
+        meta = extract_local_metadata(ap)
         state["queue"].append(
             {
                 "id": str(uuid.uuid4()),
                 "source": "local",
-                "title": title,
-                "artist": "",
-                "album": "",
+                "title": meta.get("title"),
+                "artist": meta.get("artist"),
+                "album": meta.get("album"),
                 "local_path": ap,
                 "spotify_uri": "",
-                "duration_sec": None,
+                "duration_sec": meta.get("duration_sec"),
                 "added_at": now_iso(),
+                "last_pos": 0,
             }
         )
     if state["current_index"] == -1 and state["queue"]:
@@ -1678,17 +1730,19 @@ def _load_m3u(path):
             if not line or line.startswith("#"):
                 continue
             ap = os.path.abspath(os.path.expanduser(line))
+            meta = extract_local_metadata(ap)
             out.append(
                 {
                     "id": str(uuid.uuid4()),
                     "source": "local",
-                    "title": Path(ap).stem,
-                    "artist": "",
-                    "album": "",
+                    "title": meta.get("title"),
+                    "artist": meta.get("artist"),
+                    "album": meta.get("album"),
                     "local_path": ap,
                     "spotify_uri": "",
-                    "duration_sec": None,
+                    "duration_sec": meta.get("duration_sec"),
                     "added_at": now_iso(),
+                    "last_pos": 0,
                 }
             )
     return out

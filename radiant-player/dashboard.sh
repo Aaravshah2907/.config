@@ -214,6 +214,36 @@ draw() {
     tput civis # Hide cursor
     clear
 
+    # ---------- STORMLIGHT DRAIN (Task 1) ----------
+    local state_json=$(cat "$HOME/.config/radiant-player/queue_state.json" 2>/dev/null)
+    local pos=$(echo "$state_json" | jq -r '.last_status.position // 0')
+    local dur=$(echo "$state_json" | jq -r '.last_status.duration // 0')
+    local percent=0
+    if ((dur > 0)); then percent=$((pos * 100 / dur)); fi
+
+    local C_MAIN=$BLUE
+    local C_SEC=$CYAN
+    local C_ACC=$YELLOW
+    local C_BRAND=$MAGENTA
+    local C_QUEUE=$GREEN
+
+    if ((percent > 92)); then
+        # FLICKER: Stormlight is almost gone!
+        if (( RANDOM % 10 > 6 )); then
+            C_MAIN=$GRAY; C_SEC=$GRAY; C_ACC=$GRAY; C_BRAND=$GRAY; C_QUEUE=$GRAY
+        fi
+    elif ((percent > 80)); then
+        # DRAINED: Dull slate
+        C_MAIN=$GRAY; C_SEC=$GRAY; C_ACC=$GRAY; C_BRAND=$GRAY; C_QUEUE=$GRAY
+    elif ((percent > 50)); then
+        # FADING: Dimmer colors
+        C_MAIN='\033[38;5;246m'
+        C_SEC='\033[38;5;244m'
+        C_ACC='\033[38;5;242m'
+        C_BRAND='\033[38;5;239m'
+        C_QUEUE='\033[38;5;243m'
+    fi
+
     local term_cols
     term_cols=$(tput cols 2>/dev/null || echo 80)
     local width=$((term_cols - 12))
@@ -230,9 +260,9 @@ draw() {
     local header_padding=$((inner_width - header_len))
     ((header_padding < 0)) && header_padding=0
     
-    echo -e "  ${MAGENTA}${BOLD}┌─${hline}─┐${NC}"
-    echo -e "  ${MAGENTA}${BOLD}│${NC}${header_text}${MAGENTA}${BOLD}$(printf '%*s' "$header_padding" "")│${NC}"
-    echo -e "  ${MAGENTA}${BOLD}└─${hline}─┘${NC}"
+    echo -e "  ${C_BRAND}${BOLD}┌─${hline}─┐${NC}"
+    echo -e "  ${C_BRAND}${BOLD}│${NC}${header_text}${C_BRAND}${BOLD}$(printf '%*s' "$header_padding" "")│${NC}"
+    echo -e "  ${C_BRAND}${BOLD}└─${hline}─┘${NC}"
     echo ""
 
     # Box 1: Infused Record (Now Playing)
@@ -241,7 +271,7 @@ draw() {
     # Top border: ┌── (2) label (len) hline1 (len) ──┐ (3) = total width inner_width+2
     local hline1_len=$((inner_width - label1_len - 4))
     local hline1=$(printf '─%.0s' $(seq 1 $hline1_len))
-    echo -e "  ${BLUE}${BOLD}┌──${label1}${hline1}──┐${NC}"
+    echo -e "  ${C_MAIN}${BOLD}┌──${label1}${hline1}──┐${NC}"
     
     local status_raw
     local -a status_lines=()
@@ -255,7 +285,7 @@ draw() {
         local visible_len=$(( ${#plain_line} + 2 )) # account for "  " prefix
         local padding=$((inner_width - visible_len))
         ((padding < 0)) && padding=0
-        printf "  ${BLUE}${BOLD}│${NC}  %b%*s${BLUE}${BOLD}│${NC}\n" "$line" "$padding" ""
+        printf "  ${C_MAIN}${BOLD}│${NC}  %b%*s${C_MAIN}${BOLD}│${NC}\n" "$line" "$padding" ""
     done
 
     # Loop/Shuffle Indicator line (Task 11)
@@ -266,9 +296,9 @@ draw() {
     local indicator_len=${#indicator}
     local indicator_padding=$((inner_width - indicator_len - 2))
     ((indicator_padding < 0)) && indicator_padding=0
-    echo -e "  ${BLUE}${BOLD}│${NC}  ${DIM}${indicator}${NC}$(printf '%*s' "$indicator_padding" "")${BLUE}${BOLD}│${NC}"
+    echo -e "  ${C_MAIN}${BOLD}│${NC}  ${DIM}${indicator}${NC}$(printf '%*s' "$indicator_padding" "")${C_MAIN}${BOLD}│${NC}"
 
-    echo -e "  ${BLUE}${BOLD}└─${hline}─┘${NC}"
+    echo -e "  ${C_MAIN}${BOLD}└─${hline}─┘${NC}"
     echo ""
 
     # Box 2: Highstorm Queue
@@ -276,7 +306,7 @@ draw() {
     local label2_len=${#label2}
     local hline2_len=$((inner_width - label2_len - 4))
     local hline2=$(printf '─%.0s' $(seq 1 $hline2_len))
-    echo -e "  ${GREEN}${BOLD}┌──${label2}${hline2}──┐${NC}"
+    echo -e "  ${C_QUEUE}${BOLD}┌──${label2}${hline2}──┐${NC}"
     
     local term_rows
     term_rows=$(tput lines 2>/dev/null || echo 40)
@@ -305,7 +335,7 @@ draw() {
         
         local display_line=""
         if [ "$i" -eq "$selected" ]; then
-            display_line=$(printf " ${YELLOW}${BOLD}󱐋 %2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
+            display_line=$(printf " ${C_ACC}${BOLD}󱐋 %2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
         else
             display_line=$(printf "    %2d │ %s %-${name_limit}s" "$idx" "$marker" "$short_name")
         fi
@@ -314,15 +344,15 @@ draw() {
         local visible_len=${#plain_display}
         local padding=$((inner_width - visible_len))
         ((padding < 0)) && padding=0
-        printf "  ${GREEN}${BOLD}│${NC}%b%*s${GREEN}${BOLD}│${NC}\n" "$display_line" "$padding" ""
+        printf "  ${C_QUEUE}${BOLD}│${NC}%b%*s${C_QUEUE}${BOLD}│${NC}\n" "$display_line" "$padding" ""
     done
 
     # Fill empty space if queue is short
     local current_lines=$((end - start))
     for ((i=current_lines; i<max_queue_rows; i++)); do
-        printf "  ${GREEN}${BOLD}│${NC}%*s${GREEN}${BOLD}│${NC}\n" "$inner_width" ""
+        printf "  ${C_QUEUE}${BOLD}│${NC}%*s${C_QUEUE}${BOLD}│${NC}\n" "$inner_width" ""
     done
-    echo -e "  ${GREEN}${BOLD}└─${hline}─┘${NC}"
+    echo -e "  ${C_QUEUE}${BOLD}└─${hline}─┘${NC}"
     
     if [ "$sorted_mode" -eq 1 ]; then
         echo -e "      ${YELLOW}${DIM}Sort Mode: Name (press [t] to restore original queue order)${NC}"
@@ -334,7 +364,7 @@ draw() {
     local label3_len=${#label3}
     local hline3_len=$((inner_width - label3_len - 4))
     local hline3=$(printf '─%.0s' $(seq 1 $hline3_len))
-    echo -e "  ${CYAN}${BOLD}┌──${label3}${hline3}──┐${NC}"
+    echo -e "  ${C_SEC}${BOLD}┌──${label3}${hline3}──┐${NC}"
     
     local -a cmd_rows=(
         " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}  ${DIM}[↑/↓]${NC} Move  ${DIM}[ENTER]${NC} Play  ${DIM}[n/p]${NC} Skip  ${DIM}[l]${NC} Loop  ${DIM}[s]${NC} Shuffle"
@@ -349,9 +379,9 @@ draw() {
         local visible_len=${#plain_row}
         local padding=$((inner_width - visible_len))
         ((padding < 0)) && padding=0
-        printf "  ${CYAN}${BOLD}│${NC}%b%*s${CYAN}${BOLD}│${NC}\n" "$row" "$padding" ""
+        printf "  ${C_SEC}${BOLD}│${NC}%b%*s${C_SEC}${BOLD}│${NC}\n" "$row" "$padding" ""
     done
-    echo -e "  ${CYAN}${BOLD}└─${hline}─┘${NC}"
+    echo -e "  ${C_SEC}${BOLD}└─${hline}─┘${NC}"
 }
 
 

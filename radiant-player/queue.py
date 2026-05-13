@@ -323,9 +323,11 @@ def system_media_fallback(cmd):
     script_action = scripts.get(cmd)
     if script_action:
         try:
-            subprocess.run(["osascript", "-e", f'tell application "Spotify" to {script_action}'], 
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
-            return True
+            # Check if Spotify is running to prevent auto-launch
+            if subprocess.run(["pgrep", "-x", "Spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+                subprocess.run(["osascript", "-e", f'tell application "Spotify" to {script_action}'], 
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
+                return True
         except:
             pass
     return False
@@ -436,8 +438,11 @@ def apple_script_spotify_control(cmd):
     if not script:
         return False
     try:
-        subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
-        return True
+        # Check if Spotify is running to prevent auto-launch
+        if subprocess.run(["pgrep", "-x", "Spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+            subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+            return True
+        return False
     except Exception:
         return False
 
@@ -445,6 +450,11 @@ def apple_script_spotify_control(cmd):
 def apple_script_spotify_status():
     """Directly poll the Spotify Mac App for status, bypassing the CLI."""
     try:
+        # FIRST: Check if Spotify is actually running to prevent osascript from auto-launching it.
+        check_proc = subprocess.run(["pgrep", "-x", "Spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if check_proc.returncode != 0:
+            return None
+
         # Ask Spotify for its current state
         script = 'tell application "Spotify" to get {player state, name of current track, artist of current track, player position, duration of current track, id of current track}'
         res = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=1.5)

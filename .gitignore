@@ -13,3 +13,4 @@ todolist.md
 *.jpeg
 *.txt
 */__pycache__/*
+mpv/watch_later/*

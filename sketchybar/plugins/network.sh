@@ -6,7 +6,7 @@ WIFI_INTERFACE=$(networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | grep "
 [ -z "$WIFI_INTERFACE" ] && WIFI_INTERFACE="en0"
 
 # Get SSID
-SSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F' : ' '/ SSID :/ {print $2}')
+SSID=$(shortcuts run "GetSSID")
 
 # Detect internal IP for BITS Pilani mapping
 INTERNAL_IP=$(ifconfig "$WIFI_INTERFACE" 2>/dev/null | grep "inet " | awk '{print $2}')

@@ -116,9 +116,10 @@ sketchybar --add item media.header popup.music \
 sketchybar --add item control_center right \
            --set control_center icon=󰤨 \
                        script="$PLUGIN_DIR/network.sh" \
-                       update_freq=10 \
+                       update_freq=25 \
   \
            --add bracket net.pill control_center \
+           --subscribe control_centre wifi_change \
            --set net.pill background.color=$BAR_COLOR \
                           background.border_color=$SAPPHIRE_TRANSLUCENT \
                           background.border_width=1 \
@@ -175,34 +176,34 @@ sketchybar --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change mouse.entered mouse.exited \
   \
-           --add slider volume_slider right \
-           --set volume_slider slider.width=0 \
-                               slider.background.height=6 \
-                               slider.background.corner_radius=3 \
-                               slider.background.color=$ITEM_BG_COLOR \
-                               slider.highlight_color=$SAPPHIRE \
-                               slider.knob=󰝥 \
-                               script="$PLUGIN_DIR/volume_click.sh" \
-           --subscribe volume_slider mouse.exited \
+           #--add slider volume_slider right \
+           #--set volume_slider slider.width=0 \
+           #                    slider.background.height=6 \
+           #                    slider.background.corner_radius=3 \
+           #                    slider.background.color=$ITEM_BG_COLOR \
+           #                    slider.highlight_color=$SAPPHIRE \
+           #                    slider.knob=󰝥 \
+           #                    script="$PLUGIN_DIR/volume_click.sh" \
+           #--subscribe volume_slider mouse.exited \
   \
-           --add bracket volume.pill volume volume_slider \
-           --set volume.pill background.color=$BAR_COLOR \
-                            background.border_color=$SAPPHIRE_TRANSLUCENT \
-                            background.border_width=1 \
-                            background.corner_radius=10 \
-                            background.drawing=on
+           #--add bracket volume.pill volume volume_slider \
+           #--set volume.pill background.color=$BAR_COLOR \
+           #                 background.border_color=$SAPPHIRE_TRANSLUCENT \
+           #                 background.border_width=1 \
+           #                 background.corner_radius=10 \
+           #                 background.drawing=on
 
 # Notification: Spren Message
-sketchybar --add item notif right \
-           --set notif update_freq=30 \
-                       script="$PLUGIN_DIR/notif.sh" \
-  \
-           --add bracket notif.pill notif \
-           --set notif.pill background.color=$BAR_COLOR \
-                           background.border_color=$SAPPHIRE_TRANSLUCENT \
-                           background.border_width=1 \
-                           background.corner_radius=10 \
-                           background.drawing=on
+#sketchybar --add item notif right \
+#           --set notif update_freq=30 \
+#                       script="$PLUGIN_DIR/notif.sh" \
+#  \
+#           --add bracket notif.pill notif \
+#           --set notif.pill background.color=$BAR_COLOR \
+#                           background.border_color=$SAPPHIRE_TRANSLUCENT \
+#                           background.border_width=1 \
+#                           background.corner_radius=10 \
+#                           background.drawing=on
 
 ##### Finalize #####
 sketchybar --update

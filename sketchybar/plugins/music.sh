@@ -27,11 +27,6 @@ update_bar() {
       ;;
   esac
 
-  # Truncate labels that are excessively long to prevent bar layout issues
-  if [ ${#label} -gt 40 ]; then
-    label="$(echo "$label" | /usr/bin/cut -c 1-37)..."
-  fi
-
   safe_set "$NAME" drawing=on \
                    icon.drawing=on \
                    label.drawing=on \

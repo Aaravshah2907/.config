@@ -89,7 +89,7 @@ sketchybar --add item music right \
                        popup.align=right \
                        popup.y_offset=12 \
                        scroll_texts=on \
-                       label.max_chars=24 \
+                       label.max_chars=25 \
                        label.scroll_duration=250 \
            --subscribe music media_change system_woke front_app_switched \
   \

@@ -1,4 +1,4 @@
-#!/bin/bash
+\#!/bin/bash
 
 # ====================================================================
 # WINDRUNNER COLOR PALETTE (Infused with Stormlight)
@@ -30,6 +30,7 @@ export RADIANT_GOLD=$HONOR_GOLD
 export RADIANT_PURPLE=$PURPLE
 export RADIANT_SAPPHIRE=$SAPPHIRE
 export RADIANT_SAPPHIRE_T=$SAPPHIRE_TRANSLUCENT
+export RELOAD_COLOR=$RED
 
 # Global Label/Icon Defaults
 export LABEL_COLOR=$WHITE

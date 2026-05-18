@@ -35,7 +35,7 @@ sketchybar --add item apple left \
            --set apple icon= \
                        icon.color=$HONOR_GOLD \
                        label.drawing=off \
-                       click_script="open -a iTerm" \
+                       click_script="$PLUGIN_DIR/reload.sh" \
   \
   --add item front_app left \
     --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE \
@@ -205,9 +205,11 @@ sketchybar --add item volume right \
 #                           background.corner_radius=10 \
 #                           background.drawing=on
 
+
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change
 sketchybar --trigger front_app_switched
 sketchybar --trigger volume_change
-
+sketchybar --trigger wifi_change
+sketchybar --triger media_change

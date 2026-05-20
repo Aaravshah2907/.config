@@ -119,7 +119,7 @@ quick_spotify_playlist_pick() {
     local after_count
     local add_out
 
-    query=$(printf "" | fzf --prompt=" Search Playlist > " --print-query --height 10 --reverse | awk 'END{print}')
+    query=$(printf "" | fzf --prompt=" Search Playlist (tab for multiple) > " --print-query --height 10 --reverse | awk 'END{print}')
     [ -z "$query" ] && return
 
     results=$(spotify_player search "$query" 2>/dev/null)

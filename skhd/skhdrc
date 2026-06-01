@@ -121,11 +121,57 @@ hyper + shift - 9 : /opt/homebrew/bin/yabai -m window --space 9; /opt/homebrew/b
 # Window Controls (Hyper Key)
 # ================================
 
-# Toggle float
-hyper - f : /opt/homebrew/bin/yabai -m window --toggle float
-
 # Toggle split orientation
 hyper - space : /opt/homebrew/bin/yabai -m window --toggle split
 
 # Close window
 hyper - q : /opt/homebrew/bin/yabai -m window --close
+
+# ================================
+# Application Launcher (Hyper Key)
+# ================================
+
+# Focus / Launch Cursor
+cmd + ctrl + alt + shift - c : bash ~/.config/skhd/launcher.sh "Cursor"
+
+# Focus / Launch Terminal
+cmd + ctrl + alt + shift - t : bash ~/.config/skhd/launcher.sh "iTerm"
+
+# Focus / Launch Brave
+cmd + ctrl + alt + shift - b : bash ~/.config/skhd/launcher.sh "Brave Browser"
+
+# Focus / Launch Obsidian
+cmd + ctrl + alt + shift - o : bash ~/.config/skhd/launcher.sh "Obsidian"
+
+# Focus / Launch Finder
+cmd + ctrl + alt + shift - f : bash ~/.config/skhd/launcher.sh "Finder"
+
+# Focus / Launch ChatGPT (Brave PWA)
+cmd + ctrl + alt + shift - a : bash ~/.config/skhd/launcher.sh "ChatGPT"
+
+# ================================
+# Scratchpad System (Hyper Key)
+# ================================
+
+# Toggle Terminal scratchpad
+cmd + ctrl + alt + shift - return : python3 ~/.config/skhd/scratchpad.py "iTerm"
+
+# Toggle ChatGPT scratchpad
+cmd + ctrl + alt + shift - g : python3 ~/.config/skhd/scratchpad.py "ChatGPT"
+
+# Toggle Spotify scratchpad
+cmd + ctrl + alt + shift - m : python3 ~/.config/skhd/scratchpad.py "Spotify"
+
+# Toggle Calculator scratchpad
+cmd + ctrl + alt + shift - 0x18 : python3 ~/.config/skhd/scratchpad.py "Calculator"
+
+# ================================
+# Control Center (Hyper Key)
+# ================================
+
+# Toggle Control Center (Hyper + ,)
+# skhd's hyper alias doesn't work with non-alphanumeric keys, so use explicit modifier combo
+cmd + ctrl + alt + shift - 0x2B : bash ~/.config/skhd/control_center.sh
+
+
+

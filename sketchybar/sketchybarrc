@@ -51,13 +51,15 @@ sketchybar --add item apple left \
     --subscribe front_app front_app_switched \
   \
   --add item cheatsheet left \
-    --set cheatsheet icon=󰌌 \
-                   icon.color=$SAPPHIRE \
-                   label="Skhd" \
-                   label.color=$SAPPHIRE \
-                   click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-                   popup.align=left \
-                   popup.y_offset=12 \
+  --set cheatsheet icon=󰌌 \
+                 icon.color=$SAPPHIRE \
+                 label="Skhd" \
+                 label.color=$SAPPHIRE \
+                 script="$PLUGIN_DIR/cheatsheet.sh" \
+                 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+                 popup.align=left \
+                 popup.y_offset=12 \
+  --subscribe cheatsheet mouse.entered \
   \
   --add bracket apple.pill apple front_app cheatsheet \
   --set apple.pill background.color=$BAR_COLOR \
@@ -74,12 +76,16 @@ $PLUGIN_DIR/cheatsheet.sh
 
 
 # Spaces
+SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Misc" "7" "8" "9" "10")
 SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
 for sid in "${SPACE_SIDS[@]}"
 do
+  label_idx=$((sid - 1))
+  space_label="${SPACE_LABELS[$label_idx]}"
   sketchybar --add space space.$sid left \
              --set space.$sid space=$sid \
-                               icon=$sid \
+                               icon="$space_label" \
+                               icon.font="JetBrainsMono Nerd Font:Bold:12.0" \
                                icon.color=$WHITE \
                                icon.highlight_color=$SAPPHIRE \
                                script="$PLUGIN_DIR/space.sh" \
@@ -114,7 +120,7 @@ sketchybar --add bracket app_switcher '/app\.switcher\..*/' \
            --subscribe app_switcher_trigger app_switcher_update space_change window_focus
 
 # Optional Yabai Space Layout Status Item (uncomment to enable)
-source "$CONFIG_DIR/yabai_status_item.sh"
+# source "$CONFIG_DIR/yabai_status_item.sh"
 
 
 ##### RIGHT SIDE ITEMS ###### Music: The Radiant Song
@@ -210,7 +216,7 @@ sketchybar --add item raycast right \
 
 # Clock: Chronicles
 sketchybar --add item clock right \
-           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="open -n -a \"Brave Browser\" --args --profile-directory=\"Profile 1\" \"https://calendar.google.com\"" icon=󰃭 \
+           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
            --subscribe clock mouse.entered mouse.exited \
            popup.align=right \
   \
@@ -219,19 +225,30 @@ sketchybar --add item clock right \
   \
   --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
   --add item clock.events popup.clock --set clock.events label="Destiny" \
-  --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh" \
-  \
-           --add bracket clock.pill clock \
+  --add item clock.weather popup.clock --set clock.weather icon= script="$PLUGIN_DIR/weather.sh"
+
+# Calendar Lines (Optional monthly calendar on click)
+for i in {1..8}
+do
+  sketchybar --add item clock.calendar.line.$i popup.clock \
+             --set clock.calendar.line.$i drawing=off \
+                                         label.font="Courier:Bold:12.0" \
+                                         label.color=$WHITE \
+                                         icon.drawing=off \
+                                         padding_left=20
+done
+
+sketchybar --add bracket clock.pill clock \
            --set clock.pill background.color=$BAR_COLOR \
                             background.border_color=$SAPPHIRE_TRANSLUCENT \
                             background.border_width=1 \
                             background.corner_radius=10 \
                             background.drawing=on
 
+
 # Volume: Resonance
 sketchybar --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
-                       click_script="open \"x-apple.systempreferences:com.apple.preference.sound\"" \
            --subscribe volume volume_change \
   \
            --add bracket volume.pill volume \

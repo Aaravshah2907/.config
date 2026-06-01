@@ -37,11 +37,43 @@ yabai -m config mouse_action2 resize
 # --- Rules (don’t manage these apps) ---
 
 yabai -m rule --add app="^System Settings$" manage=off
-yabai -m rule --add app="^Calculator$" manage=off
+# yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^QuickTime Player$" manage=off
 yabai -m rule --add app="^VLC$" manage=off
 yabai -m rule --add app="^mpv$" manage=off
+
+# --- Space labels (dynamically assigned to ignore macOS native fullscreen spaces) ---
+yabai -m query --spaces | python3 -c "
+import json, sys, subprocess
+spaces = json.load(sys.stdin)
+normal_spaces = [s for s in spaces if not s['is-native-fullscreen']]
+labels = ['terminal', 'code', 'browser', 'chat', 'media', 'misc']
+for i, s in enumerate(normal_spaces):
+    if i < len(labels):
+        subprocess.run(['yabai', '-m', 'space', str(s['index']), '--label', labels[i]])
+"
+
+# Workflow routing rules (use labels — immune to space index drift)
+# Note: follow_space is NOT a valid rule key in yabai v7; space-following is
+# handled by the window_created signal below.
+yabai -m rule --add app="^(iTerm2|Terminal|Alacritty|kitty)$" space=terminal
+yabai -m rule --add app="^(Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode)$" space=code
+yabai -m rule --add app="^(Brave Browser|Google Chrome|Safari|Firefox)$" space=browser
+yabai -m rule --add app="^(ChatGPT|Gemini|Slack|Discord)$" space=chat
+yabai -m rule --add app="^(Spotify|Music)$" space=media
+# yabai -m rule --add app="^Spotify$" manage=off
+
+# Follow app to its assigned space when it opens
+yabai -m signal --add event=window_created action='
+  app=$(yabai -m query --windows --window "$YABAI_WINDOW_ID" 2>/dev/null | python3 -c "import json,sys; w=json.load(sys.stdin); print(w[\"app\"])" 2>/dev/null)
+  space=$(yabai -m query --windows --window "$YABAI_WINDOW_ID" 2>/dev/null | python3 -c "import json,sys; w=json.load(sys.stdin); print(w[\"space\"])" 2>/dev/null)
+  case "$app" in
+    iTerm2|Terminal|Alacritty|kitty|Code|"VS Code"|Cursor|"Antigravity IDE"|Claude|Xcode|"Brave Browser"|"Google Chrome"|Safari|Firefox|ChatGPT|Gemini|Slack|Discord|Spotify|Music)
+      yabai -m space --focus "$space" 2>/dev/null ;;
+  esac
+'
+
 
 # --- IMPORTANT: force all spaces to bsp (fixes your earlier issue) ---
 

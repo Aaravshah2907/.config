@@ -1,6 +1,4 @@
 #!/bin/bash
-
-# Loads all defined colors
 source "$HOME/.config/sketchybar/colors.sh"
 
 # 1. Update selection state (background highlight)
@@ -10,14 +8,23 @@ if [ "$SELECTED" = "true" ]; then
                            label.color=$ITEM_BG_COLOR \
                            icon.color=$ITEM_BG_COLOR
 else
-  sketchybar --set "$NAME" background.drawing=off \
-                           label.color=$LABEL_COLOR \
-                           icon.color=$LABEL_COLOR
+  # Retrieve the occupancy state to determine standard icon color
+  # We read the current label to see if it is empty/dots
+  CURRENT_LABEL=$(sketchybar --query "$NAME" | jq -r '.label.value')
+  if [ -z "$CURRENT_LABEL" ] || [ "$CURRENT_LABEL" = "—" ] || [ "$CURRENT_LABEL" = "" ]; then
+    # Unoccupied
+    sketchybar --set "$NAME" background.drawing=off \
+                             label.color=$SLATE \
+                             icon.color=$SLATE
+  else
+    # Occupied
+    sketchybar --set "$NAME" background.drawing=off \
+                             label.color=$LABEL_COLOR \
+                             icon.color=$WHITE
+  fi
 fi
 
-
 # 2. Update window icons if the sender is space_windows_change
-# INFO contains {"space": 1, "apps": {"Spotify": 1, "Code": 1}}
 if [ "$SENDER" = "space_windows_change" ]; then
   SPACE="$(echo "$INFO" | jq -r '.space')"
   APPS="$(echo "$INFO" | jq -r '.apps | keys[]')"
@@ -32,8 +39,43 @@ if [ "$SENDER" = "space_windows_change" ]; then
     done <<< "${APPS}"
   fi
   
-  [ -z "$ICON_STRIP" ] && ICON_STRIP=" —"
-  
-  # Set label for the current space invoking the change
-  sketchybar --set "space.$SPACE" label="$ICON_STRIP"
+  # Check if space is fullscreen (native or zoomed)
+  IS_FULLSCREEN="false"
+  SPACE_JSON=$(yabai -m query --spaces --space "$SPACE" 2>/dev/null)
+  if [ -n "$SPACE_JSON" ] && [ "$SPACE_JSON" != "null" ]; then
+    NATIVE_FS=$(echo "$SPACE_JSON" | jq -r '."is-native-fullscreen"')
+    if [ "$NATIVE_FS" = "true" ]; then
+      IS_FULLSCREEN="true"
+    else
+      # Check zoomed windows
+      WINDOWS_JSON=$(yabai -m query --windows --space "$SPACE" 2>/dev/null)
+      if [ -n "$WINDOWS_JSON" ] && [ "$WINDOWS_JSON" != "null" ] && [ "$WINDOWS_JSON" != "[]" ]; then
+        ZOOMED_FS=$(echo "$WINDOWS_JSON" | jq -r 'any(.[]; ."has-fullscreen-zoom" == true)')
+        if [ "$ZOOMED_FS" = "true" ]; then
+          IS_FULLSCREEN="true"
+        fi
+      fi
+    fi
+  fi
+
+  if [ "$IS_FULLSCREEN" = "true" ]; then
+    ICON_STRIP="󰊓$ICON_STRIP"
+  fi
+
+  # Apply occupied/unoccupied styling based on whether windows exist
+  if [ -z "$ICON_STRIP" ]; then
+    # Unoccupied Space
+    if [ "$SELECTED" = "true" ]; then
+      sketchybar --set "space.$SPACE" label="—" label.drawing=off icon.color=$ITEM_BG_COLOR
+    else
+      sketchybar --set "space.$SPACE" label="—" label.drawing=off icon.color=$SLATE
+    fi
+  else
+    # Occupied Space
+    if [ "$SELECTED" = "true" ]; then
+      sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$ITEM_BG_COLOR label.color=$ITEM_BG_COLOR
+    else
+      sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$WHITE label.color=$LABEL_COLOR
+    fi
+  fi
 fi

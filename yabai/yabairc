@@ -19,8 +19,10 @@ yabai -m config focus_follows_mouse autofocus
 yabai -m config mouse_follows_focus on
 
 # --- Gaps & Padding (clean look) ---
+# Bar floats at y_offset=38 + height=42 → top of windows must clear y=80
+# top_padding = 50 → windows start at menubar(38) + 50 = y=88
 
-yabai -m config top_padding 12
+yabai -m config top_padding 50
 yabai -m config bottom_padding 12
 yabai -m config left_padding 8
 yabai -m config right_padding 8
@@ -51,4 +53,14 @@ yabai -m config normal_window_opacity 0.9
 yabai -m signal --add event=space_created action="yabai -m space --layout bsp"
 yabai -m signal --add event=space_changed action="yabai -m space --layout bsp"
 
+# SketchyBar event-driven triggers
+yabai -m signal --add event=space_changed action="sketchybar --trigger space_change"
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+yabai -m signal --add event=window_title_changed action="sketchybar --trigger window_title_change"
+yabai -m signal --add event=application_launched action="sketchybar --trigger app_switcher_update"
+yabai -m signal --add event=application_terminated action="sketchybar --trigger app_switcher_update"
+yabai -m signal --add event=window_created action="sketchybar --trigger app_switcher_update"
+yabai -m signal --add event=window_destroyed action="sketchybar --trigger app_switcher_update"
+
 echo "YABAI LOADED" > /tmp/yabai.log
+

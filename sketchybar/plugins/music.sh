@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 source "$HOME/.config/sketchybar/colors.sh"
 
+# Handle hover for Music (Peek mode)
+if [ "$SENDER" = "mouse.entered" ]; then
+  sketchybar --set "$NAME" popup.drawing=on
+  exit 0
+fi
+
+if [ "$SENDER" = "mouse.exited" ]; then
+  sketchybar --set "$NAME" popup.drawing=off
+  exit 0
+fi
+
 # Function to safely update sketchybar items
 UPDATED=0
 echo "$(date) NAME=$NAME SENDER=$SENDER" >> /tmp/sketchybar_music.log

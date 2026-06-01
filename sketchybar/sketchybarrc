@@ -1,14 +1,23 @@
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
+# Custom Events for event-driven updates
+sketchybar --add event window_focus \
+           --add event window_title_change \
+           --add event space_change \
+           --add event app_switcher_update
+
 ##### Core Bar Appearance (Radiant Floating Bar) #####
 sketchybar --bar position=top \
                 height=42 \
+                y_offset=38 \
+                margin=12 \
                 blur_radius=30 \
                 color=$DEEP_NIGHT \
                 corner_radius=35 \
                 border_width=1 \
-                border_color=$SAPPHIRE_TRANSLUCENT
+                border_color=$SAPPHIRE_TRANSLUCENT \
+                topmost=window
 
 ##### Global Defaults #####
 sketchybar --default \
@@ -38,7 +47,7 @@ sketchybar --add item apple left \
                        click_script="$PLUGIN_DIR/reload.sh" \
   \
   --add item front_app left \
-    --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE \
+    --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE icon.color=$SAPPHIRE \
     --subscribe front_app front_app_switched \
   \
   --add bracket apple.pill apple front_app \
@@ -58,13 +67,14 @@ do
                                icon.color=$WHITE \
                                icon.highlight_color=$SAPPHIRE \
                                script="$PLUGIN_DIR/space.sh" \
+                               click_script="yabai -m space --focus $sid" \
                                label.padding_right=8 \
                                label.y_offset=-1 \
                                padding_left=4 \
                                padding_right=4 \
                                background.corner_radius=8 \
                                background.height=26 \
-             --subscribe space.$sid space_windows_change
+             --subscribe space.$sid space_windows_change space_change
 done
 
 sketchybar --add bracket spaces.pill "/space\..*/" \
@@ -74,10 +84,22 @@ sketchybar --add bracket spaces.pill "/space\..*/" \
                              background.corner_radius=10 \
                              background.drawing=on
 
+# Front App Switcher (Current Space Apps)
+sketchybar --add bracket app_switcher '/app\.switcher\..*/' \
+           --set app_switcher background.color=$BAR_COLOR \
+                              background.border_color=$SAPPHIRE_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on \
+  \
+           --add item app_switcher_trigger left \
+           --set app_switcher_trigger drawing=off \
+                                      script="$PLUGIN_DIR/app_switcher.sh" \
+           --subscribe app_switcher_trigger app_switcher_update space_change window_focus
 
-##### RIGHT SIDE ITEMS #####
 
-# Music: The Radiant Song
+
+##### RIGHT SIDE ITEMS ###### Music: The Radiant Song
 sketchybar --add item music right \
            --set music icon= \
                        icon.color=$PURPLE \
@@ -85,20 +107,20 @@ sketchybar --add item music right \
                        label.color=$WHITE \
                        script="$PLUGIN_DIR/music.sh" \
                        update_freq=2 \
-                       click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+                       click_script="$PLUGIN_DIR/music_click.sh" \
                        popup.align=right \
                        popup.y_offset=12 \
                        scroll_texts=on \
                        label.max_chars=25 \
                        label.scroll_duration=250 \
-           --subscribe music media_change system_woke front_app_switched \
+           --subscribe music media_change system_woke front_app_switched mouse.entered mouse.exited \
   \
            --add bracket music.pill music \
            --set music.pill background.color=$SAPPHIRE_TRANSLUCENT \
-                            background.border_color=$HONOR_GOLD \
-                            background.border_width=1 \
-                            background.corner_radius=12 \
-                            background.drawing=on
+                             background.border_color=$HONOR_GOLD \
+                             background.border_width=1 \
+                             background.corner_radius=12 \
+                             background.drawing=on
 
 sketchybar --add item media.header popup.music \
            --set media.header icon=󰎈 label="THE RADIANT SONG" \
@@ -122,7 +144,7 @@ sketchybar --add item control_center right \
                        update_freq=25 \
   \
            --add bracket net.pill control_center \
-           --subscribe control_centre wifi_change \
+           --subscribe control_center wifi_change \
            --set net.pill background.color=$BAR_COLOR \
                           background.border_color=$SAPPHIRE_TRANSLUCENT \
                           background.border_width=1 \
@@ -153,10 +175,24 @@ sketchybar --add item battery right --set battery update_freq=120 script="$PLUGI
                              background.corner_radius=10 \
                              background.drawing=on
 
+# Raycast Integration
+sketchybar --add item raycast right \
+           --set raycast icon= \
+                         icon.color=$HONOR_GOLD \
+                         label="Raycast" \
+                         label.color=$WHITE \
+                         click_script="open -a Raycast || open raycast://" \
+  \
+           --add bracket raycast.pill raycast \
+           --set raycast.pill background.color=$BAR_COLOR \
+                              background.border_color=$SAPPHIRE_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on
 
 # Clock: Chronicles
 sketchybar --add item clock right \
-           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="sketchybar --set \$NAME popup.drawing=toggle" icon=󰃭 \
+           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="open -n -a \"Brave Browser\" --args --profile-directory=\"Profile 1\" \"https://calendar.google.com\"" icon=󰃭 \
            --subscribe clock mouse.entered mouse.exited \
            popup.align=right \
   \
@@ -174,27 +210,18 @@ sketchybar --add item clock right \
                             background.corner_radius=10 \
                             background.drawing=on
 
-# Volume: Resonance (Interactive Slider)
+# Volume: Resonance
 sketchybar --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
-           --subscribe volume volume_change mouse.entered mouse.exited \
+                       click_script="open \"x-apple.systempreferences:com.apple.preference.sound\"" \
+           --subscribe volume volume_change \
   \
-           #--add slider volume_slider right \
-           #--set volume_slider slider.width=0 \
-           #                    slider.background.height=6 \
-           #                    slider.background.corner_radius=3 \
-           #                    slider.background.color=$ITEM_BG_COLOR \
-           #                    slider.highlight_color=$SAPPHIRE \
-           #                    slider.knob=󰝥 \
-           #                    script="$PLUGIN_DIR/volume_click.sh" \
-           #--subscribe volume_slider mouse.exited \
-  \
-           #--add bracket volume.pill volume volume_slider \
-           #--set volume.pill background.color=$BAR_COLOR \
-           #                 background.border_color=$SAPPHIRE_TRANSLUCENT \
-           #                 background.border_width=1 \
-           #                 background.corner_radius=10 \
-           #                 background.drawing=on
+           --add bracket volume.pill volume \
+           --set volume.pill background.color=$BAR_COLOR \
+                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
 
 # Notification: Spren Message
 #sketchybar --add item notif right \
@@ -215,4 +242,6 @@ sketchybar --trigger space_windows_change
 sketchybar --trigger front_app_switched
 sketchybar --trigger volume_change
 sketchybar --trigger wifi_change
-sketchybar --triger media_change
+sketchybar --trigger media_change
+sketchybar --trigger app_switcher_update
+sketchybar --trigger window_focus

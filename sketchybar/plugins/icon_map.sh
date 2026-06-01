@@ -9,17 +9,20 @@
 APP_NAME=$(echo "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
 case "$APP_NAME" in
-  "Terminal" | "iTerm" | "iTerm2" | "Alacritty" | "Kitty")
-    icon=""
+  "Terminal" | "iTerm" | "iTerm2" | "Alacritty" | "Kitty" | "Warp" | "WezTerm")
+    icon="󰆍"
     ;;
   "Safari" | "Safari Technology Preview")
     icon="󰀹"
     ;;
   "Google Chrome" | "Chromium")
-    icon=""
+    icon="󰊯"
     ;;
   "Brave Browser" | "Brave")
-    icon="🦁"
+    icon="󰖟"
+    ;;
+  "Arc")
+    icon="󰞍"
     ;;
   "Firefox" | "Firefox Developer Edition")
     icon="󰈹"
@@ -29,6 +32,18 @@ case "$APP_NAME" in
     ;;
   "Messages")
     icon="󰍦"
+    ;;
+  "Telegram")
+    icon=""
+    ;;
+  "WhatsApp" | "WhatsApp Web")
+    icon="󰖣"
+    ;;
+  "Slack")
+    icon="󰒱"
+    ;;
+  "Discord")
+    icon="󰙯"
     ;;
   "Mail" | "Microsoft Outlook" | "Gmail" | "gmail")
     icon="󰇮"
@@ -42,23 +57,23 @@ case "$APP_NAME" in
   "VLC" | "vlc" | "VLC Player")
     icon="󰕼"
     ;;
-  "Code" | "Visual Studio Code" | "VSCodium")
+  "Code" | "Visual Studio Code" | "VSCodium" | "Cursor" | "Windsurf" | "Antigravity IDE" | "Antigravity" | "AntigravityIDE" | "Codeforces")
     icon="󰨞"
     ;;
-  "Finder")
-    icon="󰀶"
-    ;;
-  "Discord")
-    icon="󰙯"
-    ;;
-  "Slack")
-    icon="󰒱"
+  "Xcode" | "IntelliJ IDEA" | "WebStorm" | "PyCharm" | "Rider" | "CLion" | "PhpStorm" | "Android Studio" | "Sublime Text")
+    icon="󰨞"
     ;;
   "Calendar" | "Fantastical" | "Google Calendar" | "gcal")
     icon="󰃭"
     ;;
   "Notes")
     icon="󰎚"
+    ;;
+  "Notion")
+    icon="󱚣"
+    ;;
+  "Obsidian")
+    icon="󰶲"
     ;;
   "System Settings" | "System Preferences")
     icon="󰒓"
@@ -72,14 +87,41 @@ case "$APP_NAME" in
   "Google Classroom" | "Classroom" | "classroom")
     icon="󰑒"
     ;;
-  "Google Gemini" | "google gemini" | "gemini" | "ChatGPT" | "chatgpt" | "Perplexity" | "perplexity")
+  "Google Gemini" | "google gemini" | "gemini")
     icon="󱚤"
+    ;;
+  "ChatGPT" | "chatgpt")
+    icon="󰚩"
+    ;;
+  "Perplexity" | "perplexity")
+    icon="󰭹"
     ;;
   "Chess" | "chess" | "Chess.com" | "Lichess")
     icon="󰡙"
     ;;
-  "GitHub" | "github")
+  "GitHub" | "github" | "GitHub Desktop")
     icon="󰊤"
+    ;;
+  "Figma")
+    icon="󰽉"
+    ;;
+  "Zoom" | "Zoom.us")
+    icon="󰵗"
+    ;;
+  "Microsoft Teams" | "Teams")
+    icon="󰊻"
+    ;;
+  "1Password" | "Bitwarden")
+    icon="󰢬"
+    ;;
+  "Calculator")
+    icon="󰃬"
+    ;;
+  "Reminders")
+    icon="󰏚"
+    ;;
+  "App Store")
+    icon="󰗎"
     ;;
   "app_mode_loader")
     icon="󰖟" # Generic globe icon since all PWAs share this name

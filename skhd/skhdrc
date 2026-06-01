@@ -83,3 +83,9 @@ shift + alt - 0 : /opt/homebrew/bin/yabai -m window --space 10; /opt/homebrew/bi
 ctrl + alt - q : brew services stop yabai
 ctrl + alt - s : brew services start yabai
 ctrl + alt - r : brew services restart yabai
+
+# ================================
+# SketchyBar Control
+# ================================
+
+ctrl + alt - k : sketchybar --reload

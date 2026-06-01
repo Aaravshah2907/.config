@@ -50,12 +50,49 @@ sketchybar --add item apple left \
     --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE icon.color=$SAPPHIRE \
     --subscribe front_app front_app_switched \
   \
-  --add bracket apple.pill apple front_app \
+  --add item cheatsheet left \
+    --set cheatsheet icon=󰌌 \
+                   icon.color=$SAPPHIRE \
+                   label="Skhd" \
+                   label.color=$SAPPHIRE \
+                   click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+                   popup.align=left \
+                   popup.y_offset=12 \
+  \
+  --add bracket apple.pill apple front_app cheatsheet \
   --set apple.pill background.color=$BAR_COLOR \
                   background.border_color=$SAPPHIRE_TRANSLUCENT \
                   background.border_width=1 \
                   background.corner_radius=10 \
-                  background.drawing=on
+                  background.drawing=on \
+  \
+  --add item cheatsheet.title popup.cheatsheet \
+  --set cheatsheet.title icon=󰛵 label="SURGEBINDING CHEATSHEET" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+  \
+  --add item cheatsheet.nav popup.cheatsheet \
+  --set cheatsheet.nav icon=󰌌 label="⌥ + H/J/K/L        Focus Window (Vim)" \
+  \
+  --add item cheatsheet.swap popup.cheatsheet \
+  --set cheatsheet.swap icon=󰪹 label="⇧ ⌥ + H/J/K/L      Swap Window" \
+  \
+  --add item cheatsheet.warp popup.cheatsheet \
+  --set cheatsheet.warp icon=⚡ label="⌃ ⌥ + H/J/K/L      Warp Window" \
+  \
+  --add item cheatsheet.layout popup.cheatsheet \
+  --set cheatsheet.layout icon=📐 label="⇧ ⌥ + R/Y/X        Rotate/Mirror Layout" \
+  \
+  --add item cheatsheet.toggle popup.cheatsheet \
+  --set cheatsheet.toggle icon=󰖯 label="⇧ ⌥ + T/M/E        Float/Maximize/Balance" \
+  \
+  --add item cheatsheet.space popup.cheatsheet \
+  --set cheatsheet.space icon=🌌 label="⇧ ⌥ + 1..10       Move window to space" \
+  \
+  --add item cheatsheet.reload popup.cheatsheet \
+  --set cheatsheet.reload icon=󰑓 label="⌃ ⌥ + K            Reload Sketchybar" \
+  \
+  --add item cheatsheet.yabai popup.cheatsheet \
+  --set cheatsheet.yabai icon=🛠️ label="⌃ ⌥ + R            Restart Yabai"
+
 
 # Spaces
 SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)

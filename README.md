@@ -5,7 +5,7 @@ A collection of configuration files and scripts for my macOS setup, featuring a 
 ## 🌟 Highlights
 
 *   **[Radiant Player](./radiant-player/README.md):** A custom, terminal-based hybrid music player and dashboard integrating Spotify and local MPV playback, styled with a unique "gemstone" aesthetic inspired by *The Stormlight Archive*.
-*   **[Sketchybar](./sketchybar/README.md):** A highly customized status bar for macOS, displaying system stats, currently playing media, network info, and battery status with elegant icons.
+*   **[Sketchybar](./sketchybar/README.md):** A minimalist, hover‑enabled status bar featuring a combined RAM & Disk monitor popup, interactive Bluetooth peek‑and‑pin, streamlined system stats, and elegant icons.
 *   **[Yazi](./yazi/README.md):** A blazing fast terminal file manager configuration, tightly integrated with Radiant Player to browse and queue local music seamlessly.
 *   **Yabai & Skhd:** Tiling window management and hotkey daemon configurations for a keyboard-driven macOS experience.
 *   **Neovim:** Custom configuration for Neovim.

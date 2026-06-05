@@ -7,7 +7,8 @@ My custom "Radiant Floating Bar" configuration for [Sketchybar](https://github.c
 - **Radiant Theme**: Styled with a dark "Deep Night" background, translucent borders, and custom Rosharan/Stormlight-inspired color palette.
 - **Dynamic Workspaces**: Integrates with `yabai` (or macOS native spaces) to show active and inactive spaces.
 - **Music Integration**: "The Radiant Song" module seamlessly displays currently playing music from the `radiant-player` and Spotify, complete with interactive play/pause controls.
-- **Interactive Modules**: Clickable volume sliders, bluetooth connection menus, network status ("Spren Bond"), and a detailed clock/calendar ("Chronicles").
+- **System Monitor (RAM & Disk Hover Popup)**: Displays a clean monitor icon (`󰍹`) on the bar which reveals detailed RAM pressure ("Investiture") and Disk usage ("Material World") in a popup when hovered.
+- **Interactive Bluetooth Module**: Supports mouse-hover peek to list connected devices, with a click-to-pin feature that keeps the popup open until clicked again.
 - **Auto-Hiding/Floating**: Designed to float slightly below the screen edge with rounded corners and blurred backgrounds.
 
 ## Requirements

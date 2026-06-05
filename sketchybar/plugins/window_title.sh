@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 source "$HOME/.config/sketchybar/colors.sh"
 
 WINDOW_INFO=$(yabai -m query --windows --window 2>/dev/null)

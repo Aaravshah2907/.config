@@ -1,8 +1,34 @@
 #!/usr/bin/env bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 source "$HOME/.config/sketchybar/colors.sh"
 
+# Handle arguments / click
+if [ "$1" = "click" ]; then
+  if [ -f /tmp/bluetooth_pinned ]; then
+    rm /tmp/bluetooth_pinned
+    sketchybar --set bluetooth popup.drawing=off
+  else
+    touch /tmp/bluetooth_pinned
+    sketchybar --set bluetooth popup.drawing=on
+  fi
+  exit 0
+fi
+
+# Handle hover for Bluetooth
+if [ "$SENDER" = "mouse.entered" ]; then
+  sketchybar --set "$NAME" popup.drawing=on
+  exit 0
+fi
+
+if [ "$SENDER" = "mouse.exited" ]; then
+  if [ ! -f /tmp/bluetooth_pinned ]; then
+    sketchybar --set "$NAME" popup.drawing=off
+  fi
+  exit 0
+fi
+
 # Blueutil check
-CONNECTED_DEVICES=$(/opt/homebrew/bin/blueutil --connected)
+CONNECTED_DEVICES=$(blueutil --connected)
 COUNT=$(echo "$CONNECTED_DEVICES" | grep -c "name" | xargs)
 
 ICON="󰂯"
@@ -15,10 +41,10 @@ else
     LABEL=""
 fi
 
-/opt/homebrew/bin/sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" label="$LABEL" label.color="$COLOR"
+sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" label="$LABEL" label.color="$COLOR"
 
 # Clear popup
-/opt/homebrew/bin/sketchybar --remove '/bluetooth\.device\..*/'
+sketchybar --remove '/bluetooth\.device\..*/'
 
 # Add devices to popup
 if [ "$COUNT" -gt 0 ]; then
@@ -27,11 +53,11 @@ if [ "$COUNT" -gt 0 ]; then
         NAME=$(echo "$line" | grep -o 'name: "[^"]*"' | cut -d'"' -f2)
         [ -z "$NAME" ] && continue
         
-        /opt/homebrew/bin/sketchybar --add item bluetooth.device.$COUNTER popup.bluetooth \
-                                   --set bluetooth.device.$COUNTER label="$NAME" icon=󰂱
+        sketchybar --add item bluetooth.device.$COUNTER popup.bluetooth \
+                   --set bluetooth.device.$COUNTER label="$NAME" icon=󰂱
         COUNTER=$((COUNTER + 1))
     done <<< "$CONNECTED_DEVICES"
 else
-    /opt/homebrew/bin/sketchybar --add item bluetooth.none popup.bluetooth \
-                               --set bluetooth.none label="No devices Bonded" icon=󰂯
+    sketchybar --add item bluetooth.none popup.bluetooth \
+               --set bluetooth.none label="No devices Bonded" icon=󰂯
 fi

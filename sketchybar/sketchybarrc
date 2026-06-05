@@ -1,5 +1,6 @@
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+rm -f /tmp/bluetooth_pinned
 
 # Custom Events for event-driven updates
 sketchybar --add event window_focus \
@@ -179,15 +180,16 @@ sketchybar --add item control_center right \
 sketchybar --add item bluetooth right \
            --set bluetooth update_freq=60 \
                            script="$PLUGIN_DIR/bluetooth.sh" \
-                           click_script="sketchybar --set \$NAME popup.drawing=toggle" \
+                           click_script="$PLUGIN_DIR/bluetooth.sh click" \
                            popup.align=right \
+           --subscribe bluetooth mouse.entered mouse.exited \
   \
            --add bracket bluetooth.pill bluetooth \
            --set bluetooth.pill background.color=$BAR_COLOR \
-                               background.border_color=$SAPPHIRE_TRANSLUCENT \
-                               background.border_width=1 \
-                               background.corner_radius=10 \
-                               background.drawing=on
+                                background.border_color=$SAPPHIRE_TRANSLUCENT \
+                                background.border_width=1 \
+                                background.corner_radius=10 \
+                                background.drawing=on
 
 # Battery: Stormlight Reserve
 sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke \
@@ -211,6 +213,36 @@ sketchybar --add item raycast right \
                               background.border_width=1 \
                               background.corner_radius=10 \
                               background.drawing=on
+
+# System Monitor (RAM & Disk Hover Popup)
+sketchybar --add item system right \
+           --set system update_freq=10 \
+                        icon=󰍹 \
+                        icon.color=$SAPPHIRE \
+                        label.drawing=off \
+                        script="$PLUGIN_DIR/system.sh" \
+                        popup.align=right \
+                        popup.y_offset=12 \
+           --subscribe system mouse.entered mouse.exited \
+  \
+           --add bracket system.pill system \
+           --set system.pill background.color=$BAR_COLOR \
+                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on \
+  \
+           --add item system.ram popup.system \
+           --set system.ram icon=󰍛 \
+                            icon.color=$HONOR_GOLD \
+                            label.color=$WHITE \
+                            label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item system.disk popup.system \
+           --set system.disk icon=󰋊 \
+                             icon.color=$SAPPHIRE \
+                             label.color=$WHITE \
+                             label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
 # Clock: Chronicles
 sketchybar --add item clock right \
@@ -278,3 +310,6 @@ sketchybar --trigger wifi_change
 sketchybar --trigger media_change
 sketchybar --trigger app_switcher_update
 sketchybar --trigger window_focus
+
+# Run scripts once on startup/reload to populate values immediately
+$PLUGIN_DIR/system.sh

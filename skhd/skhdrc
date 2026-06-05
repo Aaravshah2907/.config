@@ -132,22 +132,22 @@ hyper - q : /opt/homebrew/bin/yabai -m window --close
 # ================================
 
 # Focus / Launch Cursor
-cmd + ctrl + alt + shift - c : bash ~/.config/skhd/launcher.sh "Cursor"
+# cmd + ctrl + alt + shift - c : open -a "Cursor"
 
 # Focus / Launch Terminal
-cmd + ctrl + alt + shift - t : bash ~/.config/skhd/launcher.sh "iTerm"
+cmd + ctrl + alt + shift - t : open -a "iTerm"
 
 # Focus / Launch Brave
-cmd + ctrl + alt + shift - b : bash ~/.config/skhd/launcher.sh "Brave Browser"
+cmd + ctrl + alt + shift - b : open -a "Brave Browser"
 
 # Focus / Launch Obsidian
-cmd + ctrl + alt + shift - o : bash ~/.config/skhd/launcher.sh "Obsidian"
+cmd + ctrl + alt + shift - o : open -a "Obsidian"
 
 # Focus / Launch Finder
-cmd + ctrl + alt + shift - f : bash ~/.config/skhd/launcher.sh "Finder"
+cmd + ctrl + alt + shift - f : open -a "Finder"
 
 # Focus / Launch ChatGPT (Brave PWA)
-cmd + ctrl + alt + shift - a : bash ~/.config/skhd/launcher.sh "ChatGPT"
+cmd + ctrl + alt + shift - a : open "ChatGPT"
 
 # ================================
 # Scratchpad System (Hyper Key)

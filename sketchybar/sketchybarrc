@@ -23,8 +23,8 @@ sketchybar --bar position=top \
 sketchybar --default \
   padding_left=5 \
   padding_right=5 \
-  icon.font="Hack Nerd Font:Bold:16.0" \
-  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  icon.font="Hack Nerd Font:Bold:18.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:16.0" \
   icon.color=$WHITE \
   label.color=$WHITE \
   icon.padding_left=4 \
@@ -130,7 +130,7 @@ sketchybar --add item music right \
                        label="Lashing..." \
                        label.color=$WHITE \
                        script="$PLUGIN_DIR/music.sh" \
-                       update_freq=2 \
+                       update_freq=5 \
                        click_script="$PLUGIN_DIR/music_click.sh" \
                        popup.align=right \
                        popup.y_offset=12 \
@@ -165,7 +165,7 @@ sketchybar --add item media.header popup.music \
 sketchybar --add item control_center right \
            --set control_center icon=󰤨 \
                        script="$PLUGIN_DIR/network.sh" \
-                       update_freq=25 \
+                       update_freq=120 \
   \
            --add bracket net.pill control_center \
            --subscribe control_center wifi_change \
@@ -203,8 +203,6 @@ sketchybar --add item battery right --set battery update_freq=120 script="$PLUGI
 sketchybar --add item raycast right \
            --set raycast icon= \
                          icon.color=$HONOR_GOLD \
-                         label="Raycast" \
-                         label.color=$WHITE \
                          click_script="open -a Raycast || open raycast://" \
   \
            --add bracket raycast.pill raycast \
@@ -216,7 +214,7 @@ sketchybar --add item raycast right \
 
 # Clock: Chronicles
 sketchybar --add item clock right \
-           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
+           --set clock update_freq=30 script="$PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
            --subscribe clock mouse.entered mouse.exited \
            popup.align=right \
   \

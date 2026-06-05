@@ -1,4 +1,4 @@
-\#!/bin/bash
+#!/bin/bash
 
 # ====================================================================
 # WINDRUNNER COLOR PALETTE (Infused with Stormlight)

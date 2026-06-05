@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 source "$HOME/.config/sketchybar/colors.sh"
 
 # Handle hover for Music (Peek mode)
@@ -101,13 +102,17 @@ fi
     if [ -f "$NOWPLAYING" ]; then
       STATE=$($NOWPLAYING get playbackRate 2>/dev/null)
       CLIENT=$($NOWPLAYING get clientIdentifier 2>/dev/null)
-      # Check if client matches our allowed players
-      if [[ "$CLIENT" =~ (Spotify|Music|VLC|mpv) ]]; then
+      if [ "$CLIENT" = "null" ] || [ -z "$CLIENT" ]; then
+        CLIENT=$($NOWPLAYING get clientBundleIdentifier 2>/dev/null)
+      fi
+      # Check if client matches our allowed players (case-insensitively)
+      CLIENT_LOWER=$(echo "$CLIENT" | tr '[:upper:]' '[:lower:]')
+      if [[ "$CLIENT_LOWER" =~ (spotify|music|vlc|mpv) ]]; then
         TITLE=$($NOWPLAYING get title 2>/dev/null)
         ARTIST=$($NOWPLAYING get artist 2>/dev/null)
         
         # Better mpv info handling via window title fallback
-        if [[ ("$TITLE" == "mpv" || -z "$TITLE") && "$CLIENT" =~ mpv ]]; then
+        if [[ ("$TITLE" == "mpv" || -z "$TITLE") && "$CLIENT_LOWER" =~ mpv ]]; then
           TITLE=$(osascript -e 'tell application "System Events" to tell process "mpv" to return name of window 1' 2>/dev/null)
         fi
         
@@ -152,10 +157,17 @@ if pgrep -x "Spotify" >/dev/null; then
   PROPER_STATE=$(osascript -e 'tell application "Spotify" to get player state' 2>/dev/null)
   TRACK=$(osascript -e 'tell application "Spotify" to get name of current track' 2>/dev/null)
   ARTIST=$(osascript -e 'tell application "Spotify" to get artist of current track' 2>/dev/null)
-  update_bar "$TRACK — $ARTIST" "Spotify"
   
-  if [ "$PROPER_STATE" != "playing" ]; then
-    safe_set "$NAME" icon="󰏤"
+  if [[ -n "$TRACK" ]]; then
+    LABEL="$TRACK"
+    if [[ -n "$ARTIST" ]]; then
+      LABEL="$TRACK — $ARTIST"
+    fi
+    update_bar "$LABEL" "Spotify"
+    
+    if [ "$PROPER_STATE" != "playing" ]; then
+      safe_set "$NAME" icon="󰏤"
+    fi
   fi
 fi
 

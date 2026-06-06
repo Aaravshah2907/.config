@@ -43,11 +43,11 @@ def current_rating():
     return row[0] if row else 0
 
 
-def max_rating():
+def contest_count():
     conn = get_connection()
 
     row = conn.execute("""
-        SELECT MAX(new_rating)
+        SELECT COUNT(*)
         FROM rating_history
         WHERE platform='Codeforces'
     """).fetchone()

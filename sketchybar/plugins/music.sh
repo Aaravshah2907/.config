@@ -123,7 +123,14 @@ fi
         fi
     
         update_bar "$LABEL" "$CLIENT"
-        
+
+        # Update media header icon for VLC
+        if [[ "$CLIENT_LOWER" == *vlc* ]]; then
+          sketchybar --set media.header icon=""
+        else
+          sketchybar --set media.header icon=""
+        fi
+                
         # If paused, override icon
         if [ "$STATE" != "1" ]; then
           safe_set "$NAME" icon="󰏤"

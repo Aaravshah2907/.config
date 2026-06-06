@@ -49,7 +49,7 @@ case "$CHOICE" in
     yabai --restart-service
     ;;
   "5: Reload Skhd")
-    brew services restart skhd
+    pkill -USR1 skhd
     ;;
   "6: Reload SketchyBar")
     sketchybar --reload

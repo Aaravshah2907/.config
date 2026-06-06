@@ -1,5 +1,8 @@
+# pyrefly: ignore [missing-import]
 from rich.console import Console
+# pyrefly: ignore [missing-import]
 from rich.panel import Panel
+# pyrefly: ignore [missing-import]
 from rich.table import Table
 
 from stats import current_rating, max_rating, solved_count, rating_change, rank_from_rating, contest_count

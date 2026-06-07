@@ -207,7 +207,6 @@ def get_submission_stats(problem_id):
 
 def add_note(problem_id):
     name, rating, tags = get_problem_details(problem_id)
-    attempts, successes = get_submission_stats(problem_id)
     if not name:
         console.print(f"[yellow]Warning: Problem {problem_id} not found in local database. You can still add a note for it.[/yellow]")
         name = f"Problem {problem_id}"
@@ -221,10 +220,6 @@ def add_note(problem_id):
 
 ## 🏷️ Tags
 - {tags}
-
-## 📊 Attempts / Solves
-- Attempts: {attempts}
-- Solves: {successes}
 
 ## 💡 Key Idea / Approach
 - 

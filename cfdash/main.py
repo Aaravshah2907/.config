@@ -1,3 +1,52 @@
+import argparse
+import sys
+
+parser = argparse.ArgumentParser(
+    description="CFDash: A personal Codeforces analytics dashboard powered by your local cpos database to help you decide what to practice next."
+)
+
+subparsers = parser.add_subparsers(dest="command", help="Subcommands")
+
+# Subcommand: add
+parser_add = subparsers.add_parser("add", help="Add or edit notes for a specific problem (tags, attempts/solves auto-filled)")
+parser_add.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g. 1830A)")
+
+# Subcommand: view
+parser_view = subparsers.add_parser("view", help="View the note for a specific problem")
+parser_view.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g. 1830A)")
+parser_view.add_argument("-c", "--code", action="store_true", help="Open the solution code file in your GUI editor")
+
+# Subcommand: list
+parser_list = subparsers.add_parser("list", help="List all problems that have notes")
+
+# Subcommand: remove
+parser_remove = subparsers.add_parser("remove", help="Remove notes for a specific problem")
+parser_remove.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g. 1830A)")
+
+# Subcommand: review
+parser_review = subparsers.add_parser("review", help="Start an interactive review session of solved questions with notes")
+
+# Subcommand: import
+parser_import = subparsers.add_parser("import", help="Scan local Codeforces directories and interactively add notes for untracked solved problems")
+
+args = parser.parse_args()
+
+if args.command:
+    import notes
+    if args.command == "add":
+        notes.add_note(args.problem_id)
+    elif args.command == "view":
+        notes.view_note(args.problem_id, open_code=args.code)
+    elif args.command == "list":
+        notes.list_notes()
+    elif args.command == "remove":
+        notes.remove_note(args.problem_id)
+    elif args.command == "review":
+        notes.review_notes()
+    elif args.command == "import":
+        notes.import_new_notes()
+    sys.exit(0)
+
 # pyrefly: ignore [missing-import]
 from rich.console import Console
 # pyrefly: ignore [missing-import]
@@ -19,6 +68,9 @@ rank = rank_from_rating(user_rating)
 change = rating_change()
 contests = contest_count()
 solved = solved_count()
+
+from notes import get_notes_stats
+notes_count, _, pending_count = get_notes_stats()
 
 strengths, weaknesses = get_strengths_and_weaknesses()
 recs = recommendations(user_rating, weaknesses)
@@ -52,6 +104,9 @@ profile_table.add_row("Peak", str(peak))
 profile_table.add_row("Change", f"[{change_color}]{change_sign}{change}[/{change_color}]")
 profile_table.add_row("Contests", str(contests))
 profile_table.add_row("Solved", str(solved))
+profile_table.add_row("Notes Written", f"{notes_count} / {solved}")
+pending_color = "yellow" if pending_count > 0 else "green"
+profile_table.add_row("Pending Review", f"[{pending_color}]{pending_count}[/{pending_color}]")
 
 profile_panel = Panel(profile_table, title="[bold blue]Profile[/bold blue]", border_style="blue", expand=True)
 

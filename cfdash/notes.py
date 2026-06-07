@@ -54,6 +54,25 @@ def find_local_code_file(problem_id):
             pass
     return None
 
+def problem_id_sort_key(problem_id):
+    """Return a sort key for natural ordering of problem IDs.
+    Handles IDs like '123A45' where the numeric parts may have variable length.
+    The key is a list where numeric components are integers and alphabetic components
+    are lower‑cased strings, enabling proper mixed sorting.
+    """
+    import re
+    parts = re.findall(r"\d+|[A-Za-z]+", problem_id)
+    return [int(p) if p.isdigit() else p.lower() for p in parts]
+
+def is_pending(now, last_rev):
+            if not last_rev:
+                return True
+            try:
+                rev_time = datetime.datetime.strptime(last_rev, "%Y-%m-%d %H:%M:%S")
+                return rev_time < now - datetime.timedelta(days=15)
+            except Exception:
+                return False
+
 def open_code_file(file_path):
     editor_tmpl = get_config_editor()
     if "{file}" in editor_tmpl:
@@ -197,26 +216,37 @@ def view_note(problem_id, open_code=False):
     elif open_code:
         console.print("[yellow]Source file not found locally.[/yellow]")
 
-def list_notes():
+def list_notes(sort_key=None):
     conn = get_connection()
     rows = conn.execute("""
         SELECT problem_id, notes, updated_at, review_count, last_reviewed_at
         FROM cfdash_notes
-        ORDER BY updated_at DESC
     """).fetchall()
-    
+
     if not rows:
         console.print("[yellow]No notes found. Add some using 'cfdash add <problem_id>' or 'cfdash import'![/yellow]")
         return
-    
-    table = Table(title="Saved Notes", border_style="cyan")
+
+    # Determine sorting
+    if sort_key == "rating":
+        # Sort by rating ascending using problem details
+        rows = sorted(rows, key=lambda r: get_problem_details(r[0])[1] or 0)
+    elif sort_key == "id":
+        rows = sorted(rows, key=lambda r: problem_id_sort_key(r[0]))
+    elif sort_key == "pending":
+        # Pending reviews first: last_rev is None or older than 7 days
+        import datetime
+        now = datetime.datetime.now()
+        rows = sorted(rows, key=lambda r: (0 if is_pending(now, r[4]) else 1))
+
+    table = Table(title=f"Saved Notes: ({len(rows)} entries)", border_style="cyan")
     table.add_column("Problem ID", style="bold yellow")
     table.add_column("Name", style="cyan")
     table.add_column("Rating", style="magenta", justify="right")
     table.add_column("Solves/Attempts", style="green", justify="center")
     table.add_column("Last Updated", style="dim")
     table.add_column("Reviews", justify="right")
-    
+
     for pid, notes, updated_at, rev_count, last_rev in rows:
         name, rating, _ = get_problem_details(pid)
         attempts, successes = get_submission_stats(pid)
@@ -226,7 +256,7 @@ def list_notes():
         rating_str = str(rating) if rating > 0 else "-"
         stats_str = f"{successes}/{attempts}"
         table.add_row(pid, name, rating_str, stats_str, updated_at, str(rev_count))
-        
+
     console.print(table)
 
 def remove_note(problem_id):

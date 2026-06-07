@@ -17,8 +17,12 @@ parser_view.add_argument("problem_id", type=str, help="Codeforces problem ID (e.
 parser_view.add_argument("-c", "--code", action="store_true", help="Open the solution code file in your GUI editor")
 
 # Subcommand: list
-parser_list = subparsers.add_parser("list", help="List all problems that have notes")
-
+parser_list = subparsers.add_parser("list", help="List notes with optional sorting")
+parser_list.add_argument("-r", "--rating", action="store_true", help="Sort by rating ascending")
+parser_list.add_argument("-n", "--id", action="store_true", help="Sort by problem ID ascending")
+parser_list.add_argument("-p", "--pending", action="store_true", help="Sort by pending reviews first")
+parser_help = subparsers.add_parser("help", help="Show help for subcommands")
+parser_help.add_argument("subcmd", nargs="?", help="Specific subcommand to show help for")
 # Subcommand: remove
 parser_remove = subparsers.add_parser("remove", help="Remove notes for a specific problem")
 parser_remove.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g. 1830A)")
@@ -30,22 +34,41 @@ parser_review = subparsers.add_parser("review", help="Start an interactive revie
 parser_import = subparsers.add_parser("import", help="Scan local Codeforces directories and interactively add notes for untracked solved problems")
 
 args = parser.parse_args()
+if args.command == "help":
+    if getattr(args, "subcmd", None):
+        subparser = subparsers._name_parser_map.get(args.subcmd)
+        if subparser:
+            subparser.print_help()
+        else:
+            print(f"Unknown subcommand '{args.subcmd}'. Available: {', '.join(subparsers._name_parser_map.keys())}")
+    else:
+        parser.print_help()
+    sys.exit(0)
+
+import notes
+if args.command == "add":
+    notes.add_note(args.problem_id)
+elif args.command == "view":
+    notes.view_note(args.problem_id, open_code=args.code)
+elif args.command == "list":
+    sort_key = None
+    if args.rating:
+        sort_key = "rating"
+    elif args.id:
+        sort_key = "id"
+    elif args.pending:
+        sort_key = "pending"
+    notes.list_notes(sort_key=sort_key)
+elif args.command == "remove":
+    notes.remove_note(args.problem_id)
+elif args.command == "review":
+    notes.review_notes()
+elif args.command == "import":
+    notes.import_new_notes()
 
 if args.command:
-    import notes
-    if args.command == "add":
-        notes.add_note(args.problem_id)
-    elif args.command == "view":
-        notes.view_note(args.problem_id, open_code=args.code)
-    elif args.command == "list":
-        notes.list_notes()
-    elif args.command == "remove":
-        notes.remove_note(args.problem_id)
-    elif args.command == "review":
-        notes.review_notes()
-    elif args.command == "import":
-        notes.import_new_notes()
     sys.exit(0)
+
 
 # pyrefly: ignore [missing-import]
 from rich.console import Console
@@ -60,7 +83,7 @@ from rating_histogram import get_histogram_bars
 from recommendations import recommendations
 
 console = Console()
-
+# Duplicated help handling removed; unified handling after parsing args
 # 1. Fetch data
 user_rating = current_rating()
 peak = max_rating()

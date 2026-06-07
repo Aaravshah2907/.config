@@ -19,6 +19,86 @@ from db import get_connection
 
 console = Console()
 
+def pick_problem_id(prompt="Select a problem"):
+    """Interactive problem-ID picker backed by fzf (fuzzy) or a numbered menu."""
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT problem_id FROM cfdash_notes ORDER BY problem_id"
+    ).fetchall()
+
+    if not rows:
+        console.print("[yellow]No notes in the database yet.[/yellow]")
+        return None
+
+    # Build display lines: "ID   Name   Rating"
+    entries = []
+    for (pid,) in rows:
+        name, rating, _ = get_problem_details(pid)
+        name = name or "Unknown"
+        rating_str = str(rating) if rating else "-"
+        entries.append((pid, f"{pid:<10}  {name:<45}  {rating_str}"))
+
+    import shutil, subprocess
+
+    if shutil.which("fzf"):
+        # Pipe entries into fzf; return selected problem ID
+        fzf_input = "\n".join(line for _, line in entries)
+        try:
+            result = subprocess.run(
+                ["fzf",
+                 "--prompt", f"  {prompt} > ",
+                 "--height", "40%",
+                 "--layout", "reverse",
+                 "--border", "rounded",
+                 "--info", "inline",
+                 "--ansi"],
+                input=fzf_input,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0 or not result.stdout.strip():
+                console.print("[yellow]No selection made.[/yellow]")
+                return None
+            # First token of the chosen line is the problem ID
+            selected_id = result.stdout.strip().split()[0]
+            return selected_id
+        except Exception as e:
+            console.print(f"[red]fzf error: {e}[/red]")
+            # Fall through to menu
+
+    # --- Fallback: numbered menu ---
+    console.print(f"\n[bold cyan]{prompt}[/bold cyan]")
+    table = Table(box=None, padding=(0, 2), show_header=True)
+    table.add_column("#", style="dim", justify="right")
+    table.add_column("Problem ID", style="bold yellow")
+    table.add_column("Name", style="cyan")
+    table.add_column("Rating", style="magenta", justify="right")
+    for i, (pid, _) in enumerate(entries, 1):
+        name, rating, _ = get_problem_details(pid)
+        table.add_row(str(i), pid, name or "Unknown", str(rating or "-"))
+    console.print(table)
+
+    while True:
+        try:
+            raw = input(f"\nEnter number (1-{len(entries)}) or problem ID, or 'q' to cancel: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            console.print("\n[yellow]Cancelled.[/yellow]")
+            return None
+        if raw.lower() in ('q', 'quit', ''):
+            console.print("[yellow]Cancelled.[/yellow]")
+            return None
+        if raw.isdigit():
+            idx = int(raw) - 1
+            if 0 <= idx < len(entries):
+                return entries[idx][0]
+            console.print(f"[red]Please enter a number between 1 and {len(entries)}.[/red]")
+        else:
+            # Treat as raw problem ID
+            upper = raw.upper()
+            if any(pid == upper for pid, _ in entries):
+                return upper
+            console.print(f"[red]'{raw}' not found in notes. Try again.[/red]")
+
 def get_editor():
     return os.environ.get("EDITOR", "nano")
 

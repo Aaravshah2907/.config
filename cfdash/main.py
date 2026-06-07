@@ -13,7 +13,7 @@ parser_add.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g
 
 # Subcommand: view
 parser_view = subparsers.add_parser("view", help="View the note for a specific problem")
-parser_view.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g. 1830A)")
+parser_view.add_argument("problem_id", type=str, nargs="?", default=None, help="Codeforces problem ID (e.g. 1830A) — omit to pick interactively")
 parser_view.add_argument("-c", "--code", action="store_true", help="Open the solution code file in your GUI editor")
 
 # Subcommand: list
@@ -25,7 +25,7 @@ parser_help = subparsers.add_parser("help", help="Show help for subcommands")
 parser_help.add_argument("subcmd", nargs="?", help="Specific subcommand to show help for")
 # Subcommand: remove
 parser_remove = subparsers.add_parser("remove", help="Remove notes for a specific problem")
-parser_remove.add_argument("problem_id", type=str, help="Codeforces problem ID (e.g. 1830A)")
+parser_remove.add_argument("problem_id", type=str, nargs="?", default=None, help="Codeforces problem ID (e.g. 1830A) — omit to pick interactively")
 
 # Subcommand: review
 parser_review = subparsers.add_parser("review", help="Start an interactive review session of solved questions with notes")
@@ -49,7 +49,9 @@ import notes
 if args.command == "add":
     notes.add_note(args.problem_id)
 elif args.command == "view":
-    notes.view_note(args.problem_id, open_code=args.code)
+    pid = args.problem_id or notes.pick_problem_id(prompt="Select problem to view")
+    if pid:
+        notes.view_note(pid, open_code=args.code)
 elif args.command == "list":
     sort_key = None
     if args.rating:
@@ -60,7 +62,9 @@ elif args.command == "list":
         sort_key = "pending"
     notes.list_notes(sort_key=sort_key)
 elif args.command == "remove":
-    notes.remove_note(args.problem_id)
+    pid = args.problem_id or notes.pick_problem_id(prompt="Select problem to remove")
+    if pid:
+        notes.remove_note(pid)
 elif args.command == "review":
     notes.review_notes()
 elif args.command == "import":

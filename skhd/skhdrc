@@ -173,5 +173,9 @@ cmd + ctrl + alt + shift - 0x18 : python3 ~/.config/skhd/scratchpad.py "Calculat
 # skhd's hyper alias doesn't work with non-alphanumeric keys, so use explicit modifier combo
 cmd + ctrl + alt + shift - 0x2B : bash ~/.config/skhd/control_center.sh
 
+# ================================
+# VLC Control (Hyper Key)
+# ================================
 
-
+# Toggle playback speed between 1.5 and 1
+cmd + ctrl + alt + shift - p : bash ~/.config/skhd/vlc_toggle_speed.sh

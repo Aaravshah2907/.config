@@ -3,7 +3,7 @@
 # Clean up music temp log file if creation time is older than 24 hours
 LOG_FILE="/tmp/sketchybar_music.log"
 if [ -f "$LOG_FILE" ]; then
-  find "$LOG_FILE" -type f -Bmin +1440 -delete 2>/dev/null
+  find "$LOG_FILE" -type f -Bmin +43200 -delete 2>/dev/null
 fi
 
 YAZI_SCRIPT="/Users/aaravshah2975/.config/radiant-player/queue.py"

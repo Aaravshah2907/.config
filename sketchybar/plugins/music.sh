@@ -31,13 +31,25 @@ fi
 update_bar() {
   local label="$1"
   local app="$2"
+  local filepath="$3"
   local icon="󰎆"
   local icon_color="$PURPLE"
+  
+  local check_str="${filepath:-$label}"
   
   case "$app" in
     *[Ss]potify*) icon=""; app_name="Spotify"; icon_color="$EMERALD" ;;
     *[Aa]pple*[Mm]usic*) icon="󰎆"; app_name="Music"; icon_color="$PURPLE" ;;
-    *[Vv][Ll][Cc]*) icon="󰕼"; app_name="VLC"; icon_color="$ORANGE" ;;
+    *[Vv][Ll][Cc]*)
+      app_name="VLC"
+      icon_color="$AMBER"
+      icon="󰕼" # Default VLC cone
+      if echo "$check_str" | grep -iqE '\.(mp3|wav|flac|m4a|aac|ogg|wma|m4b)$'; then
+        icon="󰎆" # Music note for audio
+      elif echo "$check_str" | grep -iqE '\.(mp4|mkv|avi|mov|webm|m4v|flv|wmv)$'; then
+        icon="󰕼" # VLC cone for video
+      fi
+      ;;
     *mpv*) icon=""; app_name="mpv"; icon_color="$SAPPHIRE" ;;
     *) 
       # Filter: restrict to designated music apps
@@ -132,9 +144,13 @@ fi
 
         # Update media header icon for VLC
         if [[ "$CLIENT_LOWER" == *vlc* ]]; then
-          sketchybar --set media.header icon=""
+          if echo "$LABEL" | grep -iqE '\.(mp3|wav|flac|m4a|aac|ogg|wma|m4b)$'; then
+            sketchybar --set media.header icon="󰎆" label="VLC AUDIO" icon.color="$AMBER" label.color="$AMBER"
+          else
+            sketchybar --set media.header icon="󰕼" label="VLC VIDEO" icon.color="$AMBER" label.color="$AMBER"
+          fi
         else
-          sketchybar --set media.header icon=""
+          sketchybar --set media.header icon="󰎈" label="THE RADIANT SONG" icon.color="$RADIANT_GOLD" label.color="$RADIANT_GOLD"
         fi
                 
         # If paused, override icon
@@ -179,6 +195,27 @@ if pgrep -x "Spotify" >/dev/null; then
     update_bar "$LABEL" "Spotify"
     
     if [ "$PROPER_STATE" != "playing" ]; then
+      safe_set "$NAME" icon="󰏤"
+    fi
+  fi
+fi
+
+# 4. VLC Fallback (if nowplaying-cli misses it)
+if pgrep -x "VLC" >/dev/null; then
+  VLC_TITLE=$(osascript -e 'tell application "VLC" to get name of current item' 2>/dev/null)
+  if [[ -n "$VLC_TITLE" && "$VLC_TITLE" != "missing value" ]]; then
+    VLC_PATH=$(osascript -e 'tell application "VLC" to get path of current item' 2>/dev/null)
+    VLC_STATE=$(osascript -e 'tell application "System Events" to tell process "VLC" to return (exists menu item "Pause" of menu "Playback" of menu bar 1)' 2>/dev/null)
+    
+    update_bar "$VLC_TITLE" "VLC" "$VLC_PATH"
+    
+    if echo "$VLC_PATH" | grep -iqE '\.(mp3|wav|flac|m4a|aac|ogg|wma|m4b)$'; then
+      sketchybar --set media.header icon="󰎆" label="VLC AUDIO" icon.color="$AMBER" label.color="$AMBER"
+    else
+      sketchybar --set media.header icon="󰕼" label="VLC VIDEO" icon.color="$AMBER" label.color="$AMBER"
+    fi
+    
+    if [ "$VLC_STATE" == "false" ]; then
       safe_set "$NAME" icon="󰏤"
     fi
   fi

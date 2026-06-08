@@ -49,6 +49,38 @@ tell application "iTerm"
 end tell
 EOF
 else
-  # Default to launching/focusing Spotify
-  open -a Spotify
+  # Use nowplaying-cli to determine the active media player
+  NOWPLAYING="/opt/homebrew/bin/nowplaying-cli"
+  if [ -f "$NOWPLAYING" ]; then
+    CLIENT=$($NOWPLAYING get clientIdentifier 2>/dev/null)
+    if [ "$CLIENT" = "null" ] || [ -z "$CLIENT" ]; then
+      CLIENT=$($NOWPLAYING get clientBundleIdentifier 2>/dev/null)
+    fi
+    
+    CLIENT_LOWER=$(echo "$CLIENT" | tr '[:upper:]' '[:lower:]')
+    
+    if [[ "$CLIENT_LOWER" == *vlc* ]]; then
+      open -a VLC
+      exit 0
+    elif [[ "$CLIENT_LOWER" == *spotify* ]]; then
+      open -a Spotify
+      exit 0
+    elif [[ "$CLIENT_LOWER" == *music* ]]; then
+      open -a Music
+      exit 0
+    elif [[ "$CLIENT_LOWER" == *mpv* ]]; then
+      osascript -e 'tell application "System Events" to tell process "mpv" to set frontmost to true' 2>/dev/null
+      exit 0
+    fi
+  fi
+
+  # Fallbacks if nowplaying-cli doesn't help
+  if pgrep -x "VLC" >/dev/null; then
+    open -a VLC
+  elif pgrep -x "mpv" >/dev/null; then
+    osascript -e 'tell application "System Events" to tell process "mpv" to set frontmost to true' 2>/dev/null
+  else
+    # Default to launching/focusing Spotify
+    open -a Spotify
+  fi
 fi

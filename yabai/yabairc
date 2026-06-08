@@ -40,7 +40,6 @@ yabai -m rule --add app="^System Settings$" manage=off
 # yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^QuickTime Player$" manage=off
-yabai -m rule --add app="^VLC$" manage=off
 yabai -m rule --add app="^mpv$" manage=off
 
 # --- Space labels (dynamically assigned to ignore macOS native fullscreen spaces) ---
@@ -61,7 +60,7 @@ yabai -m rule --add app="^(iTerm2|iTerm|Terminal|Alacritty|kitty)$" space=termin
 yabai -m rule --add app="^(Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode)$" space=code
 yabai -m rule --add app="^(Brave Browser|Google Chrome|Safari|Firefox)$" space=browser
 yabai -m rule --add app="^(ChatGPT|Gemini|Slack|Discord|WhatsApp)$" space=chat
-yabai -m rule --add app="^(Spotify|Music)$" space=media
+yabai -m rule --add app="^(Spotify|Music|VLC|mpv)$" space=media
 # yabai -m rule --add app="^Spotify$" manage=off
 
 # Follow app to its assigned space when it opens

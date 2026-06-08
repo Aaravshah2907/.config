@@ -60,7 +60,8 @@ yabai -m rule --add app="^(iTerm2|iTerm|Terminal|Alacritty|kitty)$" space=termin
 yabai -m rule --add app="^(Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode)$" space=code
 yabai -m rule --add app="^(Brave Browser|Google Chrome|Safari|Firefox)$" space=browser
 yabai -m rule --add app="^(ChatGPT|Gemini|Slack|Discord|WhatsApp)$" space=chat
-yabai -m rule --add app="^(Spotify|Music|VLC|mpv)$" space=media
+yabai -m rule --add app="^Spotify$" space=spotify
+yabai -m rule --add app="^(Music|VLC|mpv)$" space=media
 # yabai -m rule --add app="^Spotify$" manage=off
 
 # Follow app to its assigned space when it opens

@@ -49,3 +49,13 @@ sketchybar --set "$NAME" \
   icon.color="$COLOR" \
   label.color="$COLOR" \
   padding_right=0
+
+# Charging pulse animation (gentle opacity change)
+if [[ "$CHARGING" != "" ]]; then
+  sketchybar --animate "$NAME" icon.color $EMERALD $EMERALD duration=1200 repeat=indefinite
+fi
+
+# Low battery shake warning when <=15%
+if [ "$PERCENTAGE" -le 15 ]; then
+  sketchybar --animate "$NAME" icon.y_offset -4 4 duration=150 repeat=3
+fi

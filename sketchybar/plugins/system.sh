@@ -24,6 +24,20 @@ if [ -n "$FREE_PCT" ]; then
   sketchybar --set system.ram label="Memory: ${USED_PCT}%" label.color="$COLOR"
 fi
 
+# CPU usage detection (average across cores)
+CPU_PCT=$(ps -A -o %cpu | awk '{sum+=$1} END {print int(sum/NR)}')
+if [ -z "$CPU_PCT" ]; then CPU_PCT=0; fi
+
+# Set color based on CPU usage (>70% warning)
+if [ "$CPU_PCT" -gt 70 ]; then
+  CPU_COLOR="$RED"
+  sketchybar --set system.cpu label="CPU: ${CPU_PCT}%" label.color="$CPU_COLOR"
+  # Shake animation for warning
+  sketchybar --animate system icon.y_offset -4 4 duration=150 repeat=3
+else
+  sketchybar --set system.cpu label="CPU: ${CPU_PCT}%" label.color="$WHITE"
+fi
+
 # --- Disk Info (Material World) ---
 DISK_INFO=$(df -H /System/Volumes/Data | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')
 sketchybar --set system.disk label="Disk: ${DISK_INFO}" label.color="$SAPPHIRE"

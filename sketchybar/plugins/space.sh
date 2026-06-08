@@ -16,13 +16,7 @@ esac
 if [ -z "$SELECTED" ]; then
   SELECTED=$(sketchybar --query "$NAME" | jq -r '.selected')
 fi
-if [ "$SELECTED" = "true" ]; then
-   # Active space: box outline with space color
-   sketchybar --set "$NAME" background.drawing=off label.color=$SPACE_COLOR icon.color=$SPACE_COLOR border.drawing=on border.color=$SPACE_COLOR border.width=2
-else
-   # Inactive space: plain label with space color
-   sketchybar --set "$NAME" background.drawing=off label.color=$SPACE_COLOR icon.color=$SPACE_COLOR
-fi
+# Highlight handled by separate bracket (removed old border logic)
 
 # 2. Compute icons for this space (unconditional)
 # Derive space number from the item name
@@ -67,14 +61,18 @@ if [ -z "$ICON_STRIP" ]; then
     # Unoccupied Space
   if [ "$SELECTED" = "true" ]; then
     sketchybar --set "space.$SPACE" label="—" label.drawing=off icon.color=$WHITE background.drawing=on background.color=$BAR_COLOR background.border_color=$SPACE_COLOR background.border_width=2 background.corner_radius=6 background.height=42
+    sketchybar --set "space.highlight.$SPACE" drawing=on
   else
     sketchybar --set "space.$SPACE" label="—" label.drawing=off icon.color=$WHITE background.drawing=off
+    sketchybar --set "space.highlight.$SPACE" drawing=off
   fi
 else
     # Occupied Space
   if [ "$SELECTED" = "true" ]; then
     sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=on background.color=$BAR_COLOR background.border_color=$SPACE_COLOR background.border_width=2 background.corner_radius=6 background.height=42
+    sketchybar --set "space.highlight.$SPACE" drawing=on
   else
     sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=off background.drawing=off
+    sketchybar --set "space.highlight.$SPACE" drawing=off
   fi
 fi

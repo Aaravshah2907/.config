@@ -6,7 +6,8 @@ rm -f /tmp/bluetooth_pinned
 sketchybar --add event window_focus \
            --add event window_title_change \
            --add event space_change \
-           --add event app_switcher_update
+           --add event app_switcher_update \
+           --add event speedtest
 
 ##### Core Bar Appearance (Radiant Floating Bar) #####
 sketchybar --bar position=top \
@@ -192,6 +193,23 @@ sketchybar --add item bluetooth right \
                                 background.border_width=1 \
                                 background.corner_radius=10 \
                                 background.drawing=on
+
+# Speedtest: Internet speed measurement using speedtest-cli
+sketchybar --add item speedtest right \
+    --set speedtest icon=󰤨 drawing=on icon.drawing=on icon.color="$AMBER" label.drawing=on \
+         icon.padding_left=4 icon.padding_right=4 \
+         script="$PLUGIN_DIR/speedtest.sh" \
+         click_script="sketchybar --set speedtest popup.drawing=toggle" \
+         --subscribe speedtest mouse.entered mouse.exited \
+         popup.align=right popup.drawing=off popup.y_offset=12
+
+sketchybar --add item speedtest_popup popup.speedtest "Speedtest" \
+    --set speedtest_popup label="" label.drawing=on label.width=200 \
+        background.color=$BAR_COLOR \
+        background.border_color=$SAPPHIRE_TRANSLUCENT \
+        background.border_width=1 \
+        background.corner_radius=8 \
+        background.drawing=on
 
 # Battery: Stormlight Reserve
 sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke \

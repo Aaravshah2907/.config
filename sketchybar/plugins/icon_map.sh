@@ -45,7 +45,7 @@ case "$APP_NAME" in
   "Discord")
     icon="󰙯"
     ;;
-  "Mail" | "Microsoft Outlook" | "Gmail" | "gmail")
+  "Mail" | "Microsoft Outlook" | "GMail - AS" | "gmail")
     icon="󰇮"
     ;;
   "Music" | "Spotify" | "Apple Music")
@@ -60,7 +60,7 @@ case "$APP_NAME" in
   "Code" | "Visual Studio Code" | "VSCodium" | "Cursor" | "Windsurf" | "Antigravity IDE" | "Antigravity" | "AntigravityIDE" | "Codeforces")
     icon="󰨞"
     ;;
-  "Xcode" | "IntelliJ IDEA" | "WebStorm" | "PyCharm" | "Rider" | "CLion" | "PhpStorm" | "Android Studio" | "Sublime Text")
+  "Xcode" | "IntelliJ IDEA" | "WebStorm" | "Rider" | "CLion" | "PhpStorm" | "Android Studio" | "Sublime Text")
     icon="󰨞"
     ;;
   "Calendar" | "Fantastical" | "Google Calendar" | "gcal")
@@ -100,8 +100,11 @@ case "$APP_NAME" in
     icon="󰡙"
     ;;
   "GitHub" | "github" | "GitHub Desktop")
-    icon="󰊤"
-    ;;
+    icon="󰊤" ;;
+  "GitLab" | "gitlab")               
+    icon="" ;; 
+  "Docker" | "Docker Desktop")      
+  icon="󰕥" ;;   
   "Figma")
     icon="󰽉"
     ;;
@@ -128,6 +131,21 @@ case "$APP_NAME" in
     ;;
   "YouTube" | "youtube")
     icon="󰗃"
+    ;;
+  "Speedtest Connecting")
+    icon="󰤨"
+    ;;
+  "Speedtest Testing")
+    icon="󰧭"
+    ;;
+  "Speedtest Results")
+    icon="󰘴"
+    ;;
+  "Speedtest Error")
+    icon="󰅙"
+    ;;
+  "PyCharm")             
+    icon="󰟔" 
     ;;
   *)
     icon="󰀱" # Default fallback icon

@@ -1,5 +1,13 @@
 # Sketchybar Configuration
 
+## Overview
+Sketchybar is a highly customizable status bar for macOS. This configuration provides a floating, translucent bar with dynamic workspace integration, music controls, system monitoring, and Bluetooth device handling.
+
+## Usage
+After installing Sketchybar and its dependencies, enable the bar with `brew services start sketchybar` or reload with `sketchybar --reload`. The scripts in `plugins/` drive the bar items; customize them as needed.
+
+# Sketchybar Configuration
+
 My custom "Radiant Floating Bar" configuration for [Sketchybar](https://github.com/FelixKratz/SketchyBar) on macOS. It replaces the default macOS menu bar with a highly customizable, floating, theme-consistent alternative.
 
 ## Features

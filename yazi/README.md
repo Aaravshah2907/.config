@@ -1,5 +1,12 @@
 # Yazi Configuration
 
+## Overview
+Yazi is a blazing fast terminal file manager written in Rust. This configuration customizes its appearance, plugins, and keybindings to provide a seamless productivity experience.
+
+## Usage
+Run `yazi` from the terminal to launch the file manager. Use the defined keybindings in `keymap.toml` to navigate, preview, and open files. Install plugins via `ya pack -i` as described in the plugins section.
+
+
 My custom configuration for [Yazi](https://github.com/sxyazi/yazi), a blazing fast terminal file manager written in Rust.
 
 ## Features

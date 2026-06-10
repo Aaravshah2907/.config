@@ -15,6 +15,7 @@ _BRAVE_APPS_DIR = os.path.expanduser("~/Applications/Brave Browser Apps.localize
 BRAVE_APPS = {
     "ChatGPT": os.path.join(_BRAVE_APPS_DIR, "ChatGPT.app"),
     "Gemini":  os.path.join(_BRAVE_APPS_DIR, "Gemini.app"),  # add others as needed
+    "GMail": os.path.join(_BRAVE_APPS_DIR, "GMail - AS.app")
 }
 
 def run_cmd(cmd):

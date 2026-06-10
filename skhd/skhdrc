@@ -146,9 +146,6 @@ cmd + ctrl + alt + shift - o : open -a "Obsidian"
 # Focus / Launch Finder
 cmd + ctrl + alt + shift - f : open -a "Finder"
 
-# Focus / Launch ChatGPT (Brave PWA)
-cmd + ctrl + alt + shift - a : open "ChatGPT"
-
 # ================================
 # Scratchpad System (Hyper Key)
 # ================================
@@ -157,10 +154,13 @@ cmd + ctrl + alt + shift - a : open "ChatGPT"
 cmd + ctrl + alt + shift - return : python3 ~/.config/skhd/scratchpad.py "iTerm"
 
 # Toggle ChatGPT scratchpad
-cmd + ctrl + alt + shift - g : python3 ~/.config/skhd/scratchpad.py "ChatGPT"
+cmd + ctrl + alt + shift - c : python3 ~/.config/skhd/scratchpad.py "ChatGPT"
 
 # Toggle Spotify scratchpad
-cmd + ctrl + alt + shift - m : python3 ~/.config/skhd/scratchpad.py "Spotify"
+cmd + ctrl + alt + shift - s : python3 ~/.config/skhd/scratchpad.py "Spotify"
+
+# Toggle GMail
+cmd + ctrl + alt + shift - m : python3 ~/.config/skhd/scratchpad.py "GMail"
 
 # Toggle Calculator scratchpad
 cmd + ctrl + alt + shift - 0x18 : python3 ~/.config/skhd/scratchpad.py "Calculator"

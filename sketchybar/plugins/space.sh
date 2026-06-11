@@ -61,18 +61,18 @@ if [ -z "$ICON_STRIP" ]; then
     # Unoccupied Space
   if [ "$SELECTED" = "true" ]; then
     sketchybar --set "space.$SPACE" label="—" label.drawing=off icon.color=$WHITE background.drawing=on background.color=$BAR_COLOR background.border_color=$SPACE_COLOR background.border_width=2 background.corner_radius=6 background.height=42
-    sketchybar --set "space.highlight.$SPACE" drawing=on
+    # sketchybar --set "space.highlight.$SPACE" drawing=on
   else
     sketchybar --set "space.$SPACE" label="—" label.drawing=off icon.color=$WHITE background.drawing=off
-    sketchybar --set "space.highlight.$SPACE" drawing=off
+    # sketchybar --set "space.highlight.$SPACE" drawing=off
   fi
 else
     # Occupied Space
   if [ "$SELECTED" = "true" ]; then
-    sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=on background.color=$BAR_COLOR background.border_color=$SPACE_COLOR background.border_width=2 background.corner_radius=6 background.height=42
-    sketchybar --set "space.highlight.$SPACE" drawing=on
+    sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=off background.color=$BAR_COLOR
+    #sketchybar --set "space.highlight.$SPACE" drawing=on
   else
     sketchybar --set "space.$SPACE" label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=off background.drawing=off
-    sketchybar --set "space.highlight.$SPACE" drawing=off
+    #sketchybar --set "space.highlight.$SPACE" drawing=off
   fi
 fi

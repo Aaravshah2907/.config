@@ -51,6 +51,13 @@ case "$APP_NAME" in
   "Music" | "Spotify" | "Apple Music")
     icon="󰓇"
     ;;
+   # Books / Apple Books icons
+   # Available glyphs:
+   #   Open book: "󰈔". 📖
+   #   Alternate: "󰈢"
+   "Books" | "Apple Books")
+      icon="📖"
+      ;;
   "mpv" | "mpv.player" | "io.mpv")
     icon=""
     ;;

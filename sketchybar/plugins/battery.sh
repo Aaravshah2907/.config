@@ -5,6 +5,17 @@
 
 source "$HOME/.config/sketchybar/colors.sh"
 
+# Handle hover for battery widget
+if [ "$SENDER" = "mouse.entered" ]; then
+  sketchybar --set "$NAME" popup.drawing=on
+  exit 0
+fi
+
+if [ "$SENDER" = "mouse.exited" ]; then
+  sketchybar --set "$NAME" popup.drawing=off
+  exit 0
+fi
+
 PERCENTAGE="$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)"
 CHARGING="$(pmset -g batt | grep 'AC Power')"
 
@@ -30,24 +41,34 @@ if [[ "$CHARGING" != "" ]]; then
   ICON="󰂄"
 fi
 
-# Battery Color Palette (Stormlight Reserve Levels)
-if [ "$PERCENTAGE" -le 15 ]; then
-  COLOR="$RED"
-elif [ "$PERCENTAGE" -le 35 ]; then
-  COLOR="$AMBER" # Transitioning to Void/Empty
-elif [ "$PERCENTAGE" -le 60 ]; then
-  COLOR="$HONOR_GOLD" # Balanced Reserve
-elif [ "$PERCENTAGE" -le 85 ]; then
-  COLOR="$EMERALD" # Healthy Stormlight
+if [[ "$CHARGING" != "" ]]; then
+  COLOR="$HONOR_GOLD"
+  LABEL="Infusing ${PERCENTAGE}%"
 else
-  COLOR="$SAPPHIRE" # Windrunner Peak
+  # Battery Color Palette (Stormlight Reserve Levels)
+  if [ "$PERCENTAGE" -le 30 ]; then
+    COLOR="$RED"
+    LABEL="Dun Gem ${PERCENTAGE}%"
+  elif [ "$PERCENTAGE" -le 80 ]; then
+    COLOR="$AMBER" # Transitioning to Void/Empty
+    LABEL="Reserve ${PERCENTAGE}%"
+  else
+    COLOR="$SAPPHIRE" # Windrunner Peak
+    LABEL="Infused ${PERCENTAGE}%"
+  fi
 fi
 
+# Update popup battery status
+sketchybar --set battery.status \
+  icon="$ICON" \
+  icon.color="$COLOR" \
+  label="$LABEL"
+
+# Set main bar item
 sketchybar --set "$NAME" \
   icon="$ICON" \
-  label="${PERCENTAGE}%" \
   icon.color="$COLOR" \
-  label.color="$COLOR" \
+  label.drawing=off \
   padding_right=0
 
 # Charging pulse animation (gentle opacity change)

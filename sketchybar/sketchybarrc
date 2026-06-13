@@ -212,14 +212,25 @@ sketchybar --add item speedtest_popup popup.speedtest "Speedtest" \
         background.drawing=on
 
 # Battery: Stormlight Reserve
-sketchybar --add item battery right --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" --subscribe battery power_source_change system_woke \
+sketchybar --add item battery right \
+           --set battery update_freq=120 \
+                         script="$PLUGIN_DIR/battery.sh" \
+                         popup.align=right \
+                         popup.y_offset=12 \
+           --subscribe battery power_source_change system_woke mouse.entered mouse.exited \
   \
            --add bracket battery.pill battery \
            --set battery.pill background.color=$BAR_COLOR \
-                             background.border_color=$SAPPHIRE_TRANSLUCENT \
-                             background.border_width=1 \
-                             background.corner_radius=10 \
-                             background.drawing=on
+                              background.border_color=$SAPPHIRE_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on \
+  \
+           --add item battery.status popup.battery \
+           --set battery.status icon=󰁹 \
+                                icon.color=$SAPPHIRE \
+                                label.color=$WHITE \
+                                label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
 # Raycast Integration
 sketchybar --add item raycast right \
@@ -251,6 +262,19 @@ sketchybar --add item system right \
                              background.border_width=1 \
                              background.corner_radius=10 \
                              background.drawing=on \
+  \
+           --add item system.title popup.system \
+           --set system.title icon=󰖙 \
+                              icon.color=$SAPPHIRE \
+                              label="Storm: Stormless" \
+                              label.color=$SAPPHIRE \
+                              label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item system.cpu popup.system \
+           --set system.cpu icon=󰓅 \
+                            icon.color=$AMBER \
+                            label.color=$WHITE \
+                            label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   \
            --add item system.ram popup.system \
            --set system.ram icon=󰍛 \
@@ -309,16 +333,31 @@ sketchybar --add item volume right \
                              background.drawing=on
 
 # Notification: Spren Message
-#sketchybar --add item notif right \
-#           --set notif update_freq=30 \
-#                       script="$PLUGIN_DIR/notif.sh" \
-#  \
-#           --add bracket notif.pill notif \
-#           --set notif.pill background.color=$BAR_COLOR \
-#                           background.border_color=$SAPPHIRE_TRANSLUCENT \
-#                           background.border_width=1 \
-#                           background.corner_radius=10 \
-#                           background.drawing=on
+sketchybar --add item notif right \
+           --set notif update_freq=30 \
+                       script="$PLUGIN_DIR/notif.sh" \
+                       popup.align=right \
+                       popup.y_offset=12 \
+           --subscribe notif mouse.entered mouse.exited \
+  \
+           --add bracket notif.pill notif \
+           --set notif.pill background.color=$BAR_COLOR \
+                           background.border_color=$SAPPHIRE_TRANSLUCENT \
+                           background.border_width=1 \
+                           background.corner_radius=10 \
+                           background.drawing=on \
+  \
+           --add item notif.messages popup.notif \
+           --set notif.messages icon=󰍦 \
+                               icon.color=$HONOR_GOLD \
+                               label.color=$WHITE \
+                               label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item notif.mail popup.notif \
+           --set notif.mail icon=󰇮 \
+                            icon.color=$SAPPHIRE \
+                            label.color=$WHITE \
+                            label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
 
 ##### Finalize #####

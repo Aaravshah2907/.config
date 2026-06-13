@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Handle hover for Clock (Peek mode)
 if [ "$SENDER" = "mouse.entered" ]; then

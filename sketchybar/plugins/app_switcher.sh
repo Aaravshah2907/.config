@@ -1,5 +1,5 @@
 #!/bin/bash
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Query the running apps in screen coordinate order (left-to-right)
 WINDOWS=$(yabai -m query --windows --space 2>/dev/null)

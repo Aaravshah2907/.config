@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Find the Wi-Fi interface
 WIFI_INTERFACE=$(networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | grep "Device:" | awk '{print $2}')

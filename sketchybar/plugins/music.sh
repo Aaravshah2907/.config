@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Handle hover for Music (Peek mode)
 if [ "$SENDER" = "mouse.entered" ]; then
@@ -69,15 +69,14 @@ update_bar() {
 }
 
 hide_bar() {
-  # Default View: Radiant Symbol
-  # ensures it doesn't just 'ignore rendering' when idle
+  # Default View: idle / nothing playing
   sketchybar --set "$NAME" drawing=on \
                    icon.drawing=on \
                    label.drawing=on \
                    label="Resting" \
                    icon="󰋋" \
-                   icon.color="$SPREN_CRYPTIC" \
-                   label.color="$SPREN_CRYPTIC_T"
+                   icon.color="$PRES_SILVER" \
+                   label.color="$PRES_SILVER_TRANSLUCENT"
   exit 0
 }
 

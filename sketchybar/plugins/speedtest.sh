@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # speedtest.sh – runs a speedtest and updates the SketchyBar speedtest item
 # Uses only Nerd Font icons; text labels are hidden.

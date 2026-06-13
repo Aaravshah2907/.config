@@ -1,41 +1,83 @@
 [manager]
-# Border: Sapphire Glow of Stormlight
+# Border: Honorspren Sky Blue (clean on dark, not orchid)
 border_symbol = "│"
-border_style  = { fg = "#00BFFF" } 
+border_style  = { fg = "#00A8E8" }
+cwd           = { fg = "#5DA8CC", italic = true }       # Preservation Glacial
+hovered       = { bg = "#1A2A3A", fg = "#00A8E8" }      # Pres Deep bg, Honor fg
+preview_hovered = { bg = "#1A2A3A" }
 
 [status]
-# Progress bar and status icons
+# Progress bar: Preservation Deep bg, Windrunner Sapphire fg
 separator_open  = ""
 separator_close = ""
-main_css = { fg = "#ffffff", bg = "#004488" }
-alt_css  = { fg = "#ffffff", bg = "#708090" } # Slate
+main_css = { fg = "#ffffff", bg = "#003366" }    # Deep Sapphire bg
+alt_css  = { fg = "#ffffff", bg = "#607D8B" }    # Stormfather slate
+
+# Mode statuses
+mode_normal = { bg = "#00BFFF", fg = "#1A2A3A", bold = true } # Windrunner Sapphire
+mode_select = { bg = "#3CB371", fg = "#1A2A3A", bold = true } # Cultivation green
+mode_unset  = { bg = "#FF4500", fg = "#1A2A3A", bold = true } # Ashspren orange
 
 [help]
-# Column 1 (Keys): Honor's Gold
+# Col 1: Keys: Gloryspren gold (vibrant, always readable on dark)
 on_css      = { fg = "#FFD700", bold = true }
-# Column 2 (Commands): Stormlight Sapphire
+# Col 2: Commands: Windrunner Sapphire
 run_css     = { fg = "#00BFFF" }
-# Column 3 (Description): Pure White
+# Col 3: Description: Pure white
 desc_css    = { fg = "#ffffff" }
-# Hover: Deep Windrunner Blue background
-hovered_css = { fg = "#ffffff", bg = "#003366", bold = true }
-# Footer: Gold and Sapphire
-footer_css  = { fg = "#ffffff", bg = "#00BFFF" }
+# Hover: Preservation deep bg with Sapphire fg
+hovered_css = { fg = "#C8E8F5", bg = "#1A2A3A", bold = true }
+# Footer: Sapphire bar
+footer_css  = { fg = "#ffffff", bg = "#00A8E8" }
 
 [input]
-border_style = { fg = "#00BFFF" }
-title_style  = { fg = "#FFD700", bold = true }
+border_style = { fg = "#5DA8CC" }               # Preservation Glacial
+title_style  = { fg = "#FFAB40", bold = true }  # Sibling crystal amber
 
 [select]
-border_style = { fg = "#00BFFF" }
-active_style = { fg = "#FFD700", bold = true }
+border_style = { fg = "#5DA8CC" }               # Preservation Glacial
+active_style = { fg = "#FFD700", bold = true }  # Gloryspren gold
 
 [notify]
-# Notification Toast: Windrunner Sapphire and Gold
-title_info  = { fg = "#00BFFF", bold = true }
-title_warn  = { fg = "#FFD700", bold = true }
-title_error = { fg = "#ff5555", bold = true }
+# Notification Toast: Spren-coded
+title_info  = { fg = "#00A8E8", bold = true }   # Honorspren sky blue
+title_warn  = { fg = "#FFAB40", bold = true }   # Sibling amber
+title_error = { fg = "#6B1A1A", bold = true }   # Ruin Maroon
 
-icon_info  = "󱐌" # Sylphrena (Windspren)
-icon_warn  = "󰊠" # Infused Gemstone
-icon_error = "󱐋" # Highstorm Bolt
+icon_info  = "󰌵" # Glowing light / Spren
+icon_warn  = "󰀡" # Warning / Highstorm
+icon_error = "󰚌" # Ruin / Danger
+
+[icon]
+prepend_rules = [
+	{ name = "*.sh", text = "󰍹", fg = "#3CB371" },
+	{ name = "*.md", text = "󰈙", fg = "#B0C4DE" },
+	{ name = "*.json", text = "", fg = "#C3AEE8" },
+	{ name = "*.toml", text = "", fg = "#C3AEE8" },
+	{ name = "*.rs", text = "󱘗", fg = "#FF4500" },
+	{ name = "*.py", text = "󰌠", fg = "#5DA8CC" },
+	{ name = "*.c", text = "", fg = "#B0C4DE" },
+	{ name = "*.cpp", text = "", fg = "#B0C4DE" },
+	{ name = "*.txt", text = "󰈙", fg = "#C8E8F5" },
+	{ name = ".git", text = "󰊢", fg = "#ed8796" },
+	{ name = ".config", text = "󰒓", fg = "#5DA8CC" },
+]
+[filetype]
+# Added more Cosmere colors to filetypes
+rules = [
+	{ mime = "image/*", fg = "#DA70D6" },         # Cryptic Orchid
+	{ mime = "video/*", fg = "#E040FB" },         # Willshaper Amethyst
+	{ mime = "audio/*", fg = "#FFAB40" },         # Sibling amber
+	{ mime = "application/zip", fg = "#8B6914" }, # Hemalurgic spike
+	{ mime = "application/x-tar", fg = "#8B6914" },
+	{ mime = "text/plain", fg = "#C8E8F5" },      # Preservation Mist
+	{ name = "*.sh", fg = "#3CB371" },            # Cultivationspren
+	{ name = "*.md", fg = "#B0C4DE" },            # Preservation Silver
+	{ name = "*.json", fg = "#C3AEE8" },          # Preservation Lavender
+	{ name = "*.toml", fg = "#C3AEE8" },
+	{ name = "*.rs", fg = "#FF4500" },            # Ashspren orange
+	{ name = "*.py", fg = "#5DA8CC" },            # Preservation Glacial
+	{ name = "*.c", fg = "#B0C4DE" },             # Preservation Silver
+	{ name = "*.cpp", fg = "#B0C4DE" },           # Preservation Silver
+]
+

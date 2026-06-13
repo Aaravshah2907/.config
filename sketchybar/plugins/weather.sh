@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 # Fetch current weather (Condition and Temperature)
 WEATHER_DATA=$(curl -s "wttr.in/?format=%C+%t")
 

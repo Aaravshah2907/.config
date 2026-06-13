@@ -8,26 +8,39 @@ lines=()
 sorted_mode=0
 ORIG_STTY=""
 
-# ---------- COLORS (Radiant / Stormlight) ----------
-BOLD='\033[1m'
-DIM='\033[2m'
-CYAN='\033[38;5;81m'     # Stormlight Glow
-MAGENTA='\033[38;5;141m'  # Shardblade (Violet)
-GREEN='\033[38;5;121m'    # Lifebound (Emerald)
-YELLOW='\033[38;5;220m'   # Honor-Gold (Heliodor)
-BLUE='\033[38;5;69m'      # Windrunner Blue
-RED='\033[38;5;160m'      # Voidlight
-GRAY='\033[38;5;240m'     # Rosharan Slate
-NC='\033[0m'
+# ---------- COLORS (sourced from central Cosmere palette) ----------
+source "$HOME/.local/bin/cosmere_colors.sh"
 
-# Gemstone Shades
-RUBY='\033[38;5;196m'     # Infusion
-EMERALD_G='\033[38;5;46m'   # Growth
-SAPPHIRE_G='\033[38;5;27m'  # Translucence
-AMETHYST_G='\033[38;5;129m' # Metal
-DIAMOND_G='\033[38;5;231m'  # Glass
-HELIODOR_G='\033[38;5;226m' # Air
-DUN='\033[38;5;239m'      # Drained Sphere
+# Map semantic T_* ANSI vars to dashboard local names
+BOLD=$T_BOLD
+DIM=$T_DIM
+NC=$T_RESET
+
+# Dashboard color roles
+CYAN=$T_PRES_GLACIAL        # Preservation Glacial  — cmd deck border
+MAGENTA=$T_SPREN_WILL       # Willshaper Amethyst   — branding / header
+GREEN=$T_SPREN_CULTIVATION  # Cultivationspren      — queue border & selected item
+YELLOW=$T_SPREN_GLORY       # Gloryspren Gold       — sort mode / highlights
+BLUE=$T_SPREN_HONOR         # Honorspren Sky Blue   — Now Playing border
+RED=$T_RUIN_MAROON          # Ruin Maroon           — quit / error
+GRAY=$T_SPREN_STORM         # Stormfather Slate     — separators / dim text
+ORANGE=$T_SPREN_ASH         # Ashspren volcanic     — warnings
+LAVENDER=$T_PRES_LAVENDER   # Pale lavender         — special text
+INDIGO=$T_SPREN_INK         # Inkspren indigo       — deep contrast
+BONE=$T_SPREN_HIGH          # Highspren bone        — neutral bright
+MIST=$T_PRES_MIST           # Preservation mist     — soft text
+BRONZE=$T_RUIN_BRONZE       # Corroded bronze       — inactive/ruined
+
+# Gemstone role overrides
+RUBY=$T_SPREN_ASH           # Ashspren volcanic red — infusion / urgent
+EMERALD_G=$T_SPREN_CULTIVATION
+SAPPHIRE_G=$T_SAPPHIRE      # Windrunner Sapphire   — keybind highlights
+AMETHYST_G=$T_SPREN_WILL
+DIAMOND_G=$T_PRES_SILVER    # Preservation Silver   — loop/shuffle indicator
+HELIODOR_G=$T_PRES_ATIUM    # Atium pale gold       — header tagline
+DUN=$T_SPREN_STORM          # Stormfather slate     — drained / inactive
+SMOKESTONE=$T_RUIN_ASH      # Ashmount shadow       — deep background
+GARNET=$T_CRIMSON           # Odium crimson         — alerts
 
 # ---------- HELPERS ----------
 load_queue() {
@@ -136,7 +149,7 @@ quick_spotify_playlist_pick() {
     track_json=$($PY spotify_playlist_tracks "spotify:playlist:$playlist_id" 2>/dev/null)
     track_options=$(printf "%s" "$track_json" | jq -r '.[]? | "\(.title) — \(.artist)  [\(.album)]\t\(.spotify_id)"')
     [ -z "$track_options" ] && {
-        echo -e "\n  ${RED}󰔹 Could not fetch playlist tracks${NC}"
+        echo -e "\n  ${GARNET}󰔹 Could not fetch playlist tracks${NC}"
         sleep 0.8
         return
     }
@@ -168,7 +181,7 @@ quick_spotify_playlist_pick() {
     if [ "$after_count" -gt "$before_count" ]; then
         echo -e "\n  ${GREEN}󰄬 Added selected tracks: ${playlist_name} ($((after_count-before_count)) tracks)${NC}"
     else
-        echo -e "\n  ${RED}󰔹 Could not add playlist tracks${NC}"
+        echo -e "\n  ${GARNET}󰔹 Could not add playlist tracks${NC}"
         [ -n "$add_out" ] && echo -e "  ${DIM}${add_out}${NC}"
     fi
     sleep 0.8
@@ -182,7 +195,7 @@ show_health_panel() {
     echo -e "${MAGENTA}${BOLD}Radiant Health Report${NC}"
     echo -e "${GRAY}───────────────────────────────────────────────────────${NC}"
     if [ -z "$hjson" ]; then
-        echo -e "${RED}Unable to read health status.${NC}"
+        echo -e "${GARNET}Unable to read health status.${NC}"
     else
         printf "%s" "$hjson" | jq -r '
             "mpv_running      : \(.mpv_running)\n" +
@@ -329,7 +342,7 @@ draw() {
         if [ "$i" -eq "$selected" ]; then
             display_line=$(printf " ${EMERALD_G}${BOLD}󱐋 %2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
         else
-            display_line=$(printf "    %2d │ %s %-${name_limit}s" "$idx" "$marker" "$short_name")
+            display_line=$(printf "    ${BONE}%2d │ %s %-${name_limit}s${NC}" "$idx" "$marker" "$short_name")
         fi
 
         local plain_display=$(echo -e "$display_line" | sed 's/\x1b\[[0-9;]*m//g')
@@ -347,7 +360,7 @@ draw() {
     echo -e "  ${C_QUEUE}${BOLD}└─${hline}─┘${NC}"
     
     if [ "$sorted_mode" -eq 1 ]; then
-        echo -e "      ${YELLOW}${DIM}Sort Mode: Name (press [t] to restore original queue order)${NC}"
+        echo -e "      ${LAVENDER}${DIM}Sort Mode: Name (press [t] to restore original queue order)${NC}"
     fi
     echo ""
 
@@ -360,7 +373,7 @@ draw() {
     
     local -a cmd_rows=(
         " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}   ${SAPPHIRE_G}[↑/↓]${NC} Move      ${SAPPHIRE_G}[ENTER]${NC} Play ${SAPPHIRE_G}[n/p]${NC} Next/Prev  ${SAPPHIRE_G}[l]${NC} Loop        ${SAPPHIRE_G}[s]${NC} Shuffle"
-        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear    ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${RED}[q]${NC} Quit"
+        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear    ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${GARNET}[q]${NC} Quit"
         " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}   ${SAPPHIRE_G}[+/-]${NC} Vol       ${SAPPHIRE_G}[←/→]${NC} Seek   ${SAPPHIRE_G}[[/]]${NC} Jump       ${SAPPHIRE_G}[j/k]${NC} Move Item"
         " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC}  ${SAPPHIRE_G}[^S]${NC} Save       ${SAPPHIRE_G}[^L]${NC} Load    ${SAPPHIRE_G}[r]${NC} Refresh      ${SAPPHIRE_G}[t]${NC} Sort Mode"
         " ${GREEN}${NC} ${BOLD}SPO${NC}   ${SAPPHIRE_G}[a]${NC} Search+Play ${SAPPHIRE_G}[P]${NC} Playlist ${SAPPHIRE_G}[o]${NC} Spotify App"
@@ -471,9 +484,9 @@ while true; do
                 $PY clear
                 selected=0
                 load_queue
-                echo -e "\n  ${BLUE}󰃢 Queue cleared${NC}"
+                echo -e "\n  ${MIST}󰃢 Queue cleared${NC}"
             else
-                echo -e "\n  ${DIM}Cancelled${NC}"
+                echo -e "\n  ${BRONZE}Cancelled${NC}"
             fi
             sleep 0.4
             ;;

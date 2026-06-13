@@ -3,7 +3,7 @@
 # PRESERVATION — Stormlight Reserve (Battery) Plugin
 # Monitors the Investiture level of your Gemstones
 
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Handle hover for battery widget
 if [ "$SENDER" = "mouse.entered" ]; then

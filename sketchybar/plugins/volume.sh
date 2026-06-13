@@ -1,5 +1,5 @@
 #!/bin/sh
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 VOLUME="$INFO"
 

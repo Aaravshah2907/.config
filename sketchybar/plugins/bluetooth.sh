@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Handle arguments / click
 if [ "$1" = "click" ]; then
@@ -34,10 +34,10 @@ COUNT=$(echo "$CONNECTED_DEVICES" | grep -c "name" | xargs)
 ICON="󰂯"
 if [ "$COUNT" -gt 0 ]; then
     ICON="󰂱"
-    COLOR=$PRES_SILVER                   # Preservation silver — bonded & ordered
+    COLOR=$BT_CONNECTED                  # Preservation silver — bonded & ordered
     LABEL="$COUNT"
 else
-    COLOR=$RUIN_MIST                     # Ruin's poison mist — no bond, decaying
+    COLOR=$BT_IDLE                       # White — idle, visible on dark bar
     LABEL=""
 fi
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-source "$HOME/.config/sketchybar/colors.sh"
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # 1. Update selection state (background highlight)
 # Map each space to a Radiant Order color

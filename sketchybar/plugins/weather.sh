@@ -19,7 +19,7 @@ elif echo "$LOWER" | grep -iq "clear\|sunny"; then
 elif echo "$LOWER" | grep -iq "cloud"; then
   COLOR="$RUIN_ASH"           # Ruin ash — ashfall sky
 elif echo "$LOWER" | grep -iq "haze"; then
-  COLOR="$RUIN_BRONZE"        # Ruin bronze — Scadrial's hazy corroded sky
+  COLOR="$PRES_SILVER"        # Preservation silver - misty fog
 else
   COLOR="$WHITE"
 fi
@@ -28,3 +28,14 @@ fi
 sketchybar --set clock.weather label="$WEATHER_DATA" label.color="$COLOR"
 # Also update the main clock time color to match weather condition
 sketchybar --set clock label.color="$COLOR" icon.color="$COLOR"
+
+# Notify Yazi on Storm
+if echo "$LOWER" | grep -iq "storm"; then
+  if [ ! -f "/tmp/syl_storm_warn" ]; then
+    ya pub plugin --str "syl-notify custom '󰀡 Highstorm' 'Aarav, a storm approaches! The sky shows: $WEATHER_DATA'" >/dev/null 2>&1
+    touch /tmp/syl_storm_warn
+  fi
+else
+  rm -f /tmp/syl_storm_warn
+fi
+

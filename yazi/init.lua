@@ -91,3 +91,26 @@ require('spot'):setup {
     key_length = 15,
   },
 }
+
+-- Sylphrena Git Hook
+ps.sub("cd", function()
+    local f = io.popen("git rev-parse --is-inside-work-tree 2>/dev/null")
+    if f then
+        local is_git = f:read("*all")
+        f:close()
+        if is_git:match("true") then
+            local status_f = io.popen("git status -s 2>/dev/null")
+            if status_f then
+                local out = status_f:read("*all")
+                status_f:close()
+                if out and #out > 0 then
+                    local count = select(2, out:gsub("[^\n]+", ""))
+                    ya.manager_emit("plugin", { "syl-notify", args = ya.quote("custom") .. " " .. ya.quote("󰊢 Memories") .. " " .. ya.quote("This place holds memories... " .. count .. " of them are changing!") })
+                else
+                    ya.manager_emit("plugin", { "syl-notify", args = ya.quote("custom") .. " " .. ya.quote("󰊢 Memories") .. " " .. ya.quote("All patterns are stable here. No unsynced changes.") })
+                end
+            end
+        end
+    end
+end)
+

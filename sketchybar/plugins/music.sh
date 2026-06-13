@@ -64,6 +64,17 @@ update_bar() {
                    icon="$icon" \
                    label.color="$WHITE" \
                    icon.color="$icon_color"
+                   
+  # Notify Yazi about new songs (10% chance)
+  if [ "$label" != "$(cat /tmp/syl_last_track 2>/dev/null)" ] && [ "$label" != "Resting" ] && [ "$label" != "Playing in mpv" ]; then
+      echo "$label" > /tmp/syl_last_track
+      if [ $((RANDOM % 10)) -eq 0 ]; then
+          local quotes=("This rhythm... '$label' feels ancient." "Such strange human music... '$label'." "I can almost see the musicspren for '$label'!")
+          local rand_quote="${quotes[$((RANDOM % ${#quotes[@]}))]}"
+          ya pub plugin --str "syl-notify custom '󰎆 Radiant Rhythms' \"$rand_quote\"" >/dev/null 2>&1
+      fi
+  fi
+  
   UPDATED=1
   return 0
 }

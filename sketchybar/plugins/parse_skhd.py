@@ -4,67 +4,41 @@ import os
 import subprocess
 
 SECTIONS = [
-    ("WINDOWS",[
+    ("WINDOWS & LAYOUT",[
         ("⌥ HJKL", "Focus"),
         ("⌥⇧ HJKL", "Swap"),
         ("⌥⌃ HJKL", "Warp"),
         ("⌥ S/G", "Display"),
         ("⌥⇧ S/G", "Move Display"),
-    ],
-    ),
-    ("LAYOUT",[
         ("⌥⇧ R", "Rotate"),
-        ("⌥⇧ X", "Mirror X"),
-        ("⌥⇧ Y", "Mirror Y"),
-        ("⌥⇧ T", "Float"),
+        ("⌥⇧ X/Y", "Mirror X/Y"),
+        ("⌥⇧ T", "Toggle Float"),
         ("⌥⇧ M", "Fullscreen"),
         ("⌥⇧ E", "Balance"),
-    ],
-),
-(
-    "SPACES",
-    [
-        ("✦ 1-9", "Focus"),
-        ("✦⇧ 1-9", "Move Window"),
-        ("⌥⇧ 1-10", "Send Window"),
-        ("⌥⇧ P/N", "Prev/Next"),
-    ],
-),
-
-(
-    "APPS",
-    [
-        ("✦ C", "Cursor"),
+    ]),
+    ("SPACES & SYSTEM",[
+        ("✦ 1-9", "Focus Space"),
+        ("✦⇧ 1-9", "Move to Space"),
+        ("✦ ←/→", "Prev/Next Space"),
+        ("✦ Space", "Toggle Split"),
+        ("✦ Q", "Close Window"),
+        ("⌥⌃ Q/S/R", "Yabai Control"),
+        ("⌥⌃ K", "Reload Bar"),
+    ]),
+    ("APPS & SCRATCHPAD",[
         ("✦ T", "iTerm"),
         ("✦ B", "Brave"),
         ("✦ O", "Obsidian"),
         ("✦ F", "Finder"),
-        ("✦ A", "ChatGPT"),
-    ],
-),
-
-(
-    "SCRATCH",
-    [
-        ("✦ ↩", "Terminal"),
-        ("✦ G", "ChatGPT"),
-        ("✦ M", "Spotify"),
-        ("✦ =", "Calculator"),
-    ],
-),
-
-(
-    "SYSTEM",
-    [
-        ("✦ Space", "Split"),
-        ("✦ Q", "Close"),
+        ("✦ C", "Codeforces"),
+        ("✦ D", "DSA Practice"),
+        ("✦ ↩", "Term Scratch"),
+        ("✦ A", "GPT Scratch"),
+        ("✦ M/S", "Mail/Spotify Scratch"),
+        ("✦ =", "Calc Scratch"),
         ("✦ ,", "Control Center"),
-        ("⌥⌃ Q", "Stop Yabai"),
-        ("⌥⌃ S", "Start Yabai"),
-        ("⌥⌃ R", "Restart Yabai"),
-        ("⌥⌃ K", "Reload Bar"),
-    ],
-),
+        ("✦ P", "VLC Speed"),
+    ])
 ]
 
 def color(name, default):
@@ -112,7 +86,7 @@ def main():
             f"label.color={RADIANT_GOLD}",
             "label.font=JetBrainsMono Nerd Font:Bold:11",
             "label.padding_left=10",
-            "background.height=22",
+            "background.height=20",
         ]
 
         # Pair up rows for a two-column layout
@@ -129,7 +103,7 @@ def main():
                 "--set", row_name,
                 f"icon={left_text}",
                 f"label={right_text}",
-                "icon.width=240",
+                "icon.width=210",
                 "icon.align=left",
                 "label.align=left",
                 "icon.font=JetBrainsMono Nerd Font:Regular:10",
@@ -138,7 +112,7 @@ def main():
                 f"label.color={WHITE}",
                 "icon.padding_left=20",
                 "label.padding_left=20",
-                "background.height=18",
+                "background.height=16",
             ]
 
     subprocess.run(["sketchybar"] + cmds)

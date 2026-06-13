@@ -81,4 +81,16 @@ fi
 # Low battery shake warning when <=15%
 if [ "$PERCENTAGE" -le 15 ]; then
   sketchybar --animate "$NAME" icon.y_offset -4 4 duration=150 repeat=3
+  
+  if [ -z "$CHARGING" ]; then
+    if [ ! -f "/tmp/syl_batt_warn" ]; then
+      ya pub plugin --str "syl-notify custom '󰚌 Odium Approaches' 'Aarav, the stormlight is failing... we only have ${PERCENTAGE}% left!'" >/dev/null 2>&1
+      touch /tmp/syl_batt_warn
+    fi
+  else
+    rm -f /tmp/syl_batt_warn
+  fi
+else
+  rm -f /tmp/syl_batt_warn
 fi
+

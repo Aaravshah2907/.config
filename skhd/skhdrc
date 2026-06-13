@@ -60,13 +60,6 @@ shift + alt - g : /opt/homebrew/bin/yabai -m window --display east;  /opt/homebr
 # ================================
 # Workspace Setup & Management (Hyper Key)
 # ================================
-
-# Create a new space
-hyper - n : /opt/homebrew/bin/yabai -m space --create
-
-# Destroy the current space
-hyper - d : /opt/homebrew/bin/yabai -m space --destroy
-
 # Rebalance current space layout
 hyper - r : /opt/homebrew/bin/yabai -m space --balance
 

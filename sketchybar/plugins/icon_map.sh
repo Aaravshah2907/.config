@@ -45,7 +45,7 @@ case "$APP_NAME" in
   "Discord")
     icon="󰙯"
     ;;
-  "Mail" | "Microsoft Outlook" | "GMail - AS" | "gmail")
+  "Mail" | "Microsoft Outlook" | "GMail - AS" | "gmail" | "Gmail")
     icon="󰇮"
     ;;
   "Music" | "Spotify" | "Apple Music")

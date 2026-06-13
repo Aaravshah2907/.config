@@ -53,26 +53,13 @@ for i, s in enumerate(normal_spaces):
         subprocess.run(['yabai', '-m', 'space', str(s['index']), '--label', labels[i]])
 "
 
-# Workflow routing rules (use labels — immune to space index drift)
-# Note: follow_space is NOT a valid rule key in yabai v7; space-following is
-# handled by the window_created signal below.
-yabai -m rule --add app="^(iTerm2|iTerm|Terminal|Alacritty|kitty)$" space=terminal
-yabai -m rule --add app="^(Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode)$" space=code
-yabai -m rule --add app="^(Brave Browser|Google Chrome|Safari|Firefox)$" space=browser
-yabai -m rule --add app="^(ChatGPT|Gemini|Slack|Discord|WhatsApp)$" space=chat
-yabai -m rule --add app="^Spotify$" space=spotify
-yabai -m rule --add app="^(Music|VLC|mpv)$" space=media
-# yabai -m rule --add app="^Spotify$" manage=off
-
-# Follow app to its assigned space when it opens
-yabai -m signal --add event=window_created action='
-  app=$(yabai -m query --windows --window "$YABAI_WINDOW_ID" 2>/dev/null | python3 -c "import json,sys; w=json.load(sys.stdin); print(w[\"app\"])" 2>/dev/null)
-  space=$(yabai -m query --windows --window "$YABAI_WINDOW_ID" 2>/dev/null | python3 -c "import json,sys; w=json.load(sys.stdin); print(w[\"space\"])" 2>/dev/null)
-  case "$app" in
-    iTerm2|iTerm|Terminal|Alacritty|kitty|Code|"VS Code"|Cursor|"Antigravity IDE"|Claude|Xcode|"Brave Browser"|"Google Chrome"|Safari|Firefox|ChatGPT|Gemini|Slack|Discord|Spotify|Music)
-      yabai -m space --focus "$space" 2>/dev/null ;;
-  esac
-'
+# Workflow routing rules (use labels with '^' modifier to automatically follow focus — immune to space index drift)
+yabai -m rule --add app="^(iTerm2|iTerm|Terminal|Alacritty|kitty)$" space=^terminal
+yabai -m rule --add app="^(Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode|Codeforces)$" space=^code
+yabai -m rule --add app="^(Brave Browser|Google Chrome|Safari|Firefox)$" space=^browser
+yabai -m rule --add app="^(ChatGPT|Gemini|Slack|Discord|WhatsApp)$" space=^chat
+yabai -m rule --add app="^Spotify$" space=^spotify
+yabai -m rule --add app="^(Music|VLC|mpv)$" space=^media
 
 
 # --- IMPORTANT: force all spaces to bsp (fixes your earlier issue) ---

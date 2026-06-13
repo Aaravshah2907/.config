@@ -68,8 +68,7 @@ sketchybar --set battery.status \
 sketchybar --set "$NAME" \
   icon="$ICON" \
   icon.color="$COLOR" \
-  label.drawing=off \
-  padding_right=0
+  label.drawing=off
 
 # Charging pulse animation (gentle opacity change)
 if [[ "$CHARGING" != "" ]]; then

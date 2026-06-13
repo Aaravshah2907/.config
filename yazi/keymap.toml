@@ -33,10 +33,10 @@ keymap = [
 
 	# Navigation
 	{ on = "h", run = "leave", desc = "Back to the parent directory" },
-	{ on = "l", run = "enter", desc = "Enter the child directory" },
+	{ on = "l", run = "plugin smart-enter", desc = "Enter the child directory, or open file" },
 
 	{ on = "<Left>",  run = "leave", desc = "Back to the parent directory" },
-	{ on = "<Right>", run = "enter", desc = "Enter the child directory" },
+	{ on = "<Right>", run = "plugin smart-enter", desc = "Enter the child directory, or open file" },
 
 	{ on = "H", run = "back",    desc = "Back to previous directory" },
 	{ on = "L", run = "forward", desc = "Forward to next directory" },
@@ -109,8 +109,10 @@ keymap = [
 	{ on = [ "c", "n" ], run = "copy name_without_ext", desc = "Copy the filename without extension" },
 	{ on = [ "c", "m" ], run = "plugin chmod",          desc = "Chmod on files"},
 	
-	# Filter
-	{ on = "f", run = "filter --smart", desc = "Filter files" },
+	# Filter & Find
+	{ on = "f", run = "plugin fg", desc = "Find file by content (ripgrep)" },
+	{ on = "F", run = "plugin fg --args='fzf'", desc = "Find file by name (fzf)" },
+	{ on = "<C-f>", run = "filter --smart", desc = "Filter files" },
 
 	# Find
 	{ on = "/", run = "find --smart",            desc = "Find next file" },
@@ -156,8 +158,10 @@ keymap = [
     { on = [ "g", "?" ],         run = 'shell "bat ~/.config/yazi/keymap.toml | fzf --height 40% --reverse" --block', desc = "Peek at keymap" },
     { on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },
 	
-	# Tabs
+	# Tabs & UI
 	{ on = "T", run = "tab_create --current", desc = "Create a new tab with CWD" },
+	{ on = "M", run = "plugin max-preview", desc = "Maximize or restore the preview pane" },
+	{ on = "N", run = "plugin syl-notify", desc = "Seek wisdom from Sylphrena" },
 
 	{ on = "1", run = "tab_switch 0", desc = "Switch to first tab" },
 	{ on = "2", run = "tab_switch 1", desc = "Switch to second tab" },

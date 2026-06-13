@@ -71,13 +71,5 @@ rules = [
 	{ mime = "application/zip", fg = "#8B6914" }, # Hemalurgic spike
 	{ mime = "application/x-tar", fg = "#8B6914" },
 	{ mime = "text/plain", fg = "#C8E8F5" },      # Preservation Mist
-	{ name = "*.sh", fg = "#3CB371" },            # Cultivationspren
-	{ name = "*.md", fg = "#B0C4DE" },            # Preservation Silver
-	{ name = "*.json", fg = "#C3AEE8" },          # Preservation Lavender
-	{ name = "*.toml", fg = "#C3AEE8" },
-	{ name = "*.rs", fg = "#FF4500" },            # Ashspren orange
-	{ name = "*.py", fg = "#5DA8CC" },            # Preservation Glacial
-	{ name = "*.c", fg = "#B0C4DE" },             # Preservation Silver
-	{ name = "*.cpp", fg = "#B0C4DE" },           # Preservation Silver
 ]
 

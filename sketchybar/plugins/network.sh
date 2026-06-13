@@ -47,13 +47,13 @@ else
     LOCATION="Severed Bond"
 fi
 
-# Icon and Color Logic
+# Icon and Color Logic — Preservation (order/connection) vs Ruin (severed bond)
 ICON="󰤨"
-COLOR="$SAPPHIRE"
+COLOR="$PRES_GLACIAL"                    # Glacial teal — Preservation's calm bond
 
 if [ "$LOCATION" = "Severed Bond" ]; then
     ICON="󰤭"
-    COLOR="$RED"
+    COLOR="$RUIN_MAROON"                  # Ruin's bloodline — connection destroyed
 fi
 
 /opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label="$LOCATION" icon.color="$COLOR" label.color="$COLOR"

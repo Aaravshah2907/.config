@@ -4,14 +4,14 @@ source "$HOME/.config/sketchybar/colors.sh"
 # 1. Update selection state (background highlight)
 # Map each space to a Radiant Order color
 case "$NAME" in
-  space.1) SPACE_COLOR=$SAPPHIRE;;   # Windrunner (Terminal)   ;;
-  space.2) SPACE_COLOR=$PURPLE;;    # Elsecaller (Code)        ;;
-  space.3) SPACE_COLOR=$EMERALD;;   # Edgedancer (Browser)    ;;
-  space.4) SPACE_COLOR=$HONOR_GOLD;; # Bondsmith (Chat)        ;;
-  space.5) SPACE_COLOR=$AMBER;;    # Lightweaver (Media)     ;;
-  space.6) SPACE_COLOR=$SLATE;;    # Additional space (Utility) ;;
-  space.7) SPACE_COLOR=$PURPLE;;    # Spotify (Music)        ;;
-  *)      SPACE_COLOR=$ACCENT_COLOR;;
+  space.1) SPACE_COLOR=$SPREN_HONOR;;       # Honorspren (Terminal — wind & sky)     ;;
+  space.2) SPACE_COLOR=$SPREN_INK;;         # Inkspren (Code — logic & precision)    ;;
+  space.3) SPACE_COLOR=$SPREN_CULTIVATION;; # Cultivationspren (Browser — growth)   ;;
+  space.4) SPACE_COLOR=$SPREN_SIBLING;;     # Sibling/Urithiru (Chat — crystal bond) ;;
+  space.5) SPACE_COLOR=$SPREN_ASH;;         # Ashspren (Media — fire & entropy)     ;;
+  space.6) SPACE_COLOR=$SPREN_PEAK;;        # Peakspren (Misc — stone endurance)    ;;
+  space.7) SPACE_COLOR=$SPREN_WILL;;        # Willshaper (Spotify — freedom & song) ;;
+  *)       SPACE_COLOR=$SPACE_ACCENT;;
 esac
 if [ -z "$SELECTED" ]; then
   SELECTED=$(sketchybar --query "$NAME" | jq -r '.selected')

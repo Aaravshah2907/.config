@@ -14,5 +14,5 @@ if [ "$SENDER" = "mouse.exited" ]; then
   exit 0
 fi
 
-/opt/homebrew/bin/sketchybar --set "$NAME" label="$(date '+%I:%M %p')" label.color="$HONOR_GOLD" icon.color="$HONOR_GOLD"
+/opt/homebrew/bin/sketchybar --set "$NAME" label="$(date '+%I:%M %p')" label.color="$CLOCK_ACCENT" icon.color="$CLOCK_ACCENT"
 /opt/homebrew/bin/sketchybar --set clock.date label="$(date '+%A, %d %B')"

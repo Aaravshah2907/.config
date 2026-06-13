@@ -30,7 +30,7 @@ while read -r row; do
   [ -z "$ICON" ] && ICON="󰀱"
   
   if [ "$FOCUSED" = "true" ]; then
-    COLOR="$SAPPHIRE"
+    COLOR="$FRONTAPP_ACCENT"             # Cryptic shimmer — focused app
     BG_DRAW="on"
   else
     COLOR="$WHITE"
@@ -42,7 +42,7 @@ while read -r row; do
               icon="$ICON" \
               label.drawing=off \
               icon.color="$COLOR" \
-              background.color="$SAPPHIRE_TRANSLUCENT" \
+              background.color="$FRONTAPP_ACCENT_T" \
               background.drawing="$BG_DRAW" \
               background.corner_radius=6 \
               background.height=24 \

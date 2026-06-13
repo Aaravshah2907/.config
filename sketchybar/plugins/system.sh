@@ -13,13 +13,13 @@ if [ "$SENDER" = "mouse.exited" ]; then
   exit 0
 fi
 
-# --- RAM Info (Investiture) ---
+# --- RAM Info (Preservation Reserve) ---
 FREE_PCT=$(memory_pressure 2>/dev/null | awk '/System-wide memory free percentage:/ {print $5}' | tr -d '%')
 if [ -n "$FREE_PCT" ]; then
   USED_PCT=$((100 - FREE_PCT))
-  COLOR="$HONOR_GOLD"
-  [ "$USED_PCT" -gt 70 ] && COLOR="$AMBER"
-  [ "$USED_PCT" -gt 90 ] && COLOR="$RED"
+  COLOR="$SYS_RAM_COLOR"                # Atium gold — baseline
+  [ "$USED_PCT" -gt 70 ] && COLOR="$RUIN_SPIKE"   # Hemalurgic amber — pressure
+  [ "$USED_PCT" -gt 90 ] && COLOR="$RUIN_MAROON"  # Ruin's maroon — critical
   
   sketchybar --set system.ram label="Memory: ${USED_PCT}%" label.color="$COLOR"
 else
@@ -30,33 +30,34 @@ fi
 CPU_PCT=$(ps -A -o %cpu | awk '{sum+=$1} END {print int(sum/NR)}')
 if [ -z "$CPU_PCT" ]; then CPU_PCT=0; fi
 
-# Set color based on CPU usage (>70% warning)
+# Set CPU color based on usage — Ruin's influence grows with heat
 if [ "$CPU_PCT" -gt 70 ]; then
-  CPU_COLOR="$RED"
+  CPU_COLOR="$RUIN_MAROON"             # Ruin fully active — critical
+elif [ "$CPU_PCT" -gt 40 ]; then
+  CPU_COLOR="$RUIN_SPIKE"              # Hemalurgic pressure — warning
 else
-  CPU_COLOR="$WHITE"
+  CPU_COLOR="$SYS_CPU_COLOR"           # Normal — baseline Ruin spike amber
 fi
 sketchybar --set system.cpu label="CPU: ${CPU_PCT}%" label.color="$CPU_COLOR"
 
 # --- Disk Info (Material World) ---
 DISK_INFO=$(df -H /System/Volumes/Data | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')
-sketchybar --set system.disk label="Disk: ${DISK_INFO}" label.color="$SAPPHIRE"
+sketchybar --set system.disk label="Disk: ${DISK_INFO}" label.color="$SYS_DISK_COLOR"
 
-# --- Storm Severity Mapping ---
+# --- Storm Severity — Ruin vs Preservation balance ---
 if [ "$CPU_PCT" -gt 70 ] || [ "$USED_PCT" -gt 80 ]; then
   STORM_STATE="Everstorm Clash"
-  STORM_ICON="󰖓" # Weather Lightning (Everstorm)
-  STORM_COLOR="$RED"
-  # Shake animation for warning
+  STORM_ICON="󰖓"                        # Everstorm — Ruin ascendant
+  STORM_COLOR="$RUIN_MAROON"
   sketchybar --animate system icon.y_offset -4 4 duration=150 repeat=3
 elif [ "$CPU_PCT" -gt 30 ] || [ "$USED_PCT" -gt 50 ]; then
   STORM_STATE="Highstorm"
-  STORM_ICON="󰖖" # Weather Pouring (Highstorm)
-  STORM_COLOR="$AMBER"
+  STORM_ICON="󰖖"                        # Highstorm — Preservation & Ruin in tension
+  STORM_COLOR="$RUIN_SPIKE"
 else
   STORM_STATE="Stormless"
-  STORM_ICON="󰖙" # Weather Sunny/Clear (Stormless)
-  STORM_COLOR="$SAPPHIRE"
+  STORM_ICON="󰖙"                        # Clear — Preservation holds
+  STORM_COLOR="$SYS_ACCENT"
 fi
 
 sketchybar --set system.title \

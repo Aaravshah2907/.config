@@ -24,13 +24,13 @@ MAIL_COUNT=$(osascript -e 'tell application "System Events" to tell process "Mai
 TOTAL=$((MESSAGES_COUNT + MAIL_COUNT))
 
 if [ "$TOTAL" -gt 5 ]; then
-    COLOR=$RED
-    ICON="󰀦" # Angerspren (Alert Triangle / Warning)
+    COLOR=$RUIN_MAROON                   # Ruin's grip — overwhelming notifications
+    ICON="󰀦" # Angerspren (Ruin-touched alert)
 elif [ "$TOTAL" -gt 0 ]; then
-    COLOR=$HONOR_GOLD
-    ICON="󰓎" # Gloryspren (Glowing Star / Achievement)
+    COLOR=$NOTIF_ACCENT                  # Gloryspren gold — attention without alarm
+    ICON="󰓎" # Gloryspren (gold orb of joy)
 else
-    COLOR=$WHITE
+    COLOR=$PRES_MIST                     # Preservation mist — calm, clear
     ICON="󰖝" # Windspren (Wind wave / Calm)
 fi
 

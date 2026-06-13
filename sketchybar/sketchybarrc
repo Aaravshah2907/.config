@@ -33,8 +33,8 @@ sketchybar --default \
   label.padding_left=4 \
   label.padding_right=4 \
   background.drawing=off \
-  popup.background.color=$DEEP_NIGHT \
-  popup.background.border_color=$SAPPHIRE \
+  popup.background.color=$POPUP_BG_COLOR \
+  popup.background.border_color=$PRES_GLACIAL \
   popup.background.border_width=2 \
   popup.background.corner_radius=12 \
   popup.blur_radius=30
@@ -43,19 +43,19 @@ sketchybar --default \
 ##### LEFT SIDE ITEMS #####
 sketchybar --add item apple left \
            --set apple icon= \
-                       icon.color=$HONOR_GOLD \
-                       label.drawing=off \
-                       click_script="$PLUGIN_DIR/reload.sh" \
+                        icon.color=$HONOR_GOLD \
+                        label.drawing=off \
+                        click_script="$PLUGIN_DIR/reload.sh" \
   \
   --add item front_app left \
-    --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$SAPPHIRE icon.color=$SAPPHIRE \
+    --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$FRONTAPP_ACCENT icon.color=$FRONTAPP_ACCENT \
     --subscribe front_app front_app_switched \
   \
   --add item cheatsheet left \
   --set cheatsheet icon=󰌌 \
-                 icon.color=$SAPPHIRE \
+                 icon.color=$SPREN_HIGH \
                  label="Skhd" \
-                 label.color=$SAPPHIRE \
+                 label.color=$SPREN_HIGH \
                  script="$PLUGIN_DIR/cheatsheet.sh" \
                  click_script="sketchybar --set \$NAME popup.drawing=toggle" \
                  popup.align=left \
@@ -64,10 +64,10 @@ sketchybar --add item apple left \
   \
   --add bracket apple.pill apple front_app cheatsheet \
   --set apple.pill background.color=$BAR_COLOR \
-                  background.border_color=$SAPPHIRE_TRANSLUCENT \
-                  background.border_width=1 \
-                  background.corner_radius=10 \
-                  background.drawing=on \
+                   background.border_color=$SPREN_HIGH_T \
+                   background.border_width=1 \
+                   background.corner_radius=10 \
+                   background.drawing=on \
   \
   --add item cheatsheet.title popup.cheatsheet \
   --set cheatsheet.title icon=󰛵 label="SURGEBINDING CHEATSHEET" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD
@@ -88,7 +88,7 @@ do
                                icon="$space_label" \
                                icon.font="JetBrainsMono Nerd Font:Bold:12.0" \
                                icon.color=$WHITE \
-                               icon.highlight_color=$SAPPHIRE \
+                               icon.highlight_color=$SPACE_ACCENT \
                                script="$PLUGIN_DIR/space.sh" \
                                click_script="yabai -m space --focus $sid" \
                                label.padding_right=8 \
@@ -104,7 +104,7 @@ done
 
 sketchybar --add bracket spaces.pill "/space\..*/" \
            --set spaces.pill background.color=$BAR_COLOR \
-                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_color=$SPACE_ACCENT_T \
                              background.border_width=1 \
                              background.corner_radius=10 \
                              background.drawing=on
@@ -112,7 +112,7 @@ sketchybar --add bracket spaces.pill "/space\..*/" \
 # Front App Switcher (Current Space Apps)
 sketchybar --add bracket app_switcher '/app\.switcher\..*/' \
            --set app_switcher background.color=$BAR_COLOR \
-                              background.border_color=$SAPPHIRE_TRANSLUCENT \
+                              background.border_color=$FRONTAPP_ACCENT_T \
                               background.border_width=1 \
                               background.corner_radius=10 \
                               background.drawing=on \
@@ -129,7 +129,7 @@ sketchybar --add bracket app_switcher '/app\.switcher\..*/' \
 ##### RIGHT SIDE ITEMS ###### Music: The Radiant Song
 sketchybar --add item music right \
            --set music icon= \
-                       icon.color=$PURPLE \
+                        icon.color=$MUSIC_ACCENT \
                        label="Lashing..." \
                        label.color=$WHITE \
                        script="$PLUGIN_DIR/music.sh" \
@@ -143,8 +143,8 @@ sketchybar --add item music right \
            --subscribe music media_change system_woke front_app_switched mouse.entered mouse.exited \
   \
            --add bracket music.pill music \
-           --set music.pill background.color=$SAPPHIRE_TRANSLUCENT \
-                             background.border_color=$HONOR_GOLD \
+           --set music.pill background.color=$MUSIC_ACCENT_T \
+                             background.border_color=$SPREN_GLORY \
                              background.border_width=1 \
                              background.corner_radius=12 \
                              background.drawing=on
@@ -167,13 +167,15 @@ sketchybar --add item media.header popup.music \
 # Control Center: Spren Bond (Wifi)
 sketchybar --add item control_center right \
            --set control_center icon=󰤨 \
+                       padding_left=8 \
+                       padding_right=8 \
                        script="$PLUGIN_DIR/network.sh" \
                        update_freq=120 \
   \
            --add bracket net.pill control_center \
            --subscribe control_center wifi_change \
            --set net.pill background.color=$BAR_COLOR \
-                          background.border_color=$SAPPHIRE_TRANSLUCENT \
+                          background.border_color=$PRES_GLACIAL_TRANSLUCENT \
                           background.border_width=1 \
                           background.corner_radius=10 \
                           background.drawing=on
@@ -181,6 +183,8 @@ sketchybar --add item control_center right \
 # Bluetooth: Spiritweb
 sketchybar --add item bluetooth right \
            --set bluetooth update_freq=60 \
+                           padding_left=8 \
+                           padding_right=8 \
                            script="$PLUGIN_DIR/bluetooth.sh" \
                            click_script="$PLUGIN_DIR/bluetooth.sh click" \
                            popup.align=right \
@@ -188,7 +192,7 @@ sketchybar --add item bluetooth right \
   \
            --add bracket bluetooth.pill bluetooth \
            --set bluetooth.pill background.color=$BAR_COLOR \
-                                background.border_color=$SAPPHIRE_TRANSLUCENT \
+                                background.border_color=$PRES_SILVER_TRANSLUCENT \
                                 background.border_width=1 \
                                 background.corner_radius=10 \
                                 background.drawing=on
@@ -198,6 +202,8 @@ sketchybar --add item bluetooth right \
 # Battery: Stormlight Reserve
 sketchybar --add item battery right \
            --set battery update_freq=120 \
+                         padding_left=8 \
+                         padding_right=8 \
                          script="$PLUGIN_DIR/battery.sh" \
                          popup.align=right \
                          popup.y_offset=12 \
@@ -205,14 +211,14 @@ sketchybar --add item battery right \
   \
            --add bracket battery.pill battery \
            --set battery.pill background.color=$BAR_COLOR \
-                              background.border_color=$SAPPHIRE_TRANSLUCENT \
+                              background.border_color=$BATT_ACCENT_T \
                               background.border_width=1 \
                               background.corner_radius=10 \
                               background.drawing=on \
   \
            --add item battery.status popup.battery \
            --set battery.status icon=󰁹 \
-                                icon.color=$SAPPHIRE \
+                                icon.color=$BATT_ACCENT \
                                 label.color=$WHITE \
                                 label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
@@ -220,11 +226,13 @@ sketchybar --add item battery right \
 sketchybar --add item raycast right \
            --set raycast icon= \
                          icon.color=$HONOR_GOLD \
+                         padding_left=8 \
+                         padding_right=8 \
                          click_script="open -a Raycast || open raycast://" \
   \
            --add bracket raycast.pill raycast \
            --set raycast.pill background.color=$BAR_COLOR \
-                              background.border_color=$SAPPHIRE_TRANSLUCENT \
+                              background.border_color=$HONOR_GOLD_TRANSLUCENT \
                               background.border_width=1 \
                               background.corner_radius=10 \
                               background.drawing=on
@@ -235,6 +243,8 @@ sketchybar --add item system right \
                         icon=󰍹 \
                         icon.color=$SAPPHIRE \
                         label.drawing=off \
+                        padding_left=8 \
+                        padding_right=8 \
                         script="$PLUGIN_DIR/system.sh" \
                         popup.align=right \
                         popup.y_offset=12 \
@@ -242,33 +252,33 @@ sketchybar --add item system right \
   \
            --add bracket system.pill system \
            --set system.pill background.color=$BAR_COLOR \
-                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_color=$PRES_GLACIAL_TRANSLUCENT \
                              background.border_width=1 \
                              background.corner_radius=10 \
                              background.drawing=on \
   \
            --add item system.title popup.system \
            --set system.title icon=󰖙 \
-                              icon.color=$SAPPHIRE \
+                              icon.color=$SYS_ACCENT \
                               label="Storm: Stormless" \
-                              label.color=$SAPPHIRE \
+                              label.color=$SYS_ACCENT \
                               label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   \
            --add item system.cpu popup.system \
            --set system.cpu icon=󰓅 \
-                            icon.color=$AMBER \
+                            icon.color=$SYS_CPU_COLOR \
                             label.color=$WHITE \
                             label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   \
            --add item system.ram popup.system \
            --set system.ram icon=󰍛 \
-                            icon.color=$HONOR_GOLD \
+                            icon.color=$SYS_RAM_COLOR \
                             label.color=$WHITE \
                             label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   \
            --add item system.disk popup.system \
            --set system.disk icon=󰋊 \
-                             icon.color=$SAPPHIRE \
+                             icon.color=$SYS_DISK_COLOR \
                              label.color=$WHITE \
                              label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
@@ -279,7 +289,7 @@ sketchybar --add item clock right \
            popup.align=right \
   \
   --add item clock.header popup.clock \
-    --set clock.header icon=󰃤 label="CHRONICLES" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD \
+    --set clock.header icon=󰃤 label="CHRONICLES" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$CLOCK_ACCENT icon.color=$CLOCK_ACCENT \
   \
   --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
   --add item clock.events popup.clock --set clock.events label="Destiny" \
@@ -298,7 +308,7 @@ done
 
 sketchybar --add bracket clock.pill clock \
            --set clock.pill background.color=$BAR_COLOR \
-                            background.border_color=$SAPPHIRE_TRANSLUCENT \
+                            background.border_color=$CLOCK_ACCENT_T \
                             background.border_width=1 \
                             background.corner_radius=10 \
                             background.drawing=on
@@ -311,7 +321,7 @@ sketchybar --add item volume right \
   \
            --add bracket volume.pill volume \
            --set volume.pill background.color=$BAR_COLOR \
-                             background.border_color=$SAPPHIRE_TRANSLUCENT \
+                             background.border_color=$SPREN_CULTIVATION_T \
                              background.border_width=1 \
                              background.corner_radius=10 \
                              background.drawing=on
@@ -319,6 +329,8 @@ sketchybar --add item volume right \
 # Notification: Spren Message
 sketchybar --add item notif right \
            --set notif update_freq=30 \
+                       padding_left=8 \
+                       padding_right=8 \
                        script="$PLUGIN_DIR/notif.sh" \
                        popup.align=right \
                        popup.y_offset=12 \
@@ -326,20 +338,20 @@ sketchybar --add item notif right \
   \
            --add bracket notif.pill notif \
            --set notif.pill background.color=$BAR_COLOR \
-                           background.border_color=$SAPPHIRE_TRANSLUCENT \
+                           background.border_color=$NOTIF_ACCENT_T \
                            background.border_width=1 \
                            background.corner_radius=10 \
                            background.drawing=on \
   \
            --add item notif.messages popup.notif \
            --set notif.messages icon=󰍦 \
-                               icon.color=$HONOR_GOLD \
+                               icon.color=$NOTIF_ACCENT \
                                label.color=$WHITE \
                                label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   \
            --add item notif.mail popup.notif \
            --set notif.mail icon=󰇮 \
-                            icon.color=$SAPPHIRE \
+                            icon.color=$PRES_GLACIAL \
                             label.color=$WHITE \
                             label.font="JetBrainsMono Nerd Font:Bold:14.0"
 

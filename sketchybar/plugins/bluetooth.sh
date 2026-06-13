@@ -34,10 +34,10 @@ COUNT=$(echo "$CONNECTED_DEVICES" | grep -c "name" | xargs)
 ICON="󰂯"
 if [ "$COUNT" -gt 0 ]; then
     ICON="󰂱"
-    COLOR=$SAPPHIRE
+    COLOR=$PRES_SILVER                   # Preservation silver — bonded & ordered
     LABEL="$COUNT"
 else
-    COLOR=$WHITE
+    COLOR=$RUIN_MIST                     # Ruin's poison mist — no bond, decaying
     LABEL=""
 fi
 

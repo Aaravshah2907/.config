@@ -33,16 +33,16 @@ update_bar() {
   local app="$2"
   local filepath="$3"
   local icon="󰎆"
-  local icon_color="$PURPLE"
+  local icon_color="$MUSIC_ACCENT"       # Willshaper amethyst — freedom of song
   
   local check_str="${filepath:-$label}"
   
   case "$app" in
-    *[Ss]potify*) icon=""; app_name="Spotify"; icon_color="$EMERALD" ;;
-    *[Aa]pple*[Mm]usic*) icon="󰎆"; app_name="Music"; icon_color="$PURPLE" ;;
+    *[Ss]potify*) icon=""; app_name="Spotify"; icon_color="$SPREN_CULTIVATION" ;; # Cultivationspren — living growth
+    *[Aa]pple*[Mm]usic*) icon="󰎆"; app_name="Music"; icon_color="$MUSIC_ACCENT" ;;  # Willshaper — pure song
     *[Vv][Ll][Cc]*)
       app_name="VLC"
-      icon_color="$AMBER"
+      icon_color="$RUIN_SPIKE"           # Hemalurgic amber — raw power playback
       icon="󰕼" # Default VLC cone
       if echo "$check_str" | grep -iqE '\.(mp3|wav|flac|m4a|aac|ogg|wma|m4b)$'; then
         icon="󰎆" # Music note for audio
@@ -50,7 +50,7 @@ update_bar() {
         icon="󰕼" # VLC cone for video
       fi
       ;;
-    *mpv*) icon=""; app_name="mpv"; icon_color="$SAPPHIRE" ;;
+    *mpv*) icon=""; app_name="mpv"; icon_color="$PRES_GLACIAL" ;; # Preservation glacial — pure, local media
     *) 
       # Filter: restrict to designated music apps
       return 
@@ -76,8 +76,8 @@ hide_bar() {
                    label.drawing=on \
                    label="Resting" \
                    icon="󰋋" \
-                   icon.color="$SAPPHIRE" \
-                   label.color="$SAPPHIRE"
+                   icon.color="$SPREN_CRYPTIC" \
+                   label.color="$SPREN_CRYPTIC_T"
   exit 0
 }
 

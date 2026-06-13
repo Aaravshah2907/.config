@@ -8,18 +8,18 @@ if [ -z "$WEATHER_DATA" ] || [[ "$WEATHER_DATA" == *"Error"* ]]; then
   WEATHER_DATA="Weather Unavailable"
 fi
 
-# Determine color based on common Indian weather conditions (Pilani, Rajasthan, Mumbai)
+# Cosmere weather color mapping
 LOWER=$(echo "$WEATHER_DATA" | tr '[:upper:]' '[:lower:]')
 if echo "$LOWER" | grep -iq "rain"; then
-  COLOR="$SAPPHIRE"   # Light blue for rain
+  COLOR="$PRES_GLACIAL"       # Preservation glacial — calm falling water
 elif echo "$LOWER" | grep -iq "thunderstorm\|storm"; then
-  COLOR="$DEEP_NIGHT" # Dark blue for thunderstorms
+  COLOR="$RUIN_OBSIDIAN"      # Ruin's volcanic black — destruction descends
 elif echo "$LOWER" | grep -iq "clear\|sunny"; then
-  COLOR="$HONOR_GOLD" # Gold for clear skies
+  COLOR="$SPREN_SIBLING"      # Sibling/Urithiru crystal amber — tower warmth
 elif echo "$LOWER" | grep -iq "cloud"; then
-  COLOR="$SLATE"      # Slate for clouds
+  COLOR="$RUIN_ASH"           # Ruin ash — ashfall sky
 elif echo "$LOWER" | grep -iq "haze"; then
-  COLOR="$AMBER"      # Amber for haze
+  COLOR="$RUIN_BRONZE"        # Ruin bronze — Scadrial's hazy corroded sky
 else
   COLOR="$WHITE"
 fi

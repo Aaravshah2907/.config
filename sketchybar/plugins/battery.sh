@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# WINDRUNNER - Stormlight Reserve (Battery) Plugin
+# PRESERVATION — Stormlight Reserve (Battery) Plugin
 # Monitors the Investiture level of your Gemstones
 
 source "$HOME/.config/sketchybar/colors.sh"
@@ -42,18 +42,21 @@ if [[ "$CHARGING" != "" ]]; then
 fi
 
 if [[ "$CHARGING" != "" ]]; then
-  COLOR="$HONOR_GOLD"
+  COLOR="$PRES_ATIUM"                  # Atium gold — power flowing in
   LABEL="Infusing ${PERCENTAGE}%"
 else
-  # Battery Color Palette (Stormlight Reserve Levels)
-  if [ "$PERCENTAGE" -le 30 ]; then
-    COLOR="$RED"
+  # Preservation Reserve Levels: draining toward Ruin
+  if [ "$PERCENTAGE" -le 15 ]; then
+    COLOR="$RUIN_MAROON"              # Ruin's grip — critical
+    LABEL="Dun Gem ${PERCENTAGE}%"
+  elif [ "$PERCENTAGE" -le 30 ]; then
+    COLOR="$RUIN_SPIKE"              # Hemalurgic amber — danger
     LABEL="Dun Gem ${PERCENTAGE}%"
   elif [ "$PERCENTAGE" -le 80 ]; then
-    COLOR="$AMBER" # Transitioning to Void/Empty
+    COLOR="$PRES_LAVENDER"           # Preservation calm — midpoint
     LABEL="Reserve ${PERCENTAGE}%"
   else
-    COLOR="$SAPPHIRE" # Windrunner Peak
+    COLOR="$BATT_ACCENT"            # Preservation mist — fully infused
     LABEL="Infused ${PERCENTAGE}%"
   fi
 fi
@@ -70,9 +73,9 @@ sketchybar --set "$NAME" \
   icon.color="$COLOR" \
   label.drawing=off
 
-# Charging pulse animation (gentle opacity change)
+# Charging pulse animation: Preservation mist ↔ Atium gold
 if [[ "$CHARGING" != "" ]]; then
-  sketchybar --animate "$NAME" icon.color $EMERALD $EMERALD duration=1200 repeat=indefinite
+  sketchybar --animate "$NAME" icon.color $PRES_MIST $PRES_ATIUM duration=1200 repeat=indefinite
 fi
 
 # Low battery shake warning when <=15%

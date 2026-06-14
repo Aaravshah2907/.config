@@ -11,6 +11,7 @@ BOLD='\033[1m'
 
 BASE_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
 PY="python3 $BASE_DIR/queue.py"
+export PYTHONDONTWRITEBYTECODE=1
 
 echo -e "${CYAN}${BOLD}󱐌 INITIALIZING RADIANT TEST SUITE...${NC}\n"
 
@@ -31,6 +32,15 @@ for f in "$BASE_DIR"/*.sh; do
     fi
 done
 echo -e "${GREEN}PASS${NC}"
+
+echo -n "  󰑐 Checking Python unit tests... "
+if python3 -m unittest discover -s "$BASE_DIR/tests" -p "test_*.py" >/dev/null 2>&1; then
+    echo -e "${GREEN}PASS${NC}"
+else
+    echo -e "${RED}FAIL${NC}"
+    python3 -m unittest discover -s "$BASE_DIR/tests" -p "test_*.py"
+    exit 1
+fi
 
 # 2. Dependency Checks
 echo -e "\n${CYAN}${BOLD}󰓓 CHECKING SURGE BINDINGS (Dependencies)${NC}"

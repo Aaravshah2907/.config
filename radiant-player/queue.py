@@ -16,6 +16,7 @@ import concurrent.futures
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib import error as urlerror
+from urllib.parse import unquote, urlparse
 from urllib import request as urlrequest
 
 # ── Platform detection ──────────────────────────────────────────────────────
@@ -165,6 +166,7 @@ MPV_BIN = resolve_bin("mpv")
 SPOTIFY_PLAYER_BIN = resolve_bin("spotify_player")
 LIBRESPOT_BIN = resolve_bin("librespot")
 SPOTIFY_STATUS_CACHE = {"ts": 0.0, "data": None}
+VLC_STATUS_CACHE = {"ts": 0.0, "data": None}
 LOCK_WAIT_TIMEOUT_SEC = 2.0
 
 # ── VLC binary resolution ───────────────────────────────────────────────────
@@ -312,6 +314,62 @@ def ensure_mpv():
 
 
 # ── VLC RC socket helpers ───────────────────────────────────────────────────
+def vlc_file_mrl(path):
+    """Return a VLC-friendly file MRL for local paths."""
+    p = Path(os.path.expanduser(path)).resolve(strict=False)
+    return p.as_uri()
+
+
+def vlc_clean_response(raw):
+    if not raw:
+        return ""
+    lines = []
+    for line in raw.splitlines():
+        line = line.strip()
+        if not line or line == ">":
+            continue
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def vlc_clean_title(title):
+    title = (title or "").strip()
+    if title in (">", "( no input )", ""):
+        return ""
+    parsed = urlparse(title)
+    if parsed.scheme == "file":
+        return Path(unquote(parsed.path)).name
+    if os.path.sep in title:
+        return Path(title).name
+    return title
+
+
+def vlc_parse_status(raw_status):
+    state_match = re.search(r"state (\w+)", raw_status or "")
+    volume_match = re.search(r"audio volume:\s*(\d+)", raw_status or "")
+    return {
+        "state": state_match.group(1) if state_match else "stopped",
+        "volume": int(volume_match.group(1)) if volume_match else None,
+    }
+
+
+def vlc_clear_status_cache():
+    VLC_STATUS_CACHE["ts"] = 0.0
+    VLC_STATUS_CACHE["data"] = None
+
+
+def vlc_wait_for_input(timeout_sec=2.0):
+    """Wait briefly for VLC to finish accepting a newly added input."""
+    deadline = time.time() + timeout_sec
+    last_status = None
+    while time.time() < deadline:
+        last_status = vlc_get_status(force=True)
+        if last_status.get("running") or last_status.get("title") or last_status.get("duration", 0) > 0:
+            return last_status
+        time.sleep(0.1)
+    return last_status or {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
+
+
 def is_vlc_running():
     """Check if VLC is accepting connections on the RC unix socket."""
     if not os.path.exists(VLC_SOCKET_PATH):
@@ -346,6 +404,7 @@ def vlc_send(cmd_str):
                     data += chunk
             except (socket.timeout, OSError):
                 pass
+            vlc_clear_status_cache()
             return data.decode("utf-8", "replace").strip()
     except Exception as e:
         debug_log(f"vlc_send({cmd_str!r}) error: {e}")
@@ -354,19 +413,14 @@ def vlc_send(cmd_str):
 
 def vlc_query(cmd_str):
     """Send a VLC RC command and return the response."""
-    raw = vlc_send(cmd_str)
-    if not raw:
-        return ""
-    # VLC RC echoes the prompt '> ' — strip those lines
-    lines = [l.strip() for l in raw.splitlines() if l.strip() and l.strip() != ">"]
-    return "\n".join(lines)
+    return vlc_clean_response(vlc_send(cmd_str))
 
 
 def is_vlc_active():
     """Check if VLC is running AND has a track loaded."""
     if not is_vlc_running():
         return False
-    title = vlc_query("get_title")
+    title = vlc_clean_title(vlc_query("get_title"))
     return bool(title and title not in {"", ">", "( no input )"})
 
 
@@ -405,8 +459,11 @@ def ensure_vlc():
         time.sleep(0.1)
 
 
-def vlc_get_status():
+def vlc_get_status(force=False, max_age_sec=0.25):
     """Poll VLC RC for full playback state. Returns a dict matching mpv shape."""
+    cached = VLC_STATUS_CACHE.get("data")
+    if not force and cached and (time.time() - VLC_STATUS_CACHE.get("ts", 0.0)) <= max_age_sec:
+        return dict(cached)
     if not is_vlc_running():
         return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
     try:
@@ -416,14 +473,14 @@ def vlc_get_status():
         raw_length = vlc_query("get_length")
 
         # Parse state: VLC returns "( state playing )" / "( state paused )" / "( state stopped )"
-        state_match = re.search(r"state (\w+)", raw_status or "")
-        vlc_state = state_match.group(1) if state_match else "stopped"
+        parsed_status = vlc_parse_status(raw_status)
+        vlc_state = parsed_status["state"]
         running = vlc_state in ("playing", "paused")
         paused  = vlc_state != "playing"
 
         # Clean title — VLC may return the full path for local files
-        title = raw_title.strip() if raw_title else ""
-        if title in (">", "( no input )", ""):
+        title = vlc_clean_title(raw_title)
+        if not title:
             title = ""
             running = False
 
@@ -436,13 +493,16 @@ def vlc_get_status():
         except (ValueError, TypeError):
             dur = 0
 
-        return {
+        status = {
             "running": running,
             "paused": paused,
             "title": title,
             "position": pos,
             "duration": dur,
         }
+        VLC_STATUS_CACHE["ts"] = time.time()
+        VLC_STATUS_CACHE["data"] = dict(status)
+        return status
     except Exception as e:
         debug_log(f"vlc_get_status error: {e}")
         return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
@@ -451,123 +511,191 @@ def vlc_get_status():
 def vlc_load_file(path, resume_pos=0):
     """Load a local file in VLC and start playing, with optional resume."""
     ensure_vlc()
+    mrl = vlc_file_mrl(path)
     # 'clear' empties the VLC playlist, 'add' queues the file, 'play' starts it
     vlc_send("clear")
     time.sleep(0.05)
-    vlc_send(f"add {path}")
-    time.sleep(0.2)  # allow VLC to register the item
+    vlc_send(f"add {mrl}")
+    vlc_wait_for_input(timeout_sec=2.0)
     vlc_send("play")
     if resume_pos and resume_pos > 1:
-        time.sleep(0.4)  # brief wait before seeking
+        vlc_wait_for_input(timeout_sec=1.5)
         vlc_send(f"seek {int(resume_pos)}")
+    vlc_clear_status_cache()
 
 
 # ── Local player abstraction layer ─────────────────────────────────────────
-# All calls that previously went directly to mpv now route through here.
-# PLAYER_BACKEND == "vlc"  →  VLC RC socket
-# PLAYER_BACKEND == "mpv"  →  mpv JSON IPC (unchanged behaviour)
+class LocalBackend:
+    name = "local"
 
-def is_local_running():
-    return is_vlc_running() if PLAYER_BACKEND == "vlc" else is_mpv_running()
+    def is_running(self):
+        raise NotImplementedError
+
+    def is_active(self):
+        raise NotImplementedError
+
+    def ensure(self):
+        raise NotImplementedError
+
+    def pause(self):
+        raise NotImplementedError
+
+    def toggle(self):
+        raise NotImplementedError
+
+    def seek(self, delta):
+        raise NotImplementedError
+
+    def volume(self, delta):
+        raise NotImplementedError
+
+    def get_volume(self):
+        raise NotImplementedError
+
+    def get_status(self):
+        raise NotImplementedError
 
 
-def is_local_active():
-    return is_vlc_active() if PLAYER_BACKEND == "vlc" else is_mpv_active()
+class VlcBackend(LocalBackend):
+    name = "vlc"
 
+    def is_running(self):
+        return is_vlc_running()
 
-def local_pause():
-    """Pause the local player (does not stop it)."""
-    if PLAYER_BACKEND == "vlc":
+    def is_active(self):
+        return is_vlc_active()
+
+    def ensure(self):
+        ensure_vlc()
+
+    def pause(self):
         st = vlc_get_status()
         if st["running"] and not st["paused"]:
             vlc_send("pause")
-    else:
-        mpv_send(["set_property", "pause", True])
 
-
-def local_toggle():
-    """Toggle play/pause on the local player."""
-    if PLAYER_BACKEND == "vlc":
+    def toggle(self):
         st = vlc_get_status()
         if st["paused"]:
             vlc_send("play")
         else:
             vlc_send("pause")
-    else:
-        ensure_mpv()
-        mpv_send(["cycle", "pause"])
 
-
-def local_seek(delta):
-    """Seek by `delta` seconds (relative). VLC requires absolute position."""
-    if PLAYER_BACKEND == "vlc":
+    def seek(self, delta):
+        """Seek by `delta` seconds. VLC requires absolute position."""
         st = vlc_get_status()
         new_pos = max(0, st["position"] + int(delta))
         vlc_send(f"seek {new_pos}")
-    else:
-        mpv_send(["seek", int(delta), "relative"])
 
-
-def local_volume(delta):
-    """Adjust volume by `delta` percent-points.
-    VLC scale: 0-512 where 256=100%. mpv scale: 0-130 where 100=100%.
-    We treat delta as percent-points (e.g. +5 = louder by 5%).
-    """
-    if PLAYER_BACKEND == "vlc":
+    def volume(self, delta):
         # Read current volume, convert delta to VLC units (256/100 ≈ 2.56 per %)
-        raw_status = vlc_query("status")
-        vol_match = re.search(r"audio volume:\s*(\d+)", raw_status or "")
-        current_vlc_vol = int(vol_match.group(1)) if vol_match else 256
-        
+        parsed_status = vlc_parse_status(vlc_query("status"))
+        current_vlc_vol = parsed_status["volume"] if parsed_status["volume"] is not None else 256
         new_vlc_vol = max(0, min(512, current_vlc_vol + int(delta * 2.56)))
         vlc_send(f"volume {new_vlc_vol}")
-    else:
+
+    def get_volume(self):
+        parsed_status = vlc_parse_status(vlc_query("status"))
+        vlc_vol = parsed_status["volume"] if parsed_status["volume"] is not None else 256
+        return int(vlc_vol * 100 / 256)
+
+    def get_status(self):
+        return vlc_get_status()
+
+
+class MpvBackend(LocalBackend):
+    name = "mpv"
+
+    def is_running(self):
+        return is_mpv_running()
+
+    def is_active(self):
+        return is_mpv_active()
+
+    def ensure(self):
+        ensure_mpv()
+
+    def pause(self):
+        mpv_send(["set_property", "pause", True])
+
+    def toggle(self):
+        ensure_mpv()
+        mpv_send(["cycle", "pause"])
+
+    def seek(self, delta):
+        mpv_send(["seek", int(delta), "relative"])
+
+    def volume(self, delta):
         mpv_send(["add", "volume", int(delta)])
 
-
-def local_get_volume():
-    """Return current volume as a 0-100 percent integer."""
-    if PLAYER_BACKEND == "vlc":
-        raw_status = vlc_query("status")
-        vol_match = re.search(r"audio volume:\s*(\d+)", raw_status or "")
-        try:
-            vlc_vol = int(vol_match.group(1)) if vol_match else 256
-            return int(vlc_vol * 100 / 256)
-        except (ValueError, TypeError):
-            return None
-    else:
+    def get_volume(self):
         res = mpv_send(["get_property", "volume"])
         if res and res.get("data") is not None:
             return int(res["data"])
         return None
 
+    def get_status(self):
+        if not is_mpv_running():
+            return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
+        title  = mpv_send(["get_property", "media-title"])
+        paused = mpv_send(["get_property", "pause"])
+        pos    = mpv_send(["get_property", "time-pos"])
+        dur    = mpv_send(["get_property", "duration"])
+        return {
+            "running": True,
+            "paused":   (paused or {}).get("data", True),
+            "title":    (title  or {}).get("data", ""),
+            "position": (pos    or {}).get("data", 0),
+            "duration": (dur    or {}).get("data", 0),
+        }
+
+
+LOCAL_BACKENDS = {
+    "vlc": VlcBackend(),
+    "mpv": MpvBackend(),
+}
+ACTIVE_LOCAL_BACKEND = LOCAL_BACKENDS[PLAYER_BACKEND]
+
+
+def is_local_running():
+    return ACTIVE_LOCAL_BACKEND.is_running()
+
+
+def is_local_active():
+    return ACTIVE_LOCAL_BACKEND.is_active()
+
+
+def local_pause():
+    """Pause the local player (does not stop it)."""
+    ACTIVE_LOCAL_BACKEND.pause()
+
+
+def local_toggle():
+    """Toggle play/pause on the local player."""
+    ACTIVE_LOCAL_BACKEND.toggle()
+
+
+def local_seek(delta):
+    ACTIVE_LOCAL_BACKEND.seek(delta)
+
+
+def local_volume(delta):
+    """Adjust volume by `delta` percent-points."""
+    ACTIVE_LOCAL_BACKEND.volume(delta)
+
+
+def local_get_volume():
+    """Return current volume as a 0-100 percent integer."""
+    return ACTIVE_LOCAL_BACKEND.get_volume()
+
 
 def local_get_status():
     """Get current status from the local player as a normalised dict."""
-    if PLAYER_BACKEND == "vlc":
-        return vlc_get_status()
-    # mpv path
-    if not is_mpv_running():
-        return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
-    title  = mpv_send(["get_property", "media-title"])
-    paused = mpv_send(["get_property", "pause"])
-    pos    = mpv_send(["get_property", "time-pos"])
-    dur    = mpv_send(["get_property", "duration"])
-    return {
-        "running": True,
-        "paused":   (paused or {}).get("data", True),
-        "title":    (title  or {}).get("data", ""),
-        "position": (pos    or {}).get("data", 0),
-        "duration": (dur    or {}).get("data", 0),
-    }
+    return ACTIVE_LOCAL_BACKEND.get_status()
 
 
 def ensure_local_player():
     """Start whichever local player is the active backend."""
-    if PLAYER_BACKEND == "vlc":
-        ensure_vlc()
-    else:
-        ensure_mpv()
+    ACTIVE_LOCAL_BACKEND.ensure()
 
 
 def shell_ok(cmd):

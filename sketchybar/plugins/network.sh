@@ -21,28 +21,61 @@ get_ssid_with_timeout() {
   )
 }
 
+normalize_ssid() {
+  printf "%s" "$1" \
+    | tr -d '\r' \
+    | awk 'NF { print; exit }' \
+    | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+is_redacted_ssid() {
+  [ -z "$1" ] || [[ "$1" == *"<redacted>"* ]]
+}
+
+get_ssid_from_fallbacks() {
+  local ssid
+
+  ssid=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F': ' '/^[[:space:]]*SSID[[:space:]]*:/ {print $2; exit}')
+  ssid=$(normalize_ssid "$ssid")
+  if ! is_redacted_ssid "$ssid"; then
+    printf "%s" "$ssid"
+    return
+  fi
+
+  ssid=$(networksetup -getairportnetwork "$WIFI_INTERFACE" 2>/dev/null | sed 's/^Current Wi-Fi Network: //')
+  ssid=$(normalize_ssid "$ssid")
+  if ! is_redacted_ssid "$ssid" && [[ "$ssid" != *"not associated"* ]]; then
+    printf "%s" "$ssid"
+    return
+  fi
+
+  if [ -x "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport" ]; then
+    ssid=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I 2>/dev/null | awk -F': ' '/^[[:space:]]*SSID[[:space:]]*:/ {print $2; exit}')
+    ssid=$(normalize_ssid "$ssid")
+    if ! is_redacted_ssid "$ssid"; then
+      printf "%s" "$ssid"
+    fi
+  fi
+}
+
 # Get SSID
 SSID=$(get_ssid_with_timeout)
+SSID=$(normalize_ssid "$SSID")
 
 # Detect internal IP
 INTERNAL_IP=$(ifconfig "$WIFI_INTERFACE" 2>/dev/null | grep "inet " | awk '{print $2}')
 
-# Fallback: If shortcuts timed out/failed but we have an IP, use ipconfig SSID or generic fallback
-if [ -z "$SSID" ] && [ -n "$INTERNAL_IP" ]; then
-  SSID=$(ipconfig getsummary "$WIFI_INTERFACE" 2>/dev/null | awk -F': ' '/SSID/ {print $2}')
-  if [ -z "$SSID" ] || [ "$SSID" = "<redacted>" ]; then
-    SSID="University"
-  fi
+# Fallback: If Shortcuts timed out/failed/redacted, try local Wi-Fi tools.
+if is_redacted_ssid "$SSID" && [ -n "$INTERNAL_IP" ]; then
+  SSID=$(get_ssid_from_fallbacks)
+  SSID=$(normalize_ssid "$SSID")
 fi
 
 # General Location/SSID Logic
-if [ -n "$SSID" ]; then
-    # Handle redacted or hidden SSIDs
-    if [[ "$SSID" == "<redacted>" || "$SSID" == "" ]]; then
-        LOCATION="University"
-    else
-        LOCATION="$SSID"
-    fi
+if ! is_redacted_ssid "$SSID"; then
+    LOCATION="$SSID"
+elif [ -n "$INTERNAL_IP" ]; then
+    LOCATION="$INTERNAL_IP"
 else
     LOCATION="Severed Bond"
 fi

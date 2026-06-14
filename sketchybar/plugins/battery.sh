@@ -23,6 +23,12 @@ if [ "$PERCENTAGE" = "" ]; then
   exit 0
 fi
 
+if [[ "$CHARGING" != "" ]]; then
+  sketchybar --set "$NAME" update_freq=5
+else
+  sketchybar --set "$NAME" update_freq=120
+fi
+
 case "${PERCENTAGE}" in
   9[0-9]|100) ICON="󰁹"
   ;;
@@ -34,7 +40,7 @@ case "${PERCENTAGE}" in
   ;;
   [1-2][0-9]) ICON="󰁻"
   ;;
-  *) ICON="󰂎"
+  *) ICON="󱃍"
 esac
 
 if [[ "$CHARGING" != "" ]]; then
@@ -42,24 +48,26 @@ if [[ "$CHARGING" != "" ]]; then
 fi
 
 if [[ "$CHARGING" != "" ]]; then
-  COLOR="$PRES_ATIUM"                  # Atium gold — power flowing in
-  LABEL="Infusing ${PERCENTAGE}%"
+  COLOR="$BATT_ACCENT"
+  LABEL="󰇚 Infusing ${PERCENTAGE}%"
+
+elif [ "$PERCENTAGE" -le 15 ]; then
+  COLOR="$RUIN_MAROON"
+  LABEL="Dun Gem ${PERCENTAGE}%"
+
+elif [ "$PERCENTAGE" -le 30 ]; then
+  COLOR="$RUIN_SPIKE"
+  LABEL="Dun Gem ${PERCENTAGE}%"
+
+elif [ "$PERCENTAGE" -le 80 ]; then
+  COLOR="$PRES_LAVENDER"
+  LABEL="Reserve ${PERCENTAGE}%"
+
 else
-  # Preservation Reserve Levels: draining toward Ruin
-  if [ "$PERCENTAGE" -le 15 ]; then
-    COLOR="$RUIN_MAROON"              # Ruin's grip — critical
-    LABEL="Dun Gem ${PERCENTAGE}%"
-  elif [ "$PERCENTAGE" -le 30 ]; then
-    COLOR="$RUIN_SPIKE"              # Hemalurgic amber — danger
-    LABEL="Dun Gem ${PERCENTAGE}%"
-  elif [ "$PERCENTAGE" -le 80 ]; then
-    COLOR="$PRES_LAVENDER"           # Preservation calm — midpoint
-    LABEL="Reserve ${PERCENTAGE}%"
-  else
-    COLOR="$BATT_ACCENT"            # Preservation mist — fully infused
-    LABEL="Infused ${PERCENTAGE}%"
-  fi
+  COLOR="$BATT_ACCENT"
+  LABEL="Infused ${PERCENTAGE}%"
 fi
+
 
 # Update popup battery status
 sketchybar --set battery.status \
@@ -73,14 +81,27 @@ sketchybar --set "$NAME" \
   icon.color="$COLOR" \
   label.drawing=off
 
-# Charging pulse animation: Preservation mist ↔ Atium gold
+# Charging pulse animation: Preservation mist <-> Atium gold
 if [[ "$CHARGING" != "" ]]; then
-  sketchybar --animate "$NAME" icon.color $PRES_MIST $PRES_ATIUM duration=1200 repeat=indefinite
+  CHARGE_PHASE_FILE="/tmp/syl_batt_charge_phase"
+
+  if [ -f "$CHARGE_PHASE_FILE" ]; then
+    CHARGE_COLOR="$PRES_ATIUM"
+    rm -f "$CHARGE_PHASE_FILE"
+  else
+    CHARGE_COLOR="$BATT_ACCENT"
+    touch "$CHARGE_PHASE_FILE"
+  fi
+
+  sketchybar --animate sin 60 --set "$NAME" icon.color="$CHARGE_COLOR"
+else
+  rm -f /tmp/syl_batt_charge_phase
 fi
 
 # Low battery shake warning when <=15%
 if [ "$PERCENTAGE" -le 15 ]; then
-  sketchybar --animate "$NAME" icon.y_offset -4 4 duration=150 repeat=3
+  sketchybar --animate sin 15 --set "$NAME" icon.y_offset=-4
+  sketchybar --animate sin 15 --set "$NAME" icon.y_offset=0
   
   if [ -z "$CHARGING" ]; then
     if [ ! -f "/tmp/syl_batt_warn" ]; then
@@ -92,5 +113,5 @@ if [ "$PERCENTAGE" -le 15 ]; then
   fi
 else
   rm -f /tmp/syl_batt_warn
+  sketchybar --set "$NAME" icon.y_offset=0
 fi
-

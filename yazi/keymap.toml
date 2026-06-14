@@ -99,8 +99,7 @@ keymap = [
 	{ on = ["m", "n"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/control.sh next"', desc = "Lash Forward" },
 	{ on = ["m", "b"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/control.sh prev"', desc = "Lash Backward" },
 	{ on = ["m", "r"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/queue.py loop"', desc = "Swear New Loop Oath" },
-	{ on = ["m", "l"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/control.sh seekf"', desc = "Seek Forward" },
-	{ on = ["m", "h"], run = 'shell "/Users/aaravshah2975/.config/radiant-player/control.sh seekb"', desc = "Seek Backward" },
+
 	
 	# Copy
 	{ on = [ "c", "c" ], run = "copy path",             desc = "Copy the file path" },

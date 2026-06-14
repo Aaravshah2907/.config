@@ -1517,9 +1517,11 @@ def entry_title(entry):
 
 
 def source_icon(source):
-    return SPOTIFY_ICON if source == "spotify" else LOCAL_ICON
+    if source == "spotify":
+        return SPOTIFY_ICON
+    return "󰕼" if PLAYER_BACKEND == "vlc" else ""
 
-
+    
 def ensure_index(state):
     q = state["queue"]
     if not q:
@@ -1573,7 +1575,14 @@ def update_last_status(state, running=False, paused=True, title="Resting", artis
         item = state["queue"][idx]
         # Only update if it matches (to avoid cross-track pollution)
         if source == item.get("source"):
-            item["last_pos"] = position
+            dur = duration or 0
+            pos = position or 0
+            # If we're within the last 5 s of the track, the song is effectively
+            # done — clear last_pos so it starts from the beginning next time.
+            if dur > 0 and pos >= (dur - 5):
+                item["last_pos"] = 0
+            else:
+                item["last_pos"] = pos
 
     try:
         payload = {
@@ -1619,6 +1628,9 @@ def play_current(state):
         update_last_status(state)
         return
     item = state["queue"][state["current_index"]]
+    # Do NOT clear last_auto_next_id here. We encode current_index into the key
+    # (see auto-next dedup below), so advancing the index automatically
+    # invalidates the old guard without risking a chain-reaction skip.
     normalize_queue_item(item)
     source = item.get("source", "local")
     stop_inactive_source(source)
@@ -1633,7 +1645,12 @@ def play_current(state):
         dur_hint = item.get("duration_sec") or 0
         resume_pos = 0
         if last_pos > 1:
-            if dur_hint <= 0 or last_pos < (dur_hint - 3):
+            # Safety: never resume within the last 10 s of a known-duration track —
+            # that means the song finished naturally and last_pos wasn't cleared yet.
+            near_end = dur_hint > 0 and last_pos >= (dur_hint - 10)
+            if near_end:
+                item["last_pos"] = 0  # clear stale end-position
+            elif dur_hint <= 0 or last_pos < (dur_hint - 3):
                 resume_pos = last_pos
 
         if PLAYER_BACKEND == "vlc":
@@ -1658,6 +1675,10 @@ def play_current(state):
             mpv_send(["set_property", "pause", False])
             pos = mpv_send(["get_property", "time-pos"])
             dur = mpv_send(["get_property", "duration"])
+            
+            extracted_dur = (dur or {}).get("data")
+            if not extracted_dur:
+                extracted_dur = item.get("duration_sec", 0)
             update_last_status(
                 state,
                 running=True,
@@ -1666,7 +1687,7 @@ def play_current(state):
                 artist=item.get("artist", ""),
                 source="local",
                 position=(pos or {}).get("data", 0),
-                duration=(dur or {}).get("data", item.get("duration_sec", 0)),
+                duration=extracted_dur or 0,
             )
     else:
         ok, _ = spotify_play_uri(item.get("spotify_uri", ""))
@@ -1695,6 +1716,26 @@ def play_current(state):
                 track_id=item.get("spotify_id", ""),
             )
     state["active_source"] = source
+
+
+def _peek_next_item(state):
+    """Return the queue item that would be played after the current one, or None."""
+    q = state.get("queue", [])
+    if not q:
+        return None
+    idx = state.get("current_index", -1)
+    if idx < 0:
+        return None
+    next_idx = idx + 1
+    loop = state.get("loop_mode", "off")
+    if next_idx >= len(q):
+        if loop == "playlist":
+            next_idx = 0
+        elif loop == "single":
+            next_idx = idx
+        else:
+            return None  # end of queue, no next track
+    return q[next_idx]
 
 
 def refresh_live_status(state):
@@ -1737,6 +1778,15 @@ def refresh_live_status(state):
     source = item.get("source", "local")
     if source == "local":
         if not is_local_running():
+            # Detect track-finished transition: was running local → now stopped.
+            # Use extrapolated status so that if the dashboard wasn't polled,
+            # we still know the song reached its end based on wall-clock time.
+            prev_st = status_from_snapshot_or_state(state)
+            was_running_local = (
+                prev_st.get("running") and
+                not prev_st.get("paused") and
+                prev_st.get("source") == "local"
+            )
             ext = external_spotify_snapshot()
             if ext:
                 update_last_status(
@@ -1751,28 +1801,94 @@ def refresh_live_status(state):
                     track_id=ext.get("track_id", ""),
                 )
             else:
-                update_last_status(state, running=False, paused=True, title=item.get("title", "Resting"), artist=item.get("artist", ""), source="local")
+                # If previous state was actively playing local, the track just finished
+                # → trigger auto-next to advance the queue
+                if was_running_local and is_track_finished_for_auto_next(prev_st):
+                    track_sig = f"{idx}:{prev_st.get('track_id') or prev_st.get('title', '')}"
+                    if track_sig and state.get("last_auto_next_id") != track_sig:
+                        debug_log(f"Auto-next (track-finished) for local: {prev_st.get('title')}")
+                        state["last_auto_next_id"] = track_sig
+                        # Reset last_pos on the finished track so it starts fresh on next loop-around
+                        if 0 <= idx < len(q):
+                            q[idx]["last_pos"] = 0
+                        # Optimistically show next track as loading so UI doesn't flash IDLE
+                        next_item = _peek_next_item(state)
+                        if next_item:
+                            update_last_status(state, running=True, paused=False,
+                                               title=next_item.get("title", "Loading…"),
+                                               artist=next_item.get("artist", ""), source="local")
+                        else:
+                            update_last_status(state, running=False, paused=True,
+                                               title=item.get("title", "Resting"),
+                                               artist=item.get("artist", ""), source="local")
+                        save_state(state)
+                        script_path = os.path.abspath(__file__)
+                        subprocess.Popen([sys.executable, script_path, "next"],
+                                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return
         
         lst = local_get_status()
-        update_last_status(
-            state,
-            running=True,
-            paused=lst.get("paused", True),
-            title=lst.get("title") or item.get("title", "Unknown"),
-            artist=item.get("artist", ""),
-            source="local",
-            position=lst.get("position", 0),
-            duration=lst.get("duration", 0),
-        )
+        is_actually_running = lst.get("running", False)
+        has_title = bool(lst.get("title"))
         
-        check_auto_next(state, {
-            "source": "local",
-            "title": lst.get("title") or item.get("title", "Unknown"),
-            "paused": lst.get("paused", True),
-            "position": lst.get("position", 0),
-            "duration": lst.get("duration", 0)
-        })
+        if is_actually_running and has_title:
+            update_last_status(
+                state,
+                running=True,
+                paused=lst.get("paused", True),
+                title=lst.get("title") or item.get("title", "Unknown"),
+                artist=item.get("artist", ""),
+                source="local",
+                position=lst.get("position", 0),
+                duration=lst.get("duration", 0),
+            )
+            
+            check_auto_next(state, {
+                "running": True,
+                "source": "local",
+                "title": lst.get("title") or item.get("title", "Unknown"),
+                "paused": lst.get("paused", True),
+                "position": lst.get("position", 0),
+                "duration": lst.get("duration", 0)
+            })
+        else:
+            # VLC process is alive but track finished (state=stopped) or RC lagged.
+            # Use extrapolated status so that if the dashboard wasn't polled,
+            # we still know the song reached its end based on wall-clock time.
+            prev_st = status_from_snapshot_or_state(state)
+            was_running_local = (
+                prev_st.get("running") and
+                not prev_st.get("paused") and
+                prev_st.get("source") == "local"
+            )
+            
+            if was_running_local and is_track_finished_for_auto_next(prev_st):
+                # Dedup key encodes the queue index so the same title at a
+                # different position (playlist loop) gets a fresh guard, but
+                # we don't fire twice for the same index.
+                track_sig = f"{idx}:{prev_st.get('track_id') or prev_st.get('title', '')}"
+                if track_sig and state.get("last_auto_next_id") != track_sig:
+                    debug_log(f"Auto-next (vlc-stopped) for local: {prev_st.get('title')}")
+                    state["last_auto_next_id"] = track_sig
+                    # Reset last_pos on the finished track so it starts fresh on next loop-around
+                    if 0 <= idx < len(q):
+                        q[idx]["last_pos"] = 0
+                    # Optimistically show next track as loading so UI doesn't flash IDLE
+                    next_item = _peek_next_item(state)
+                    if next_item:
+                        update_last_status(state, running=True, paused=False,
+                                           title=next_item.get("title", "Loading…"),
+                                           artist=next_item.get("artist", ""), source="local")
+                    else:
+                        update_last_status(state, running=False, paused=True,
+                                           title=item.get("title", "Resting"),
+                                           artist=item.get("artist", ""), source="local")
+                    save_state(state)
+                    script_path = os.path.abspath(__file__)
+                    subprocess.Popen([sys.executable, script_path, "next"],
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # If not near the end, we ignore the 'stopped' state and assume VLC is just loading
+
     else:
         # Backfill metadata for older queue entries that only had Spotify IDs.
         if (not item.get("artist")) and item.get("spotify_uri"):
@@ -1804,20 +1920,43 @@ def refresh_live_status(state):
         check_auto_next(state, status_dict)
 
 
+def is_track_finished_for_auto_next(prev_st):
+    """Returns True if the previous state indicates the track was near its end."""
+    if not prev_st:
+        return False
+    pos = prev_st.get("position", 0)
+    dur = prev_st.get("duration", 0)
+    if dur > 0:
+        # Allow a 10s buffer because the dashboard polls periodically. The last
+        # recorded position before VLC stops might be several seconds behind.
+        return pos >= (dur - 10)
+    return False
+
+
 def check_auto_next(state, st):
-    """Triggers the 'next' command if we are near the end of a track."""
-    if st.get("paused", True):
+    """Triggers the 'next' command if we are near the end of a track.
+    Handles paused state and unknown durations gracefully.
+    """
+    # Ensure we have a running track that is not paused
+    if not st.get("running", False) or st.get("paused", False):
         return
     pos = st.get("position", 0)
     dur = st.get("duration", 0)
     source = st.get("source", "local")
-    
-    # Thresholds: Local (2.5s), Spotify (3s)
-    threshold = 3.0 if source == "spotify" else 2.5
-    
-    if dur > 5 and pos >= (dur - threshold):
-        # Unique ID for the track to prevent multiple triggers
-        track_sig = st.get("track_id") or st.get("title")
+
+    # If duration is unknown or zero, cannot reliably auto-next
+    if dur <= 0:
+        return
+
+    # Thresholds: Local (4.0s), Spotify (5.0s)
+    # Increase threshold to account for 2-second polling in dashboard.sh
+    threshold = 5.0 if source == "spotify" else 4.0
+
+    if pos >= (dur - threshold):
+        # Dedup key encodes queue index so the same song at a different position
+        # in a playlist loop gets a fresh key, but won't double-fire.
+        cur_idx = state.get("current_index", -1)
+        track_sig = f"{cur_idx}:{st.get('track_id') or st.get('title', '')}"
         if track_sig and state.get("last_auto_next_id") != track_sig:
             debug_log(f"Auto-next triggered for {source}: {pos}/{dur}")
             state["last_auto_next_id"] = track_sig
@@ -1957,8 +2096,17 @@ def maybe_reconcile_local(state):
         if state.get("current_index") != target or state.get("active_source") != "local":
             state["current_index"] = target
             state["active_source"] = "local"
-            # Update status partially for immediate UI feedback in fast paths
-            update_last_status(state, running=True, title=item.get("title", "Local"), artist=item.get("artist", ""), source="local")
+            # Only update in-memory state; do NOT call update_last_status here because
+            # it would write a partial snapshot (paused=True, pos=0, dur=0) that
+            # stales the dashboard until the next full refresh_live_status cycle.
+            # refresh_live_status will write the correct snapshot right after this returns.
+            state["last_status"] = {
+                **state.get("last_status", {}),
+                "running": True,
+                "title": item.get("title", "Local"),
+                "artist": item.get("artist", ""),
+                "source": "local",
+            }
             debug_log(f"Reconciled local current_index to {target}")
             return True
     return False
@@ -2622,8 +2770,41 @@ def cmd_status_fast():
                 if st.get("source") == "spotify":
                     st = {"running": False, "paused": True, "title": "Resting"}
 
+    # Reality check: if snapshot says local+running but VLC is actually done,
+    # correct st and detect the track-finished transition
+    if st.get("running") and st.get("source") == "local" and not is_local_active():
+        prev_running = st.copy()
+        if is_track_finished_for_auto_next(prev_running):
+            st = {"running": False, "paused": True, "title": st.get("title", "Resting"), "source": "local"}
+        # Trigger auto-next for the track that just finished
+            if not prev_running.get("paused", False):
+                cur_idx = state.get("current_index", -1)
+                track_sig = f"{cur_idx}:{prev_running.get('track_id') or prev_running.get('title', '')}"
+                if track_sig and state.get("last_auto_next_id") != track_sig:
+                    debug_log(f"Auto-next (status_fast stale snapshot) for local: {prev_running.get('title')}")
+                    state["last_auto_next_id"] = track_sig
+                    save_state(state)
+                    script_path = os.path.abspath(__file__)
+                    subprocess.Popen([sys.executable, script_path, "next"],
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
     if st.get("running"):
         check_auto_next(state, st)
+    else:
+        # Detect track-finished transition: previous state was running → now idle
+        # Use extrapolated status to catch if the track finished naturally
+        prev_st = status_from_snapshot_or_state(state)
+        was_running = prev_st.get("running") and not prev_st.get("paused")
+        if was_running and prev_st.get("source") == "local" and is_track_finished_for_auto_next(prev_st):
+            cur_idx = state.get("current_index", -1)
+            track_sig = f"{cur_idx}:{prev_st.get('track_id') or prev_st.get('title', '')}"
+            if track_sig and state.get("last_auto_next_id") != track_sig:
+                debug_log(f"Auto-next (status_fast finished) for local: {prev_st.get('title')}")
+                state["last_auto_next_id"] = track_sig
+                save_state(state)
+                script_path = os.path.abspath(__file__)
+                subprocess.Popen([sys.executable, script_path, "next"],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if not st.get("running"):
         print(f"  {DIM}{REST_ICON} Idle{NC}")
@@ -2739,8 +2920,17 @@ def cmd_short_status_fast():
 def cmd_status_json():
     state = load_state()
     refresh_live_status(state)
-    # Redundant call removed to maintain mpv priority
-    st = status_from_snapshot_or_state(state, max_age_sec=3)
+    # After refresh_live_status, state["last_status"] has the freshest data.
+    # status_from_snapshot_or_state can return a stale snapshot from a previous
+    # song if the snapshot file hasn't been updated yet (race window during
+    # song transitions). Prefer last_status when the titles differ.
+    live_st = state.get("last_status") or {}
+    snap_st = status_from_snapshot_or_state(state, max_age_sec=3)
+    # Use live_st if it has a title and the snapshot title disagrees
+    if live_st.get("title") and snap_st.get("title") and live_st["title"] != snap_st["title"]:
+        st = live_st
+    else:
+        st = snap_st if snap_st.get("title") else live_st
     if not st.get("running"):
         print(json.dumps({"running": False}))
         return
@@ -2751,6 +2941,7 @@ def cmd_status_json():
         "paused": st.get("paused", True),
         "loop": state.get("loop_mode", "off"),
         "source": st.get("source"),
+        "backend": PLAYER_BACKEND if st.get("source") == "local" else st.get("source", "local"),
         "track_id": st.get("track_id", ""),
         "position": st.get("position", 0),
         "duration": st.get("duration", 0),
@@ -2770,15 +2961,36 @@ def cmd_toggle():
     refresh_live_status(state)
 
 
-def cmd_seek(delta):
+
+
+
+def cmd_restart():
+    """Restart the current track from the beginning, clearing any saved resume position."""
     state = load_state()
     source = pick_active_source_for_controls(state)
+    if source is None:
+        return
+
     if source == "local":
-        local_seek(int(delta))
+        # Clear the saved resume position so next play starts from zero
+        idx = state.get("current_index", -1)
+        q = state.get("queue", [])
+        if 0 <= idx < len(q):
+            q[idx]["last_pos"] = 0
+
+        # Most reliable way to restart a track in VLC without stream errors
+        # is to simply reload it fresh.
+        play_current(state)
+
+        # Give the player a moment to process the seek, then sync from live state
+        time.sleep(0.15)
+        vlc_clear_status_cache()
+        refresh_live_status(state)
+        save_state(state)
+
     elif source == "spotify":
-        # Some spotify_player versions support this syntax.
-        offset_ms = str(int(delta) * 1000)
-        spotify_cmd(["playback", "seek", offset_ms])
+        # Seek to position 0 ms
+        spotify_cmd(["playback", "seek", "0"])
 
 
 def cmd_volume(delta):
@@ -3025,8 +3237,9 @@ def main():
         elif cmd == "toggle":
             cmd_toggle()
             signal_refresh()
-        elif cmd == "seek":
-            cmd_seek(int(sys.argv[2]))
+
+        elif cmd == "restart":
+            cmd_restart()
             signal_refresh()
         elif cmd == "volume":
             cmd_volume(int(sys.argv[2]))

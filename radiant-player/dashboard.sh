@@ -384,11 +384,11 @@ draw() {
     echo -e "  ${C_SEC}${BOLD}┌──${label3}${hline3}──┐${NC}"
     
     local -a cmd_rows=(
-        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}   ${SAPPHIRE_G}[↑/↓]${NC} Move      ${SAPPHIRE_G}[ENTER]${NC} Play ${SAPPHIRE_G}[n/p]${NC} Next/Prev  ${SAPPHIRE_G}[l]${NC} Loop        ${SAPPHIRE_G}[s]${NC} Shuffle"
-        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear    ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${GARNET}[q]${NC} Quit"
-        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}   ${SAPPHIRE_G}[+/-]${NC} Vol       ${SAPPHIRE_G}[←/→]${NC} Seek   ${SAPPHIRE_G}[[/]]${NC} Jump       ${SAPPHIRE_G}[j/k]${NC} Move Item"
-        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC}  ${SAPPHIRE_G}[^S]${NC} Save       ${SAPPHIRE_G}[^L]${NC} Load    ${SAPPHIRE_G}[r]${NC} Refresh      ${SAPPHIRE_G}[t]${NC} Sort Mode"
-        " ${GREEN}${NC} ${BOLD}SPO${NC}   ${SAPPHIRE_G}[a]${NC} Search+Play ${SAPPHIRE_G}[P]${NC} Playlist ${SAPPHIRE_G}[o]${NC} Spotify App"
+        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}   ${SAPPHIRE_G}[↑/↓]${NC} Move      ${SAPPHIRE_G}[ENTER]${NC} Play     ${SAPPHIRE_G}[n/p]${NC} Next/Prev  ${SAPPHIRE_G}[l]${NC} Loop        ${SAPPHIRE_G}[s]${NC} Shuffle"
+        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear        ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${GARNET}[q]${NC} Quit"
+        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}   ${SAPPHIRE_G}[+/-]${NC} Vol       ${SAPPHIRE_G}[j/k]${NC} Move Item  ${SAPPHIRE_G}[R]${NC} Restart"
+        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC}  ${SAPPHIRE_G}[^S]${NC} Save       ${SAPPHIRE_G}[^L]${NC} Load        ${SAPPHIRE_G}[r]${NC} Refresh      ${SAPPHIRE_G}[t]${NC} Sort Mode"
+        " ${GREEN}${NC} ${BOLD}SPO${NC}   ${SAPPHIRE_G}[a]${NC} Search+Play ${SAPPHIRE_G}[P]${NC} Playlist     ${SAPPHIRE_G}[o]${NC} Spotify App"
     )
     
     for row in "${cmd_rows[@]}"; do
@@ -458,8 +458,6 @@ while true; do
             case "$key2" in
                 "[A") ((selected--)) ;;         # up
                 "[B") ((selected++)) ;;         # down
-                "[C") $PY seek 5 ;;             # right →
-                "[D") $PY seek -5 ;;            # left ←
             esac
             ;;
 
@@ -476,8 +474,6 @@ while true; do
             load_queue
             ;;
 
-        "[") $PY seek -10 ;;
-        "]") $PY seek 10 ;;
         "+" | "=") $PY volume 5 ;;
         "-") $PY volume -5 ;;
         
@@ -548,6 +544,7 @@ while true; do
             ;;
         l)  $PY loop;   load_queue ;;
         s)  $PY shuffle; load_queue ;;
+        R)  $PY restart ;;
         r)
             # Highstorm Refresh Effect
             echo -ne "${CYAN}${BOLD}"

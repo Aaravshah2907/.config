@@ -106,8 +106,24 @@ if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | jq -r '.running') == "true" ]];
   LICON=""
   if [ "$LOOP" == "single" ]; then LICON="󰑘 "; elif [ "$LOOP" == "playlist" ]; then LICON="󰑖 "; fi
   
-  ICON=""
+  BACKEND=$(echo "$MPV_STATUS" | jq -r '.backend // "mpv"')
+  ICON=""
   APP="mpv"
+  case "$BACKEND" in
+    vlc|VLC)
+      ICON="󰕼"
+      APP="VLC"
+      ;;
+    spotify|Spotify)
+      ICON=""
+      APP="Spotify"
+      ;;
+    *)
+      ICON=""
+      APP="mpv"
+      ;;
+  esac
+  # Source overrides backend for Spotify streams played via local backend
   if [ "$SOURCE" == "spotify" ]; then
     ICON=""
     APP="Spotify"

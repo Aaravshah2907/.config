@@ -32,14 +32,7 @@ case "$cmd" in
         [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
         notify_syl "Playing"
         ;;
-    seekf)
-        python3 "$PY" seek 5
-        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
-        ;;
-    seekb)
-        python3 "$PY" seek -5
-        [ -n "$YAZI_ID" ] && ya emit redraw >/dev/null 2>&1
-        ;;
+
 esac
 
 exit 0

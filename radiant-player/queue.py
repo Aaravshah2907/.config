@@ -1647,7 +1647,7 @@ def play_current(state):
         if last_pos > 1:
             # Safety: never resume within the last 10 s of a known-duration track —
             # that means the song finished naturally and last_pos wasn't cleared yet.
-            near_end = dur_hint > 0 and last_pos >= (dur_hint - 10)
+            near_end = dur_hint > 0 and last_pos >= (dur_hint - 3)
             if near_end:
                 item["last_pos"] = 0  # clear stale end-position
             elif dur_hint <= 0 or last_pos < (dur_hint - 3):
@@ -1927,9 +1927,9 @@ def is_track_finished_for_auto_next(prev_st):
     pos = prev_st.get("position", 0)
     dur = prev_st.get("duration", 0)
     if dur > 0:
-        # Allow a 10s buffer because the dashboard polls periodically. The last
+        # Allow a 3s buffer because the dashboard polls periodically. The last
         # recorded position before VLC stops might be several seconds behind.
-        return pos >= (dur - 10)
+        return pos >= (dur - 3)
     return False
 
 
@@ -3095,7 +3095,7 @@ def cmd_spotify_health():
 def cmd_health():
     state = load_state()
     st = read_status_snapshot(max_age_sec=30) or (state.get("last_status", {}) or {})
-    spotify_st = spotify_status(max_age_sec=10)
+    spotify_st = spotify_status(max_age_sec=1)
     # VLC-specific socket info
     vlc_socket_exists = os.path.exists(VLC_SOCKET_PATH) if PLAYER_BACKEND == "vlc" else False
     mpv_socket_exists = os.path.exists(SOCKET_PATH) if PLAYER_BACKEND == "mpv" else False

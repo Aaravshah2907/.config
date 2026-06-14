@@ -3,6 +3,7 @@ import json
 import os
 import random
 import re
+import shutil
 import socket
 import subprocess
 import sys
@@ -17,8 +18,12 @@ from pathlib import Path
 from urllib import error as urlerror
 from urllib import request as urlrequest
 
-# Configuration
-SOCKET_PATH = "/tmp/mpv-yazi.sock"
+# ── Platform detection ──────────────────────────────────────────────────────
+IS_MACOS = sys.platform == "darwin"
+
+# ── Configuration ──────────────────────────────────────────────────────────
+SOCKET_PATH = "/tmp/mpv-yazi.sock"          # mpv IPC socket (fallback)
+VLC_SOCKET_PATH = "/tmp/vlc-radiant.sock"   # VLC RC socket (primary)
 STATE_PATH = Path(os.path.expanduser("~/.config/radiant-player/queue_state.json"))
 PLAYLIST_DIR = Path(os.path.expanduser("~/.config/mpv/playlists"))
 LOCK_PATH = Path("/tmp/radiant-player.lock")
@@ -29,24 +34,30 @@ DEBUG_LOG_PATH = Path("/tmp/radiant-player.log")
 ART_CACHE_SIG_PATH = Path("/tmp/radiant-art-cache.sig")
 ART_CACHE_RENDER_PATH = Path("/tmp/radiant-art-cache.ansi")
 
-BOLD = "\033[1m"
-DIM = "\033[2m"
-CYAN = "\033[38;5;81m"     # Stormlight Glow (Sapphire)
-MAGENTA = "\033[38;5;141m"  # Shardblade (Violet)
-GREEN = "\033[38;5;121m"    # Lifebound (Emerald)
-YELLOW = "\033[38;5;220m"   # Honor's Gold (Heliodor)
-BLUE = "\033[38;5;69m"      # Windrunner Blue
-RED = "\033[38;5;160m"      # Voidlight / Odium
-GRAY = "\033[38;5;240m"     # Rosharan Slate
-NC = "\033[0m"
-# Gemstone Shades
-RUBY="\033[38;5;196m"     # Infusion
-EMERALD_G="\033[38;5;46m"   # Growth
-SAPPHIRE_G="\033[38;5;27m"  # Translucence
-AMETHYST_G="\033[38;5;129m" # Metal
-DIAMOND_G="\033[38;5;231m"  # Glass
-HELIODOR_G="\033[38;5;226m" # Air
-DUN="\033[38;5;239m"      # Drained Sphere
+# ── ANSI colors — mirrors cosmere_colors.sh T_* palette ───────────────────
+NC        = "\033[0m"
+BOLD      = "\033[1m"
+DIM       = "\033[2m"
+# Windrunner / Stormlight
+CYAN      = "\033[38;5;74m"   # T_PRES_GLACIAL  — Glacial teal
+BLUE      = "\033[38;5;39m"   # T_SPREN_HONOR   — Honorspren sky blue
+GREEN     = "\033[38;5;71m"   # T_SPREN_CULTIVATION — Cultivationspren green
+YELLOW    = "\033[38;5;220m"  # T_SPREN_GLORY   — Gloryspren gold
+MAGENTA   = "\033[38;5;177m"  # T_SPREN_WILL    — Willshaper amethyst
+RED       = "\033[38;5;88m"   # T_RUIN_MAROON   — Ruin's bloodline
+GRAY      = "\033[38;5;66m"   # T_SPREN_STORM   — Stormfather slate
+# Gemstone roles
+RUBY      = "\033[38;5;202m"  # T_SPREN_ASH     — Ashspren volcanic (urgent/infused)
+EMERALD_G = "\033[38;5;71m"   # T_SPREN_CULTIVATION
+SAPPHIRE_G= "\033[38;5;39m"   # T_SAPPHIRE      — Windrunner
+AMETHYST_G= "\033[38;5;177m"  # T_SPREN_WILL
+DIAMOND_G = "\033[38;5;152m"  # T_PRES_SILVER   — Frosted silver
+HELIODOR_G= "\033[38;5;222m"  # T_PRES_ATIUM    — Atium pale gold
+DUN       = "\033[38;5;236m"  # T_RUIN_ASH      — Ashmount shadow (drained)
+AMBER     = "\033[38;5;215m"  # T_AMBER         — Lightweaver amber (VLC accent)
+SIBLING   = "\033[38;5;214m"  # T_SPREN_SIBLING — Crystal amber (VLC backend label)
+LAVENDER  = "\033[38;5;183m"  # T_PRES_LAVENDER — Pale lavender
+CRIMSON   = "\033[38;5;204m"  # T_CRIMSON       — Odium crimson
 
 LOCAL_ICON = "󰎈"
 SPOTIFY_ICON = ""
@@ -100,7 +111,8 @@ def debug_log(message):
 BIN_CACHE_PATH = Path("/tmp/radiant-bin-cache.json")
 
 def resolve_bin(name):
-    # Cache lookup
+    """Resolve a binary name to its full path, with caching.
+    On macOS checks Homebrew paths first; on Linux skips them."""
     if BIN_CACHE_PATH.exists():
         try:
             with BIN_CACHE_PATH.open("r") as f:
@@ -110,23 +122,31 @@ def resolve_bin(name):
         except Exception:
             pass
 
+    # Build candidate list — Homebrew paths only on macOS
+    candidates = []
+    if IS_MACOS:
+        candidates += [f"/opt/homebrew/bin/{name}", f"/opt/homebrew/opt/{name}/bin/{name}"]
+    candidates += [f"/usr/local/bin/{name}", f"/usr/bin/{name}", name]
+
     resolved = name
-    for candidate in (f"/opt/homebrew/bin/{name}", f"/usr/local/bin/{name}", name):
+    for candidate in candidates:
         if os.path.isabs(candidate):
             if os.path.exists(candidate):
                 resolved = candidate
                 break
         else:
+            result = shutil.which(candidate)
+            if result:
+                resolved = result
+                break
             if subprocess.run(
                 ["bash", "-lc", f"command -v {candidate} >/dev/null 2>&1"], check=False
             ).returncode == 0:
-                # Get the actual path
                 p = subprocess.run(["bash", "-lc", f"command -v {candidate}"], capture_output=True, text=True).stdout.strip()
                 if p:
                     resolved = p
                     break
 
-    # Update cache
     try:
         cache = {}
         if BIN_CACHE_PATH.exists():
@@ -146,6 +166,34 @@ SPOTIFY_PLAYER_BIN = resolve_bin("spotify_player")
 LIBRESPOT_BIN = resolve_bin("librespot")
 SPOTIFY_STATUS_CACHE = {"ts": 0.0, "data": None}
 LOCK_WAIT_TIMEOUT_SEC = 2.0
+
+# ── VLC binary resolution ───────────────────────────────────────────────────
+# macOS: VLC.app ships its own binary; Homebrew installs a wrapper at /opt/homebrew/bin/vlc
+# Linux: cvlc (headless wrapper) preferred, plain vlc as fallback
+def _resolve_vlc_bin():
+    candidates = []
+    if IS_MACOS:
+        candidates += [
+            "/opt/homebrew/bin/vlc",
+            "/usr/local/bin/vlc",
+            "/Applications/VLC.app/Contents/MacOS/VLC",
+        ]
+    else:
+        candidates += ["cvlc", "vlc"]
+    for c in candidates:
+        if os.path.isabs(c):
+            if os.path.exists(c):
+                return c
+        else:
+            found = shutil.which(c)
+            if found:
+                return found
+    return None
+
+VLC_BIN = _resolve_vlc_bin()
+
+# Active local player backend: "vlc" if VLC is found, else "mpv"
+PLAYER_BACKEND = "vlc" if VLC_BIN else "mpv"
 
 
 def is_pid_running(pid):
@@ -180,6 +228,7 @@ def load_state():
 
 
 def save_state(state):
+    state["player_backend"] = PLAYER_BACKEND
     STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     tmp = STATE_PATH.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8") as f:
@@ -262,6 +311,265 @@ def ensure_mpv():
         time.sleep(0.1)
 
 
+# ── VLC RC socket helpers ───────────────────────────────────────────────────
+def is_vlc_running():
+    """Check if VLC is accepting connections on the RC unix socket."""
+    if not os.path.exists(VLC_SOCKET_PATH):
+        return False
+    try:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.settimeout(0.3)
+            s.connect(VLC_SOCKET_PATH)
+            return True
+    except Exception:
+        return False
+
+
+def vlc_send(cmd_str):
+    """Send a text command to VLC RC socket. Returns the response text or None."""
+    try:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.settimeout(1.0)
+            s.connect(VLC_SOCKET_PATH)
+            s.sendall((cmd_str.strip() + "\n").encode())
+            
+            s.settimeout(0.5) # wait up to 0.5s for initial response
+            data = b""
+            try:
+                chunk = s.recv(4096)
+                data += chunk
+                s.settimeout(0.05) # very short timeout for remaining bytes
+                while True:
+                    chunk = s.recv(4096)
+                    if not chunk:
+                        break
+                    data += chunk
+            except (socket.timeout, OSError):
+                pass
+            return data.decode("utf-8", "replace").strip()
+    except Exception as e:
+        debug_log(f"vlc_send({cmd_str!r}) error: {e}")
+        return None
+
+
+def vlc_query(cmd_str):
+    """Send a VLC RC command and return the response."""
+    raw = vlc_send(cmd_str)
+    if not raw:
+        return ""
+    # VLC RC echoes the prompt '> ' — strip those lines
+    lines = [l.strip() for l in raw.splitlines() if l.strip() and l.strip() != ">"]
+    return "\n".join(lines)
+
+
+def is_vlc_active():
+    """Check if VLC is running AND has a track loaded."""
+    if not is_vlc_running():
+        return False
+    title = vlc_query("get_title")
+    return bool(title and title not in {"", ">", "( no input )"})
+
+
+def ensure_vlc():
+    """Start VLC headlessly with RC socket if not already running."""
+    if not VLC_BIN:
+        debug_log("VLC binary not found — cannot start VLC")
+        return
+    if is_vlc_running():
+        return
+    if os.path.exists(VLC_SOCKET_PATH):
+        try:
+            os.remove(VLC_SOCKET_PATH)
+        except OSError:
+            pass
+    
+    intf_name = "oldrc" if IS_MACOS else "rc"
+    subprocess.Popen(
+        [
+            VLC_BIN,
+            "-I", "dummy",
+            "--extraintf", intf_name,
+            "--no-video",
+            "--no-osd",
+            "--quiet",
+            "--rc-unix", VLC_SOCKET_PATH,
+            "--rc-fake-tty",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        stdin=subprocess.DEVNULL,
+    )
+    for _ in range(40):
+        if is_vlc_running():
+            return
+        time.sleep(0.1)
+
+
+def vlc_get_status():
+    """Poll VLC RC for full playback state. Returns a dict matching mpv shape."""
+    if not is_vlc_running():
+        return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
+    try:
+        raw_status = vlc_query("status")
+        raw_title  = vlc_query("get_title")
+        raw_time   = vlc_query("get_time")
+        raw_length = vlc_query("get_length")
+
+        # Parse state: VLC returns "( state playing )" / "( state paused )" / "( state stopped )"
+        state_match = re.search(r"state (\w+)", raw_status or "")
+        vlc_state = state_match.group(1) if state_match else "stopped"
+        running = vlc_state in ("playing", "paused")
+        paused  = vlc_state != "playing"
+
+        # Clean title — VLC may return the full path for local files
+        title = raw_title.strip() if raw_title else ""
+        if title in (">", "( no input )", ""):
+            title = ""
+            running = False
+
+        try:
+            pos = int(raw_time)
+        except (ValueError, TypeError):
+            pos = 0
+        try:
+            dur = int(raw_length)
+        except (ValueError, TypeError):
+            dur = 0
+
+        return {
+            "running": running,
+            "paused": paused,
+            "title": title,
+            "position": pos,
+            "duration": dur,
+        }
+    except Exception as e:
+        debug_log(f"vlc_get_status error: {e}")
+        return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
+
+
+def vlc_load_file(path, resume_pos=0):
+    """Load a local file in VLC and start playing, with optional resume."""
+    ensure_vlc()
+    # 'clear' empties the VLC playlist, 'add' queues the file, 'play' starts it
+    vlc_send("clear")
+    time.sleep(0.05)
+    vlc_send(f"add {path}")
+    time.sleep(0.2)  # allow VLC to register the item
+    vlc_send("play")
+    if resume_pos and resume_pos > 1:
+        time.sleep(0.4)  # brief wait before seeking
+        vlc_send(f"seek {int(resume_pos)}")
+
+
+# ── Local player abstraction layer ─────────────────────────────────────────
+# All calls that previously went directly to mpv now route through here.
+# PLAYER_BACKEND == "vlc"  →  VLC RC socket
+# PLAYER_BACKEND == "mpv"  →  mpv JSON IPC (unchanged behaviour)
+
+def is_local_running():
+    return is_vlc_running() if PLAYER_BACKEND == "vlc" else is_mpv_running()
+
+
+def is_local_active():
+    return is_vlc_active() if PLAYER_BACKEND == "vlc" else is_mpv_active()
+
+
+def local_pause():
+    """Pause the local player (does not stop it)."""
+    if PLAYER_BACKEND == "vlc":
+        st = vlc_get_status()
+        if st["running"] and not st["paused"]:
+            vlc_send("pause")
+    else:
+        mpv_send(["set_property", "pause", True])
+
+
+def local_toggle():
+    """Toggle play/pause on the local player."""
+    if PLAYER_BACKEND == "vlc":
+        st = vlc_get_status()
+        if st["paused"]:
+            vlc_send("play")
+        else:
+            vlc_send("pause")
+    else:
+        ensure_mpv()
+        mpv_send(["cycle", "pause"])
+
+
+def local_seek(delta):
+    """Seek by `delta` seconds (relative). VLC requires absolute position."""
+    if PLAYER_BACKEND == "vlc":
+        st = vlc_get_status()
+        new_pos = max(0, st["position"] + int(delta))
+        vlc_send(f"seek {new_pos}")
+    else:
+        mpv_send(["seek", int(delta), "relative"])
+
+
+def local_volume(delta):
+    """Adjust volume by `delta` percent-points.
+    VLC scale: 0-512 where 256=100%. mpv scale: 0-130 where 100=100%.
+    We treat delta as percent-points (e.g. +5 = louder by 5%).
+    """
+    if PLAYER_BACKEND == "vlc":
+        # Read current volume, convert delta to VLC units (256/100 ≈ 2.56 per %)
+        raw_status = vlc_query("status")
+        vol_match = re.search(r"audio volume:\s*(\d+)", raw_status or "")
+        current_vlc_vol = int(vol_match.group(1)) if vol_match else 256
+        
+        new_vlc_vol = max(0, min(512, current_vlc_vol + int(delta * 2.56)))
+        vlc_send(f"volume {new_vlc_vol}")
+    else:
+        mpv_send(["add", "volume", int(delta)])
+
+
+def local_get_volume():
+    """Return current volume as a 0-100 percent integer."""
+    if PLAYER_BACKEND == "vlc":
+        raw_status = vlc_query("status")
+        vol_match = re.search(r"audio volume:\s*(\d+)", raw_status or "")
+        try:
+            vlc_vol = int(vol_match.group(1)) if vol_match else 256
+            return int(vlc_vol * 100 / 256)
+        except (ValueError, TypeError):
+            return None
+    else:
+        res = mpv_send(["get_property", "volume"])
+        if res and res.get("data") is not None:
+            return int(res["data"])
+        return None
+
+
+def local_get_status():
+    """Get current status from the local player as a normalised dict."""
+    if PLAYER_BACKEND == "vlc":
+        return vlc_get_status()
+    # mpv path
+    if not is_mpv_running():
+        return {"running": False, "paused": True, "title": "", "position": 0, "duration": 0}
+    title  = mpv_send(["get_property", "media-title"])
+    paused = mpv_send(["get_property", "pause"])
+    pos    = mpv_send(["get_property", "time-pos"])
+    dur    = mpv_send(["get_property", "duration"])
+    return {
+        "running": True,
+        "paused":   (paused or {}).get("data", True),
+        "title":    (title  or {}).get("data", ""),
+        "position": (pos    or {}).get("data", 0),
+        "duration": (dur    or {}).get("data", 0),
+    }
+
+
+def ensure_local_player():
+    """Start whichever local player is the active backend."""
+    if PLAYER_BACKEND == "vlc":
+        ensure_vlc()
+    else:
+        ensure_mpv()
+
+
 def shell_ok(cmd):
     return subprocess.run(["bash", "-lc", cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
 
@@ -289,46 +597,72 @@ def spotify_cmd(args):
 
 def system_media_fallback(cmd):
     """
-    Fallback to system-level media controls (nowplaying-cli or osascript)
-    if the primary player (spotify_player) is unresponsive.
+    Fallback to system-level media controls when spotify_player is unresponsive.
+    macOS: tries nowplaying-cli then AppleScript.
+    Linux: tries playerctl.
     """
-    np_bin = "/opt/homebrew/bin/nowplaying-cli"
-    np_map = {
-        "toggle": "togglePlayPause",
+    if IS_MACOS:
+        np_bin = "/opt/homebrew/bin/nowplaying-cli"
+        np_map = {
+            "toggle": "togglePlayPause",
+            "play": "play",
+            "pause": "pause",
+            "next": "next",
+            "prev": "previous",
+            "previous": "previous",
+        }
+        if os.path.exists(np_bin):
+            action = np_map.get(cmd)
+            if action:
+                try:
+                    subprocess.run([np_bin, action], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
+                    return True
+                except Exception:
+                    pass
+
+        # AppleScript fallback for Spotify Desktop
+        scripts = {
+            "toggle": "playpause",
+            "play": "play",
+            "pause": "pause",
+            "next": "next track",
+            "prev": "previous track",
+            "previous": "previous track",
+        }
+        script_action = scripts.get(cmd)
+        if script_action:
+            try:
+                if subprocess.run(["pgrep", "-ix", "spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+                    subprocess.run(
+                        ["osascript", "-e", f'tell application "Spotify" to {script_action}'],
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2,
+                    )
+                    return True
+            except Exception:
+                pass
+        return False
+
+    # Linux: try playerctl (MPRIS)
+    playerctl = shutil.which("playerctl")
+    if not playerctl:
+        return False
+    playerctl_map = {
+        "toggle": "play-pause",
         "play": "play",
         "pause": "pause",
         "next": "next",
         "prev": "previous",
         "previous": "previous",
     }
-    
-    if os.path.exists(np_bin):
-        action = np_map.get(cmd)
-        if action:
-            try:
-                subprocess.run([np_bin, action], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
-                return True
-            except:
-                pass
-                
-    # macOS AppleScript fallback for Spotify specifically
-    scripts = {
-        "toggle": "playpause",
-        "play": "play",
-        "pause": "pause",
-        "next": "next track",
-        "prev": "previous track",
-        "previous": "previous track",
-    }
-    script_action = scripts.get(cmd)
-    if script_action:
+    action = playerctl_map.get(cmd)
+    if action:
         try:
-            # Check if Spotify is running to prevent auto-launch
-            if subprocess.run(["pgrep", "-x", "Spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
-                subprocess.run(["osascript", "-e", f'tell application "Spotify" to {script_action}'], 
-                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2)
-                return True
-        except:
+            subprocess.run(
+                [playerctl, "-p", "spotify,Spotify", action],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2,
+            )
+            return True
+        except Exception:
             pass
     return False
 
@@ -426,20 +760,23 @@ def spotify_cached_access_token():
 
 
 def apple_script_spotify_control(cmd):
-    """Fallback control for macOS using AppleScript to talk to Spotify Desktop."""
+    """Fallback Spotify control via AppleScript (macOS only).
+    On Linux this is a no-op — spotify_player CLI handles everything there.
+    """
+    if not IS_MACOS:
+        return False
     script_map = {
         "toggle": 'tell application "Spotify" to playpause',
-        "next": 'tell application "Spotify" to next track',
-        "prev": 'tell application "Spotify" to previous track',
-        "play": 'tell application "Spotify" to play',
-        "pause": 'tell application "Spotify" to pause',
+        "next":   'tell application "Spotify" to next track',
+        "prev":   'tell application "Spotify" to previous track',
+        "play":   'tell application "Spotify" to play',
+        "pause":  'tell application "Spotify" to pause',
     }
     script = script_map.get(cmd)
     if not script:
         return False
     try:
-        # Check if Spotify is running to prevent auto-launch
-        if subprocess.run(["pgrep", "-x", "Spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+        if subprocess.run(["pgrep", "-ix", "spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
             subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
             return True
         return False
@@ -448,11 +785,13 @@ def apple_script_spotify_control(cmd):
 
 
 def apple_script_spotify_status():
-    """Directly poll the Spotify Mac App for status, bypassing the CLI."""
+    """Poll the Spotify Desktop app for playback state (macOS only).
+    On Linux returns None — caller falls back to spotify_player CLI.
+    """
+    if not IS_MACOS:
+        return None
     try:
-        # FIRST: Check if Spotify is actually running to prevent osascript from auto-launching it.
-        check_proc = subprocess.run(["pgrep", "-x", "Spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if check_proc.returncode != 0:
+        if subprocess.run(["pgrep", "-ix", "spotify"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
             return None
 
         # Ask Spotify for its current state
@@ -466,14 +805,13 @@ def apple_script_spotify_status():
         parts = [p.strip() for p in raw.split(",")]
         if len(parts) < 6:
             return None
-            
         return {
-            "running": True,
-            "paused": parts[0] != "playing",
-            "title": parts[1],
-            "artist": parts[2],
+            "running":  True,
+            "paused":   parts[0] != "playing",
+            "title":    parts[1],
+            "artist":   parts[2],
             "position": float(parts[3]),
-            "duration": float(parts[4]) / 1000.0, # ms to s
+            "duration": float(parts[4]) / 1000.0,  # ms → s
             "track_id": parts[5].split(":")[-1] if ":" in parts[5] else parts[5],
         }
     except Exception:
@@ -827,19 +1165,22 @@ def spotify_play_uri(uri):
         ok, _ = spotify_cmd(args)
         if ok:
             return True, uri
-    # AppleScript Fallback for Mac (handles playlists/albums/tracks)
-    debug_log(f"Falling back to AppleScript for play: {uri}")
+
+    # macOS: AppleScript fallback for Spotify Desktop
+    if IS_MACOS:
+        debug_log(f"Falling back to AppleScript for play: {uri}")
     # For playlists/albums, Spotify AppleScript prefers 'play track "uri"' to start the context
-    script = f'tell application "Spotify" to play track "{uri}"'
-    try:
-        subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+        script = f'tell application "Spotify" to play track "{uri}"'
+        try:
+            subprocess.run(["osascript", "-e", script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
         # Give it a moment to register the change
-        time.sleep(0.5)
+            time.sleep(0.5)
         # Force a status update so the UI syncs immediately
-        apple_script_spotify_status()
-        return True, uri
-    except Exception:
-        return False, uri
+            apple_script_spotify_status()
+            return True, uri
+        except Exception:
+            pass
+    return False, uri
 
 
 def spotify_status(max_age_sec=0.0):
@@ -953,39 +1294,69 @@ def spotify_health():
 
 
 def nowplaying_spotify_snapshot():
-    nowplaying_bin = "/opt/homebrew/bin/nowplaying-cli"
-    if not os.path.exists(nowplaying_bin):
+    """Poll the system Now Playing API for Spotify status.
+    macOS: uses nowplaying-cli (Homebrew).
+    Linux: uses playerctl if available.
+    """
+    if IS_MACOS:
+        nowplaying_bin = "/opt/homebrew/bin/nowplaying-cli"
+        if not os.path.exists(nowplaying_bin):
+            return None
+        try:
+        # Task 5: Run nowplaying-cli calls concurrently
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+                f_client = executor.submit(subprocess.run, [nowplaying_bin, "get", "clientIdentifier"],
+                                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+                f_title  = executor.submit(subprocess.run, [nowplaying_bin, "get", "title"],
+                                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+                f_artist = executor.submit(subprocess.run, [nowplaying_bin, "get", "artist"],
+                                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+                f_rate   = executor.submit(subprocess.run, [nowplaying_bin, "get", "playbackRate"],
+                                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+                client       = f_client.result().stdout.strip()
+                title        = f_title.result().stdout.strip()
+                artist       = f_artist.result().stdout.strip()
+                playback_rate= f_rate.result().stdout.strip()
+
+            client_l = (client or "").strip().lower()
+            client_unknown = client_l in {"", "null", "(null)", "none"}
+
+            if not title:
+                return None
+            if (not re.search(r"spotify", client_l, re.IGNORECASE)) and (not client_unknown):
+                return None
+            return {
+                "running": True,
+                "paused":  playback_rate != "1",
+                "title":   title,
+                "artist":  artist,
+                "position": 0,
+                "duration": 0,
+            }
+        except Exception:
+            return None
+
+    # Linux: playerctl MPRIS fallback
+    playerctl = shutil.which("playerctl")
+    if not playerctl:
         return None
     try:
-        # Task 5: Run nowplaying-cli calls concurrently
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            f_client = executor.submit(subprocess.run, [nowplaying_bin, "get", "clientIdentifier"], 
-                                      stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
-            f_title = executor.submit(subprocess.run, [nowplaying_bin, "get", "title"], 
-                                     stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
-            f_artist = executor.submit(subprocess.run, [nowplaying_bin, "get", "artist"], 
-                                      stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
-            f_rate = executor.submit(subprocess.run, [nowplaying_bin, "get", "playbackRate"], 
-                                    stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
-
-            client = f_client.result().stdout.strip()
-            title = f_title.result().stdout.strip()
-            artist = f_artist.result().stdout.strip()
-            playback_rate = f_rate.result().stdout.strip()
-
-        client_l = (client or "").strip().lower()
-        client_unknown = client_l in {"", "null", "(null)", "none"}
-
+        p_title  = subprocess.run([playerctl, "-p", "spotify,Spotify", "metadata", "title"],
+                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+        p_artist = subprocess.run([playerctl, "-p", "spotify,Spotify", "metadata", "artist"],
+                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+        p_status = subprocess.run([playerctl, "-p", "spotify,Spotify", "status"],
+                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=1.5, check=False)
+        title  = p_title.stdout.strip()
+        artist = p_artist.stdout.strip()
+        status = p_status.stdout.strip().lower()
         if not title:
-            return None
-        # Prefer explicit Spotify identity, but allow null/unknown clientIdentifier
-        if (not re.search(r"spotify", client_l, re.IGNORECASE)) and (not client_unknown):
             return None
         return {
             "running": True,
-            "paused": playback_rate != "1",
-            "title": title,
-            "artist": artist,
+            "paused":  status != "playing",
+            "title":   title,
+            "artist":  artist,
             "position": 0,
             "duration": 0,
         }
@@ -1048,10 +1419,11 @@ def normalize_queue_item(item):
 
 
 def stop_inactive_source(source):
+    """Pause whichever backend is NOT currently active."""
     if source == "spotify":
-        mpv_send(["set_property", "pause", True])
+        local_pause()          # pause local player when switching to Spotify
     elif source == "local":
-        spotify_pause()
+        spotify_pause()        # pause Spotify when switching to local
 
 
 def update_last_status(state, running=False, paused=True, title="Resting", artist="", source=None, position=0, duration=0, track_id=""):
@@ -1127,30 +1499,47 @@ def play_current(state):
         path = item.get("local_path")
         if not path:
             return
-        ensure_mpv()
-        mpv_send(["loadfile", path, "replace"])
-        
-        # Auto-Resume logic for local tracks
-        last_pos = item.get("last_pos")
-        if last_pos and last_pos > 1:
-            # If we are very close to the end, don't resume there
-            dur = item.get("duration_sec") or 0
-            if dur <= 0 or last_pos < (dur - 3):
-                mpv_send(["set_property", "time-pos", last_pos])
 
-        mpv_send(["set_property", "pause", False])
-        pos = mpv_send(["get_property", "time-pos"])
-        dur = mpv_send(["get_property", "duration"])
-        update_last_status(
-            state,
-            running=True,
-            paused=False,
-            title=item.get("title") or Path(path).name,
-            artist=item.get("artist", ""),
-            source="local",
-            position=(pos or {}).get("data", 0),
-            duration=(dur or {}).get("data", item.get("duration_sec", 0)),
-        )
+        # Auto-Resume: compute resume position if close to middle of track
+        last_pos = item.get("last_pos") or 0
+        dur_hint = item.get("duration_sec") or 0
+        resume_pos = 0
+        if last_pos > 1:
+            if dur_hint <= 0 or last_pos < (dur_hint - 3):
+                resume_pos = last_pos
+
+        if PLAYER_BACKEND == "vlc":
+            vlc_load_file(path, resume_pos=resume_pos)
+            time.sleep(0.3)  # let VLC settle before querying status
+            st = vlc_get_status()
+            update_last_status(
+                state,
+                running=True,
+                paused=False,
+                title=st.get("title") or item.get("title") or Path(path).name,
+                artist=item.get("artist", ""),
+                source="local",
+                position=st.get("position", 0),
+                duration=st.get("duration") or item.get("duration_sec", 0),
+            )
+        else:
+            ensure_mpv()
+            mpv_send(["loadfile", path, "replace"])
+            if resume_pos:
+                mpv_send(["set_property", "time-pos", resume_pos])
+            mpv_send(["set_property", "pause", False])
+            pos = mpv_send(["get_property", "time-pos"])
+            dur = mpv_send(["get_property", "duration"])
+            update_last_status(
+                state,
+                running=True,
+                paused=False,
+                title=item.get("title") or Path(path).name,
+                artist=item.get("artist", ""),
+                source="local",
+                position=(pos or {}).get("data", 0),
+                duration=(dur or {}).get("data", item.get("duration_sec", 0)),
+            )
     else:
         ok, _ = spotify_play_uri(item.get("spotify_uri", ""))
         if ok:
@@ -1181,13 +1570,13 @@ def play_current(state):
 
 
 def refresh_live_status(state):
-    # Prioritize Local/MPV if it is active
-    mpv_active = False
-    if state.get("source_lock") != "spotify" and is_mpv_active():
-        mpv_active = True
+    # Prioritize Local player if it is active
+    local_active = False
+    if state.get("source_lock") != "spotify" and is_local_active():
+        local_active = True
         maybe_reconcile_local(state)
-        
-    if not mpv_active:
+
+    if not local_active:
         # Fallback to Spotify only if mpv is idle or locked out
         if maybe_reconcile_external_spotify(state):
             idx = state.get("current_index", -1)
@@ -1219,7 +1608,7 @@ def refresh_live_status(state):
     item = q[idx]
     source = item.get("source", "local")
     if source == "local":
-        if not is_mpv_running():
+        if not is_local_running():
             ext = external_spotify_snapshot()
             if ext:
                 update_last_status(
@@ -1236,27 +1625,25 @@ def refresh_live_status(state):
             else:
                 update_last_status(state, running=False, paused=True, title=item.get("title", "Resting"), artist=item.get("artist", ""), source="local")
             return
-        title = mpv_send(["get_property", "media-title"])
-        paused = mpv_send(["get_property", "pause"])
-        pos = mpv_send(["get_property", "time-pos"])
-        dur = mpv_send(["get_property", "duration"])
+        
+        lst = local_get_status()
         update_last_status(
             state,
             running=True,
-            paused=(paused or {}).get("data", True),
-            title=(title or {}).get("data", item.get("title", "Unknown")),
+            paused=lst.get("paused", True),
+            title=lst.get("title") or item.get("title", "Unknown"),
             artist=item.get("artist", ""),
             source="local",
-            position=(pos or {}).get("data", 0),
-            duration=(dur or {}).get("data", 0),
+            position=lst.get("position", 0),
+            duration=lst.get("duration", 0),
         )
         
         check_auto_next(state, {
             "source": "local",
-            "title": (title or {}).get("data", item.get("title", "Unknown")),
-            "paused": (paused or {}).get("data", True),
-            "position": (pos or {}).get("data", 0),
-            "duration": (dur or {}).get("data", 0)
+            "title": lst.get("title") or item.get("title", "Unknown"),
+            "paused": lst.get("paused", True),
+            "position": lst.get("position", 0),
+            "duration": lst.get("duration", 0)
         })
     else:
         # Backfill metadata for older queue entries that only had Spotify IDs.
@@ -1307,7 +1694,9 @@ def check_auto_next(state, st):
             debug_log(f"Auto-next triggered for {source}: {pos}/{dur}")
             state["last_auto_next_id"] = track_sig
             save_state(state)
-            subprocess.Popen([sys.executable, sys.argv[0], "next"], 
+            
+            script_path = os.path.abspath(__file__)
+            subprocess.Popen([sys.executable, script_path, "next"], 
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -1402,38 +1791,41 @@ def maybe_reconcile_external_spotify(state):
 def maybe_reconcile_local(state):
     if state.get("source_lock") == "spotify":
         return False
-    if not is_mpv_running():
+    if not is_local_running():
         return False
-    
-    # Try to get the current track info from mpv
-    title_res = mpv_send(["get_property", "media-title"])
-    if not title_res or not title_res.get("data"):
+
+    # Get the current track info from the active local player
+    lst = local_get_status()
+    live_title = (lst.get("title") or "").strip().lower()
+    if not live_title:
         return False
-    
-    live_title = str(title_res["data"]).strip().lower()
-    
-    # Also try to get path to be more precise
-    path_res = mpv_send(["get_property", "path"])
-    live_path = str(path_res.get("data", "")).strip() if path_res else ""
-    
+
+    # For VLC we only have title; mpv also exposes path
+    live_path = ""
+    if PLAYER_BACKEND == "mpv":
+        path_res = mpv_send(["get_property", "path"])
+        live_path = str(path_res.get("data", "")).strip() if path_res else ""
+
     target = -1
-    for i, item in enumerate(state.get("queue", [])):
-        if item.get("source") != "local":
+    item = None
+    for i, q_item in enumerate(state.get("queue", [])):
+        if q_item.get("source") != "local":
             continue
-        
-        # Match by path first (strongest)
-        it_path = item.get("local_path")
+        # Match by path first (strongest signal)
+        it_path = q_item.get("local_path")
         if live_path and it_path and os.path.abspath(os.path.expanduser(it_path)) == os.path.abspath(os.path.expanduser(live_path)):
             target = i
+            item = q_item
             break
             
         # Match by title
-        it_title = (item.get("title") or "").strip().lower()
+        it_title = (q_item.get("title") or "").strip().lower()
         if it_title and it_title == live_title:
             target = i
+            item = q_item
             break
-            
-    if target >= 0:
+
+    if target >= 0 and item is not None:
         if state.get("current_index") != target or state.get("active_source") != "local":
             state["current_index"] = target
             state["active_source"] = "local"
@@ -1451,18 +1843,17 @@ def should_prefer_external_spotify(state):
 def pick_active_source_for_controls(state):
     lock = state.get("source_lock", "auto")
     if lock == "local":
-        return "local" if is_mpv_running() else None
+        return "local" if is_local_running() else None
     if lock == "spotify":
         return "spotify" if is_external_spotify_active(max_age_sec=2.0) else None
-    
-    # Priority: mpv first if it has a track loaded
-    if is_mpv_active():
+
+    # Priority: local player first if it has a track loaded
+    if is_local_active():
         return "local"
         
     if is_external_spotify_active(max_age_sec=2.0):
         return "spotify"
-        
-    return "local" if is_mpv_running() else None
+    return "local" if is_local_running() else None
 
 
 def with_lock(timeout_sec=LOCK_WAIT_TIMEOUT_SEC):
@@ -1805,11 +2196,11 @@ def cmd_next():
         _step(1)
         return
 
-    # Fallback: only if queue is empty/inactive, try external skip
-    if lock != "local" and is_external_spotify_active(max_age_sec=2.0):
+    # Fallback: try external skip, if it succeeds return. Otherwise fall through.
+    if lock != "local":
         if spotify_next():
             maybe_reconcile_external_spotify(state)
-        return
+            return
     
     _step(1)
 
@@ -1824,11 +2215,11 @@ def cmd_prev():
         _step(-1)
         return
 
-    # Fallback: only if queue is empty/inactive, try external skip
-    if lock != "local" and is_external_spotify_active(max_age_sec=2.0):
+    # Fallback: try external skip, if it succeeds return. Otherwise fall through.
+    if lock != "local":
         if spotify_prev():
             maybe_reconcile_external_spotify(state)
-        return
+            return
     
     _step(-1)
 
@@ -2043,7 +2434,13 @@ def cmd_status():
     pretty = f"{src_icon} {title.split('|')[0].strip() if '|' in title else title}"
     if artist:
         pretty += f" — {artist}"
-    print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
+    vol_text = ""
+    if source == "local":
+        v = local_get_volume()
+        if v is not None:
+            vol_text = f"  {GRAY}│{NC}  {CYAN} {v}%{NC}"
+
+    print(f"    {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}{vol_text}")
     print(f"    {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
     print(f"\n    {BOLD}{YELLOW}󱐋 {current_ideal}{NC}")
 
@@ -2076,18 +2473,18 @@ def cmd_status_fast():
         except Exception:
             pass
 
-    # Priority Reconcile: Try local first if it seems active
-    mpv_active = False
-    if state.get("source_lock") != "spotify" and is_mpv_active():
-        mpv_active = True
+    # Priority Reconcile: Try local player first if it seems active
+    local_active = False
+    if state.get("source_lock") != "spotify" and is_local_active():
+        local_active = True
         maybe_reconcile_local(state)
         # Ensure 'st' reflects the local state even if index didn't change
         if st.get("source") != "local":
             st = state.get("last_status", {})
             save_state(state)
-    
+
     # Fallback Reconcile: Try Spotify ONLY if local is idle
-    if not mpv_active:
+    if not local_active:
         if st.get("source") == "spotify" or not st.get("running"):
             if maybe_reconcile_external_spotify(state):
                 st = state.get("last_status", {})
@@ -2127,7 +2524,13 @@ def cmd_status_fast():
     pretty = f"{src_icon} {title.split('|')[0].strip() if '|' in title else title}"
     if artist:
         pretty += f" — {artist}"
-    print(f" {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}")
+    vol_text = ""
+    if source == "local":
+        v = local_get_volume()
+        if v is not None:
+            vol_text = f"  {GRAY}│{NC}  {CYAN} {v}%{NC}"
+
+    print(f" {state_color}{BOLD}{state_icon}{NC}  {GRAY}│{NC}  {BOLD}{pretty}{NC}{vol_text}")
     print(f" {bar}  {DIM}{fmt_time(pos)}/{fmt_time(dur)}{NC}  {loop_label}")
     print(f"\n {BOLD}{AMETHYST_G}󱐋 {current_ideal}{NC}")
 
@@ -2233,8 +2636,7 @@ def cmd_toggle():
     if source is None:
         return
     if source == "local":
-        ensure_mpv()
-        mpv_send(["cycle", "pause"])
+        local_toggle()
     else:
         spotify_toggle()
     refresh_live_status(state)
@@ -2244,17 +2646,18 @@ def cmd_seek(delta):
     state = load_state()
     source = pick_active_source_for_controls(state)
     if source == "local":
-        mpv_send(["seek", int(delta), "relative"])
+        local_seek(int(delta))
     elif source == "spotify":
         # Some spotify_player versions support this syntax.
-        spotify_cmd(["playback", "seek", str(delta)])
+        offset_ms = str(int(delta) * 1000)
+        spotify_cmd(["playback", "seek", offset_ms])
 
 
 def cmd_volume(delta):
     state = load_state()
     source = pick_active_source_for_controls(state)
     if source == "local":
-        mpv_send(["add", "volume", int(delta)])
+        local_volume(int(delta))
     elif source == "spotify":
         # correct syntax for spotify_player 0.23.0+ is using --offset flag
         spotify_cmd(["playback", "volume", "--offset", str(delta)])
@@ -2263,9 +2666,9 @@ def cmd_volume(delta):
 def cmd_get_volume():
     state = load_state()
     if state.get("active_source") == "local":
-        res = mpv_send(["get_property", "volume"])
-        if res and res.get("data") is not None:
-            print(int(res["data"]))
+        vol = local_get_volume()
+        if vol is not None:
+            print(vol)
 
 
 def cmd_current_index():
@@ -2353,22 +2756,30 @@ def cmd_health():
     state = load_state()
     st = read_status_snapshot(max_age_sec=30) or (state.get("last_status", {}) or {})
     spotify_st = spotify_status(max_age_sec=10)
+    # VLC-specific socket info
+    vlc_socket_exists = os.path.exists(VLC_SOCKET_PATH) if PLAYER_BACKEND == "vlc" else False
+    mpv_socket_exists = os.path.exists(SOCKET_PATH) if PLAYER_BACKEND == "mpv" else False
     payload = {
-        "mpv_running": is_mpv_running(),
-        "socket_path_exists": os.path.exists(SOCKET_PATH),
+        # Backend identification — used by radiant-mpv health panel
+        "player_backend":        PLAYER_BACKEND,
+        "local_player_running":  is_local_running(),
+        "local_socket_exists":   vlc_socket_exists if PLAYER_BACKEND == "vlc" else mpv_socket_exists,
+        # Legacy field kept for backward-compatibility with old bash parsers
+        "mpv_running":           is_mpv_running(),
+        "socket_path_exists":    mpv_socket_exists,
         "spotify_player": shell_ok(f"command -v {SPOTIFY_PLAYER_BIN} >/dev/null 2>&1"),
-        "librespot": shell_ok(f"command -v {LIBRESPOT_BIN} >/dev/null 2>&1"),
-        "source_lock": state.get("source_lock", "auto"),
-        "active_source": state.get("active_source"),
-        "queue_size": len(state.get("queue", [])),
-        "current_index": state.get("current_index", -1),
-        "running": st.get("running", False),
-        "source": st.get("source"),
-        "title": st.get("title", ""),
-        "artist": st.get("artist", ""),
-        "spotify_running": spotify_st.get("running", False),
-        "spotify_title": spotify_st.get("title", ""),
-        "spotify_artist": spotify_st.get("artist", ""),
+        "librespot":      shell_ok(f"command -v {LIBRESPOT_BIN} >/dev/null 2>&1"),
+        "source_lock":    state.get("source_lock", "auto"),
+        "active_source":  state.get("active_source"),
+        "queue_size":     len(state.get("queue", [])),
+        "current_index":  state.get("current_index", -1),
+        "running":        st.get("running", False),
+        "source":         st.get("source"),
+        "title":          st.get("title", ""),
+        "artist":         st.get("artist", ""),
+        "spotify_running":  spotify_st.get("running", False),
+        "spotify_title":    spotify_st.get("title", ""),
+        "spotify_artist":   spotify_st.get("artist", ""),
         "spotify_track_id": spotify_st.get("track_id", ""),
     }
     print(json.dumps(payload))
@@ -2407,7 +2818,7 @@ def main():
         print("Lock busy, please retry.")
         return
     try:
-        if cmd == "play":
+        if cmd in ("play", "add"):
             cmd_play(sys.argv[2:])
             signal_refresh()
         elif cmd == "add_spotify":

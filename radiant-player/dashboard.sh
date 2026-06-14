@@ -198,8 +198,9 @@ show_health_panel() {
         echo -e "${GARNET}Unable to read health status.${NC}"
     else
         printf "%s" "$hjson" | jq -r '
-            "mpv_running      : \(.mpv_running)\n" +
-            "socket_exists    : \(.socket_path_exists)\n" +
+            "player_backend   : \(.player_backend)\n" +
+            "local_running    : \(.local_player_running)\n" +
+            "socket_exists    : \(.local_socket_exists)\n" +
             "spotify_player   : \(.spotify_player)\n" +
             "librespot        : \(.librespot)\n" +
             "source_lock      : \(.source_lock)\n" +
@@ -271,12 +272,23 @@ draw() {
     echo ""
 
     # Box 1: Infused Record (Now Playing)
+    local backend=$(echo "$state_json" | jq -r '.player_backend // "mpv"')
     local label1=" INFUSED RECORD "
-    local label1_len=${#label1}
+    local backend_visible=""
+    local backend_colored=""
+    if [ "$backend" = "vlc" ]; then
+        backend_visible="[VLC 󰕼] "
+        backend_colored="${T_SPREN_SIBLING}[VLC 󰕼]${NC}${C_MAIN}${BOLD} "
+    else
+        backend_visible="[MPV 󰎈] "
+        backend_colored="${T_SPREN_HONOR}[MPV 󰎈]${NC}${C_MAIN}${BOLD} "
+    fi
+    local label1_full="${label1}${backend_colored}"
+    local label1_len=$(( ${#label1} + ${#backend_visible} ))
     # Top border: ┌── (2) label (len) hline1 (len) ──┐ (3) = total width inner_width+2
     local hline1_len=$((inner_width - label1_len - 4))
     local hline1=$(printf '─%.0s' $(seq 1 $hline1_len))
-    echo -e "  ${C_MAIN}${BOLD}┌──${label1}${hline1}──┐${NC}"
+    echo -e "  ${C_MAIN}${BOLD}┌──${label1_full}${hline1}──┐${NC}"
     
     local status_raw
     local -a status_lines=()

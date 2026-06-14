@@ -51,29 +51,12 @@ sketchybar --add item apple left \
     --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$FRONTAPP_ACCENT icon.color=$FRONTAPP_ACCENT \
     --subscribe front_app front_app_switched \
   \
-  --add item cheatsheet left \
-  --set cheatsheet icon=󰌌 \
-                 icon.color=$SPREN_HIGH \
-                 label="Skhd" \
-                 label.color=$SPREN_HIGH \
-                 script="$PLUGIN_DIR/cheatsheet.sh" \
-                 click_script="sketchybar --set \$NAME popup.drawing=toggle" \
-                 popup.align=left \
-                 popup.y_offset=12 \
-  --subscribe cheatsheet mouse.entered \
-  \
-  --add bracket apple.pill apple front_app cheatsheet \
+  --add bracket apple.pill apple front_app \
   --set apple.pill background.color=$BAR_COLOR \
                    background.border_color=$SPREN_HIGH_T \
                    background.border_width=1 \
                    background.corner_radius=10 \
-                   background.drawing=on \
-  \
-  --add item cheatsheet.title popup.cheatsheet \
-  --set cheatsheet.title icon=󰛵 label="SURGEBINDING CHEATSHEET" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$RADIANT_GOLD icon.color=$RADIANT_GOLD
-
-# Dynamically populate cheatsheet popup from skhdrc
-$PLUGIN_DIR/cheatsheet.sh
+                   background.drawing=on
 
 
 # Spaces
@@ -222,65 +205,7 @@ sketchybar --add item battery right \
                                 label.color=$WHITE \
                                 label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
-# Raycast Integration
-sketchybar --add item raycast right \
-           --set raycast icon= \
-                         icon.color=$HONOR_GOLD \
-                         padding_left=8 \
-                         padding_right=8 \
-                         click_script="open -a Raycast || open raycast://" \
-  \
-           --add bracket raycast.pill raycast \
-           --set raycast.pill background.color=$BAR_COLOR \
-                              background.border_color=$HONOR_GOLD_TRANSLUCENT \
-                              background.border_width=1 \
-                              background.corner_radius=10 \
-                              background.drawing=on
 
-# System Monitor (RAM & Disk Hover Popup)
-sketchybar --add item system right \
-           --set system update_freq=10 \
-                        icon=󰍹 \
-                        icon.color=$SAPPHIRE \
-                        label.drawing=off \
-                        padding_left=8 \
-                        padding_right=8 \
-                        script="$PLUGIN_DIR/system.sh" \
-                        popup.align=right \
-                        popup.y_offset=12 \
-           --subscribe system mouse.entered mouse.exited \
-  \
-           --add bracket system.pill system \
-           --set system.pill background.color=$BAR_COLOR \
-                             background.border_color=$PRES_GLACIAL_TRANSLUCENT \
-                             background.border_width=1 \
-                             background.corner_radius=10 \
-                             background.drawing=on \
-  \
-           --add item system.title popup.system \
-           --set system.title icon=󰖙 \
-                              icon.color=$SYS_ACCENT \
-                              label="Storm: Stormless" \
-                              label.color=$SYS_ACCENT \
-                              label.font="JetBrainsMono Nerd Font:Bold:14.0" \
-  \
-           --add item system.cpu popup.system \
-           --set system.cpu icon=󰓅 \
-                            icon.color=$SYS_CPU_COLOR \
-                            label.color=$WHITE \
-                            label.font="JetBrainsMono Nerd Font:Bold:14.0" \
-  \
-           --add item system.ram popup.system \
-           --set system.ram icon=󰍛 \
-                            icon.color=$SYS_RAM_COLOR \
-                            label.color=$WHITE \
-                            label.font="JetBrainsMono Nerd Font:Bold:14.0" \
-  \
-           --add item system.disk popup.system \
-           --set system.disk icon=󰋊 \
-                             icon.color=$SYS_DISK_COLOR \
-                             label.color=$WHITE \
-                             label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
 # Clock: Chronicles
 sketchybar --add item clock right \
@@ -327,33 +252,33 @@ sketchybar --add item volume right \
                              background.drawing=on
 
 # Notification: Spren Message
-sketchybar --add item notif right \
-           --set notif update_freq=30 \
-                       padding_left=8 \
-                       padding_right=8 \
-                       script="$PLUGIN_DIR/notif.sh" \
-                       popup.align=right \
-                       popup.y_offset=12 \
-           --subscribe notif mouse.entered mouse.exited \
-  \
-           --add bracket notif.pill notif \
-           --set notif.pill background.color=$BAR_COLOR \
-                           background.border_color=$NOTIF_ACCENT_T \
-                           background.border_width=1 \
-                           background.corner_radius=10 \
-                           background.drawing=on \
-  \
-           --add item notif.messages popup.notif \
-           --set notif.messages icon=󰍦 \
-                               icon.color=$NOTIF_ACCENT \
-                               label.color=$WHITE \
-                               label.font="JetBrainsMono Nerd Font:Bold:14.0" \
-  \
-           --add item notif.mail popup.notif \
-           --set notif.mail icon=󰇮 \
-                            icon.color=$PRES_GLACIAL \
-                            label.color=$WHITE \
-                            label.font="JetBrainsMono Nerd Font:Bold:14.0"
+# sketchybar --add item notif right \
+#            --set notif update_freq=30 \
+#                        padding_left=8 \
+#                        padding_right=8 \
+#                        script="$PLUGIN_DIR/notif.sh" \
+#                        popup.align=right \
+#                        popup.y_offset=12 \
+#            --subscribe notif mouse.entered mouse.exited \
+#   \
+#            --add bracket notif.pill notif \
+#            --set notif.pill background.color=$BAR_COLOR \
+#                            background.border_color=$NOTIF_ACCENT_T \
+#                            background.border_width=1 \
+#                            background.corner_radius=10 \
+#                            background.drawing=on \
+#   \
+#            --add item notif.messages popup.notif \
+#            --set notif.messages icon=󰍦 \
+#                                icon.color=$NOTIF_ACCENT \
+#                                label.color=$WHITE \
+#                                label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+#   \
+#            --add item notif.mail popup.notif \
+#            --set notif.mail icon=󰇮 \
+#                             icon.color=$PRES_GLACIAL \
+#                             label.color=$WHITE \
+#                             label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
 
 ##### Finalize #####
@@ -367,4 +292,3 @@ sketchybar --trigger app_switcher_update
 sketchybar --trigger window_focus
 
 # Run scripts once on startup/reload to populate values immediately
-$PLUGIN_DIR/system.sh

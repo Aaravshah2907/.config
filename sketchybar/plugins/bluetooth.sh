@@ -36,12 +36,14 @@ if [ "$COUNT" -gt 0 ]; then
     ICON="󰂱"
     COLOR=$BT_CONNECTED                  # Preservation silver — bonded & ordered
     LABEL="$COUNT"
+    DRAWING="on"
 else
     COLOR=$BT_IDLE                       # White — idle, visible on dark bar
     LABEL=""
+    DRAWING="off"
 fi
 
-sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" label="$LABEL" label.color="$COLOR"
+sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" label="$LABEL" label.color="$COLOR" drawing="$DRAWING"
 
 # Clear popup
 sketchybar --remove '/bluetooth\.device\..*/'

@@ -1,8 +1,13 @@
 return {
-	entry = function(_, args)
+	entry = function(_, job)
+		local args = job and job.args or {}
+		if args.args then
+			args = args.args
+		end
+
 		local arg1 = args and args[1] or nil
 
-		if arg1 == "quote" then
+		if arg1 == "quote" or not arg1 then
 			local quotes = {
 				"Journey before destination.",
 				"Life before death.",

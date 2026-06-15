@@ -23,11 +23,11 @@ require("simple-tag"):setup({
 	  -- Default theme use "reversed = true".
 	  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-config/preset/theme-dark.toml#L25
 	  -- Only need to set this if you use shipped/stable yazi <= v25.5.31 or nightly yazi installed before 11/12/2025
-	  reversed = true, -- (Optional)
+	  -- reversed = true, -- (Optional)
 
 	  -- More colors: https://yazi-rs.github.io/docs/configuration/theme#types.color
     -- format: [tag key] = "color"
-	  ["x"] = "#595f61", -- Scripts
+	  ["M"] = "#595f61", -- Medical
 	  ["c"] = "#000000", -- Config
 	  ["!"] = "#cc9057", -- Pin
 	  -- ["1"] = "cyan",
@@ -37,7 +37,7 @@ require("simple-tag"):setup({
 	  ["B"] = "yellow", -- Books
 	  ["T"] = "blue", -- Travel
 	  ["C"] = "lightblue", -- Cosmere?
-	  ["₹"] = "green", -- Financial
+	  ["R"] = "green", -- Financial
 	  ["?"] = "#2a8030", -- Doubtful
 	  ["m"] = "#4981d0", --Music
 	  ["v"] = "#7da4dd", -- Video
@@ -52,7 +52,7 @@ require("simple-tag"):setup({
     default = "󰚋",
 
     -- format: [tag key] = "tag icon"
-		["x"] = "",
+		["M"] = "",
 		["i"] = "",
 		["c"] = "",
 		["!"] = "",
@@ -61,7 +61,7 @@ require("simple-tag"):setup({
 		["B"] = "",
 		["T"] = "",
 		["C"] = "",
-		["₹"] = "󰆯",
+		["R"] = "₹",
 		["?"] = "󱍋",
 		["m"] = "󰽴",
 		["v"] = "󰎁",

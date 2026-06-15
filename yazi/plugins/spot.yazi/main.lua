@@ -1,4 +1,4 @@
---- @since 25.12.29
+--- @since 26.5.6
 
 local M = {}
 
@@ -17,7 +17,7 @@ local get_config = ya.sync(function(st)
         hash_filesize_limit = 150, -- in MB, set 0 to disable
         relative_time = true, -- 2026-01-01 or n days ago
         time_format = '%Y-%m-%d %H:%M', -- https://www.man7.org/linux/man-pages/man3/strftime.3.html
-        show_compression = 'size', ---@type false|"size"|"percentage"
+        show_compression = true, ---@type boolean
       },
       plugins_section = {
         enable = true,
@@ -171,7 +171,7 @@ local get_total_size = function(urls)
   local total = 0
   for _, url in ipairs(urls) do
     local it = fs.calc_size(url)
-    while true do
+    while it do
       local next = it:recv() ---@diagnostic disable-line: undefined-field
       if next then
         total = total + next
@@ -193,8 +193,8 @@ local format_size = function(size)
     unit_index = unit_index + 1
   end
 
-  local str = string.format('%.2f', size)
-  str = string.gsub(str, '(%d),?0*$', '%1')
+  local str = ('%.2f'):format(size)
+  str = str:gsub('(%d),?0*$', '%1')
   return str .. ' ' .. units[unit_index]
 end
 
@@ -242,18 +242,19 @@ function M:render_table(job, extra, config)
   local size = format_size(get_total_size({ job.file.url })) ---@diagnostic disable-line: missing-fields
 
   if config.metadata_section.show_compression and job.mime == 'application/zip' then
-    local comp_size = '??'
     local output, err = Command('zipinfo'):arg({ '-t', tostring(job.file.url) }):output()
 
     if not output or err then
       return Err('Error: %s', err)
-    elseif config.metadata_section.show_compression == 'percentage' then
-      comp_size = string.gsub(output.stdout, '.* (%d+%.%d+%%)', '%1')
-    elseif config.metadata_section.show_compression == 'size' then
-      comp_size =
-        format_size(tonumber(string.gsub(output.stdout, '.* (%d+) bytes uncompressed.*', '%1'), 10))
     end
-    size = size .. ' (' .. comp_size .. ')'
+    if config.metadata_section.show_compression == true then
+      size = size
+        .. ' ('
+        .. format_size(tonumber(output.stdout:gsub('.* (%d+) bytes uncompressed.*', '%1'), 10))
+        .. ', '
+        .. output.stdout:gsub('.* (%d+%.%d+%%)', '%1')
+        .. ')'
+    end
   end
 
   -- Metadata
@@ -277,24 +278,20 @@ function M:render_table(job, extra, config)
 
   -- Plugins
   if config.plugins_section.enable then
-    local spotter = rt.plugin.spotter(job.file, job.mime) ---@diagnostic disable-line: undefined-field
-    local previewer = rt.plugin.previewer(job.file, job.mime) ---@diagnostic disable-line: undefined-field
-    local fetchers = rt.plugin.fetchers(job.file, job.mime) ---@diagnostic disable-line: undefined-field
-    local preloaders = rt.plugin.preloaders(job.file, job.mime) ---@diagnostic disable-line: undefined-field
-
-    for i, v in ipairs(fetchers) do
-      fetchers[i] = v.cmd
+    local get_plugin = function(type)
+      local text = ''
+      for _, plugin in pairs(rt.plugin[type]:match({ mime = job.mime, file = job.file })) do
+        text = text .. plugin.name .. ', '
+      end
+      ya.dbg(text)
+      return text:sub(1, -3)
     end
-    for i, v in ipairs(preloaders) do
-      preloaders[i] = v.cmd
-    end
-
     add_section {
       title = 'Plugins',
-      { 'Spotter', spotter and spotter.cmd or '-' },
-      { 'Previewer', previewer and previewer.cmd or '-' },
-      { 'Fetchers', #fetchers ~= 0 and table.concat(fetchers, ', ') or '-' },
-      { 'Preloaders', #preloaders ~= 0 and table.concat(preloaders, ', ') or '-' },
+      { 'Spotter', get_plugin('spotters') },
+      { 'Previewer', get_plugin('previewers') },
+      { 'Fetchers', get_plugin('fetchers') },
+      { 'Preloaders', get_plugin('preloaders') },
     }
   end
 

@@ -42,7 +42,7 @@ require('spot'):setup {
     hash_filesize_limit = 150, -- in MB, set 0 to disable
     relative_time = true, -- 2026-01-01 or n days ago
     time_format = '%Y-%m-%d %H:%M', -- https://www.man7.org/linux/man-pages/man3/strftime.3.html
-    show_compression = 'size', ---@type false|"size"|"percentage"
+    show_compression = true, ---@type boolean
   },
   plugins_section = {
     enable = true,
@@ -68,6 +68,7 @@ list of plugins using spot.yazi as a base
 
 - [spot-audio.yazi](/spot-audio.yazi)
 - [spot-video.yazi](/spot-video.yazi)
+- [spot-image.yazi](/spot-image.yazi)
 - [spot-cbz.yazi](/spot-cbz.yazi)
 
 if you are building something on top of spot.yazi feel free to add it here

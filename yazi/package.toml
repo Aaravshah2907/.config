@@ -1,34 +1,34 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "1962818"
+rev = "598cdb6"
 hash = "f0c8c378184d5f8abd1b095a443d336d"
 
 [[plugin.deps]]
 use = "boydaihungst/simple-tag"
-rev = "a971d5a"
-hash = "bd921661ea2be141a1ff182ed81d7012"
+rev = "e8be031"
+hash = "50ba6725b86ae62c626d27eb5836decb"
 
 [[plugin.deps]]
 use = "AminurAlam/yazi-plugins:preview-git"
-rev = "1d28640"
-hash = "52f20cafe2faf4901910ef77da8956e8"
+rev = "6206bae"
+hash = "ba369f2f02be9e932cf7882c113d6844"
 
 [[plugin.deps]]
 use = "AminurAlam/yazi-plugins:spot"
-rev = "1d28640"
-hash = "854227f2312a6287c7872726e74f8de3"
+rev = "6206bae"
+hash = "920c166a88e012cb5b4429fd5b338403"
 
 [[plugin.deps]]
 use = "AminurAlam/yazi-plugins:spot-audio"
-rev = "1d28640"
-hash = "5f55cfa8993d3cb94ed217ffabda9366"
+rev = "6206bae"
+hash = "835d2a4edb94a145e5a3433c458d98da"
 
 [[plugin.deps]]
 use = "AminurAlam/yazi-plugins:spot-video"
-rev = "1d28640"
-hash = "3e437d65ebb31ac1ce2e1a20c93f3357"
+rev = "6206bae"
+hash = "1e3ea3fe62450615ceca63910c9b629b"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"
-rev = "ca61658"
-hash = "8589ae0231756a9daf9c072f31b1fe0"
+rev = "0f9204b"
+hash = "20624fcdfcf7e4e912de05e348065e5e"

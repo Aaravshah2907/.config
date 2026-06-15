@@ -1,0 +1,126 @@
+{
+  "title": "VSCode Hyper Shortcuts",
+
+  "rules": [
+
+    {
+      "description": "VSCode: Hyper+Mouse5 -> Quick Open",
+
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "pointing_button": "button5",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "left_control",
+                "left_option",
+                "left_shift"
+              ]
+            }
+          },
+
+          "to": [
+            {
+              "key_code": "p",
+              "modifiers": ["left_command"]
+            }
+          ],
+
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.microsoft\\.VSCode$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "description": "VSCode: Hyper+Mouse4 -> Command Palette",
+
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "pointing_button": "button4",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "left_control",
+                "left_option",
+                "left_shift"
+              ]
+            }
+          },
+
+          "to": [
+            {
+              "key_code": "p",
+              "modifiers": [
+                "left_command",
+                "left_shift"
+              ]
+            }
+          ],
+
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.microsoft\\.VSCode$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "description": "VSCode: Hyper+/ -> Toggle Comment",
+
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "left_control",
+                "left_option",
+                "left_shift"
+              ]
+            }
+          },
+
+          "to": [
+            {
+              "key_code": "slash",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.microsoft\\.VSCode$"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+  ]
+}

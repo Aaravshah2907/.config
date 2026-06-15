@@ -1,0 +1,34 @@
+{
+  "title": "Yazi Shortcut",
+
+  "rules": [
+    {
+      "description": "Hyper+F -> Run fv in iTerm",
+
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "key_code": "f",
+
+            "modifiers": {
+              "mandatory": [
+                "left_command",
+                "left_control",
+                "left_option",
+                "left_shift"
+              ]
+            }
+          },
+
+          "to": [
+            {
+              "shell_command": "~/.local/bin/fv.sh"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

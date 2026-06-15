@@ -120,6 +120,7 @@ hyper - space : /opt/homebrew/bin/yabai -m window --toggle split
 hyper - q : /opt/homebrew/bin/yabai -m window --close
 
 # ================================
+fv ~
 # Application Launcher (Hyper Key)
 # ================================
 
@@ -134,9 +135,6 @@ cmd + ctrl + alt + shift - b : open -a "Brave Browser"
 
 # Focus / Launch Obsidian
 cmd + ctrl + alt + shift - o : open -a "Obsidian"
-
-# Focus / Launch Finder
-cmd + ctrl + alt + shift - f : open -a "Finder"
 
 # ================================
 # Scratchpad System (Hyper Key)

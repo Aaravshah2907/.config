@@ -1,0 +1,40 @@
+{
+  "title": "Pebble Right Ctrl to Hyper",
+  "rules": [
+    {
+      "description": "Pebble keyboard: Right Ctrl -> Hyper",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "right_control",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_shift",
+              "modifiers": [
+                "left_control",
+                "left_option",
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "vendor_id": 1578,
+                  "product_id": 16641
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

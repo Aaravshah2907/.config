@@ -1,0 +1,96 @@
+{
+  "title": "Mouse Navigation Layer",
+  "rules": [
+    {
+      "description": "Middle button: Escape / Mission Control",
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "pointing_button": "button3"
+          },
+
+          "to_if_alone": [
+            {
+              "key_code": "escape"
+            }
+          ],
+
+          "to_if_held_down": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "control"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "description": "Button4: Back / Previous Space",
+
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "pointing_button": "button4"
+          },
+
+          "to_if_alone": [
+            {
+              "key_code": "open_bracket",
+              "modifiers": [
+                "command"
+              ]
+            }
+          ],
+
+          "to_if_held_down": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": [
+                "control"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "description": "Button5: Forward / Next Space",
+
+      "manipulators": [
+        {
+          "type": "basic",
+
+          "from": {
+            "pointing_button": "button5"
+          },
+
+          "to_if_alone": [
+            {
+              "key_code": "close_bracket",
+              "modifiers": [
+                "command"
+              ]
+            }
+          ],
+
+          "to_if_held_down": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": [
+                "control"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

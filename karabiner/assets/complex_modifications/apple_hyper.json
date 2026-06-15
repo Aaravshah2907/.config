@@ -1,0 +1,39 @@
+{
+  "title": "Apple Right Command to Hyper",
+  "rules": [
+    {
+      "description": "Apple Internal Keyboard: Right Command -> Hyper",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "right_command",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_shift",
+              "modifiers": [
+                "left_control",
+                "left_option",
+                "left_command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [
+                {
+                  "is_built_in_keyboard": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

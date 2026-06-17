@@ -8,6 +8,16 @@
                 },
                 "rules": [
                     {
+                        "description": "Insert -> Cheat Sheet",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "insert" },
+                                "to": [{ "shell_command": "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "NumLock -> Keybee Cockpit",
                         "manipulators": [
                             {

@@ -8,16 +8,6 @@
                 },
                 "rules": [
                     {
-                        "description": "NumLock -> Keybee Cockpit",
-                        "manipulators": [
-                            {
-                                "from": { "key_code": "keypad_num_lock" },
-                                "to": [{ "shell_command": "~/.local/bin/keybee-status" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Keybee device-specific mappings",
                         "manipulators": [
                             {
@@ -100,22 +90,6 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "shell_command": "~/.local/bin/toggle_dnd.sh" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 16641,
-                                                "vendor_id": 1578
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": { "key_code": "pause" },
-                                "to": [{ "shell_command": "~/.local/bin/panic-mode" }],
                                 "type": "basic"
                             }
                         ]

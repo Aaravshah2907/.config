@@ -1,0 +1,155 @@
+{
+  "title": "Keybee Special Keys",
+  "rules": [
+    {
+      "description": "Keybee device-specific mappings",
+
+      "manipulators": [
+
+        {
+          "type": "basic",
+
+          "from": {
+            "key_code": "application"
+          },
+
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ],
+
+          "conditions": [
+            {
+              "type": "device_if",
+
+              "identifiers": [
+                {
+                  "vendor_id": 1578,
+                  "product_id": 16641
+                }
+              ]
+            }
+          ]
+        },
+
+        {
+          "type": "basic",
+
+          "from": {
+            "key_code": "f11"
+          },
+
+          "to": [
+            {
+              "key_code": "q",
+              "modifiers": [
+                "left_control",
+                "left_command"
+              ]
+            }
+          ],
+
+          "conditions": [
+            {
+              "type": "device_if",
+
+              "identifiers": [
+                {
+                  "vendor_id": 1578,
+                  "product_id": 16641
+                }
+              ]
+            }
+          ]
+        },
+        {
+           "type": "basic",
+
+           "conditions": [
+            {
+               "type": "device_if",
+               "identifiers": [
+                  {
+                      "vendor_id": 1578,
+                      "product_id": 16641
+                  }
+               ]
+            }
+          ],
+
+           "from": {
+             "key_code": "print_screen"
+           },
+
+            "to": [
+             {
+               "key_code": "5",
+               "modifiers": [
+                  "left_command",
+                  "left_shift"
+                ]
+              }
+              ]
+            }, 
+            {
+              "type": "basic",
+
+              "conditions": [
+                {
+                  "type": "device_if",
+                  "identifiers": [
+                    {
+                      "vendor_id": 1578,
+                      "product_id": 16641
+                    }
+                  ]
+                }
+              ],
+
+              "from": {
+                "key_code": "scroll_lock",
+                "modifiers": {
+                  "optional": ["any"]
+                }
+              },
+
+              "to": [
+                {
+                  "shell_command": "~/.local/bin/toggle_dnd.sh"
+                }
+              ]
+            },
+            {
+              "type": "basic",
+
+              "conditions": [
+                {
+                  "type": "device_if",
+                  "identifiers": [
+                    {
+                      "vendor_id": 1578,
+                      "product_id": 16641
+                    }
+                  ]
+                }
+              ],
+
+              "from": {
+                "key_code": "pause"
+              },
+
+              "to": [
+                {
+                  "shell_command": "~/.local/bin/panic-mode"
+                }
+
+              ]
+       }
+      ]
+    }
+  ]
+}

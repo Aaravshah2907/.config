@@ -8,119 +8,6 @@
                 },
                 "rules": [
                     {
-                        "description": "NumLock -> Keybee Cockpit",
-                        "manipulators": [
-                            {
-                                "from": { "key_code": "keypad_num_lock" },
-                                "to": [{ "shell_command": "~/.local/bin/keybee-status" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Keybee device-specific mappings",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 16641,
-                                                "vendor_id": 1578
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": { "key_code": "application" },
-                                "to": [
-                                    {
-                                        "key_code": "up_arrow",
-                                        "modifiers": ["left_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 16641,
-                                                "vendor_id": 1578
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": { "key_code": "f11" },
-                                "to": [
-                                    {
-                                        "key_code": "q",
-                                        "modifiers": ["left_control", "left_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 16641,
-                                                "vendor_id": 1578
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": { "key_code": "print_screen" },
-                                "to": [
-                                    {
-                                        "key_code": "5",
-                                        "modifiers": ["left_command", "left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 16641,
-                                                "vendor_id": 1578
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "scroll_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "shell_command": "~/.local/bin/toggle_dnd.sh" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 16641,
-                                                "vendor_id": 1578
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": { "key_code": "pause" },
-                                "to": [{ "shell_command": "~/.local/bin/panic-mode" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Hyper+F -> Run fv in iTerm",
                         "manipulators": [
                             {
@@ -464,35 +351,18 @@
                         },
                         {
                             "from": { "key_code": "f7" },
-                            "to": [{ "key_code": "f7" }]
+                            "to": [{ "consumer_key_code": "al_local_machine_browser" }]
                         },
                         {
                             "from": { "key_code": "f8" },
                             "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }]
-                        },
-                        {
-                            "from": { "key_code": "f9" },
-                            "to": [{ "key_code": "f9" }]
-                        },
-                        {
-                            "from": { "key_code": "f10" },
-                            "to": [{ "key_code": "f10" }]
-                        },
-                        {
-                            "from": { "key_code": "f11" },
-                            "to": [{ "key_code": "f11" }]
-                        },
-                        {
-                            "from": { "key_code": "f12" },
-                            "to": [{ "key_code": "f12" }]
                         }
                     ],
                     "identifiers": {
                         "is_keyboard": true,
                         "product_id": 16641,
                         "vendor_id": 1578
-                    },
-                    "ignore_vendor_events": true
+                    }
                 },
                 {
                     "identifiers": {

@@ -1,0 +1,24 @@
+{
+    "title": "Pebble NumLock",
+    "rules":[
+        {
+          "description": "NumLock -> Keybee Cockpit",
+
+          "manipulators": [
+            {
+              "type": "basic",
+
+              "from": {
+                "key_code": "keypad_num_lock"
+              },
+
+              "to": [
+                {
+                  "shell_command": "~/.local/bin/keybee-status"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+}

@@ -41,6 +41,7 @@ yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^QuickTime Player$" manage=off
 yabai -m rule --add app="^mpv$" manage=off
+yabai -m rule --add title="^⌨️ Shortcut Hub$" manage=off
 
 # --- Space labels (dynamically assigned to ignore macOS native fullscreen spaces) ---
 yabai -m query --spaces | python3 -c "

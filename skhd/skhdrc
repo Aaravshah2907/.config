@@ -53,8 +53,8 @@ ctrl + alt - l : /opt/homebrew/bin/yabai -m window --warp east
 # Move Windows Across Displays
 # ================================
 
-shift + alt - s : /opt/homebrew/bin/yabai -m window --display west;  /opt/homebrew/bin/yabai -m display --focus west
-shift + alt - g : /opt/homebrew/bin/yabai -m window --display east;  /opt/homebrew/bin/yabai -m display --focus east
+shift + alt - s : /opt/homebrew/bin/yabai -m window --display west && sleep 0.1 &&  /opt/homebrew/bin/yabai -m display --focus west
+shift + alt - g : /opt/homebrew/bin/yabai -m window --display east && sleep 0.1 &&  /opt/homebrew/bin/yabai -m display --focus east
 
 
 # ================================
@@ -88,26 +88,26 @@ ctrl + alt - k : sketchybar --reload
 # ================================
 
 # Focus space 1-9
-hyper - 1 : /opt/homebrew/bin/yabai -m space --focus 1
-hyper - 2 : /opt/homebrew/bin/yabai -m space --focus 2
-hyper - 3 : /opt/homebrew/bin/yabai -m space --focus 3
-hyper - 4 : /opt/homebrew/bin/yabai -m space --focus 4
-hyper - 5 : /opt/homebrew/bin/yabai -m space --focus 5
-hyper - 6 : /opt/homebrew/bin/yabai -m space --focus 6
-hyper - 7 : /opt/homebrew/bin/yabai -m space --focus 7
-hyper - 8 : /opt/homebrew/bin/yabai -m space --focus 8
-hyper - 9 : /opt/homebrew/bin/yabai -m space --focus 9
+#hyper - 1 : /opt/homebrew/bin/yabai -m space --focus 1
+#hyper - 2 : /opt/homebrew/bin/yabai -m space --focus 2
+#hyper - 3 : /opt/homebrew/bin/yabai -m space --focus 3
+#hyper - 4 : /opt/homebrew/bin/yabai -m space --focus 4
+#hyper - 5 : /opt/homebrew/bin/yabai -m space --focus 5
+#hyper - 6 : /opt/homebrew/bin/yabai -m space --focus 6
+#hyper - 7 : /opt/homebrew/bin/yabai -m space --focus 7
+#hyper - 8 : /opt/homebrew/bin/yabai -m space --focus 8
+#hyper - 9 : /opt/homebrew/bin/yabai -m space --focus 9
 
 # Move window to space 1-9
-hyper + shift - 1 : /opt/homebrew/bin/yabai -m window --space 1; /opt/homebrew/bin/yabai -m space --focus 1
-hyper + shift - 2 : /opt/homebrew/bin/yabai -m window --space 2; /opt/homebrew/bin/yabai -m space --focus 2
-hyper + shift - 3 : /opt/homebrew/bin/yabai -m window --space 3; /opt/homebrew/bin/yabai -m space --focus 3
-hyper + shift - 4 : /opt/homebrew/bin/yabai -m window --space 4; /opt/homebrew/bin/yabai -m space --focus 4
-hyper + shift - 5 : /opt/homebrew/bin/yabai -m window --space 5; /opt/homebrew/bin/yabai -m space --focus 5
-hyper + shift - 6 : /opt/homebrew/bin/yabai -m window --space 6; /opt/homebrew/bin/yabai -m space --focus 6
-hyper + shift - 7 : /opt/homebrew/bin/yabai -m window --space 7; /opt/homebrew/bin/yabai -m space --focus 7
-hyper + shift - 8 : /opt/homebrew/bin/yabai -m window --space 8; /opt/homebrew/bin/yabai -m space --focus 8
-hyper + shift - 9 : /opt/homebrew/bin/yabai -m window --space 9; /opt/homebrew/bin/yabai -m space --focus 9
+hyper - 1 : /opt/homebrew/bin/yabai -m window --space 1 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 1
+hyper - 2 : /opt/homebrew/bin/yabai -m window --space 2 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 2
+hyper - 3 : /opt/homebrew/bin/yabai -m window --space 3 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 3
+hyper - 4 : /opt/homebrew/bin/yabai -m window --space 4 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 4
+hyper - 5 : /opt/homebrew/bin/yabai -m window --space 5 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 5
+hyper - 6 : /opt/homebrew/bin/yabai -m window --space 6 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 6
+hyper - 7 : /opt/homebrew/bin/yabai -m window --space 7 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 7
+hyper - 8 : /opt/homebrew/bin/yabai -m window --space 8 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 8
+hyper - 9 : /opt/homebrew/bin/yabai -m window --space 9 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 9
 
 # ================================
 # Window Controls (Hyper Key)
@@ -120,7 +120,7 @@ hyper - space : /opt/homebrew/bin/yabai -m window --toggle split
 hyper - q : /opt/homebrew/bin/yabai -m window --close
 
 # ================================
-fv ~
+
 # Application Launcher (Hyper Key)
 # ================================
 
@@ -178,3 +178,10 @@ cmd + ctrl + alt + shift - 0x2B : bash ~/.config/skhd/control_center.sh
 
 # Toggle playback speed between 1.5 and 1
 cmd + ctrl + alt + shift - p : bash ~/.config/skhd/vlc_toggle_speed.sh
+
+# Pebble Keys:
+f7 : ~/.local/bin/toggle-sharing
+
+f9 : ~/.local/bin/lock-screen.sh
+
+f10 : ~/.local/bin/study-mode

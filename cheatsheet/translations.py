@@ -45,6 +45,9 @@ EXPLICIT_TRANSLATIONS = {
     "control_center.sh":
         "Open Control Center",
 
+    "show-cheatsheet.sh":
+        "Open Shortcut Hub",
+
 }
 
 
@@ -146,6 +149,9 @@ def categorise(command):
 
     if ".local/bin" in command:
         return "⭐ System"
+
+    if "show-cheatsheet.sh" in command:
+        return "⌨️ Keyboard"
 
     return "💻 Misc"
 

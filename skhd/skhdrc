@@ -168,9 +168,9 @@ cmd + ctrl + alt + shift - 0x18 : python3 ~/.config/skhd/scratchpad.py "Calculat
 # Control Center (Hyper Key)
 # ================================
 
-# Toggle Control Center (Hyper + ,)
+# Toggle Control Center (Hyper + ;)
 # skhd's hyper alias doesn't work with non-alphanumeric keys, so use explicit modifier combo
-cmd + ctrl + alt + shift - 0x2B : bash ~/.config/skhd/control_center.sh
+cmd + ctrl + alt + shift - 0x29 : bash ~/.config/skhd/control_center.sh
 
 # ================================
 # VLC Control (Hyper Key)

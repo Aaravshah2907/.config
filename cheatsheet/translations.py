@@ -48,65 +48,96 @@ EXPLICIT_TRANSLATIONS = {
     "show-cheatsheet.sh":
         "Open Shortcut Hub",
 
+    "toggle_dnd.sh":
+        "Toggle Do Not Disturb",
+
+    "panic-mode":
+        "Panic Mode",
+
+    "keybee-status":
+        "Keybee Status",
+
+    "fv.sh":
+        "Run fv in iTerm",
+
+    "run fv":
+        "Run fv in iTerm",
+
 }
 
 
+HYPER_MODIFIER_TOKENS = ("cmd", "ctrl", "alt", "shift")
+HYPER_GLYPHS = ("⌘", "⌃", "⌥", "⇧")
+
+
+def collapse_hyper_modifiers(shortcut):
+    """Turn cmd+ctrl+alt+shift (or glyph equivalents) into Hyper."""
+    lower = shortcut.lower()
+
+    if all(token in lower for token in HYPER_MODIFIER_TOKENS):
+        remainder = lower
+        for token in HYPER_MODIFIER_TOKENS:
+            remainder = re.sub(rf"\b{token}\b", "", remainder)
+        remainder = re.sub(r"[\s+\-]+", " ", remainder).strip()
+        return f"Hyper {remainder}".strip()
+
+    if all(glyph in shortcut for glyph in HYPER_GLYPHS):
+        remainder = shortcut
+        for glyph in HYPER_GLYPHS:
+            remainder = remainder.replace(glyph, "")
+        remainder = re.sub(r"\s+", " ", remainder).strip()
+        return f"Hyper {remainder}".strip()
+
+    return shortcut
+
+
 def prettify_keys(shortcut):
-    shortcut = shortcut.lower()
-    shortcut = shortcut.strip()
+    shortcut = shortcut.lower().strip()
 
     hyper_patterns = [
         "cmd + ctrl + alt + shift",
         "command + control + option + shift",
     ]
 
-    # normalise karabiner modifiers first
     replacements = {
         "left_command": "cmd",
         "right_command": "cmd",
         "command": "cmd",
-
         "left_control": "ctrl",
         "right_control": "ctrl",
         "control": "ctrl",
-
         "left_option": "alt",
         "right_option": "alt",
         "option": "alt",
-
         "left_shift": "shift",
         "right_shift": "shift",
     }
 
-    for k, v in replacements.items():
-        shortcut = shortcut.replace(k, v)
-
-    # hyper collapse
-    #if all(x in shortcut for x in ["cmd", "ctrl", "alt", "shift"]):
-        #return "Hyper"
-
+    for old, new in replacements.items():
+        shortcut = shortcut.replace(old, new)
 
     for pattern in hyper_patterns:
         shortcut = shortcut.replace(pattern, "hyper")
 
-    replacements = {
-        "alt":"⌥",
-        "shift":"⇧",
-        "ctrl":"⌃",
-        "cmd":"⌘",
+    shortcut = re.sub(r"\bhyper\b", "Hyper", shortcut)
+
+    glyph_map = {
+        "alt": "⌥",
+        "shift": "⇧",
+        "ctrl": "⌃",
+        "cmd": "⌘",
     }
 
+    for old, new in glyph_map.items():
+        shortcut = re.sub(rf"\b{old}\b", new, shortcut)
 
-    for old,new in replacements.items():
-        shortcut = shortcut.replace(old,new)
-
-    shortcut = shortcut.replace("hyper","Hyper")
-    shortcut = shortcut.replace(" - "," ")
-    shortcut = shortcut.replace("+","")
+    shortcut = shortcut.replace(" - ", " ")
+    shortcut = re.sub(r"\s*\+\s*", " ", shortcut)
     shortcut = shortcut.replace("0x18", "=")
     shortcut = shortcut.replace("0x2b", "\\")
     shortcut = shortcut.replace("0x29", ";")
-
+    shortcut = collapse_hyper_modifiers(shortcut)
+    shortcut = re.sub(r"\s+", " ", shortcut).strip()
 
     return shortcut
 
@@ -174,10 +205,25 @@ def translate(command):
         app = app.split(" - ")[0]
         return f"Open {app}"
 
+    apps = re.findall(r'open -a "([^"]+)"', command)
+    pwas = re.findall(r'open "[^"]+/([^/"]+)\.app"', command)
+
+    if len(apps) + len(pwas) > 1:
+        label = pwas[0] if pwas else apps[0]
+        return f"Open {label} Workspace"
+
+    if apps:
+        return f"Open {apps[0]}"
+
+    if pwas:
+        return f"Open {pwas[0]}"
+
     for pattern, value in EXPLICIT_TRANSLATIONS.items():
         if pattern.lower() in lower:
             return value
 
+    if "insert ->" in lower and "cheat" in lower:
+        return "Open Shortcut Hub"
 
     if "--focus west" in lower:
         return "Focus Left"
@@ -239,8 +285,10 @@ def translate(command):
         app = command.split('"')[1]
         return f"{app} Scratchpad"
 
-    if 'open "' in command:
-        app = command.split('"')[1]
-        return f"Open {app}"
+    if lower.startswith("send "):
+        return command[5:].strip()
+
+    if lower.startswith("tap:") or lower.startswith("hold:"):
+        return command
 
     return command

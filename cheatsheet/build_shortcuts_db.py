@@ -13,17 +13,34 @@ from translations import (
 SKHD = Path.home() / ".config/skhd/skhdrc"
 
 KARABINER_MAIN = Path.home() / ".config/karabiner/karabiner.json"
-KARABINER_MODS = Path.home() / ".config/karabiner/assets/complex_modifications/"
+# Imported rules live in karabiner.json; assets/*.json are install templates only.
+KARABINER_MODS = None
 
 CACHE = Path("/tmp/shortcut_db.json")
+
+POINTING_BUTTON_NAMES = {
+    "button1": "Left Click",
+    "button2": "Right Click",
+    "button3": "Middle Click",
+    "button4": "Back Button",
+    "button5": "Forward Button",
+}
+
+MODIFIER_REMAP_KEYS = {
+    "right_command",
+    "right_control",
+    "caps_lock",
+}
 
 
 APP_MAP_REVERSE = {
     "com.microsoft.VSCode": "vscode",
+    "com.todesktop.230313mzl4w4u92": "cursor",
     "com.brave.Browser": "brave",
     "com.google.Chrome": "chrome",
     "com.apple.Safari": "safari",
     "com.apple.Terminal": "iterm",
+    "com.googlecode.iterm2": "iterm",
     "org.videolan.vlc": "vlc",
 }
 
@@ -53,6 +70,8 @@ KARABINER_KEY_NAMES = {
     "hyphen": "-",
     "equal_sign": "=",
     "grave_accent_and_tilde": "`",
+    "insert": "Insert",
+    "f": "F",
 }
 
 KARABINER_MODIFIER_NAMES = {
@@ -162,15 +181,31 @@ def format_karabiner_key(key):
     if not key:
         return ""
 
-    key = str(key).strip()
+    key = str(key).strip().lower()
+    if key in POINTING_BUTTON_NAMES:
+        return POINTING_BUTTON_NAMES[key]
     return KARABINER_KEY_NAMES.get(key, key.replace("_", " ").title())
 
 
-def format_karabiner_combo(key, modifiers=None):
-    parts = []
+def is_hyper_combo(modifiers):
+    mods = {m.lower() for m in (modifiers or [])}
+    has_cmd = mods & {"left_command", "right_command", "command"}
+    has_ctrl = mods & {"left_control", "right_control", "control"}
+    has_opt = mods & {"left_option", "right_option", "option"}
+    has_shift = mods & {"left_shift", "right_shift", "shift"}
+    return bool(has_cmd and has_ctrl and has_opt and has_shift)
 
-    for modifier in modifiers or []:
-        parts.append(KARABINER_MODIFIER_NAMES.get(modifier, format_karabiner_key(modifier)))
+
+def format_karabiner_combo(key, modifiers=None):
+    modifiers = modifiers or []
+
+    if is_hyper_combo(modifiers):
+        parts = ["Hyper"]
+    else:
+        parts = [
+            KARABINER_MODIFIER_NAMES.get(modifier, format_karabiner_key(modifier))
+            for modifier in modifiers
+        ]
 
     if key:
         parts.append(format_karabiner_key(key))
@@ -214,26 +249,49 @@ def extract_karabiner():
         return action
 
         
-    def extract_action(m):
-        to_block = m.get("to", [])
-        if not to_block:
+    def format_to_entry(entry):
+        if "shell_command" in entry:
+            return entry["shell_command"]
+
+        if "key_code" in entry:
+            key = entry.get("key_code")
+            modifiers = entry.get("modifiers", [])
+            combo = format_karabiner_combo(key, modifiers)
+            if modifiers:
+                return f"Send {combo}"
+            return translate_karabiner(key)
+
+        if "pointing_button" in entry:
+            return f"Send {format_karabiner_key(entry['pointing_button'])}"
+
+        if "consumer_key_code" in entry:
+            return entry["consumer_key_code"].replace("_", " ").title()
+
+        return str(entry)
+
+    def format_to_block(block):
+        if not block:
             return ""
 
-        t = to_block[0]
+        return " / ".join(format_to_entry(entry) for entry in block)
 
-        if "shell_command" in t:
-            return t["shell_command"]
+    def extract_action(m, rule_description="", manipulator_count=1):
+        if manipulator_count == 1 and rule_description:
+            return rule_description
 
-        if "key_code" in t:
-            key = t.get("key_code")
-            modifiers = t.get("modifiers", [])
-            combo = format_karabiner_combo(key, modifiers)
-            return translate_karabiner(key) if not modifiers else f"Send {combo}"
+        parts = []
 
-        if "pointing_button" in t:
-            return f"Send {format_karabiner_key(t['pointing_button'])}"
+        if m.get("to"):
+            parts.append(format_to_block(m["to"]))
+        if m.get("to_if_alone"):
+            parts.append(f"Tap: {format_to_block(m['to_if_alone'])}")
+        if m.get("to_if_held_down"):
+            parts.append(f"Hold: {format_to_block(m['to_if_held_down'])}")
 
-        return str(t)
+        if parts:
+            return " · ".join(parts)
+
+        return rule_description
 
     #def is_valid_karabiner_entry(keys, action):
         #if not keys:
@@ -247,7 +305,22 @@ def extract_karabiner():
 
         #return True
 
+    def is_modifier_remap(m):
+        frm = m.get("from", {})
+        key = frm.get("key_code")
+        if key not in MODIFIER_REMAP_KEYS:
+            return False
+
+        to_block = m.get("to", [])
+        if not to_block:
+            return False
+
+        return bool(to_block[0].get("modifiers"))
+
     def is_valid_key(m):
+        if is_modifier_remap(m):
+            return False
+
         frm = m.get("from", {})
         key = frm.get("key_code")
         button = frm.get("pointing_button")
@@ -255,7 +328,6 @@ def extract_karabiner():
         if not key and not button:
             return False
 
-        # filter junk keys
         junk = {
             "vk_none",
             "application",
@@ -265,7 +337,10 @@ def extract_karabiner():
             "keypad_num_lock",
         }
 
-        return key not in junk
+        if key in junk:
+            return False
+
+        return True
 
 
     seen = set()
@@ -278,7 +353,7 @@ def extract_karabiner():
         seen.add(key)
         return True
         
-    def handle_manipulator(m):
+    def handle_manipulator(m, rule_description="", manipulator_count=1):
         try:
             if not is_valid_key(m):
                 return
@@ -288,16 +363,18 @@ def extract_karabiner():
 
             mods = frm.get("modifiers", {}).get("mandatory", [])
 
-            action = extract_action(m)
+            action = extract_action(m, rule_description, manipulator_count)
+            if not action:
+                return
 
             keys = format_karabiner_combo(key, mods)
 
             item = {
-                "keys" : keys,
+                "keys": keys,
                 "action": translate(command=action),
                 "category": categorise(action),
                 "command": action,
-                "source": "karabiner"
+                "source": "karabiner",
             }
 
             if not dedupe(item):
@@ -328,17 +405,10 @@ def extract_karabiner():
                 .get("rules", [])
 
     for rule in rules:
-        for m in rule.get("manipulators", []):
-            handle_manipulator(m)
-
-    # read external complex_modifications
-    if KARABINER_MODS.exists():
-        for file in KARABINER_MODS.glob("*.json"):
-            d = safe_read_json(file)
-
-            for rule in d.get("rules", []):
-                for m in rule.get("manipulators", []):
-                    handle_manipulator(m)
+        manipulators = rule.get("manipulators", [])
+        description = rule.get("description", "")
+        for m in manipulators:
+            handle_manipulator(m, description, len(manipulators))
 
     return shortcuts_global, shortcuts_apps
 

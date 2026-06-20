@@ -198,9 +198,8 @@ show_health_panel() {
         echo -e "${GARNET}Unable to read health status.${NC}"
     else
         printf "%s" "$hjson" | jq -r '
-            "player_backend   : \(.player_backend)\n" +
-            "local_running    : \(.local_player_running)\n" +
-            "socket_exists    : \(.local_socket_exists)\n" +
+            "mpv_running      : \(.mpv_running)\n" +
+            "socket_exists    : \(.socket_path_exists)\n" +
             "spotify_player   : \(.spotify_player)\n" +
             "librespot        : \(.librespot)\n" +
             "source_lock      : \(.source_lock)\n" +
@@ -272,23 +271,12 @@ draw() {
     echo ""
 
     # Box 1: Infused Record (Now Playing)
-    local backend=$(echo "$state_json" | jq -r '.player_backend // "mpv"')
     local label1=" INFUSED RECORD "
-    local backend_visible=""
-    local backend_colored=""
-    if [ "$backend" = "vlc" ]; then
-        backend_visible="[VLC 󰕼] "
-        backend_colored="${T_SPREN_SIBLING}[VLC 󰕼]${NC}${C_MAIN}${BOLD} "
-    else
-        backend_visible="[MPV 󰎈] "
-        backend_colored="${T_SPREN_HONOR}[MPV 󰎈]${NC}${C_MAIN}${BOLD} "
-    fi
-    local label1_full="${label1}${backend_colored}"
-    local label1_len=$(( ${#label1} + ${#backend_visible} ))
+    local label1_len=${#label1}
     # Top border: ┌── (2) label (len) hline1 (len) ──┐ (3) = total width inner_width+2
     local hline1_len=$((inner_width - label1_len - 4))
     local hline1=$(printf '─%.0s' $(seq 1 $hline1_len))
-    echo -e "  ${C_MAIN}${BOLD}┌──${label1_full}${hline1}──┐${NC}"
+    echo -e "  ${C_MAIN}${BOLD}┌──${label1}${hline1}──┐${NC}"
     
     local status_raw
     local -a status_lines=()
@@ -384,11 +372,11 @@ draw() {
     echo -e "  ${C_SEC}${BOLD}┌──${label3}${hline3}──┐${NC}"
     
     local -a cmd_rows=(
-        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}   ${SAPPHIRE_G}[↑/↓]${NC} Move      ${SAPPHIRE_G}[ENTER]${NC} Play     ${SAPPHIRE_G}[n/p]${NC} Next/Prev  ${SAPPHIRE_G}[l]${NC} Loop        ${SAPPHIRE_G}[s]${NC} Shuffle"
-        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear        ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${GARNET}[q]${NC} Quit"
-        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}   ${SAPPHIRE_G}[+/-]${NC} Vol       ${SAPPHIRE_G}[j/k]${NC} Move Item  ${SAPPHIRE_G}[R]${NC} Restart"
-        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC}  ${SAPPHIRE_G}[^S]${NC} Save       ${SAPPHIRE_G}[^L]${NC} Load        ${SAPPHIRE_G}[r]${NC} Refresh      ${SAPPHIRE_G}[t]${NC} Sort Mode"
-        " ${GREEN}${NC} ${BOLD}SPO${NC}   ${SAPPHIRE_G}[a]${NC} Search+Play ${SAPPHIRE_G}[P]${NC} Playlist     ${SAPPHIRE_G}[o]${NC} Spotify App"
+        " ${GREEN}󰌌${NC} ${BOLD}NAV${NC}   ${SAPPHIRE_G}[↑/↓]${NC} Move      ${SAPPHIRE_G}[ENTER]${NC} Play ${SAPPHIRE_G}[n/p]${NC} Next/Prev  ${SAPPHIRE_G}[l]${NC} Loop        ${SAPPHIRE_G}[s]${NC} Shuffle"
+        " ${CYAN}󰀻${NC} ${BOLD}SYS${NC}   ${SAPPHIRE_G}[d]${NC} Del         ${SAPPHIRE_G}[c]${NC} Clear    ${SAPPHIRE_G}[H]${NC} Health       ${SAPPHIRE_G}[/]${NC} Find        ${GARNET}[q]${NC} Quit"
+        " ${BLUE}󰓓${NC} ${BOLD}ADJ${NC}   ${SAPPHIRE_G}[+/-]${NC} Vol       ${SAPPHIRE_G}[←/→]${NC} Seek   ${SAPPHIRE_G}[[/]]${NC} Jump       ${SAPPHIRE_G}[j/k]${NC} Move Item"
+        " ${MAGENTA}󰆓${NC} ${BOLD}FILE${NC}  ${SAPPHIRE_G}[^S]${NC} Save       ${SAPPHIRE_G}[^L]${NC} Load    ${SAPPHIRE_G}[r]${NC} Refresh      ${SAPPHIRE_G}[t]${NC} Sort Mode"
+        " ${GREEN}${NC} ${BOLD}SPO${NC}   ${SAPPHIRE_G}[a]${NC} Search+Play ${SAPPHIRE_G}[P]${NC} Playlist ${SAPPHIRE_G}[o]${NC} Spotify App"
     )
     
     for row in "${cmd_rows[@]}"; do
@@ -458,6 +446,8 @@ while true; do
             case "$key2" in
                 "[A") ((selected--)) ;;         # up
                 "[B") ((selected++)) ;;         # down
+                "[C") $PY seek 5 ;;             # right →
+                "[D") $PY seek -5 ;;            # left ←
             esac
             ;;
 
@@ -474,6 +464,8 @@ while true; do
             load_queue
             ;;
 
+        "[") $PY seek -10 ;;
+        "]") $PY seek 10 ;;
         "+" | "=") $PY volume 5 ;;
         "-") $PY volume -5 ;;
         
@@ -544,7 +536,6 @@ while true; do
             ;;
         l)  $PY loop;   load_queue ;;
         s)  $PY shuffle; load_queue ;;
-        R)  $PY restart ;;
         r)
             # Highstorm Refresh Effect
             echo -ne "${CYAN}${BOLD}"

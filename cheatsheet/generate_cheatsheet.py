@@ -19,9 +19,7 @@ MENUBAR_APPLESCRIPT = Path.home() / ".config/cheatsheet/menubar_shortcuts.apples
 
 CACHE = Path("/tmp/shortcut_db.json")
 LOCK = Path("/tmp/shortcut_hub.lock")
-
 OUTPUT = Path("/tmp/shortcut_hub.html")
-
 
 APP_MAP = {
     "Visual Studio Code": "vscode",
@@ -33,7 +31,6 @@ APP_MAP = {
     "Cursor": "cursor",
 }
 
-
 def toggle_lock():
     if LOCK.exists():
         LOCK.unlink()
@@ -41,7 +38,6 @@ def toggle_lock():
     else:
         LOCK.write_text("1")
         return True
-
 
 def get_frontmost_app():
     try:
@@ -53,83 +49,14 @@ def get_frontmost_app():
     except:
         return ""
 
-
 def normalize_app(app_name):
     return APP_MAP.get(app_name, None)
-
 
 def load_cache():
     if not CACHE.exists():
         return {"global": [], "apps": {}}
-
     with open(CACHE) as f:
         return json.load(f)
-
-
-def categorise_item(item):
-    command = item.get("command", "").lower()
-
-    return categorise(command)
-
-
-def prettify_item_keys(item):
-    return prettify_keys(item.get("keys", ""))
-
-
-def translate_item(item):
-    return translate(item.get("command", ""))
-
-
-def build_cards(shortcuts):
-    grouped = {}
-
-    for item in shortcuts:
-        category = item.get("category", "💻 Misc")
-        grouped.setdefault(category, []).append(item)
-
-    html = []
-
-    for category, entries in grouped.items():
-        items_html = []
-
-        for e in entries:
-            items_html.append(f"""
-                <div class="item">
-                    <span class="key">{e["keys"]}</span>
-                    <span>{e["action"]}</span>
-                </div>
-            """)
-
-        html.append(f"""
-        <div class="card">
-            <h2>{category}</h2>
-            {''.join(items_html)}
-        </div>
-        """)
-
-    return "\n".join(html)
-
-
-def dedupe_shortcuts(shortcuts):
-    seen = set()
-    deduped = []
-
-    for item in shortcuts:
-        key = (
-            item.get("keys", ""),
-            item.get("action", ""),
-            item.get("command", ""),
-            item.get("source", ""),
-        )
-
-        if key in seen:
-            continue
-
-        seen.add(key)
-        deduped.append(item)
-
-    return deduped
-
 
 MENU_GLYPHS = {
     "1": "⌫",
@@ -176,17 +103,13 @@ MENUBAR_SKIP_PREFIXES = (
     "Apple >",
 )
 
-
 def normalize_menu_value(value):
     if value is None:
         return ""
-
     value = str(value).strip()
     if value.lower() in {"", "missing value", "none", "null"}:
         return ""
-
     return value
-
 
 def format_menu_shortcut(cmd_char, cmd_glyph, cmd_mods):
     cmd_char = normalize_menu_value(cmd_char)
@@ -202,8 +125,6 @@ def format_menu_shortcut(cmd_char, cmd_glyph, cmd_mods):
         mods = 0
 
     parts = []
-
-    # AXMenuItemCmdModifiers uses bit 3 to mean "no command key".
     if not mods & 8:
         parts.append("⌘")
     if mods & 4:
@@ -215,7 +136,6 @@ def format_menu_shortcut(cmd_char, cmd_glyph, cmd_mods):
 
     parts.append(key.upper() if len(key) == 1 and key.isalpha() else key)
     return " ".join(parts)
-
 
 def get_frontmost_app_name():
     env_app = os.environ.get("CHEATSHEET_FRONT_APP", "").strip()
@@ -232,41 +152,33 @@ def get_frontmost_app_name():
             text=True,
             timeout=2,
         ).strip()
-    except (subprocess.SubprocessError, OSError):
+    except:
         return ""
-
 
 def menubar_cache_path(app_name):
     safe_name = re.sub(r"[^\w.-]+", "_", app_name).strip("_") or "unknown"
     return MENUBAR_CACHE_DIR / f"{safe_name}.json"
 
-
 def load_menubar_cache(app_name):
     cache_file = menubar_cache_path(app_name)
     if not cache_file.exists():
         return None
-
     age = time.time() - cache_file.stat().st_mtime
     if age > MENUBAR_CACHE_TTL_SECONDS:
         return None
-
     try:
         return json.loads(cache_file.read_text())
-    except (json.JSONDecodeError, OSError):
+    except:
         return None
-
 
 def save_menubar_cache(app_name, shortcuts):
     if not app_name:
         return
-
     MENUBAR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     menubar_cache_path(app_name).write_text(json.dumps(shortcuts, indent=2))
 
-
 def parse_menubar_output(output):
     shortcuts = []
-
     for line in output.splitlines():
         parts = line.split("\t")
         if len(parts) != 5:
@@ -290,9 +202,7 @@ def parse_menubar_output(output):
             "command": command,
             "source": "menubar",
         })
-
     return shortcuts
-
 
 def extract_menubar_shortcuts_from_system_events():
     if not MENUBAR_APPLESCRIPT.exists():
@@ -310,46 +220,77 @@ def extract_menubar_shortcuts_from_system_events():
             text=True,
             timeout=MENUBAR_TIMEOUT_SECONDS,
         )
-    except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
+    except:
         return []
 
     shortcuts = parse_menubar_output(out)
     save_menubar_cache(app_name, shortcuts)
     return shortcuts
 
+def dedupe_shortcuts(shortcuts):
+    seen = set()
+    deduped = []
+    for item in shortcuts:
+        key = (
+            item.get("keys", ""),
+            item.get("action", ""),
+            item.get("command", ""),
+            item.get("source", ""),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+    return deduped
 
-def get_shortcuts_for_context():
+def get_all_shortcuts_data():
     cache = load_cache()
-
-    app = normalize_app(get_frontmost_app())
+    active_app = get_frontmost_app_name()
+    normalized_active = normalize_app(get_frontmost_app())
 
     global_shortcuts = cache.get("global", [])
+    for item in global_shortcuts:
+        item["app"] = "Global"
 
     app_shortcuts = []
-    if app and app in cache.get("apps", {}):
-        app_shortcuts = cache["apps"][app]
+    if normalized_active and normalized_active in cache.get("apps", {}):
+        app_shortcuts = cache["apps"][normalized_active]
+    for item in app_shortcuts:
+        item["app"] = active_app
 
     menubar_shortcuts = extract_menubar_shortcuts_from_system_events()
+    for item in menubar_shortcuts:
+        item["app"] = active_app
 
-    return dedupe_shortcuts(global_shortcuts + app_shortcuts + menubar_shortcuts)
+    # Load other apps' shortcuts from cache
+    other_shortcuts = []
+    for app_name, app_list in cache.get("apps", {}).items():
+        if app_name != normalized_active:
+            for item in app_list:
+                item_copy = item.copy()
+                item_copy["app"] = app_name
+                other_shortcuts.append(item_copy)
+
+    all_shortcuts = dedupe_shortcuts(global_shortcuts + app_shortcuts + menubar_shortcuts)
+    for s in other_shortcuts:
+        all_shortcuts.append(s)
+
+    return all_shortcuts, active_app
 
 
 def build_html():
-    shortcuts = get_shortcuts_for_context()
-
-    content = build_cards(shortcuts)
-
+    shortcuts, active_app = get_all_shortcuts_data()
     template = HTML.read_text()
-
-    final = template.replace("{{CONTENT}}", content)
-
+    
+    # Inject shortcuts JSON and active app name
+    final = template.replace("{{SHORTCUTS_JSON}}", json.dumps(shortcuts))
+    final = final.replace("{{ACTIVE_APP}}", active_app)
+    
     OUTPUT.write_text(final)
-
 
 def main():
     toggle_lock()
     build_html()
-
 
 if __name__ == "__main__":
     main()

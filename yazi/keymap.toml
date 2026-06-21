@@ -109,8 +109,8 @@ keymap = [
 	{ on = [ "c", "m" ], run = "plugin chmod",          desc = "Chmod on files"},
 	
 	# Filter & Find
-	{ on = "f", run = "plugin fg", desc = "Find file by content (ripgrep)" },
-	{ on = "F", run = "plugin fg --args='fzf'", desc = "Find file by name (fzf)" },
+	{ on = "f", run = "filter --smart", desc = "Filter files" },
+	{ on = "F", run = "filter --smart", desc = "Filter files" },
 	{ on = "<C-f>", run = "filter --smart", desc = "Filter files" },
 
 	# Find

@@ -5,37 +5,6 @@
       "description": "Keybee device-specific mappings",
 
       "manipulators": [
-
-        {
-          "type": "basic",
-
-          "from": {
-            "key_code": "application"
-          },
-
-          "to": [
-            {
-              "key_code": "up_arrow",
-              "modifiers": [
-                "left_control"
-              ]
-            }
-          ],
-
-          "conditions": [
-            {
-              "type": "device_if",
-
-              "identifiers": [
-                {
-                  "vendor_id": 1578,
-                  "product_id": 16641
-                }
-              ]
-            }
-          ]
-        },
-
         {
           "type": "basic",
 

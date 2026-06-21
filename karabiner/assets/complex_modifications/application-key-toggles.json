@@ -1,0 +1,103 @@
+{
+    "title": "Application Key: Airdrop, LocalSend, Neardrop Toggles",
+    "rules": [
+        {
+            "description": "Application key shortcuts for toggle apps",
+            "manipulators": [
+                {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 16641,
+                                    "vendor_id": 1578
+                                }
+                            ],
+                            "type": "device_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "application",
+                        "modifiers": { "optional": ["any"] }
+                    },
+                    "to": [{ "set_variable": { "name": "application_mode", "value": 1 } }],
+                    "to_if_alone": [{ "key_code": "vk_none" }],
+                    "to_after_key_up": [{ "set_variable": { "name": "application_mode", "value": 0 } }],
+                    "type": "basic"
+                },
+                {
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "application_mode",
+                            "value": 1
+                        },
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 16641,
+                                    "vendor_id": 1578
+                                }
+                            ],
+                            "type": "device_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "a",
+                        "modifiers": { "optional": ["any"] }
+                    },
+                    "to": [{ "shell_command": "~/.local/bin/toggle-airdrop" }],
+                    "type": "basic"
+                },
+                {
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "application_mode",
+                            "value": 1
+                        },
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 16641,
+                                    "vendor_id": 1578
+                                }
+                            ],
+                            "type": "device_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "l",
+                        "modifiers": { "optional": ["any"] }
+                    },
+                    "to": [{ "shell_command": "~/.local/bin/toggle-localsend" }],
+                    "type": "basic"
+                },
+                {
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "application_mode",
+                            "value": 1
+                        },
+                        {
+                            "identifiers": [
+                                {
+                                    "product_id": 16641,
+                                    "vendor_id": 1578
+                                }
+                            ],
+                            "type": "device_if"
+                        }
+                    ],
+                    "from": {
+                        "key_code": "n",
+                        "modifiers": { "optional": ["any"] }
+                    },
+                    "to": [{ "shell_command": "~/.local/bin/toggle-neardrop" }],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

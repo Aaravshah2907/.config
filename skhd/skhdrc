@@ -180,7 +180,8 @@ cmd + ctrl + alt + shift - 0x29 : bash ~/.config/skhd/control_center.sh
 cmd + ctrl + alt + shift - p : bash ~/.config/skhd/vlc_toggle_speed.sh
 
 # Pebble Keys:
-f7 : ~/.local/bin/toggle-sharing
+
+f7 : /usr/bin/open -a "Mission Control"
 
 f9 : ~/.local/bin/lock-screen.sh
 

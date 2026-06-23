@@ -27,25 +27,31 @@ else
   ICON="🌙"
 fi
 
-# Cosmere weather color mapping
+# Cosmere weather color mapping with condition-specific icons
 LOWER=$(echo "$CONDITION" | tr '[:upper:]' '[:lower:]')
 if echo "$LOWER" | grep -iq "rain"; then
   COLOR="$PRES_GLACIAL"       # Preservation glacial — calm falling water
+  CONDITION_ICON="🌧️"
 elif echo "$LOWER" | grep -iq "thunderstorm\|storm"; then
   COLOR="$RUIN_OBSIDIAN"      # Ruin's volcanic black — destruction descends
+  CONDITION_ICON="⛈️"
 elif echo "$LOWER" | grep -iq "clear\|sunny"; then
   COLOR="$SPREN_SIBLING"      # Sibling/Urithiru crystal amber — tower warmth
+  CONDITION_ICON="☀️"
 elif echo "$LOWER" | grep -iq "cloud"; then
   COLOR="$RUIN_ASH"           # Ruin ash — ashfall sky
+  CONDITION_ICON="☁️"
 elif echo "$LOWER" | grep -iq "haze\|mist"; then
   COLOR="$PRES_SILVER"        # Preservation silver - misty fog
+  CONDITION_ICON="🌫️"
 else
   COLOR="$WHITE"
+  CONDITION_ICON="🌤️"
 fi
 
 # Format the weather data for display
-WEATHER_DISPLAY=$(echo "󰁹 $CONDITION | $HUMIDITY% | $WIND km/h" && \
-                  echo "󰂏 $TEMPERATURE°C" && \
+WEATHER_DISPLAY=$(echo "󰁹 $CONDITION_ICON $CONDITION | $HUMIDITY% | $WIND km/h" && \
+                  echo "󰂏 $ICON $TEMPERATURE°C" && \
                   echo "󰂓 $FEELS_LIKE°C")
 
 # Set the weather line in the popup

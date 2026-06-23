@@ -217,8 +217,8 @@ sketchybar --add item clock right \
   \
   --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
   --add item clock.events popup.clock --set clock.events label="Destiny" \
-  --add item clock.weather1 popup.clock --set clock.weather1 icon= script="$PLUGIN_DIR/weather.sh" \ 
-  --add item clock.weather2 popup.clock --set clock.weather2 icon= script="$PLUGIN_DIR/weatherTemp.sh"
+  --add item clock.weather1 popup.clock --set clock.weather1 icon= script="$PLUGIN_DIR/weather.sh" \
+  --add item clock.temperature popup.clock --set clock.temperature icon= script="$PLUGIN_DIR/weatherTemp.sh"
 
 # Calendar Lines (Optional monthly calendar on click)
 for i in {1..8}

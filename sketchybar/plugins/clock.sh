@@ -6,6 +6,7 @@ if [ "$SENDER" = "mouse.entered" ]; then
   /opt/homebrew/bin/sketchybar --set "$NAME" popup.drawing=on
   bash "$HOME/.config/sketchybar/plugins/calendar.sh"
   bash "$HOME/.config/sketchybar/plugins/weather.sh"
+  bash "$HOME/.config/sketchybar/plugins/weatherTemp.sh"
   exit 0
 fi
 

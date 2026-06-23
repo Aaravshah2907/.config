@@ -13,30 +13,43 @@ fi
 IFS=' ' read -r -a weather_parts <<< "$WEATHER_DATA"
 
 # Extract each part
-CONDITION=${weather_parts[0]}
-TEMPERATURE=${weather_parts[1]}
-HUMIDITY=${weather_parts[2]}
-WIND=${weather_parts[3]}
-FEELS_LIKE=${weather_parts[4]}
+RAW_CONDITION=$(curl -s "wttr.in/?format=%C" | xargs)
+HUMIDITY=$(curl -s "wttr.in/?format=%h")
+WIND=$(curl -s "wttr.in/?format=%w")
 
 # Cosmere weather color mapping with condition-specific icons
-LOWER=$(echo "$CONDITION" | tr '[:upper:]' '[:lower:]')
-if echo "$LOWER" | grep -iq "rain"; then
-  COLOR="$PRES_GLACIAL"       # Preservation glacial — calm falling water
-  CONDITION_ICON=""
-elif echo "$LOWER" | grep -iq "thunderstorm\|storm"; then
-  COLOR="$RUIN_OBSIDIAN"      # Ruin's volcanic black — destruction descends
+LOWER=$(echo "$RAW_CONDITION" | tr '[:upper:]' '[:lower:]')
+
+if [[ "$LOWER" == *"storm"* ]] || [[ "$LOWER" == *"thunder"* ]]; then
+  CONDITION="Storm"
+  COLOR="$DEEP_SAPPHIRE"
   CONDITION_ICON=""
-elif echo "$LOWER" | grep -iq "clear\|sunny"; then
-  COLOR="$SPREN_SIBLING"      # Sibling/Urithiru crystal amber — tower warmth
+elif [[ "$LOWER" == *"rain"* ]] || [[ "$LOWER" == *"drizzle"* ]] || [[ "$LOWER" == *"shower"* ]]; then
+  CONDITION="Rain"
+  COLOR="$PRES_GLACIAL"
+  CONDITION_ICON=""
+elif [[ "$LOWER" == *"snow"* ]] || [[ "$LOWER" == *"ice"* ]] || [[ "$LOWER" == *"sleet"* ]] || [[ "$LOWER" == *"blizzard"* ]]; then
+  CONDITION="Snow"
+  COLOR="$PRES_SILVER"
+  CONDITION_ICON=""
+elif [[ "$LOWER" == *"dust"* ]] || [[ "$LOWER" == *"sand"* ]] || [[ "$LOWER" == *"smoke"* ]]; then
+  CONDITION="Dust"
+  COLOR="$SPREN_PEAK"
+  CONDITION_ICON=""
+elif [[ "$LOWER" == *"clear"* ]] || [[ "$LOWER" == *"sunny"* ]]; then
+  CONDITION="Clear"
+  COLOR="$SPREN_SIBLING"
   CONDITION_ICON=""
-elif echo "$LOWER" | grep -iq "cloud"; then
-  COLOR="$RUIN_ASH"           # Ruin ash — ashfall sky
+elif [[ "$LOWER" == *"cloud"* ]] || [[ "$LOWER" == *"overcast"* ]]; then
+  CONDITION="Cloudy"
+  COLOR="$RUIN_ASH"
   CONDITION_ICON=""
-elif echo "$LOWER" | grep -iq "haze\|mist"; then
-  COLOR="$PRES_SILVER"        # Preservation silver - misty fog
+elif [[ "$LOWER" == *"mist"* ]] || [[ "$LOWER" == *"fog"* ]] || [[ "$LOWER" == *"haze"* ]]; then
+  CONDITION="Mist"
+  COLOR="$PRES_MIST"
   CONDITION_ICON=""
 else
+  CONDITION="$RAW_CONDITION"
   COLOR="$WHITE"
   CONDITION_ICON="🌤️"
 fi

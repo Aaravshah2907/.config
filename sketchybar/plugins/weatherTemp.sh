@@ -31,8 +31,8 @@ else
   fi
 
   # Format the weather data for display
-  WEATHER_DISPLAY2=$(printf "%s %s°C |  %s°C\n" "$ICON" "$TEMPERATURE" "$FEELS_LIKE")
+  WEATHER_DISPLAY2=$(printf "%s %s |  %s\n" "$ICON" "$TEMPERATURE" "$FEELS_LIKE")
 fi
 
 # Set the weather line in the popup
-sketchybar --set clock.weather2 label="$WEATHER_DISPLAY2" label.color="$COLOR"
+sketchybar --set clock.temperature label="$WEATHER_DISPLAY2" label.color="$COLOR"

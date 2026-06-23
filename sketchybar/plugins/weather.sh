@@ -19,6 +19,14 @@ HUMIDITY=${weather_parts[2]}
 WIND=${weather_parts[3]}
 FEELS_LIKE=${weather_parts[4]}
 
+# Determine day/night based on current time
+CURRENT_HOUR=$(date +%H)
+if (( CURRENT_HOUR >= 6 && CURRENT_HOUR < 18 )); then
+  ICON="☀️"
+else
+  ICON="🌙"
+fi
+
 # Cosmere weather color mapping
 LOWER=$(echo "$CONDITION" | tr '[:upper:]' '[:lower:]')
 if echo "$LOWER" | grep -iq "rain"; then
@@ -35,11 +43,9 @@ else
   COLOR="$WHITE"
 fi
 
-# Format the weather data for display using echo for multi-line output
-WEATHER_DISPLAY=$(echo "󰁹 $CONDITION" && \
+# Format the weather data for display
+WEATHER_DISPLAY=$(echo "󰁹 $CONDITION | $HUMIDITY% | $WIND km/h" && \
                   echo "󰂏 $TEMPERATURE°C" && \
-                  echo "󰂑 $HUMIDITY%" && \
-                  echo "󰂒 $WIND km/h" && \
                   echo "󰂓 $FEELS_LIKE°C")
 
 # Set the weather line in the popup

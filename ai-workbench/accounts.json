@@ -1,0 +1,10 @@
+[
+  {
+    "provider": "OpenAI",
+    "nickname": "Main OpenAI",
+    "email": "test@example.com",
+    "auth_type": "API Key",
+    "notes": "",
+    "last_used": null
+  }
+]

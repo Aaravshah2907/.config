@@ -50,7 +50,7 @@ else
 fi
 
 # Format the weather data for display
-WEATHER_DISPLAY=$(echo "󰁹 $CONDITION_ICON $CONDITION | $HUMIDITY% | $WIND km/h" && \
+WEATHER_DISPLAY=$(echo "󰁹 $CONDITION_ICON $CONDITION | 💧 $HUMIDITY% | 🌬️ $WIND km/h" && \
                   echo "󰂏 $ICON $TEMPERATURE°C" && \
                   echo "󰂓 $FEELS_LIKE°C")
 

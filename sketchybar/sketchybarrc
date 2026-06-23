@@ -152,7 +152,7 @@ sketchybar --add item control_center right \
            --set control_center icon=󰤨 \
                        padding_left=8 \
                        padding_right=8 \
-                       script="$PLUGIN_DIR/network.sh" \
+                       script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/network.sh" \
                        update_freq=120 \
                        popup.align=right \
            --subscribe control_center mouse.entered mouse.exited \
@@ -166,13 +166,6 @@ sketchybar --add item control_center right \
            --add item control_center.up popup.control_center \
            --set control_center.up icon=󰕒 label="Upload: ..." \
   \
-           --add bracket net.pill control_center \
-           --set net.pill background.color=$BAR_COLOR \
-                          background.border_color=$PRES_GLACIAL_TRANSLUCENT \
-                          background.border_width=1 \
-                          background.corner_radius=10 \
-                          background.drawing=on \
-  \
            --add item net_speed right \
            --set net_speed update_freq=2 script="$PLUGIN_DIR/net_speed.sh" drawing=off
 
@@ -182,7 +175,7 @@ sketchybar --add item github right \
                         icon= \
                         icon.color=$WHITE \
                         label.drawing=off \
-                        script="$PLUGIN_DIR/github.sh" \
+                        script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/github.sh" \
                         popup.align=right \
            --subscribe github mouse.entered mouse.exited \
   \
@@ -194,17 +187,10 @@ sketchybar --add item bluetooth right \
            --set bluetooth update_freq=60 \
                            padding_left=8 \
                            padding_right=8 \
-                           script="$PLUGIN_DIR/bluetooth.sh" \
+                           script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/bluetooth.sh" \
                            click_script="$PLUGIN_DIR/bluetooth.sh click" \
                            popup.align=right \
-           --subscribe bluetooth mouse.entered mouse.exited \
-  \
-           --add bracket bluetooth.pill bluetooth \
-           --set bluetooth.pill background.color=$BAR_COLOR \
-                                background.border_color=$PRES_SILVER_TRANSLUCENT \
-                                background.border_width=1 \
-                                background.corner_radius=10 \
-                                background.drawing=on
+           --subscribe bluetooth mouse.entered mouse.exited
 
 
 
@@ -213,17 +199,17 @@ sketchybar --add item battery right \
            --set battery update_freq=120 \
                          padding_left=8 \
                          padding_right=8 \
-                         script="$PLUGIN_DIR/battery.sh" \
+                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/battery.sh" \
                          popup.align=right \
                          popup.y_offset=12 \
            --subscribe battery power_source_change system_woke mouse.entered mouse.exited \
   \
-           --add bracket battery.pill battery \
-           --set battery.pill background.color=$BAR_COLOR \
-                              background.border_color=$BATT_ACCENT_T \
-                              background.border_width=1 \
-                              background.corner_radius=10 \
-                              background.drawing=on \
+           --add bracket system.pill battery bluetooth control_center \
+           --set system.pill background.color=$BAR_COLOR \
+                             background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on \
   \
            --add item battery.status popup.battery \
            --set battery.status icon=󰁹 \
@@ -235,7 +221,7 @@ sketchybar --add item battery right \
 
 # Clock: Chronicles
 sketchybar --add item clock right \
-           --set clock update_freq=30 script="$PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
+           --set clock update_freq=30 script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
            --subscribe clock mouse.entered mouse.exited \
            popup.align=right \
   \
@@ -331,7 +317,7 @@ sketchybar --add item sysmon right \
                         icon=󰒓 \
                         icon.color=$PRES_GLACIAL \
                         label.drawing=off \
-                        script="$PLUGIN_DIR/sysmon.sh" \
+                        script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/sysmon.sh" \
                         popup.align=right \
            --subscribe sysmon mouse.entered mouse.exited \
   \
@@ -350,8 +336,8 @@ sketchybar --add item pomodoro right \
                           icon=󰔟 \
                           icon.color=$SPREN_HONOR \
                           label.drawing=off \
-                          script="$PLUGIN_DIR/pomodoro.sh" \
-           --subscribe pomodoro mouse.clicked
+                          script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/pomodoro.sh" \
+           --subscribe pomodoro mouse.clicked mouse.entered mouse.exited
 
 # Reorder right items logically (first is rightmost)
 sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro github upcoming_alert focus_toggle clock

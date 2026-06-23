@@ -56,19 +56,43 @@ if [ "$IS_FULLSCREEN" = "true" ]; then
   ICON_STRIP="󰊓$ICON_STRIP"
 fi
 
-# Apply occupied/unoccupied styling based on whether windows exist
+# Map space names and icons
+case "$SPACE" in
+  1) SPACE_ICON="" ;;
+  2) SPACE_ICON="" ;;
+  3) SPACE_ICON="" ;;
+  4) SPACE_ICON="" ;;
+  5) SPACE_ICON="" ;;
+  6) SPACE_ICON="" ;;
+  7) SPACE_ICON="" ;;
+  *) SPACE_ICON="" ;;
+esac
+
+# Apply styling smoothly using animation to avoid glitches
 if [ -z "$ICON_STRIP" ]; then
-    # Unoccupied Space
+  # Unoccupied Space (Empty)
   if [ "$SELECTED" = "true" ]; then
-    sketchybar --set "space.$SPACE" drawing=on label="—" label.drawing=off icon.color=$WHITE background.drawing=on background.color=$BAR_COLOR background.border_color=$SPACE_COLOR background.border_width=2 background.corner_radius=6 background.height=42
+    # Selected but empty: Show Icon, solid white background
+    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label.drawing=off \
+      icon.color=$BAR_COLOR \
+      background.drawing=on background.color=$WHITE background.border_width=0 background.corner_radius=8
   else
-    sketchybar --set "space.$SPACE" drawing=off
+    # Unoccupied & Unselected: Just a dot, default dimmed color
+    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="•" label.drawing=off \
+      icon.color=$PRES_GLACIAL_TRANSLUCENT background.drawing=on background.color=0x00000000
   fi
 else
-    # Occupied Space
+  # Occupied Space (Apps inside)
   if [ "$SELECTED" = "true" ]; then
-    sketchybar --set "space.$SPACE" drawing=on label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=off background.color=$BAR_COLOR
+    # Selected AND Occupied: Solid space color background
+    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label="$ICON_STRIP" label.drawing=on \
+      icon.color=$BAR_COLOR label.color=$BAR_COLOR \
+      background.drawing=on background.color=$SPACE_COLOR background.border_width=0 background.corner_radius=8
   else
-    sketchybar --set "space.$SPACE" drawing=on label="$ICON_STRIP" label.drawing=on icon.color=$SPACE_COLOR label.color=$SPACE_COLOR background.drawing=off
+    # Occupied but Unselected: Space color, transparent background
+    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label="$ICON_STRIP" label.drawing=on \
+      icon.color=$SPACE_COLOR label.color=$SPACE_COLOR \
+      background.drawing=on background.color=0x00000000
   fi
 fi
+

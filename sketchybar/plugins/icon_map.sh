@@ -19,10 +19,10 @@ case "$APP_NAME" in
     icon="󰊯"
     ;;
   "Brave Browser" | "Brave")
-    icon="󰖟"
+    icon="󰊯"
     ;;
   "Arc")
-    icon="󰞍"
+    icon="󰇩"
     ;;
   "Firefox" | "Firefox Developer Edition")
     icon="󰈹"
@@ -51,12 +51,8 @@ case "$APP_NAME" in
   "Music" | "Spotify" | "Apple Music")
     icon="󰓇"
     ;;
-   # Books / Apple Books icons
-   # Available glyphs:
-   #   Open book: "󰈔". 📖
-   #   Alternate: "󰈢"
    "Books" | "Apple Books")
-      icon="📖"
+      icon="󰈔"
       ;;
   "mpv" | "mpv.player" | "io.mpv")
     icon=""

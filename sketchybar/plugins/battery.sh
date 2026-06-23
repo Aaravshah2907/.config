@@ -115,3 +115,10 @@ else
   rm -f /tmp/syl_batt_warn
   sketchybar --set "$NAME" icon.y_offset=0
 fi
+
+# Smart Battery Border
+if [ "$PERCENTAGE" -le 20 ] && [[ "$CHARGING" == "" ]]; then
+  sketchybar --set bar border_color=$RUIN_MAROON
+else
+  sketchybar --set bar border_color=$SAPPHIRE_TRANSLUCENT
+fi

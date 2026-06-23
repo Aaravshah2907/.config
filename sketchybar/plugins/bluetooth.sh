@@ -51,12 +51,22 @@ sketchybar --remove '/bluetooth\.device\..*/'
 # Add devices to popup
 if [ "$COUNT" -gt 0 ]; then
     COUNTER=0
+    PROFILER_DATA=$(system_profiler SPBluetoothDataType 2>/dev/null)
     while read -r line; do
         NAME=$(echo "$line" | grep -o 'name: "[^"]*"' | cut -d'"' -f2)
         [ -z "$NAME" ] && continue
         
+        # Try to find battery level for this device
+        BATTERY=$(echo "$PROFILER_DATA" | awk -v name="$NAME" '$0 ~ name":" {found=1} found && /Battery Level:/ {print $3; exit} found && /^[[:space:]]*[^[:space:]]+:/ && !($0 ~ name":") && !/Address:/ && !/Firmware/ && !/Vendor/ {found=0}')
+        
+        if [ -n "$BATTERY" ]; then
+           LABEL_STR="$NAME ($BATTERY)"
+        else
+           LABEL_STR="$NAME"
+        fi
+        
         sketchybar --add item bluetooth.device.$COUNTER popup.bluetooth \
-                   --set bluetooth.device.$COUNTER label="$NAME" icon=󰂱
+                   --set bluetooth.device.$COUNTER label="$LABEL_STR" icon=󰂱
         COUNTER=$((COUNTER + 1))
     done <<< "$CONNECTED_DEVICES"
 else

@@ -154,13 +154,40 @@ sketchybar --add item control_center right \
                        padding_right=8 \
                        script="$PLUGIN_DIR/network.sh" \
                        update_freq=120 \
+                       popup.align=right \
+           --subscribe control_center mouse.entered mouse.exited \
+  \
+           --add item control_center.ssid popup.control_center \
+           --set control_center.ssid icon=󰤨 label="SSID: ..." \
+  \
+           --add item control_center.down popup.control_center \
+           --set control_center.down icon=󰇚 label="Download: ..." \
+  \
+           --add item control_center.up popup.control_center \
+           --set control_center.up icon=󰕒 label="Upload: ..." \
   \
            --add bracket net.pill control_center \
            --set net.pill background.color=$BAR_COLOR \
                           background.border_color=$PRES_GLACIAL_TRANSLUCENT \
                           background.border_width=1 \
                           background.corner_radius=10 \
-                          background.drawing=on
+                          background.drawing=on \
+  \
+           --add item net_speed right \
+           --set net_speed update_freq=2 script="$PLUGIN_DIR/net_speed.sh" drawing=off
+
+# GitHub Notification
+sketchybar --add item github right \
+           --set github update_freq=300 \
+                        icon= \
+                        icon.color=$WHITE \
+                        label.drawing=off \
+                        script="$PLUGIN_DIR/github.sh" \
+                        popup.align=right \
+           --subscribe github mouse.entered mouse.exited \
+  \
+           --add item github.notifications popup.github \
+           --set github.notifications icon=󰂚 label="No token"
 
 # Bluetooth: Spiritweb
 sketchybar --add item bluetooth right \
@@ -280,6 +307,54 @@ sketchybar --add item volume right \
 #                             label.color=$WHITE \
 #                             label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
+
+# Focus Toggle
+sketchybar --add item focus_toggle right \
+           --set focus_toggle icon=󰈈 \
+                              icon.color=$PRES_GLACIAL \
+                              label.drawing=off \
+                              script="$PLUGIN_DIR/focus.sh" \
+           --subscribe focus_toggle mouse.clicked
+
+# Upcoming Meeting Alert
+sketchybar --add item upcoming_alert right \
+           --set upcoming_alert update_freq=120 \
+                                icon=󰃭 \
+                                icon.color=$SPREN_GLORY \
+                                label.color=$SPREN_GLORY \
+                                drawing=off \
+                                script="$PLUGIN_DIR/upcoming.sh"
+
+# System Monitor
+sketchybar --add item sysmon right \
+           --set sysmon update_freq=5 \
+                        icon=󰒓 \
+                        icon.color=$PRES_GLACIAL \
+                        label.drawing=off \
+                        script="$PLUGIN_DIR/sysmon.sh" \
+                        popup.align=right \
+           --subscribe sysmon mouse.entered mouse.exited \
+  \
+           --add item sysmon.cpu popup.sysmon \
+           --set sysmon.cpu icon=󰍛 label="CPU: ..." \
+  \
+           --add item sysmon.ram popup.sysmon \
+           --set sysmon.ram icon=󰘚 label="RAM: ..." \
+  \
+           --add item sysmon.disk popup.sysmon \
+           --set sysmon.disk icon=󰋊 label="Disk: ..."
+
+# Pomodoro Timer
+sketchybar --add item pomodoro right \
+           --set pomodoro update_freq=1 \
+                          icon=󰔟 \
+                          icon.color=$SPREN_HONOR \
+                          label.drawing=off \
+                          script="$PLUGIN_DIR/pomodoro.sh" \
+           --subscribe pomodoro mouse.clicked
+
+# Reorder right items logically (first is rightmost)
+sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro github upcoming_alert focus_toggle clock
 
 ##### Finalize #####
 sketchybar --update

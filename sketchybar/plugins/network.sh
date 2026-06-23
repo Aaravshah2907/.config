@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
+if [ "$SENDER" = "mouse.entered" ]; then
+  /opt/homebrew/bin/sketchybar --set control_center popup.drawing=on
+  exit 0
+elif [ "$SENDER" = "mouse.exited" ]; then
+  /opt/homebrew/bin/sketchybar --set control_center popup.drawing=off
+  exit 0
+fi
+
 # Find the Wi-Fi interface
 WIFI_INTERFACE=$(networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | grep "Device:" | awk '{print $2}')
 [ -z "$WIFI_INTERFACE" ] && WIFI_INTERFACE="en0"
@@ -89,4 +97,5 @@ if [ "$LOCATION" = "Severed Bond" ]; then
     COLOR="$RUIN_MAROON"                  # Ruin's bloodline — connection destroyed
 fi
 
-/opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label="$LOCATION" icon.color="$COLOR" label.color="$COLOR"
+/opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label.drawing=off icon.color="$COLOR" \
+                             --set control_center.ssid label="SSID: $LOCATION" icon=󰤨 icon.color="$COLOR"

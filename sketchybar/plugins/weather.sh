@@ -35,8 +35,12 @@ else
   COLOR="$WHITE"
 fi
 
-# Format the weather data for display using printf to ensure UTF-8 encoding
-WEATHER_DISPLAY=$(printf "Condition: %s\nTemperature: %s°C\nHumidity: %s%%\nWind: %s km/h\nFeels Like: %s°C\n" "$CONDITION" "$TEMPERATURE" "$HUMIDITY" "$WIND" "$FEELS_LIKE")
+# Format the weather data for display using echo for multi-line output
+WEATHER_DISPLAY=$(echo "󰁹 $CONDITION" && \
+                  echo "󰂏 $TEMPERATURE°C" && \
+                  echo "󰂑 $HUMIDITY%" && \
+                  echo "󰂒 $WIND km/h" && \
+                  echo "󰂓 $FEELS_LIKE°C")
 
 # Set the weather line in the popup
 sketchybar --set clock.weather label="$WEATHER_DISPLAY" label.color="$COLOR"

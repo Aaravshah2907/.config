@@ -19,43 +19,33 @@ HUMIDITY=${weather_parts[2]}
 WIND=${weather_parts[3]}
 FEELS_LIKE=${weather_parts[4]}
 
-# Determine day/night based on current time
-CURRENT_HOUR=$(date +%H)
-if (( CURRENT_HOUR >= 6 && CURRENT_HOUR < 18 )); then
-  ICON="☀️"
-else
-  ICON="🌙"
-fi
-
 # Cosmere weather color mapping with condition-specific icons
 LOWER=$(echo "$CONDITION" | tr '[:upper:]' '[:lower:]')
 if echo "$LOWER" | grep -iq "rain"; then
   COLOR="$PRES_GLACIAL"       # Preservation glacial — calm falling water
-  CONDITION_ICON="🌧️"
+  CONDITION_ICON=""
 elif echo "$LOWER" | grep -iq "thunderstorm\|storm"; then
   COLOR="$RUIN_OBSIDIAN"      # Ruin's volcanic black — destruction descends
-  CONDITION_ICON="⛈️"
+  CONDITION_ICON=""
 elif echo "$LOWER" | grep -iq "clear\|sunny"; then
   COLOR="$SPREN_SIBLING"      # Sibling/Urithiru crystal amber — tower warmth
-  CONDITION_ICON="☀️"
+  CONDITION_ICON=""
 elif echo "$LOWER" | grep -iq "cloud"; then
   COLOR="$RUIN_ASH"           # Ruin ash — ashfall sky
-  CONDITION_ICON="☁️"
+  CONDITION_ICON=""
 elif echo "$LOWER" | grep -iq "haze\|mist"; then
   COLOR="$PRES_SILVER"        # Preservation silver - misty fog
-  CONDITION_ICON="🌫️"
+  CONDITION_ICON=""
 else
   COLOR="$WHITE"
   CONDITION_ICON="🌤️"
 fi
 
 # Format the weather data for display
-WEATHER_DISPLAY=$(echo "󰁹 $CONDITION_ICON $CONDITION | 💧 $HUMIDITY% | 🌬️ $WIND km/h" && \
-                  echo "󰂏 $ICON $TEMPERATURE°C" && \
-                  echo "󰂓 $FEELS_LIKE°C")
+WEATHER_DISPLAY1=$(echo "$CONDITION_ICON $CONDITION |  $HUMIDITY | 󱪉 $WIND")
 
 # Set the weather line in the popup
-sketchybar --set clock.weather label="$WEATHER_DISPLAY" label.color="$COLOR"
+sketchybar --set clock.weather1 label="$WEATHER_DISPLAY1" label.color="$COLOR"
 # Also update the main clock time color to match weather condition
 sketchybar --set clock label.color="$COLOR" icon.color="$COLOR"
 

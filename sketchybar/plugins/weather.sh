@@ -42,7 +42,7 @@ else
 fi
 
 # Format the weather data for display
-WEATHER_DISPLAY1=$(echo "$CONDITION_ICON $CONDITION |  $HUMIDITY | 󱪉 $WIND")
+WEATHER_DISPLAY1=$(printf "%s %s |  %s | 󱪉 %s\n" "$CONDITION_ICON" "$CONDITION" "$HUMIDITY" "$WIND")
 
 # Set the weather line in the popup
 sketchybar --set clock.weather1 label="$WEATHER_DISPLAY1" label.color="$COLOR"
@@ -52,7 +52,7 @@ sketchybar --set clock label.color="$COLOR" icon.color="$COLOR"
 # Notify Yazi on Storm
 if echo "$LOWER" | grep -iq "storm"; then
   if [ ! -f "/tmp/syl_storm_warn" ]; then
-    ya pub plugin --str "syl-notify custom '󰀡 Highstorm' 'Aarav, a storm approaches! The sky shows: $WEATHER_DISPLAY'" >/dev/null 2>&1
+    ya pub plugin --str "syl-notify custom '󰀡 Highstorm' 'Aarav, a storm approaches! The sky shows: $WEATHER_DISPLAY1'" >/dev/null 2>&1
     touch /tmp/syl_storm_warn
   fi
 else

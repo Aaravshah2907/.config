@@ -252,7 +252,7 @@ def ensure_mpv():
         except OSError:
             pass
     subprocess.Popen(
-        [MPV_BIN, "--no-video", "--idle=yes", "--title=${media-title}", f"--input-ipc-server={SOCKET_PATH}"],
+        [MPV_BIN, "--no-video", "--idle=yes", "--keep-open=yes", "--no-resume-playback", "--title=${media-title}", f"--input-ipc-server={SOCKET_PATH}"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -1113,7 +1113,7 @@ def read_status_snapshot(max_age_sec=15):
         return None
 
 
-def play_current(state):
+def play_current(state, resume=False):
     ensure_index(state)
     if state["current_index"] < 0 or state["current_index"] >= len(state["queue"]):
         update_last_status(state)
@@ -1131,12 +1131,15 @@ def play_current(state):
         mpv_send(["loadfile", path, "replace"])
         
         # Auto-Resume logic for local tracks
-        last_pos = item.get("last_pos")
-        if last_pos and last_pos > 1:
-            # If we are very close to the end, don't resume there
-            dur = item.get("duration_sec") or 0
-            if dur <= 0 or last_pos < (dur - 3):
-                mpv_send(["set_property", "time-pos", last_pos])
+        if resume:
+            last_pos = item.get("last_pos")
+            if last_pos and last_pos > 1:
+                # If we are very close to the end, don't resume there
+                dur = item.get("duration_sec") or 0
+                if dur <= 0 or last_pos < (dur - 3):
+                    mpv_send(["set_property", "time-pos", last_pos])
+        else:
+            item["last_pos"] = 0
 
         mpv_send(["set_property", "pause", False])
         pos = mpv_send(["get_property", "time-pos"])
@@ -1236,10 +1239,24 @@ def refresh_live_status(state):
             else:
                 update_last_status(state, running=False, paused=True, title=item.get("title", "Resting"), artist=item.get("artist", ""), source="local")
             return
+        # Detect keep-open EOF: mpv is running but the track has ended
+        eof_res = mpv_send(["get_property", "eof-reached"])
+        if eof_res and eof_res.get("data") is True:
+            path_res = mpv_send(["get_property", "path"])
+            track_sig = path_res.get("data") if path_res else None
+            track_sig = track_sig or item.get("local_path") or item.get("title")
+            if track_sig and state.get("last_auto_next_id") != track_sig:
+                debug_log(f"EOF detected for local track at index {idx}, advancing queue")
+                state["last_auto_next_id"] = track_sig
+                save_state(state)
+                subprocess.Popen([sys.executable, sys.argv[0], "next"],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return
         title = mpv_send(["get_property", "media-title"])
         paused = mpv_send(["get_property", "pause"])
         pos = mpv_send(["get_property", "time-pos"])
         dur = mpv_send(["get_property", "duration"])
+        path_res = mpv_send(["get_property", "path"])
         update_last_status(
             state,
             running=True,
@@ -1254,6 +1271,7 @@ def refresh_live_status(state):
         check_auto_next(state, {
             "source": "local",
             "title": (title or {}).get("data", item.get("title", "Unknown")),
+            "track_id": (path_res or {}).get("data") if path_res else None,
             "paused": (paused or {}).get("data", True),
             "position": (pos or {}).get("data", 0),
             "duration": (dur or {}).get("data", 0)
@@ -1574,7 +1592,7 @@ def cmd_play(files):
     # Preserve old behavior: first local enqueue starts playback immediately.
     if was_empty and state["queue"]:
         state["current_index"] = 0
-        play_current(state)
+        play_current(state, resume=False)
     save_state(state)
 
 
@@ -1709,11 +1727,8 @@ def cmd_play_index(idx):
     ensure_index(state)
     if idx < 0 or idx >= len(state["queue"]):
         return
-    if idx == state.get("current_index"):
-        cmd_toggle()
-        return
     state["current_index"] = idx
-    play_current(state)
+    play_current(state, resume=False)
     save_state(state)
 
 
@@ -1785,13 +1800,17 @@ def _step(delta):
         if state.get("loop_mode") == "playlist":
             state["current_index"] = 0
         else:
+            # End of queue with loop off: stop playback instead of replaying last track
             state["current_index"] = len(q) - 1
+            update_last_status(state, running=False, paused=True, title="Queue Ended", source="local")
+            save_state(state)
+            return
     if state["current_index"] < 0:
         if state.get("loop_mode") == "playlist":
             state["current_index"] = len(q) - 1
         else:
             state["current_index"] = 0
-    play_current(state)
+    play_current(state, resume=False)
     save_state(state)
 
 
@@ -1929,7 +1948,7 @@ def cmd_load(name):
         normalize_queue_item(item)
     ensure_index(state)
     if state["current_index"] >= 0:
-        play_current(state)
+        play_current(state, resume=True)
     else:
         update_last_status(state)
     save_state(state)
@@ -2080,6 +2099,19 @@ def cmd_status_fast():
     mpv_active = False
     if state.get("source_lock") != "spotify" and is_mpv_active():
         mpv_active = True
+        # Check if mpv has reached EOF (keep-open pauses at end)
+        eof_res = mpv_send(["get_property", "eof-reached"])
+        if eof_res and eof_res.get("data") is True:
+            path_res = mpv_send(["get_property", "path"])
+            track_sig = path_res.get("data") if path_res else None
+            track_sig = track_sig or st.get("track_id") or st.get("title") or "unknown_fast_eof"
+            if state.get("last_auto_next_id") != track_sig:
+                debug_log("EOF detected in status_fast, advancing queue")
+                state["last_auto_next_id"] = track_sig
+                save_state(state)
+                subprocess.Popen([sys.executable, sys.argv[0], "next"],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return
         maybe_reconcile_local(state)
         # Ensure 'st' reflects the local state even if index didn't change
         if st.get("source") != "local":
@@ -2231,8 +2263,14 @@ def cmd_toggle():
     state = load_state()
     source = pick_active_source_for_controls(state)
     if source is None:
+        play_current(state, resume=True)
+        save_state(state)
         return
     if source == "local":
+        if not is_mpv_active():
+            play_current(state, resume=True)
+            save_state(state)
+            return
         ensure_mpv()
         mpv_send(["cycle", "pause"])
     else:

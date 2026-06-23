@@ -115,11 +115,11 @@ if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | jq -r '.running') == "true" ]];
       APP="VLC"
       ;;
     spotify|Spotify)
-      ICON=""
+      ICON=""
       APP="Spotify"
       ;;
     *)
-      ICON=""
+      ICON=""
       APP="mpv"
       ;;
   esac

@@ -29,7 +29,7 @@ elif echo "$LOWER" | grep -iq "clear\|sunny"; then
   COLOR="$SPREN_SIBLING"      # Sibling/Urithiru crystal amber — tower warmth
 elif echo "$LOWER" | grep -iq "cloud"; then
   COLOR="$RUIN_ASH"           # Ruin ash — ashfall sky
-elif echo "$LOWER" | grep -iq "haze"; then
+elif echo "$LOWER" | grep -iq "haze\|mist"; then
   COLOR="$PRES_SILVER"        # Preservation silver - misty fog
 else
   COLOR="$WHITE"

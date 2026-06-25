@@ -345,7 +345,7 @@ sketchybar --add item cpkb right \
                       icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
                       icon.color=$FRONTAPP_ACCENT \
                       label.drawing=off \
-                      script="$PLUGIN_DIR/cpkb_plugin.sh" \
+                      script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/cpkb_plugin.sh" \
            --subscribe cpkb mouse.clicked mouse.entered mouse.exited
 
 # Reorder right items logically (first is rightmost)

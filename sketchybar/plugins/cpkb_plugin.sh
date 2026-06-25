@@ -1,21 +1,10 @@
 #!/bin/bash
+source "$HOME/.local/bin/cosmere_colors.sh"
 
 # CPKB SketchyBar Plugin
-# Handles hover effects and click events
+# Handles click events (hover is delegated to hover.sh)
 
-# Theme Colors (Ensure they match your overall sketchybar theme)
-COLOR_BG=0xff1e1e2e
-COLOR_BG_HOVER=0xff313244
-
-if [ "$SENDER" = "mouse.entered" ]; then
-  # Hover effect: Show background and change color
-  sketchybar --set "$NAME" background.drawing=on \
-                           background.color="$COLOR_BG_HOVER"
-elif [ "$SENDER" = "mouse.exited" ]; then
-  # Remove hover effect
-  sketchybar --set "$NAME" background.drawing=off \
-                           background.color="$COLOR_BG"
-elif [ "$SENDER" = "mouse.clicked" ]; then
+if [ "$SENDER" = "mouse.clicked" ]; then
   # Prompt user for search term
   SEARCH_TERM=$(osascript -e 'Tell application "System Events" to display dialog "Search snippets:" default answer ""' -e 'text returned of result' 2>/dev/null)
   

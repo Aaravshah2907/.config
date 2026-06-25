@@ -10,7 +10,7 @@ if [ "$SENDER" = "mouse.clicked" ]; then
   
   if [ $? -eq 0 ]; then
     # Query database: search by title, tags, or id. Limit to 5 results for sanity.
-    RESULTS=$(sqlite3 "$HOME/.local/share/cpkb/snippets.db" "SELECT id || ' | ' || title FROM snippets WHERE title LIKE '%$SEARCH_TERM%' OR tags LIKE '%$SEARCH_TERM%' OR id LIKE '%$SEARCH_TERM%' ORDER BY created_at DESC LIMIT 5;")
+    RESULTS=$(cpkb query "$SEARCH_TERM" --limit 5)
     
     if [ -z "$RESULTS" ]; then
       osascript -e 'display notification "No matching snippet found" with title "CPKB Search"'

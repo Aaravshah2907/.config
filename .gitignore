@@ -13,6 +13,7 @@ todolist.md
 *.jpeg
 *.txt
 */__pycache__/*
+*/*/__pycache__/*
 mpv/watch_later/*
 joplin-desktop/*
 github-copilot/*

@@ -2,6 +2,7 @@ import argparse
 import os
 import json
 from datetime import datetime
+import engine
 
 CONFIG_DIR = os.path.expanduser("~/.config/ai-workbench")
 PARENT_DIR = os.path.expanduser("~/.config")
@@ -244,6 +245,47 @@ def setup_cmd():
     except Exception as e:
         print(f"Failed to create symlink: {e}")
 
+def help_cmd():
+    help_text = """
+=== AI Workbench CLI Help ===
+
+[Intelligence Engine]
+  ai ask <prompt>           : Send a prompt to the AI. Automatically merges memory.md and tasks.md.
+    --account <nickname>    : (Optional) Specify which account to route the request through.
+
+[Core Commands]
+  ai setup                  : Run initial workbench setup and install to PATH (~/.local/bin/ai).
+  ai status                 : Show workbench status, current session, and last updated time.
+  ai memory                 : Display the contents of your permanent memory.md file.
+  ai tasks                  : Display the contents of your active tasks.md file.
+  ai logs                   : Display the build log (ai_workbench_build_log.md).
+
+[Account & Provider Management]
+  ai providers              : List all registered AI providers (e.g. OpenAI, ollama, agy, aider).
+  ai accounts               : List all configured accounts and their details.
+  
+  ai provider add <name>    : Register a new provider type.
+  ai provider remove <name> : Remove a provider type.
+  
+  ai account add <provider> <nickname> : Create a new account configuration.
+    --email <email>         : (Optional) Email associated with account.
+    --auth <type>           : (Optional) Auth type (e.g., 'API Key', 'Local').
+    --notes <notes>         : (Optional) Extra info (e.g., 'qwen3:8b' for Ollama models).
+  
+  ai account remove <nick>  : Remove an account by its nickname.
+
+[Session Management]
+  ai session start <name>   : Start tracking a new work session.
+  ai session stop           : Stop the current work session.
+  ai resume                 : Resume the most recent session.
+  
+  ai help                   : Show this exhaustive help menu.
+"""
+    print(help_text.strip())
+
+def ask_cmd(prompt, account):
+    engine.ask_engine(prompt, account)
+
 def main():
     parser = argparse.ArgumentParser(description="ai-workbench command line interface")
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
@@ -289,6 +331,11 @@ def main():
     session_subparsers.add_parser("stop", help="Stop current session")
     
     subparsers.add_parser("resume", help="Resume current session")
+    subparsers.add_parser("help", help="Show exhaustive help menu")
+
+    ask_parser = subparsers.add_parser("ask", help="Ask the AI a question")
+    ask_parser.add_argument("prompt", nargs="+", help="The prompt to send")
+    ask_parser.add_argument("--account", help="The account nickname to use")
 
     args = parser.parse_args()
 
@@ -329,8 +376,10 @@ def main():
             session_parser.print_help()
     elif args.command == "resume":
         resume_cmd()
-    elif args.command is None:
-        parser.print_help()
+    elif args.command == "ask":
+        ask_cmd(args.prompt, args.account)
+    elif args.command == "help" or args.command is None:
+        help_cmd()
     else:
         print(f"Command '{args.command}' is not yet fully implemented.")
 

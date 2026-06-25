@@ -1,9 +1,33 @@
 [
   {
-    "provider": "OpenAI",
-    "nickname": "Main OpenAI",
-    "email": "test@example.com",
-    "auth_type": "API Key",
+    "provider": "ollama",
+    "nickname": "LocalOllama",
+    "email": "",
+    "auth_type": "Local",
+    "notes": "qwen3:8b",
+    "last_used": null
+  },
+  {
+    "provider": "ollama",
+    "nickname": "LocalOllamaCoder",
+    "email": "",
+    "auth_type": "Local",
+    "notes": "qwen3-coder:30b",
+    "last_used": null
+  },
+  {
+    "provider": "agy",
+    "nickname": "LocalAGY",
+    "email": "",
+    "auth_type": "Local",
+    "notes": "",
+    "last_used": null
+  },
+  {
+    "provider": "aider",
+    "nickname": "LocalAider",
+    "email": "",
+    "auth_type": "Local",
     "notes": "",
     "last_used": null
   }

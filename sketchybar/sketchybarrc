@@ -182,6 +182,31 @@ sketchybar --add item github right \
            --add item github.notifications popup.github \
            --set github.notifications icon=󰂚 label="No token"
 
+# Slack Notifications: Cryptic Whispers
+sketchybar --add item slack right \
+           --set slack update_freq=300 \
+                        icon=󰒱 \
+                        icon.color=$WHITE \
+                        label.drawing=off \
+                        script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/slack.sh" \
+                        click_script="open -a Slack" \
+                        popup.align=right \
+           --subscribe slack mouse.entered mouse.exited \
+  \
+           --add item slack.header popup.slack \
+           --set slack.header label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item slack.status popup.slack \
+           --add item slack.dnd popup.slack \
+           --add item slack.unreads popup.slack \
+           --add item slack.mentions popup.slack \
+  \
+           --add item slack.ch1 popup.slack \
+           --add item slack.ch2 popup.slack \
+           --add item slack.ch3 popup.slack \
+           --add item slack.ch4 popup.slack \
+           --add item slack.ch5 popup.slack
+
 # Bluetooth: Spiritweb
 sketchybar --add item bluetooth right \
            --set bluetooth update_freq=60 \
@@ -349,7 +374,7 @@ sketchybar --add item cpkb right \
            --subscribe cpkb mouse.clicked mouse.entered mouse.exited
 
 # Reorder right items logically (first is rightmost)
-sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb github upcoming_alert focus_toggle clock
+sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack github upcoming_alert focus_toggle clock
 
 ##### Finalize #####
 sketchybar --update

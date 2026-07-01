@@ -84,13 +84,26 @@ return {
       })
       -- Register keymap groups so which-key shows nice labels
       wk.add({
-        { "<leader>f", group = "Find" },
+        -- Normal mode groups
         { "<leader>b", group = "Buffer" },
         { "<leader>c", group = "Code" },
-        { "<leader>d", group = "Diagnostics" },
+        { "<leader>d", group = "Debug" },
+        { "<leader>f", group = "Find" },
         { "<leader>g", group = "Git" },
         { "<leader>o", group = "Obsidian" },
-        { "<leader>r", group = "Rename" },
+        { "<leader>r", group = "Run" },
+        { "<leader>s", group = "Surround" },
+        { "<leader>t", group = "Terminal" },
+        { "<leader>w", group = "Workspace" },
+        { "<leader>x", group = "Trouble" },
+        { "<leader>z", desc = "Zen Mode" },
+
+        -- Visual mode groups
+        { "<leader>c", group = "Code", mode = "v" },
+        { "<leader>d", group = "Debug", mode = "v" },
+        { "<leader>g", group = "Git", mode = "v" },
+        { "<leader>s", group = "Surround", mode = "v" },
+        { "<leader>p", desc = "Paste (keep clipboard)", mode = "v" },
       })
     end,
   },
@@ -124,6 +137,11 @@ return {
           map("n", "<leader>gp", gs.preview_hunk, "Preview hunk")
           map("n", "<leader>gb", function() gs.blame_line({ full = true }) end, "Blame line")
           map("n", "<leader>gr", gs.reset_hunk, "Reset hunk")
+          map("n", "<leader>gs", gs.stage_hunk, "Stage hunk")
+
+          -- Visual mode: stage/reset selected lines
+          map("v", "<leader>gs", function() gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, "Stage selected")
+          map("v", "<leader>gr", function() gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, "Reset selected")
         end,
       })
     end,

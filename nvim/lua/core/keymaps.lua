@@ -88,3 +88,22 @@ map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Close buffer" })
 -- so you can indent/outdent multiple times without reselecting.
 map("v", "<", "<gv", { desc = "Indent left and reselect" })
 map("v", ">", ">gv", { desc = "Indent right and reselect" })
+
+-- ─── Visual Mode: Search Selected Text ─────────────────────────────────────
+-- Select some text, then press * to search for it across the file.
+map("v", "*", '"zy/\\V<C-r>z<cr>', { desc = "Search selected text forward" })
+map("v", "#", '"zy?\\V<C-r>z<cr>', { desc = "Search selected text backward" })
+
+-- ─── Visual Mode: Sort Selected Lines ──────────────────────────────────────
+-- Select lines, press Space+ss to sort them alphabetically.
+map("v", "<leader>ss", ":sort<cr>", { desc = "Sort selected lines" })
+map("v", "<leader>su", ":sort u<cr>", { desc = "Sort + remove duplicates" })
+
+-- ─── Visual Mode: Yank to System Clipboard ─────────────────────────────────
+-- Select text, press Space+y to copy to your Mac clipboard (pasteable in other apps).
+map("v", "<leader>y", '"+y', { desc = "Yank to system clipboard" })
+map("n", "<leader>Y", '"+Y', { desc = "Yank line to system clipboard" })
+
+-- ─── Visual Mode: Code Action on Selection ─────────────────────────────────
+-- Select code, then Space+ca for code actions on just the selection.
+map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action (selection)" })

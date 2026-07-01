@@ -88,3 +88,21 @@ autocmd("FileType", {
   end,
   desc = "Markdown-friendly settings (wrap, spell check)",
 })
+
+-- ─── File Templates (Competitive Programming) ───────────────────────────────
+-- Automatically load a template when creating a new C++ or Python file.
+augroup("Templates", { clear = true })
+
+autocmd("BufNewFile", {
+  group = "Templates",
+  pattern = "*.cpp",
+  command = "0r ~/.config/nvim/templates/skeleton.cpp",
+  desc = "Load C++ template for new files",
+})
+
+autocmd("BufNewFile", {
+  group = "Templates",
+  pattern = "*.py",
+  command = "0r ~/.config/nvim/templates/skeleton.py",
+  desc = "Load Python template for new files",
+})

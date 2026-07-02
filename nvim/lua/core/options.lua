@@ -10,8 +10,8 @@ local opt = vim.opt -- Shorthand so we don't type vim.opt every time
 -- ─── Line Numbers ───────────────────────────────────────────────────────────
 -- Shows the current line number AND relative numbers for other lines.
 -- Relative numbers make it easy to jump: "5j" moves down 5 lines.
-opt.number = true            -- Show the actual line number on the current line
-opt.relativenumber = true    -- Other lines show distance from current line
+opt.number = true -- Show the actual line number on the current line
+opt.relativenumber = true -- Other lines show distance from current line
 
 -- ─── Mouse ──────────────────────────────────────────────────────────────────
 -- Enable mouse support in all modes. You can click to place cursor, scroll,
@@ -29,8 +29,8 @@ opt.smartcase = true
 -- When you split the window (like having two files side by side), these
 -- control where the new window appears. Most editors put new splits to
 -- the right and below, so we do the same.
-opt.splitright = true   -- Vertical splits open to the right
-opt.splitbelow = true   -- Horizontal splits open below
+opt.splitright = true -- Vertical splits open to the right
+opt.splitbelow = true -- Horizontal splits open below
 
 -- ─── Colors ─────────────────────────────────────────────────────────────────
 -- Enable 24-bit RGB colors in the terminal. Required for our colorscheme
@@ -63,20 +63,20 @@ opt.undofile = true
 -- Use spaces instead of tabs, with 2 spaces per indent level.
 -- This is the most common setting for web development (HTML/CSS/JS).
 -- Java uses 4 spaces — we set that per-filetype in autocmds.lua.
-opt.expandtab = true     -- Press Tab → insert spaces (not a tab character)
-opt.shiftwidth = 2       -- Number of spaces for each indent level
-opt.tabstop = 2          -- How wide a tab character looks (if one exists)
+opt.expandtab = true -- Press Tab → insert spaces (not a tab character)
+opt.shiftwidth = 4 -- Number of spaces for each indent level
+opt.tabstop = 4 -- How wide a tab character looks (if one exists)
 
 -- ─── Line Wrapping ──────────────────────────────────────────────────────────
 -- Don't wrap long lines — let them scroll horizontally.
 -- This keeps code neatly aligned. (In nano, lines wrap by default.)
-opt.wrap = false
+opt.wrap = true
 
 -- ─── Scroll Offset ──────────────────────────────────────────────────────────
 -- Keep at least 8 lines visible above and below the cursor when scrolling.
 -- This prevents the cursor from getting "trapped" at the very edge of the screen.
 opt.scrolloff = 8
-opt.sidescrolloff = 8    -- Same but for horizontal scrolling
+opt.sidescrolloff = 8 -- Same but for horizontal scrolling
 
 -- ─── Cursor Line ────────────────────────────────────────────────────────────
 -- Highlight the line the cursor is on. Makes it easier to find your cursor.
@@ -95,8 +95,8 @@ opt.clipboard = "unnamedplus"
 opt.completeopt = "menuone,noselect"
 
 -- ─── Misc ───────────────────────────────────────────────────────────────────
-opt.showmode = false     -- Don't show "-- INSERT --" (lualine already shows it)
-opt.backup = false       -- Don't create backup files (we have undofile + git)
-opt.swapfile = false     -- Don't create swap files
+opt.showmode = false -- Don't show "-- INSERT --" (lualine already shows it)
+opt.backup = false -- Don't create backup files (we have undofile + git)
+opt.swapfile = false -- Don't create swap files
 opt.fileencoding = "utf-8" -- Use UTF-8 encoding
-opt.conceallevel = 2     -- Hide markup in markdown (nice for Obsidian notes)
+opt.conceallevel = 3 -- Hide markup in markdown (nice for Obsidian notes)

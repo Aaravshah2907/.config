@@ -33,8 +33,7 @@ int main() {
 
   int T = 1;
 
-  if (!(cin >> T))
-    return 0;
+  if (!(cin >> T)) return 0;
   while (T--)
     solve();
   return 0;

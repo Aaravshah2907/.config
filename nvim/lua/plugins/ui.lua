@@ -125,6 +125,7 @@ return {
         "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
         "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
       }
+      dashboard.section.header.opts.hl = "Statement" -- This will give it a nice blue/sapphire color
 
       -- Quick-access buttons — press the highlighted letter to trigger
       -- The format is: button("shortcut", "  Icon  Label", ":command")
@@ -134,12 +135,13 @@ return {
         dashboard.button("r", "  Recent Files", ":Telescope oldfiles <CR>"),
         dashboard.button("g", "  Find Word",    ":Telescope live_grep <CR>"),
         dashboard.button("e", "  Open Yazi",    ":Yazi <CR>"),
-        dashboard.button("o", "  Open Notes",   ":ObsidianQuickSwitch <CR>"),
+
         dashboard.button("q", "  Quit",         ":qa<CR>"),
       }
 
       -- Footer — shows a message at the bottom
-      dashboard.section.footer.val = "Welcome to Neovim! 🚀"
+      dashboard.section.footer.val = "Life before death. Strength before weakness. Journey before destination. ⚔️"
+      dashboard.section.footer.opts.hl = "Comment"
 
       -- Apply padding between sections
       dashboard.config.layout = {

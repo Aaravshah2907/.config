@@ -62,6 +62,62 @@ autocmd("VimResized", {
   desc = "Auto-resize splits when terminal is resized",
 })
 
+-- ─── :O Command (Open File) ─────────────────────────────────────────────
+-- Neovim doesn't have :o or :open. Add :O as a convenient alias for :edit.
+vim.api.nvim_create_user_command("O", function(opts)
+  vim.cmd("edit " .. opts.args)
+end, { nargs = "?", complete = "file", desc = "Open a file (alias for :edit)" })
+
+-- ─── Auto-Compile on Save ───────────────────────────────────────────────
+-- Compiles C++ files in the background on save. Errors are populated in the Quickfix list.
+augroup("AutoCompile", { clear = true })
+
+-- Set makeprg for cpp files to use our compile command
+autocmd("FileType", {
+  group = "AutoCompile",
+  pattern = "cpp",
+  callback = function()
+    vim.opt_local.makeprg = "g++ -std=c++17 -O2 -I$HOME/.local/include -o /tmp/nvim_run %"
+  end,
+})
+
+-- Async Auto-compile C++ on save
+autocmd("BufWritePost", {
+  group = "AutoCompile",
+  pattern = "*.cpp",
+  callback = function()
+    local makeprg = vim.api.nvim_buf_get_option(0, "makeprg")
+    if makeprg == "" then return end
+    
+    local expanded_cmd = vim.fn.expandcmd(makeprg)
+    
+    local lines = {}
+    vim.fn.jobstart(expanded_cmd, {
+      stdout_buffered = true,
+      stderr_buffered = true,
+      on_stderr = function(_, data)
+        if data then
+          for _, line in ipairs(data) do
+            if line ~= "" then table.insert(lines, line) end
+          end
+        end
+      end,
+      on_exit = function(_, code)
+        if code == 0 then
+          vim.fn.setqflist({}, "r", { title = "Compile Errors" })
+          vim.notify("Compiled successfully ✓", vim.log.levels.INFO)
+          vim.cmd("cclose")
+        else
+          vim.fn.setqflist({}, "r", { title = "Compile Errors", lines = lines, efm = vim.api.nvim_buf_get_option(0, "errorformat") })
+          vim.notify("Compilation failed ✗", vim.log.levels.ERROR)
+          vim.cmd("copen")
+        end
+      end
+    })
+  end,
+  desc = "Async Auto-compile C++ on save",
+})
+
 -- ─── Filetype-Specific Settings ─────────────────────────────────────────────
 -- Different languages have different conventions:
 --   • Java: 4 spaces per indent (Google/Oracle style)
@@ -89,20 +145,44 @@ autocmd("FileType", {
   desc = "Markdown-friendly settings (wrap, spell check)",
 })
 
--- ─── File Templates (Competitive Programming) ───────────────────────────────
+-- ─── File Templates (Competitive Programming) ───────────────────────────
 -- Automatically load a template when creating a new C++ or Python file.
+-- Also handles files created externally (e.g. by CPOS) that exist but are
+-- empty — BufNewFile only fires for files that don't exist on disk, so we
+-- also hook BufRead to catch empty existing files.
+
 augroup("Templates", { clear = true })
 
-autocmd("BufNewFile", {
-  group = "Templates",
-  pattern = "*.cpp",
-  command = "0r ~/.config/nvim/templates/skeleton.cpp",
-  desc = "Load C++ template for new files",
-})
+-- Templates to load: { pattern, template_path }
+local templates = {
+  { "*.cpp", "~/.config/nvim/templates/skeleton.cpp" },
+  { "*.py",  "~/.config/nvim/templates/skeleton.py" },
+}
 
-autocmd("BufNewFile", {
-  group = "Templates",
-  pattern = "*.py",
-  command = "0r ~/.config/nvim/templates/skeleton.py",
-  desc = "Load Python template for new files",
-})
+for _, tpl in ipairs(templates) do
+  local pattern, template_path = tpl[1], tpl[2]
+
+  -- Case 1: File doesn't exist on disk (`:e newfile.cpp`)
+  autocmd("BufNewFile", {
+    group = "Templates",
+    pattern = pattern,
+    command = "0r " .. template_path,
+    desc = "Load template for new " .. pattern .. " files",
+  })
+
+  -- Case 2: File exists on disk but is empty (created by CPOS, touch, etc.)
+  autocmd("BufRead", {
+    group = "Templates",
+    pattern = pattern,
+    callback = function()
+      -- Only insert template if the buffer is completely empty
+      if vim.api.nvim_buf_line_count(0) == 1 and vim.api.nvim_buf_get_lines(0, 0, 1, false)[1] == "" then
+        vim.cmd("0r " .. template_path)
+        -- Mark the buffer as modified so the user knows to save
+        vim.bo.modified = true
+      end
+    end,
+    desc = "Load template for empty existing " .. pattern .. " files",
+  })
+end
+

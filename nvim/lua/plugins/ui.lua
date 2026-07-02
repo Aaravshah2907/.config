@@ -115,16 +115,8 @@ return {
 			local alpha = require("alpha")
 			local dashboard = require("alpha.themes.dashboard")
 
-			-- ASCII art header — this is what you see at the top of the dashboard
+			-- ASCII art header
 			dashboard.section.header.val = {
-				-- "                                                     ",
-				-- "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
-				--"  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
-				-- "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
-				-- "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
-				-- "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
-				-- "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
-				--	[[                                                                       ]],
 				[[                                                                     ]],
 				[[       ████ ██████           █████      ██                     ]],
 				[[      ███████████             █████                             ]],
@@ -135,10 +127,34 @@ return {
 				[[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
 				[[                                                                       ]],
 			}
-			dashboard.section.header.opts.hl = "Statement" -- This will give it a nice blue/sapphire color
 
-			-- Quick-access buttons — press the highlighted letter to trigger
-			-- The format is: button("shortcut", "  Icon  Label", ":command")
+			-- Cosmere Stormlight Gradient (Deep Sapphire to Light Radiant Blue)
+			local gradient = {
+				"#001f3f", -- Deep dark sea
+				"#003366",
+				"#004080",
+				"#0059b3", -- Windrunner blue
+				"#0073e6",
+				"#008cff",
+				"#33a6ff",
+				"#66c0ff",
+				"#99d9ff", -- Radiant light
+			}
+
+			-- Create highlight groups and assign them to each line of the header
+			local hl_table = {}
+			for i, color in ipairs(gradient) do
+				local hl_group = "AlphaHeaderGradient" .. i
+				vim.api.nvim_set_hl(0, hl_group, { fg = color, bold = true })
+				table.insert(hl_table, { { hl_group, 0, 200 } })
+			end
+			dashboard.section.header.opts.hl = hl_table
+
+			vim.api.nvim_set_hl(0, "AlphaButtons", { fg = "#FFD700" }) -- Gold for buttons
+			vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#50fa7b", bold = true })
+			vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#C3AEE8", italic = true }) -- Elsecaller Purple
+
+			-- Quick-access buttons
 			dashboard.section.buttons.val = {
 				dashboard.button("n", "  New File", ":ene <BAR> startinsert <CR>"),
 				dashboard.button("f", "  Find File", ":Telescope find_files <CR>"),
@@ -148,16 +164,21 @@ return {
 				dashboard.button("q", "  Quit", ":qa<CR>"),
 			}
 
-			-- Footer — shows a message at the bottom
+			-- Footer
 			dashboard.section.footer.val =
 				"Life before death. Strength before weakness. Journey before destination. ⚔️"
-			dashboard.section.footer.opts.hl = "Comment"
+			dashboard.section.footer.opts.hl = "AlphaFooter"
+
+			for _, button in ipairs(dashboard.section.buttons.val) do
+				button.opts.hl = "AlphaButtons"
+				button.opts.hl_shortcut = "AlphaShortcut"
+			end
 
 			-- Apply padding between sections
 			dashboard.config.layout = {
-				{ type = "padding", val = 1 },
+				{ type = "padding", val = 2 },
 				dashboard.section.header,
-				{ type = "padding", val = 1 },
+				{ type = "padding", val = 2 },
 				dashboard.section.buttons,
 				{ type = "padding", val = 1 },
 				dashboard.section.footer,
@@ -173,6 +194,65 @@ return {
 				end,
 			})
 		end,
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- Which-key: Keymap popup menu
+	-- ---------------------------------------------------------------------------
+	-- Displays a popup with possible keybindings of the command you started typing
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			preset = "modern",
+			window = {
+				border = "single", -- Cosmere themed sharp borders
+			},
+		},
+		keys = {
+			{
+				"<leader>wk",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Which-Key Keymaps",
+			},
+		},
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- mini.animate: Smooth scrolling and window transitions
+	-- ---------------------------------------------------------------------------
+	{
+		"echasnovski/mini.animate",
+		version = "*",
+		event = "VeryLazy",
+		config = function()
+			require("mini.animate").setup({
+				cursor = { enable = false }, -- disable cursor animation as it can feel laggy
+				scroll = { enable = true },  -- smooth scrolling
+				window = { enable = true },  -- window opening/closing animations
+			})
+		end,
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- todo-comments.nvim: Highlight TODOs, FIXMEs, etc.
+	-- ---------------------------------------------------------------------------
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {
+			colors = {
+				error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+				warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+				info = { "DiagnosticInfo", "#2563EB" },
+				hint = { "DiagnosticHint", "#10B981" },
+				default = { "Identifier", "#C3AEE8" }, -- Elsecaller Purple for default
+				test = { "Identifier", "#FF00FF" }
+			},
+		},
 	},
 
 	-- ---------------------------------------------------------------------------

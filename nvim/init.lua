@@ -20,7 +20,7 @@
 -- If we set it after, those plugins would use the wrong key.
 vim.g.mapleader = " "       -- Space as the leader key
 vim.g.maplocalleader = " "  -- Same for buffer-local leader (used by some plugins)
-
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true }) -- Prevent space from moving cursor
 -- ────────────────────────────────────────────────────────────────────────────
 -- 2. LOAD CORE SETTINGS
 -- ────────────────────────────────────────────────────────────────────────────

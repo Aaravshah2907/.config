@@ -55,20 +55,25 @@ return {
   -- ---------------------------------------------------------------------------
   -- Todo Comments: Highlight TODO, FIXME, NOTE in your code
   -- ---------------------------------------------------------------------------
-  -- Makes comments like "TODO: fix this" stand out with bright colors.
-  -- Use :TodoTelescope to find all TODOs across your project!
   {
     "folke/todo-comments.nvim",
     event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {},
+    opts = {
+      colors = {
+        error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+        warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+        info = { "DiagnosticInfo", "#2563EB" },
+        hint = { "DiagnosticHint", "#10B981" },
+        default = { "Identifier", "#C3AEE8" }, -- Elsecaller Purple
+        test = { "Identifier", "#FF00FF" }
+      },
+    },
   },
 
   -- ---------------------------------------------------------------------------
   -- Which-Key: Keybinding Helper Popup
   -- ---------------------------------------------------------------------------
-  -- When you press <leader> (Space) and pause, a popup appears showing
-  -- all available keybindings. Incredible for learning your config!
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -76,15 +81,17 @@ return {
       local wk = require("which-key")
       wk.setup({
         plugins = {
-          spelling = { enabled = true }, -- Show spelling suggestions with z=
+          spelling = { enabled = true },
         },
         win = {
           border = "rounded",
         },
+        keys = {
+          scroll_down = "<c-d>",
+          scroll_up = "<c-u>",
+        },
       })
-      -- Register keymap groups so which-key shows nice labels
       wk.add({
-        -- Normal mode groups
         { "<leader>b", group = "Buffer" },
         { "<leader>c", group = "Code" },
         { "<leader>d", group = "Debug" },
@@ -97,8 +104,6 @@ return {
         { "<leader>w", group = "Workspace" },
         { "<leader>x", group = "Trouble" },
         { "<leader>z", desc = "Zen Mode" },
-
-        -- Visual mode groups
         { "<leader>c", group = "Code", mode = "v" },
         { "<leader>d", group = "Debug", mode = "v" },
         { "<leader>g", group = "Git", mode = "v" },

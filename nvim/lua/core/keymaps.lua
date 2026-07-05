@@ -23,18 +23,18 @@ map("i", "jk", "<Esc>", { desc = "Exit insert mode" })
 -- ─── Save, Quit, Save+Quit ─────────────────────────────────────────────────
 -- Coming from nano: Ctrl+O was save, Ctrl+X was quit.
 -- In Neovim: Space+w saves, Space+q quits, Space+x does both.
-map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
-map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-map("n", "<leader>x", "<cmd>wq<cr>", { desc = "Save and quit" })
+map("n", "<leader>w", "<cmd>w<cr>", { desc = "[S]ave [F]ile" })
+map("n", "<leader>q", "<cmd>q<cr>", { desc = "[Q]uit" })
+map("n", "<leader>x", "<cmd>wq<cr>", { desc = "Save and [Q]uit" })
 map("n", "<leader>?", "<cmd>e ~/nvim_cheatsheet.md<cr>", { desc = "Open Cheatsheet" })
 
 -- ─── Navigate Between Splits ────────────────────────────────────────────────
 -- When you have multiple files open side-by-side (splits), use
 -- Ctrl+h/j/k/l to jump between them (h=left, j=down, k=up, l=right).
-map("n", "<C-h>", "<C-w>h", { desc = "Move to left split" })
-map("n", "<C-j>", "<C-w>j", { desc = "Move to split below" })
-map("n", "<C-k>", "<C-w>k", { desc = "Move to split above" })
-map("n", "<C-l>", "<C-w>l", { desc = "Move to right split" })
+map("n", "<C-h>", "<C-w>h", { desc = "Move to [L]eft split" })
+map("n", "<C-j>", "<C-w>j", { desc = "Move to split [B]elow" })
+map("n", "<C-k>", "<C-w>k", { desc = "Move to split [A]bove" })
+map("n", "<C-l>", "<C-w>l", { desc = "Move to [R]ight split" })
 
 -- ─── Resize Splits ──────────────────────────────────────────────────────────
 -- Ctrl+Arrow keys to resize the current split window.
@@ -79,9 +79,9 @@ map("x", "<leader>p", '"_dP', { desc = "Paste without losing clipboard" })
 -- ─── Buffer Navigation ─────────────────────────────────────────────────────
 -- Buffers are like tabs. Navigate between open files:
 --   Space+bn = next buffer, Space+bp = previous buffer, Space+bd = close
-map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "Next buffer" })
-map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
-map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Close buffer" })
+map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "[N]ext [B]uffer" })
+map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "[P]revious [B]uffer" })
+map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "[C]lose [B]uffer" })
 
 -- ─── Better Indenting ───────────────────────────────────────────────────────
 -- In visual mode, after indenting with < or >, keep the selection

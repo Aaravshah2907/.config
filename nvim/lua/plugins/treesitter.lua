@@ -59,6 +59,19 @@ return {
             scope_incremental = false,   -- Disabled (use CR instead)
           },
         },
+
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+            keymaps = {
+              ["af"] = { query = "@function.outer", desc = "Select [A]round [F]unction" },
+              ["if"] = { query = "@function.inner", desc = "Select [I]nside [F]unction" },
+              ["ac"] = { query = "@class.outer", desc = "Select [A]round [C]lass" },
+              ["ic"] = { query = "@class.inner", desc = "Select [I]nside [C]lass" },
+            },
+          },
+        },
       })
     end,
   },

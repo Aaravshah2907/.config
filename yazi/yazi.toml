@@ -58,7 +58,7 @@ download = [
     { run = "ya emit download %S", desc = "Download" },
 ]
 vlc = [
-    { run = '"/Applications/VLC.app/Contents/MacOS/VLC" %*', desc = "Open in VLC", for = "macos", orphan = true },
+    { run = '/bin/bash /Users/aaravshah2975/.config/yazi/scripts/vlc_playlist.sh "$@"', desc = "Open in VLC Playlist", for = "macos", orphan = true },
 ]
 playlist = [
     { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py load %*', desc = "Load Playlist", for = "macos", orphan = true },

@@ -1,69 +1,182 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# RunCat implementation for SketchyBar
-# This script runs in a loop, updating the icon of the sketchybar item.
-# The sleep duration between frames decreases as CPU usage increases.
+################################################################################
+# SylSpren - SketchyBar CPU Animation
+#
+# A lightweight, text-based CPU monitor inspired by Syl from the Cosmere.
+#
+# Behaviour
+# ---------
+# • Low CPU    → Gentle floating
+# • Medium CPU → Small flight path
+# • High CPU   → Fast darting
+# • Max CPU    → Stormlight burst
+#
+# The SketchyBar interface is unchanged:
+#
+#   sketchybar --set "$NAME" icon="..."
+#
+################################################################################
 
-# The frames of the animation. You can change these to anything!
-# Some examples:
-# PACMAN: "ᗧ" "ᗤ"
-# SPINNER: "⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏"
-# EMOJI CAT: "😺" "😸" "😹" "😻"
-# NERD FONT CAT WAGGING/BOUNCING:
-FRAMES=("󰄛 " " 󰄛" "  󰄛" "   󰄛" "  󰄛" " 󰄛")
+# ------------------------------------------------------------------------------
+# Animation Sets
+# ------------------------------------------------------------------------------
 
-# Number of frames
-FRAME_COUNT=${#FRAMES[@]}
+IDLE_FRAMES=(
+"✦"
+"✧"
+"⋆"
+"✧"
+)
+
+FLY_FRAMES=(
+"✦"
+"·✦"
+"··✦"
+"···✦"
+"··✦"
+"·✦"
+)
+
+FAST_FRAMES=(
+"✦·"
+"·✦"
+"✦••"
+"••✦"
+"✦⋯"
+"⋯✦"
+)
+
+STORMLIGHT_FRAMES=(
+"✦✧"
+"✧⋆"
+"⋆✦"
+"✦⋆"
+"⋆✧"
+"✧✦"
+)
+
+# ------------------------------------------------------------------------------
+# Configuration
+# ------------------------------------------------------------------------------
+
+CPU_REFRESH_INTERVAL=2
+LAST_CPU_UPDATE=0
+
+CPU_USAGE=0
+SLEEP_TIME=0.50
+
 FRAME_INDEX=0
 
-# Default sleep time
-SLEEP_TIME=0.5
+FRAMES=("${IDLE_FRAMES[@]}")
 
-update_cpu_usage() {
-  while true; do
-    # Get CPU usage using top or ps
-    # This fetches the total cpu usage percentage
-    CPU_USAGE=$(ps -A -o %cpu | awk '{s+=$1} END {print s}')
-    
-    # Calculate sleep time: High CPU = Low Sleep Time, Low CPU = High Sleep Time
-    # Example logic: 
-    # If CPU is 0%, sleep is 0.5s. If CPU is 100%, sleep is 0.05s.
-    
-    # Ensure CPU_USAGE is a number and avoid division by zero
-    if (( $(echo "$CPU_USAGE > 100" | bc -l) )); then
-        CPU_USAGE=100
+# ------------------------------------------------------------------------------
+# CPU Usage
+# ------------------------------------------------------------------------------
+
+update_cpu() {
+
+    # Total CPU usage using top
+    #
+    # Example output:
+    # CPU usage: 12.34% user, 5.67% sys, 81.99% idle
+    #
+
+    local idle
+
+    idle=$(top -l 1 | awk -F'[, %]+' '/CPU usage/ {print $(NF-1)}')
+
+    if [[ -z "$idle" ]]; then
+        return
     fi
-    
-    # Calculate inverted sleep time
-    NEW_SLEEP=$(echo "0.5 - (0.45 * ($CPU_USAGE / 100))" | bc -l)
-    
-    # Ensure sleep time is at least 0.05
-    if (( $(echo "$NEW_SLEEP < 0.05" | bc -l) )); then
-      SLEEP_TIME=0.05
-    else
-      SLEEP_TIME=$NEW_SLEEP
-    fi
-    
-    # Update CPU every 2 seconds
-    sleep 2
-  done
+
+    CPU_USAGE=$(awk -v idle="$idle" 'BEGIN{printf "%.0f",100-idle}')
+
+    # Clamp
+
+    (( CPU_USAGE < 0 )) && CPU_USAGE=0
+    (( CPU_USAGE > 100 )) && CPU_USAGE=100
 }
 
-# Start the CPU monitor in the background
-update_cpu_usage &
-CPU_PID=$!
+# ------------------------------------------------------------------------------
+# Choose Animation
+# ------------------------------------------------------------------------------
 
-# Trap to kill background process when sketchybar reloads this script
-trap "kill $CPU_PID" EXIT
+select_animation() {
 
-# Animation Loop
+    if (( CPU_USAGE < 20 )); then
+
+        FRAMES=("${IDLE_FRAMES[@]}")
+
+    elif (( CPU_USAGE < 45 )); then
+
+        FRAMES=("${FLY_FRAMES[@]}")
+
+    elif (( CPU_USAGE < 75 )); then
+
+        FRAMES=("${FAST_FRAMES[@]}")
+
+    else
+
+        FRAMES=("${STORMLIGHT_FRAMES[@]}")
+
+    fi
+
+    FRAME_COUNT=${#FRAMES[@]}
+    FRAME_INDEX=$(( FRAME_INDEX % FRAME_COUNT ))
+}
+
+# ------------------------------------------------------------------------------
+# Animation Speed
+# ------------------------------------------------------------------------------
+
+update_speed() {
+
+    if (( CPU_USAGE < 20 )); then
+
+        SLEEP_TIME=0.50
+
+    elif (( CPU_USAGE < 40 )); then
+
+        SLEEP_TIME=0.35
+
+    elif (( CPU_USAGE < 60 )); then
+
+        SLEEP_TIME=0.22
+
+    elif (( CPU_USAGE < 80 )); then
+
+        SLEEP_TIME=0.12
+
+    else
+
+        SLEEP_TIME=0.06
+
+    fi
+}
+
+# ------------------------------------------------------------------------------
+# Main Loop
+# ------------------------------------------------------------------------------
+
 while true; do
-  # Set the icon in sketchybar
-  sketchybar --set "$NAME" icon="${FRAMES[$FRAME_INDEX]}"
-  
-  # Increment frame
-  FRAME_INDEX=$(( (FRAME_INDEX + 1) % FRAME_COUNT ))
-  
-  # Sleep dynamically
-  sleep "$SLEEP_TIME"
+
+    now=$(date +%s)
+
+    if (( now - LAST_CPU_UPDATE >= CPU_REFRESH_INTERVAL )); then
+
+        update_cpu
+        select_animation
+        update_speed
+
+        LAST_CPU_UPDATE=$now
+
+    fi
+
+    sketchybar --set "$NAME" icon="${FRAMES[$FRAME_INDEX]}"
+
+    FRAME_INDEX=$(( (FRAME_INDEX + 1) % FRAME_COUNT ))
+
+    sleep "$SLEEP_TIME"
+
 done

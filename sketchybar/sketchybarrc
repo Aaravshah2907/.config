@@ -319,6 +319,16 @@ sketchybar --add item volume right \
 #                             label.font="JetBrainsMono Nerd Font:Bold:14.0"
 
 
+# Caffeine Toggle
+sketchybar --add item caffeine right \
+           --set caffeine update_freq=3 \
+                          icon=󰅶 \
+                          icon.color=$WHITE \
+                          label.drawing=off \
+                          script="$PLUGIN_DIR/caffeine.sh" \
+                          click_script="$PLUGIN_DIR/caffeine.sh click" \
+           --subscribe caffeine mouse.clicked
+
 # Focus Toggle
 sketchybar --add item focus_toggle right \
            --set focus_toggle icon=󰈈 \
@@ -374,7 +384,7 @@ sketchybar --add item cpkb right \
            --subscribe cpkb mouse.clicked mouse.entered mouse.exited
 
 # Reorder right items logically (first is rightmost)
-sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack github focus_toggle clock
+sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack github caffeine focus_toggle clock
 
 ##### Finalize #####
 sketchybar --update

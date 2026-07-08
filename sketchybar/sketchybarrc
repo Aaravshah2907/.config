@@ -345,6 +345,12 @@ sketchybar --add item utilities right \
 #                                drawing=off \
 #                                script="$PLUGIN_DIR/upcoming.sh"
 
+# RunCat
+sketchybar --add item runcat right \
+           --set runcat icon.font="Hack Nerd Font:Bold:18.0" \
+                        icon.color=$WHITE \
+                        label.drawing=off
+
 # System Monitor
 sketchybar --add item sysmon right \
            --set sysmon update_freq=5 \
@@ -383,7 +389,7 @@ sketchybar --add item cpkb right \
            --subscribe cpkb mouse.clicked mouse.entered mouse.exited
 
 # Reorder right items logically (first is rightmost)
-sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack github utilities clock
+sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
 
 ##### Finalize #####
 sketchybar --update
@@ -396,3 +402,5 @@ sketchybar --trigger app_switcher_update
 sketchybar --trigger window_focus
 
 # Run scripts once on startup/reload to populate values immediately
+pkill -f runcat.sh
+NAME=runcat $PLUGIN_DIR/runcat.sh &

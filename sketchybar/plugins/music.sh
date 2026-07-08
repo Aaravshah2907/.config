@@ -81,13 +81,7 @@ update_bar() {
 
 hide_bar() {
   # Default View: idle / nothing playing
-  sketchybar --set "$NAME" drawing=on \
-                   icon.drawing=on \
-                   label.drawing=on \
-                   label="Resting" \
-                   icon="󰋋" \
-                   icon.color="$PRES_SILVER" \
-                   label.color="$PRES_SILVER_TRANSLUCENT"
+  sketchybar --set "$NAME" drawing=off
   exit 0
 }
 

@@ -20,7 +20,7 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
   fi
 
   if [ -z "$TOKEN" ]; then
-    sketchybar --set slack icon.color=$WHITE label.drawing=off
+    sketchybar --set slack icon.color=$WHITE drawing=off label.drawing=off
     sketchybar --set slack.header label="CRYPTIC WHISPERS"
     sketchybar --set slack.status label="Add token to ~/.slack_token"
     sketchybar --set slack.presence label="" icon=""
@@ -195,7 +195,7 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
   #  UPDATE SKETCHYBAR
   # ══════════════════════════════════════════════
   if [ -n "$API_ERROR" ]; then
-    sketchybar --set slack icon.color=$CRIMSON label.drawing=off
+    sketchybar --set slack icon.color=$CRIMSON drawing=off label.drawing=off
     sketchybar --set slack.header label="API ERROR"
     sketchybar --set slack.status label="$API_ERROR"
     sketchybar --set slack.presence label="" icon=""
@@ -210,13 +210,13 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
 
   # ── Bar icon state ──
   if [ "$TOTAL_MENTIONS" -gt 0 ]; then
-    sketchybar --set slack icon.color=$SPREN_CRYPTIC label="$TOTAL_MENTIONS" label.drawing=on
+    sketchybar --set slack drawing=on icon.color=$SPREN_CRYPTIC label="$TOTAL_MENTIONS" label.drawing=on
   elif [ "$TOTAL_UNREADS" -gt 0 ]; then
-    sketchybar --set slack icon.color=$SPREN_CRYPTIC label="$TOTAL_UNREADS" label.drawing=on
+    sketchybar --set slack drawing=on icon.color=$SPREN_CRYPTIC label="$TOTAL_UNREADS" label.drawing=on
   elif [ "$SNOOZE_ENABLED" = "true" ] || { [ "$DND_ENABLED" = "true" ] && [ "$DND_LABEL" = "DND active" ]; }; then
-    sketchybar --set slack icon.color=$PRES_SILVER label.drawing=off
+    sketchybar --set slack icon.color=$PRES_SILVER drawing=off label.drawing=off
   else
-    sketchybar --set slack icon.color=$WHITE label.drawing=off
+    sketchybar --set slack icon.color=$WHITE drawing=off label.drawing=off
   fi
 
   # ── Popup items ──

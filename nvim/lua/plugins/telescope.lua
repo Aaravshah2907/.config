@@ -57,5 +57,10 @@ return {
     map("n", "<leader>fd", builtin.diagnostics,   { desc = "Find diagnostics" })
     map("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Find symbols" })
     map("n", "<leader>fc", builtin.current_buffer_fuzzy_find, { desc = "Find in current file" })
+    map("n", "<leader>ft", builtin.builtin, { desc = "Find Telescope builtins" })
+    map("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps" })
+    map("n", "<leader>fw", builtin.grep_string, { desc = "Find Word under cursor" })
+    map("n", "<leader>fn", function() builtin.find_files({ cwd = vim.fn.stdpath("config") }) end, { desc = "Find Neovim config files" })
+    map("n", "<leader>fR", builtin.registers, { desc = "Find Registers" })
   end,
 }

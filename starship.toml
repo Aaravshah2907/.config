@@ -27,9 +27,9 @@
 # Custom modules for Radiant Order detection are appended after language modules
 format = """
 [╭─](bold #607D8B)$os$username$hostname$directory$git_branch$git_status$git_state\
-$python$nodejs$rust$golang$java$kotlin$lua$docker_context\
+$c$python$nodejs$rust$golang$java$kotlin$lua$docker_context\
 $custom\
-$cmd_duration$jobs
+$memory_usage$cmd_duration$status$jobs
 [╰─](bold #607D8B)$character"""
 
 # Right side info (time always visible on right)
@@ -47,15 +47,15 @@ add_newline = true
 # =============================================================================
 [character]
 success_symbol = "[⟫](bold #50fa7b)"
-error_symbol   = "[⟫](bold #ed8796)"
-vimcmd_symbol  = "[⟪](bold #ffb86c)"
+error_symbol = "[⟫](bold #ed8796)"
+vimcmd_symbol = "[⟪](bold #ffb86c)"
 
 # =============================================================================
 # OS ICON
 # =============================================================================
 [os]
 disabled = false
-format   = "[$symbol](bold #00BFFF) "
+format = "[$symbol](bold #00BFFF) "
 
 [os.symbols]
 Macos = "󰀵"
@@ -64,43 +64,74 @@ Macos = "󰀵"
 # USERNAME
 # =============================================================================
 [username]
-show_always = false
-format      = "[$user]($style)[@](bold #607D8B)"
-style_user  = "bold #FFD700"
-style_root  = "bold #ed8796"
+show_always = true
+format = "[$user]($style)[@](bold #607D8B)"
+style_user = "bold #FFD700"
+style_root = "bold #ed8796"
 
 # =============================================================================
 # HOSTNAME
 # =============================================================================
 [hostname]
 ssh_only = false
-format   = "[$hostname](bold #5DA8CC)[  ](bold #607D8B)"
-trim_at  = "."
+format = "[$hostname](bold #5DA8CC)[  ](bold #607D8B)"
+trim_at = "."
 
 # =============================================================================
 # DIRECTORY
 # =============================================================================
 [directory]
-format            = "[  ](bold #00BFFF)[$path]($style)[$read_only]($read_only_style) "
-style             = "bold #00BFFF"
-read_only         = " 󰌾"
-read_only_style   = "bold #ed8796"
+format = "[](bold #00BFFF)[$path]($style)[$read_only]($read_only_style) "
+style = "bold #00BFFF"
+read_only = "󰌾 "
+read_only_style = "bold #A9A9A9"
 truncation_length = 4
-truncate_to_repo  = true
-home_symbol       = "~"
+truncate_to_repo = true
+home_symbol = "~"
 
 [directory.substitutions]
-"Documents" = "󰈙 Docs"
-"Downloads" = "󰇚 DLs"
-"Desktop"   = "󰇄 Desktop"
-"~"         = "  "
+"Documents/Code/CodeForces" = " CodeForces"
+"Documents/Personal/AudioBooks" = "󰋋 "
+"Documents/Personal/Yt-Videos" = "󰗃 "
+"Documents/Personal/Yt-Music" = "󰝚 "
+"Documents/Personal/Tracker" = "󱕍 Tracker"
+"Documents/Personal/Books" = "󰂾 "
+"Documents/CODING-LEARNING" = "󰑣 Learning"
+"Documents/Physics-KB" = "󰆧 Physics-KB"
+"Documents/Personal" = " "
+"Documents/Code" = " Code"
+"Documents/Temp" = " Temp"
+".config/sketchybar" = "󰹑 Sketchybar"
+".config/spicetify" = " Spicetify"
+"Applications" = " "
+".config/nvim" = " "
+".config/yazi" = "󰇥 "
+"Documents" = "󰈙 "
+"Downloads" = "󰇚 "
+"Pictures" = " Pictures"
+"Projects" = " Projects"
+"Desktop" = "󰇄 Desktop"
+"Library" = "🏛"
+".config" = " "
+".local/share" = "󰉋 share"
+".local/bin" = "󰆍 bin"
+".local" = "󰘔 "
+"Movies" = "󰿎 "
+"Videos" = "󰕧 "
+"Public" = " Public"
+"GitHub" = " GitHub"
+".Trash" = " Trash"
+"Music" = " "
+"cpkb" = "</> cpkb"
+".ssh" = "󰌆 "
+"~" = " "
 
 # =============================================================================
 # GIT  — Stormlight-themed states
 # =============================================================================
 [git_branch]
 format = "[on](dimmed #607D8B) [󰊢 $branch(:$remote_branch)](bold #8989ff) "
-style  = "bold #8989ff"
+style = "bold #8989ff"
 
 [git_status]
 # Each state maps to a Cosmere concept:
@@ -110,22 +141,22 @@ style  = "bold #8989ff"
 #   Stashed   = stashed (glacial)     Forged    = staged (emerald)
 #   Renamed   = renamed (amethyst)    Shattered = deleted (crimson)
 #   Odium     = conflicted (crimson)
-format     = "([$all_status$ahead_behind]($style) )"
-style      = "bold #DA70D6"
+format = "([$all_status$ahead_behind]($style) )"
+style = "bold #DA70D6"
 conflicted = "[☠ Odium](bold #ed8796)"
-ahead      = "[⇡ Ascending·${count}](bold #50fa7b)"
-behind     = "[⇣ Fallen·${count}](bold #ed8796)"
-diverged   = "[⇕ Diverged ⇡${ahead_count}⇣${behind_count}](bold #ffb86c)"
-untracked  = "[? Unbound·${count}](bold #ffb86c)"
-stashed    = "[󰏗 Stashed](bold #5DA8CC)"
-modified   = "[⚡ Stormed·${count}](bold #ffb86c)"
-staged     = "[✦ Forged·${count}](bold #50fa7b)"
-renamed    = "[» Renamed·${count}](bold #E040FB)"
-deleted    = "[✕ Shattered·${count}](bold #ed8796)"
+ahead = "[⇡ Ascending·${count}](bold #50fa7b)"
+behind = "[⇣ Fallen·${count}](bold #ed8796)"
+diverged = "[⇕ Diverged ⇡${ahead_count}⇣${behind_count}](bold #ffb86c)"
+untracked = "[? Unbound·${count}](bold #ffb86c)"
+stashed = "[󰏗 Stashed](bold #5DA8CC)"
+modified = "[⚡ Stormed·${count}](bold #ffb86c)"
+staged = "[✦ Forged·${count}](bold #50fa7b)"
+renamed = "[» Renamed·${count}](bold #E040FB)"
+deleted = "[✕ Shattered·${count}](bold #ed8796)"
 
 [git_state]
 format = "\\([$state($progress_current/$progress_total)](bold #ffb86c)\\) "
-style  = "bold #ffb86c"
+style = "bold #ffb86c"
 
 # =============================================================================
 # LANGUAGES & RUNTIMES  — Each mapped to a Radiant Order
@@ -142,15 +173,21 @@ style  = "bold #ffb86c"
 
 # Lightweaver — Python (Cryptic/Pattern spren, orchid)
 [python]
-format         = "[${symbol}${pyenv_prefix}(${version})( \\($virtualenv\\))](bold #DA70D6) "
-symbol         = "󰌠 "
-detect_files   = ["requirements.txt", "setup.py", "pyproject.toml", ".python-version", "*.py"]
+format = "[${symbol}${pyenv_prefix}(${version})( \\($virtualenv\\))](bold #DA70D6) "
+symbol = "󰌠 "
+detect_files = [
+    "requirements.txt",
+    "setup.py",
+    "pyproject.toml",
+    ".python-version",
+    "*.py",
+]
 detect_folders = [".venv", "venv", "__pycache__"]
 
 # Willshaper — Node.js (Willshaper spren, amethyst)
 [nodejs]
-format       = "[$symbol($version)](bold #E040FB) "
-symbol       = "󰎙 "
+format = "[$symbol($version)](bold #E040FB) "
+symbol = "󰎙 "
 detect_files = ["package.json", ".nvmrc"]
 
 # Stoneward — Rust (Peakspren, warm stone-tan)
@@ -183,13 +220,30 @@ symbol = "󰢱 "
 # Shows the active Radiant Order based on detected language in cwd.
 # Appears after language modules. Uses ✦ (Stormmark glyph).
 # Order detection priority: py > js/ts > rs > go > java > kt > lua > c/cpp
+# Dustbringer — C/C++ (Ashspren, volcanic orange)
+[c]
+format = "[$symbol($version)](bold #FF4500) "
+symbol = " "
+detect_extensions = ["c", "cpp", "h", "hpp"]
+
+# Investiture Level (Memory Usage)
+[memory_usage]
+disabled = false
+threshold = 70
+format = "[󰓡 Investiture: ${ram}](bold #8989ff) "
+
+# Ruin's Touch (Status/Error)
+[status]
+disabled = false
+format = "[✕ Ruin ($int)](bold #ed8796) "
+
 # =============================================================================
 [custom.radiant_order]
 description = "Shows the Radiant Order bonded to the current project"
-when        = true
-format      = "[✦ $output](dimmed #607D8B) "
-shell       = ["bash", "--noprofile", "--norc"]
-command     = """
+when = true
+format = "[✦ $output](dimmed #607D8B) "
+shell = ["bash", "--noprofile", "--norc"]
+command = """
 if ls *.py requirements.txt setup.py pyproject.toml .python-version 2>/dev/null | grep -q .; then
   echo "Lightweaver"
 elif ls package.json .nvmrc *.js *.ts 2>/dev/null | grep -q .; then
@@ -220,26 +274,26 @@ symbol = "󰡨 "
 # COMMAND DURATION
 # =============================================================================
 [cmd_duration]
-format             = "[ ${duration}](bold #607D8B) "
-min_time           = 2000
-show_milliseconds  = false
-show_notifications = false
+format = "[󰔚 Cadmium·${duration}](bold #607D8B) "
+min_time = 2000
+show_milliseconds = false
+show_notifications = true
 
 # =============================================================================
 # JOBS (background jobs count)
 # =============================================================================
 [jobs]
-format    = "[$symbol$number](bold #DA70D6) "
-symbol    = "󰒓 "
+format = "[$symbol$number](bold #DA70D6) "
+symbol = "󰒓 "
 threshold = 1
 
 # =============================================================================
 # TIME (right side)
 # =============================================================================
 [time]
-disabled        = false
-format          = "[ $time](bold #607D8B) "
-time_format     = "%H:%M"
+disabled = false
+format = "[ $time](bold #607D8B) "
+time_format = "%H:%M"
 utc_time_offset = "local"
 
 # =============================================================================
@@ -273,27 +327,32 @@ utc_time_offset = "local"
 # discharging_symbol = "◉◉◉◉◉"    # Full — Honor Gold (Radiant)
 # =============================================================================
 [battery]
-format = "[$symbol$percentage](bold $style) "
+format = "[$symbol](bold $style) "
 
 [[battery.display]]
-threshold          = 15
-style              = "bold #ed8796"
-discharging_symbol = "󰂎 "
+threshold = 20
+style = "bold #ed8796"
+discharging_symbol = "◉◯◯◯◯"
 
 [[battery.display]]
-threshold          = 40
-style              = "bold #ffb86c"
-discharging_symbol = "󰁽 "
+threshold = 40
+style = "bold #ffb86c"
+discharging_symbol = "◉◉◯◯◯"
 
 [[battery.display]]
-threshold          = 80
-style              = "bold #50fa7b"
-discharging_symbol = "󰁿 "
+threshold = 60
+style = "bold #5DA8CC"
+discharging_symbol = "◉◉◉◯◯"
 
 [[battery.display]]
-threshold          = 100
-style              = "bold #50fa7b"
-discharging_symbol = "󰁹 "
+threshold = 80
+style = "bold #00BFFF"
+discharging_symbol = "◉◉◉◉◯"
+
+[[battery.display]]
+threshold = 100
+style = "bold #FFD700"
+discharging_symbol = "◉◉◉◉◉"
 
 # =============================================================================
 # DISABLED MODULES (not needed)

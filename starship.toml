@@ -1,0 +1,317 @@
+# =============================================================================
+# ~/.config/starship.toml
+# Aarav's Starship config — Cosmere / Stormlight Archive theme
+# Palette reference: ~/.local/bin/cosmere_colors.sh
+#
+# Color key (hex values from Cosmere palette):
+#   Windrunner Sapphire  →  #00BFFF  (SAPPHIRE)
+#   Honor Gold           →  #FFD700  (HONOR_GOLD)
+#   Lifebound Emerald    →  #50fa7b  (EMERALD)
+#   Shardblade Violet    →  #8989ff  (VIOLET)
+#   Lightweaver Amber    →  #ffb86c  (AMBER)
+#   Odium Crimson        →  #ed8796  (CRIMSON)
+#   Honorspren Blue      →  #00A8E8  (SPREN_HONOR)
+#   Glacial Teal         →  #5DA8CC  (PRES_GLACIAL)
+#   Willshaper Amethyst  →  #E040FB  (SPREN_WILL)
+#   Gloryspren Gold      →  #FFD700  (SPREN_GLORY)
+#   Cryptic Orchid       →  #DA70D6  (SPREN_CRYPTIC)
+#   Stormfather Slate    →  #607D8B  (SPREN_STORM)
+#   Deep Night BG        →  #001a33  (DEEP_NIGHT hex approx)
+#   Ashspren Volcanic    →  #FF4500  (SPREN_ASH)
+#   Peakspren Stone      →  #F4A460  (SPREN_PEAK)
+#   Highspren Bone       →  #F5F5DC  (SPREN_HIGH)
+#   Inkspren Indigo      →  #8A2BE2  (SPREN_INK)
+# =============================================================================
+
+# --- Global format: two-line prompt with powerline separators ---
+# Custom modules for Radiant Order detection are appended after language modules
+format = """
+[╭─](bold #607D8B)$os$username$hostname$directory$git_branch$git_status$git_state\
+$python$nodejs$rust$golang$java$kotlin$lua$docker_context\
+$custom\
+$cmd_duration$jobs
+[╰─](bold #607D8B)$character"""
+
+# Right side info (time always visible on right)
+right_format = """$time$battery"""
+
+# --- Shell timeout for slow commands ---
+command_timeout = 800
+
+# --- Newline between prompts for breathing room ---
+add_newline = true
+
+# =============================================================================
+# PROMPT CHARACTER — Shardblade slash ⟫
+# Success: Lifebound Emerald  |  Error: Odium Crimson  |  Vim: Amber
+# =============================================================================
+[character]
+success_symbol = "[⟫](bold #50fa7b)"
+error_symbol   = "[⟫](bold #ed8796)"
+vimcmd_symbol  = "[⟪](bold #ffb86c)"
+
+# =============================================================================
+# OS ICON
+# =============================================================================
+[os]
+disabled = false
+format   = "[$symbol](bold #00BFFF) "
+
+[os.symbols]
+Macos = "󰀵"
+
+# =============================================================================
+# USERNAME
+# =============================================================================
+[username]
+show_always = false
+format      = "[$user]($style)[@](bold #607D8B)"
+style_user  = "bold #FFD700"
+style_root  = "bold #ed8796"
+
+# =============================================================================
+# HOSTNAME
+# =============================================================================
+[hostname]
+ssh_only = false
+format   = "[$hostname](bold #5DA8CC)[  ](bold #607D8B)"
+trim_at  = "."
+
+# =============================================================================
+# DIRECTORY
+# =============================================================================
+[directory]
+format            = "[  ](bold #00BFFF)[$path]($style)[$read_only]($read_only_style) "
+style             = "bold #00BFFF"
+read_only         = " 󰌾"
+read_only_style   = "bold #ed8796"
+truncation_length = 4
+truncate_to_repo  = true
+home_symbol       = "~"
+
+[directory.substitutions]
+"Documents" = "󰈙 Docs"
+"Downloads" = "󰇚 DLs"
+"Desktop"   = "󰇄 Desktop"
+"~"         = "  "
+
+# =============================================================================
+# GIT  — Stormlight-themed states
+# =============================================================================
+[git_branch]
+format = "[on](dimmed #607D8B) [󰊢 $branch(:$remote_branch)](bold #8989ff) "
+style  = "bold #8989ff"
+
+[git_status]
+# Each state maps to a Cosmere concept:
+#   Invested  = clean (sapphire)      Stormed   = modified (amber)
+#   Ascending = ahead (emerald)       Fallen    = behind (crimson)
+#   Diverged  = diverged (amber)      Unbound   = untracked (amber)
+#   Stashed   = stashed (glacial)     Forged    = staged (emerald)
+#   Renamed   = renamed (amethyst)    Shattered = deleted (crimson)
+#   Odium     = conflicted (crimson)
+format     = "([$all_status$ahead_behind]($style) )"
+style      = "bold #DA70D6"
+conflicted = "[☠ Odium](bold #ed8796)"
+ahead      = "[⇡ Ascending·${count}](bold #50fa7b)"
+behind     = "[⇣ Fallen·${count}](bold #ed8796)"
+diverged   = "[⇕ Diverged ⇡${ahead_count}⇣${behind_count}](bold #ffb86c)"
+untracked  = "[? Unbound·${count}](bold #ffb86c)"
+stashed    = "[󰏗 Stashed](bold #5DA8CC)"
+modified   = "[⚡ Stormed·${count}](bold #ffb86c)"
+staged     = "[✦ Forged·${count}](bold #50fa7b)"
+renamed    = "[» Renamed·${count}](bold #E040FB)"
+deleted    = "[✕ Shattered·${count}](bold #ed8796)"
+
+[git_state]
+format = "\\([$state($progress_current/$progress_total)](bold #ffb86c)\\) "
+style  = "bold #ffb86c"
+
+# =============================================================================
+# LANGUAGES & RUNTIMES  — Each mapped to a Radiant Order
+#
+# Order → Language mapping:
+#   Lightweaver  (Shallan)   → Python       — Cryptic orchid  #DA70D6
+#   Willshaper   (Venli)     → Node/JS      — Amethyst        #E040FB
+#   Stoneward    (Taln)      → Rust         — Peakspren stone #F4A460
+#   Windrunner   (Kaladin)   → Go           — Honorspren blue #00A8E8
+#   Skybreaker   (Szeth)     → Java         — Highspren bone  #F5F5DC
+#   Elsecaller   (Jasnah)    → Kotlin       — Inkspren indigo #8A2BE2
+#   Truthwatcher (Renarin)   → Lua          — Mistspren green #90EE90
+# =============================================================================
+
+# Lightweaver — Python (Cryptic/Pattern spren, orchid)
+[python]
+format         = "[${symbol}${pyenv_prefix}(${version})( \\($virtualenv\\))](bold #DA70D6) "
+symbol         = "󰌠 "
+detect_files   = ["requirements.txt", "setup.py", "pyproject.toml", ".python-version", "*.py"]
+detect_folders = [".venv", "venv", "__pycache__"]
+
+# Willshaper — Node.js (Willshaper spren, amethyst)
+[nodejs]
+format       = "[$symbol($version)](bold #E040FB) "
+symbol       = "󰎙 "
+detect_files = ["package.json", ".nvmrc"]
+
+# Stoneward — Rust (Peakspren, warm stone-tan)
+[rust]
+format = "[$symbol($version)](bold #F4A460) "
+symbol = "󱘗 "
+
+# Windrunner — Go (Honorspren, sky blue)
+[golang]
+format = "[$symbol($version)](bold #00A8E8) "
+symbol = "󰟓 "
+
+# Skybreaker — Java (Highspren, pale bone/beige)
+[java]
+format = "[$symbol($version)](bold #F5F5DC) "
+symbol = "󰬷 "
+
+# Elsecaller — Kotlin (Inkspren, deep indigo)
+[kotlin]
+format = "[$symbol($version)](bold #8A2BE2) "
+symbol = "󱈙 "
+
+# Truthwatcher — Lua (Mistspren, pale mist-green)
+[lua]
+format = "[$symbol($version)](bold #90EE90) "
+symbol = "󰢱 "
+
+# =============================================================================
+# RADIANT ORDER INDICATOR (custom module)
+# Shows the active Radiant Order based on detected language in cwd.
+# Appears after language modules. Uses ✦ (Stormmark glyph).
+# Order detection priority: py > js/ts > rs > go > java > kt > lua > c/cpp
+# =============================================================================
+[custom.radiant_order]
+description = "Shows the Radiant Order bonded to the current project"
+when        = true
+format      = "[✦ $output](dimmed #607D8B) "
+shell       = ["bash", "--noprofile", "--norc"]
+command     = """
+if ls *.py requirements.txt setup.py pyproject.toml .python-version 2>/dev/null | grep -q .; then
+  echo "Lightweaver"
+elif ls package.json .nvmrc *.js *.ts 2>/dev/null | grep -q .; then
+  echo "Willshaper"
+elif ls Cargo.toml *.rs 2>/dev/null | grep -q .; then
+  echo "Stoneward"
+elif ls go.mod go.sum *.go 2>/dev/null | grep -q .; then
+  echo "Windrunner"
+elif ls pom.xml build.gradle *.java 2>/dev/null | grep -q .; then
+  echo "Skybreaker"
+elif ls *.kt build.gradle.kts 2>/dev/null | grep -q .; then
+  echo "Elsecaller"
+elif ls *.lua 2>/dev/null | grep -q .; then
+  echo "Truthwatcher"
+elif ls *.c *.cpp *.h *.hpp CMakeLists.txt 2>/dev/null | grep -q .; then
+  echo "Dustbringer"
+fi
+"""
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+[docker_context]
+format = "[$symbol$context](bold #5DA8CC) "
+symbol = "󰡨 "
+
+# =============================================================================
+# COMMAND DURATION
+# =============================================================================
+[cmd_duration]
+format             = "[ ${duration}](bold #607D8B) "
+min_time           = 2000
+show_milliseconds  = false
+show_notifications = false
+
+# =============================================================================
+# JOBS (background jobs count)
+# =============================================================================
+[jobs]
+format    = "[$symbol$number](bold #DA70D6) "
+symbol    = "󰒓 "
+threshold = 1
+
+# =============================================================================
+# TIME (right side)
+# =============================================================================
+[time]
+disabled        = false
+format          = "[ $time](bold #607D8B) "
+time_format     = "%H:%M"
+utc_time_offset = "local"
+
+# =============================================================================
+# BATTERY (right side)
+# Standard battery icons — colour-coded by charge level
+#
+# [FUTURE / SPHERELIGHT MODE] — Uncomment below and comment out the standard
+# [[battery.display]] blocks to use Stormlight sphere-charge style instead:
+#
+# [battery]
+# format = "[$symbol](bold $style) "
+# [[battery.display]]
+# threshold = 20
+# style = "bold #ed8796"
+# discharging_symbol = "◉◯◯◯◯"    # Critical — Crimson (Odium's touch)
+# [[battery.display]]
+# threshold = 40
+# style = "bold #ffb86c"
+# discharging_symbol = "◉◉◯◯◯"    # Low — Amber (Lightweaver warmth)
+# [[battery.display]]
+# threshold = 60
+# style = "bold #5DA8CC"
+# discharging_symbol = "◉◉◉◯◯"    # Mid — Glacial Teal (Preservation)
+# [[battery.display]]
+# threshold = 80
+# style = "bold #00BFFF"
+# discharging_symbol = "◉◉◉◉◯"    # Good — Sapphire (Windrunner)
+# [[battery.display]]
+# threshold = 100
+# style = "bold #FFD700"
+# discharging_symbol = "◉◉◉◉◉"    # Full — Honor Gold (Radiant)
+# =============================================================================
+[battery]
+format = "[$symbol$percentage](bold $style) "
+
+[[battery.display]]
+threshold          = 15
+style              = "bold #ed8796"
+discharging_symbol = "󰂎 "
+
+[[battery.display]]
+threshold          = 40
+style              = "bold #ffb86c"
+discharging_symbol = "󰁽 "
+
+[[battery.display]]
+threshold          = 80
+style              = "bold #50fa7b"
+discharging_symbol = "󰁿 "
+
+[[battery.display]]
+threshold          = 100
+style              = "bold #50fa7b"
+discharging_symbol = "󰁹 "
+
+# =============================================================================
+# DISABLED MODULES (not needed)
+# =============================================================================
+[package]
+disabled = true
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[azure]
+disabled = true
+
+[conda]
+disabled = true
+
+[line_break]
+disabled = true

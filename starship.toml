@@ -28,12 +28,11 @@
 format = """
 [╭─](bold #607D8B)$os$username$hostname$directory$git_branch$git_status$git_state\
 $c$python$nodejs$rust$golang$java$kotlin$lua$docker_context\
-$custom\
-$memory_usage$cmd_duration$status$jobs
+$cmd_duration$status$jobs
 [╰─](bold #607D8B)$character"""
 
 # Right side info (time always visible on right)
-right_format = """$time$battery"""
+# right_format = """$time$battery"""
 
 # --- Shell timeout for slow commands ---
 command_timeout = 800
@@ -82,7 +81,10 @@ trim_at = "."
 # =============================================================================
 [directory]
 format = "[](bold #00BFFF)[$path]($style)[$read_only]($read_only_style) "
+repo_root_format = "[](bold #00BFFF)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 style = "bold #00BFFF"
+repo_root_style = "underline bold #00BFFF"
+before_repo_root_style = "bold #607D8B"
 read_only = "󰌾 "
 read_only_style = "bold #A9A9A9"
 truncation_length = 4
@@ -114,8 +116,8 @@ home_symbol = "~"
 "Library" = "🏛"
 ".config" = " "
 ".local/share" = "󰉋 share"
-".local/bin" = "󰆍 bin"
-".local" = "󰘔 "
+".local/bin" = " bin"
+".local" = "󰉩 "
 "Movies" = "󰿎 "
 "Videos" = "󰕧 "
 "Public" = " Public"
@@ -274,7 +276,7 @@ symbol = "󰡨 "
 # COMMAND DURATION
 # =============================================================================
 [cmd_duration]
-format = "[󰔚 Cadmium·${duration}](bold #607D8B) "
+format = "[󰔚 ·${duration}](bold #607D8B) "
 min_time = 2000
 show_milliseconds = false
 show_notifications = true

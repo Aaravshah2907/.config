@@ -85,8 +85,9 @@ autocmd("FileType", {
 autocmd("BufWritePost", {
 	group = "AutoCompile",
 	pattern = "*.cpp",
-	callback = function()
-		local makeprg = vim.api.nvim_buf_get_option(0, "makeprg")
+	callback = function(args)
+		local makeprg = vim.bo[args.buf].makeprg
+		local efm = vim.bo[args.buf].errorformat
 		if makeprg == "" then
 			return
 		end
@@ -115,7 +116,7 @@ autocmd("BufWritePost", {
 					vim.fn.setqflist(
 						{},
 						"r",
-						{ title = "Compile Errors", lines = lines, efm = vim.api.nvim_buf_get_option(0, "errorformat") }
+						{ title = "Compile Errors", lines = lines, efm = efm }
 					)
 					vim.notify("Compilation failed ✗", vim.log.levels.ERROR)
 					vim.cmd("copen")

@@ -251,6 +251,23 @@ do
     group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
     callback = function() vim.hl.on_yank() end,
   })
+
+  -- [[ Quality of Life Keybindings ]]
+  
+  -- Better navigation (center screen after half-page scrolling)
+  vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down and center' })
+  vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center' })
+  
+  -- Keep search terms in the middle of the screen
+  vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result' })
+  vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Prev search result' })
+
+  -- Move selected lines up and down in visual mode
+  vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move line down' })
+  vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move line up' })
+  
+  -- Keep cursor in place when joining lines
+  vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Join lines' })
 end
 
 -- ============================================================
@@ -447,6 +464,20 @@ do
 
   -- ... and there is more!
   --  Check out: https://github.com/nvim-mini/mini.nvim
+
+  -- [[ Oil.nvim ]]
+  -- A file explorer that lets you edit your filesystem like a normal Neovim buffer.
+  vim.pack.add { gh 'stevearc/oil.nvim' }
+  require('oil').setup({
+    default_file_explorer = true,
+  })
+  vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+  -- [[ Flash.nvim ]]
+  -- Lets you navigate your code with search labels.
+  vim.pack.add { gh 'folke/flash.nvim' }
+  require('flash').setup({})
+  vim.keymap.set({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash Jump" })
 end
 
 -- ============================================================
@@ -977,6 +1008,40 @@ do
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- require 'custom.plugins'
+end
+
+-- ============================================================
+-- SECTION 11: SNACKS.NVIM
+-- Quality of life plugins, dashboard, pickers
+-- ============================================================
+do
+  vim.pack.add { gh 'folke/snacks.nvim' }
+
+  require("snacks").setup({
+    dashboard = {
+      sections = {
+        { section = "terminal", cmd = "cat ~/.config/nvim/kal-syl-ascii.txt", height = 28, padding = 1 },
+        { section = "keys", gap = 1, padding = 1 },
+        { section = "startup" },
+      },
+      preset = {
+        keys = {
+          { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+          { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+          { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+          { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+          { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+          { icon = " ", key = "b", desc = "Local Bin", action = ":lua Snacks.dashboard.pick('files', {cwd = '~/.local/bin'})" },
+          { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+        },
+      },
+    },
+    picker = { enabled = true },
+    notifier = { enabled = true },
+    quickfile = { enabled = true },
+    bigfile = { enabled = true },
+    words = { enabled = true },
+  })
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`

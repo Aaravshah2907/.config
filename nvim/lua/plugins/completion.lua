@@ -18,6 +18,7 @@ return {
       "hrsh7th/cmp-buffer",     -- Words from the current file
       "hrsh7th/cmp-path",       -- File paths (type ./ to see files)
       "saadparwaiz1/cmp_luasnip", -- Snippet completions
+      "hrsh7th/cmp-cmdline",    -- Command line suggestions
 
       -- Snippet engine + pre-made snippets
       {
@@ -193,6 +194,26 @@ return {
           completion = cmp.config.window.bordered(),
           documentation = cmp.config.window.bordered(),
         },
+      })
+
+      -- ── Command Line Completion ────────────────────────────────────
+      -- Use buffer source for `/` and `?`
+      cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' }
+        }
+      })
+
+      -- Use cmdline & path source for ':'
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          { name = 'cmdline' }
+        }),
+        matching = { disallow_symbol_nonprefix_matching = false }
       })
     end,
   },

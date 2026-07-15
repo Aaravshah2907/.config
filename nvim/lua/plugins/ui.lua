@@ -108,6 +108,7 @@ return {
 	-- Shows a cool ASCII art header and quick-access buttons.
 	{
 		"goolord/alpha-nvim",
+		enabled = false, -- Disabled in favor of snacks.nvim dashboard for ANSI color support
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		event = "VimEnter", -- Show on startup
 
@@ -208,14 +209,22 @@ return {
 			window = {
 				border = "single", -- Cosmere themed sharp borders
 			},
+			spec = {
+				{ "<leader>b", group = "Buffer" },
+				{ "<leader>c", group = "Code" },
+				{ "<leader>g", group = "Git" },
+				{ "<leader>s", group = "Search/Sort" },
+				{ "<leader>f", group = "Find/File" },
+				{ "<leader>t", group = "Toggle/Terminal" },
+			},
 		},
 		keys = {
 			{
 				"<leader>wk",
 				function()
-					require("which-key").show({ global = false })
+					require("which-key").show()
 				end,
-				desc = "Which-Key Keymaps",
+				desc = "Show All Keymaps (Which-Key)",
 			},
 		},
 	},
@@ -298,5 +307,69 @@ return {
 		"stevearc/dressing.nvim",
 		event = "VeryLazy",
 		opts = {}, -- Use defaults — they're already great
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- Snacks.nvim: Quality of life and Dashboard (replaces Alpha)
+	-- ---------------------------------------------------------------------------
+	-- Using Snacks dashboard because it natively supports running terminal
+	-- commands (like ascii-image-converter) to render 24-bit ANSI colors!
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		opts = {
+			dashboard = {
+				sections = {
+					{ section = "header" },
+					{ section = "keys", gap = 1, padding = 1 },
+					{ section = "startup" },
+				},
+				preset = {
+					header = [[
+                                                                     
+       ████ ██████           █████      ██                     
+      ███████████             █████                             
+      █████████ ███████████████████ ███   ███████████   
+     █████████  ███    █████████████ █████ ██████████████   
+    █████████ ██████████ █████████ █████ █████ ████ █████   
+  ███████████ ███    ███ █████████ █████ █████ ████ █████  
+ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
+					keys = {
+						{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+						{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+						{ icon = " ", key = "c", desc = "Config", action = ":lua require('yazi').yazi({}, vim.fn.stdpath('config'))" },
+						{ icon = " ", key = "e", desc = "Open Yazi", action = ":Yazi" },
+						{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
+					},
+				},
+			},
+			-- You can enable other snacks features here if you'd like
+			picker = { enabled = true },
+			notifier = { enabled = true },
+			quickfile = { enabled = true },
+			terminal = { enabled = true },
+			lazygit = { enabled = true },
+			gitbrowse = { enabled = true },
+			words = { enabled = true },
+			zen = { enabled = true },
+			dim = { enabled = true },
+			scratch = { enabled = true },
+			rename = { enabled = true },
+			bufdelete = { enabled = true },
+		},
+		keys = {
+			-- Snacks specific keymaps
+			{ "<leader>t", function() Snacks.terminal() end, desc = "[T]oggle Terminal" },
+			{ "<leader>gg", function() Snacks.lazygit() end, desc = "[G]it [G]ui (Lazygit)" },
+			{ "<leader>gb", function() Snacks.gitbrowse() end, desc = "[G]it [B]rowse" },
+			{ "<leader>z", function() Snacks.zen() end, desc = "[Z]en Mode" },
+			{ "<leader>d", function() Snacks.dim() end, desc = "[D]im Mode" },
+			{ "<leader>.", function() Snacks.scratch() end, desc = "[.] Scratch Buffer" },
+			{ "<leader>bd", function() Snacks.bufdelete() end, desc = "[B]uffer [D]elete" },
+			{ "<leader>rn", function() Snacks.rename.rename_file() end, desc = "[R]e[N]ame File" },
+		},
 	},
 }

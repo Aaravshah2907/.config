@@ -70,3 +70,5 @@ alias h='cht.sh'
 
 # --- cfdash ---
 alias cfdash='/Users/aaravshah2975/.config/cfdash/.venv/bin/python /Users/aaravshah2975/.config/cfdash/main.py'
+
+

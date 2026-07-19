@@ -4,6 +4,7 @@
 # Monitors the Investiture level of your Gemstones
 
 source "$HOME/.local/bin/cosmere_colors.sh"
+source "$HOME/.config/shell/functions.sh"
 
 # Handle hover for battery widget
 if [ "$SENDER" = "mouse.entered" ]; then
@@ -102,18 +103,46 @@ fi
 if [ "$PERCENTAGE" -le 15 ]; then
   sketchybar --animate sin 15 --set "$NAME" icon.y_offset=-4
   sketchybar --animate sin 15 --set "$NAME" icon.y_offset=0
-  
-  if [ -z "$CHARGING" ]; then
-    if [ ! -f "/tmp/syl_batt_warn" ]; then
-      ya pub plugin --str "syl-notify custom '󰚌 Odium Approaches' 'Aarav, the stormlight is failing... we only have ${PERCENTAGE}% left!'" >/dev/null 2>&1
-      touch /tmp/syl_batt_warn
+else
+  sketchybar --set "$NAME" icon.y_offset=0
+fi
+
+# WhatsApp Notifications (Wacli)
+if [[ "$CHARGING" == "" ]]; then
+  if [ "$PERCENTAGE" -le 5 ]; then
+    if [ ! -f "/tmp/wacli_batt_5" ]; then
+      alert "🚨 CRITICAL: Battery at ${PERCENTAGE}%. Shutting down soon!" &
+      touch "/tmp/wacli_batt_5"
     fi
-  else
-    rm -f /tmp/syl_batt_warn
+  elif [ "$PERCENTAGE" -le 10 ]; then
+    if [ ! -f "/tmp/wacli_batt_10" ]; then
+      alert "⚠️ WARNING: Battery low at ${PERCENTAGE}%." &
+      touch "/tmp/wacli_batt_10"
+    fi
+  elif [ "$PERCENTAGE" -le 20 ]; then
+    if [ ! -f "/tmp/wacli_batt_20" ]; then
+      alert "🔋 NOTICE: Battery at ${PERCENTAGE}%." &
+      touch "/tmp/wacli_batt_20"
+    fi
+  fi
+  # Clean up charging warning lock
+  rm -f "/tmp/wacli_batt_95"
+  
+  # Also trigger the original system notification logic for <=15
+  if [ "$PERCENTAGE" -le 15 ] && [ ! -f "/tmp/syl_batt_warn" ]; then
+    ya pub plugin --str "syl-notify custom '󰚌 Odium Approaches' 'Aarav, the stormlight is failing... we only have ${PERCENTAGE}% left!'" >/dev/null 2>&1
+    touch /tmp/syl_batt_warn
   fi
 else
-  rm -f /tmp/syl_batt_warn
-  sketchybar --set "$NAME" icon.y_offset=0
+  # Clean up discharge warning locks
+  rm -f "/tmp/wacli_batt_5" "/tmp/wacli_batt_10" "/tmp/wacli_batt_20" "/tmp/syl_batt_warn"
+  
+  if [ "$PERCENTAGE" -ge 95 ]; then
+    if [ ! -f "/tmp/wacli_batt_95" ]; then
+      alert "⚡ Battery charged to ${PERCENTAGE}%. You can unplug now." &
+      touch "/tmp/wacli_batt_95"
+    fi
+  fi
 fi
 
 # Smart Battery Border

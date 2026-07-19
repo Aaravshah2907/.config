@@ -72,3 +72,77 @@ spa() {
     spicetify restore backup
     spicetify apply
 }
+
+# --- WhatsApp & Ntfy Alert ---
+alert() {
+    local msg="${1:-Process finished.}"
+    local secrets_file="$HOME/.local/share/alert-secrets.sh"
+
+    if [ -f "$secrets_file" ]; then
+        # shellcheck source=/dev/null
+        . "$secrets_file"
+    fi
+
+    if [ -z "$ALERT_WHATSAPP_TO" ] || [ -z "$ALERT_NTFY_TOPIC" ]; then
+        echo "alert: missing ALERT_WHATSAPP_TO or ALERT_NTFY_TOPIC in $secrets_file" >&2
+        return 1
+    fi
+    
+    # 1. Send via WhatsApp (silently syncs to linked devices)
+    wacli send text --to "$ALERT_WHATSAPP_TO" --message "$msg" --pick 1
+    
+    # 2. Send via ntfy.sh (triggers push notification on phone)
+    curl -s -d "$msg" "https://ntfy.sh/$ALERT_NTFY_TOPIC" > /dev/null
+}
+
+# --- Wacli Smart Wrapper ---
+wa() {
+    if [ $# -eq 0 ]; then
+        echo "Usage:"
+        echo "  wa --to <name> --msg <text>"
+        echo "  wa --to <name> --file <path> [--caption <text>]"
+        echo "  wa chats | groups | sync | messages <chat>"
+        return 1
+    fi
+
+    local TO=""
+    local MSG=""
+    local FILE=""
+    local CAPTION=""
+    local COMMAND=()
+    local IS_SEND=0
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --to) TO="$2"; shift 2; IS_SEND=1 ;;
+            --msg) MSG="$2"; shift 2; IS_SEND=1 ;;
+            --file) FILE="$2"; shift 2; IS_SEND=1 ;;
+            --caption) CAPTION="$2"; shift 2; IS_SEND=1 ;;
+            *) COMMAND+=("$1"); shift ;;
+        esac
+    done
+
+    # Handle Sending Operations
+    if [ $IS_SEND -eq 1 ]; then
+        if [ -z "$TO" ]; then
+            echo "❌ Error: --to is required for sending."
+            return 1
+        fi
+        
+        if [ -n "$FILE" ]; then
+            if [ -n "$CAPTION" ]; then
+                wacli send file --to "$TO" --file "$FILE" --caption "$CAPTION" --pick 1
+            else
+                wacli send file --to "$TO" --file "$FILE" --pick 1
+            fi
+        elif [ -n "$MSG" ]; then
+            wacli send text --to "$TO" --message "$MSG" --pick 1
+        else
+            echo "❌ Error: Must provide --msg or --file."
+            return 1
+        fi
+    else
+        # Handle regular commands (chats, groups, doctor, etc.)
+        wacli "${COMMAND[@]}"
+    fi
+}

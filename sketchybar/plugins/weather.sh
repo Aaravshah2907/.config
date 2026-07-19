@@ -1,6 +1,7 @@
 #!/bin/bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 source "$HOME/.local/bin/cosmere_colors.sh"
+source "$HOME/.config/shell/functions.sh"
 
 # Fetch detailed weather data: condition, temperature, humidity, wind, feels-like
 WEATHER_DATA=$(curl -s "wttr.in/?format=%C+%t+%h+%w+%f")
@@ -70,4 +71,14 @@ if echo "$LOWER" | grep -iq "storm"; then
   fi
 else
   rm -f /tmp/syl_storm_warn
+fi
+
+# WhatsApp Notify on extreme weather (Storm, Rain, Snow, Blizzard)
+if echo "$LOWER" | grep -iqE "storm|rain|snow|blizzard"; then
+  if [ ! -f "/tmp/wacli_weather_warn" ]; then
+    alert "🌧️ Weather Alert: Expect $CONDITION today! ($HUMIDITY humidity, $WIND wind)" &
+    touch /tmp/wacli_weather_warn
+  fi
+else
+  rm -f /tmp/wacli_weather_warn
 fi

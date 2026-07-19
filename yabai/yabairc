@@ -84,3 +84,7 @@ yabai -m signal --add event=window_destroyed action="sketchybar --trigger app_sw
 
 echo "YABAI LOADED" > /tmp/yabai.log
 
+# Alert on reload — useful when yabai crashes and auto-restarts
+source "$HOME/.config/shell/functions.sh"
+alert "🪟 Yabai reloaded at $(date '+%H:%M:%S') — window manager is back." &
+

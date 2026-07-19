@@ -70,3 +70,28 @@ sketchybar --set system \
   icon="$STORM_ICON" \
   icon.color="$STORM_COLOR" \
   label.drawing=off
+
+# --- System Health WhatsApp Alerts ---
+source "$HOME/.config/shell/functions.sh"
+
+# Disk space alert (warn if free space drops below 50%)
+DISK_USED_PCT=$(df / | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
+DISK_FREE_PCT=$((100 - DISK_USED_PCT))
+if [ "$DISK_FREE_PCT" -le 50 ]; then
+  if [ ! -f "/tmp/wacli_disk_warn" ]; then
+    alert "💾 Disk Space Warning: Only ${DISK_FREE_PCT}% free remaining on your Mac! Time to clean up." &
+    touch /tmp/wacli_disk_warn
+  fi
+else
+  rm -f /tmp/wacli_disk_warn
+fi
+
+# Memory pressure alert (warn if RAM usage >90%)
+if [ "$USED_PCT" -gt 90 ]; then
+  if [ ! -f "/tmp/wacli_ram_warn" ]; then
+    alert "🧠 Memory Alert: RAM at ${USED_PCT}% — your Mac is under heavy pressure!" &
+    touch /tmp/wacli_ram_warn
+  fi
+else
+  rm -f /tmp/wacli_ram_warn
+fi

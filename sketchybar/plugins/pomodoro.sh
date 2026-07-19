@@ -1,5 +1,6 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+source "$HOME/.config/shell/functions.sh"
 
 STATE_FILE="/tmp/sketchybar_pomodoro.state"
 
@@ -29,6 +30,7 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
     if [ $REMAINING -le 0 ]; then
       # Timer done! Animation and sound
       rm "$STATE_FILE"
+      alert "🍅 Pomodoro completed! Time to take a short break." &
       afplay /System/Library/Sounds/Glass.aiff &
       sleep 1
       afplay /System/Library/Sounds/Glass.aiff &

@@ -76,7 +76,13 @@ return {
 			end
 			-- Save first, then run in a horizontal split terminal
 			vim.cmd("w")
-			vim.cmd("belowright 15split | terminal " .. cmd)
+			local fname = vim.fn.expand("%:t")
+			-- Alert via WhatsApp/Ntfy if run takes longer than 15 seconds
+			local timed_cmd = string.format(
+				"_start=$(date +%%s); %s; _end=$(date +%%s); _dur=$((_end-_start)); if [ $_dur -gt 15 ]; then source ~/.config/shell/functions.sh && alert \"✅ Neovim: '%s' finished in ${_dur}s.\"; fi",
+				cmd, fname
+			)
+			vim.cmd("belowright 15split | terminal " .. timed_cmd)
 			vim.cmd("startinsert")
 		end, { desc = "Run: Current file" })
 
@@ -118,7 +124,13 @@ return {
 			end
 
 			vim.cmd("w")
-			vim.cmd("belowright 15split | terminal " .. cmd)
+			local fname = vim.fn.expand("%:t")
+			-- Alert only if run takes longer than 15 seconds (skip for quick CP runs)
+			local timed_cmd = string.format(
+				"_start=$(date +%%s); %s; _end=$(date +%%s); _dur=$((_end-_start)); if [ $_dur -gt 15 ]; then source ~/.config/shell/functions.sh && alert \"✅ Neovim: '%s' finished in ${_dur}s.\"; fi",
+				cmd, fname
+			)
+			vim.cmd("belowright 15split | terminal " .. timed_cmd)
 			vim.cmd("startinsert")
 		end, { desc = "Run: With input.txt" })
 

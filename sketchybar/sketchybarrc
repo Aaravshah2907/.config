@@ -172,7 +172,7 @@ sketchybar --add item control_center right \
 # GitHub Notification
 sketchybar --add item github right \
            --set github update_freq=300 \
-                        icon= \
+                        icon= \
                         icon.color=$WHITE \
                         label.drawing=off \
                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/github.sh" \
@@ -181,6 +181,39 @@ sketchybar --add item github right \
   \
            --add item github.notifications popup.github \
            --set github.notifications icon=󰂚 label="No token"
+
+# Ntfy.sh Notifications: Windspren Whispers
+sketchybar --add item ntfy right \
+           --set ntfy update_freq=60 \
+                       icon=󰵙 \
+                       icon.color=$PRES_MIST \
+                       label.drawing=off \
+                       drawing=off \
+                       script="$PLUGIN_DIR/ntfy.sh" \
+                       popup.align=right \
+                       popup.y_offset=12 \
+           --subscribe ntfy mouse.entered mouse.exited mouse.clicked \
+  \
+           --add item ntfy.header popup.ntfy \
+           --set ntfy.header \
+                   icon=󰵙 \
+                   icon.color=$NOTIF_ACCENT \
+                   label="WINDSPREN WHISPERS" \
+                   label.font="JetBrainsMono Nerd Font:Bold:13.0" \
+                   label.color=$NOTIF_ACCENT \
+  \
+           --add item ntfy.msg1 popup.ntfy \
+           --add item ntfy.msg2 popup.ntfy \
+           --add item ntfy.msg3 popup.ntfy \
+           --add item ntfy.msg4 popup.ntfy \
+           --add item ntfy.msg5 popup.ntfy \
+  \
+           --add item ntfy.hint popup.ntfy \
+           --set ntfy.hint \
+                   icon.drawing=off \
+                   label="Click icon to mark all read" \
+                   label.font="JetBrainsMono Nerd Font:Bold:11.0" \
+                   label.color=$PRES_MIST
 
 # Slack Notifications: Cryptic Whispers
 sketchybar --add item slack right \
@@ -391,7 +424,7 @@ sketchybar --add item cpkb right \
 # Reorder right items logically (first is rightmost)
 #sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
 
-sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack github utilities clock
+sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack ntfy github utilities clock
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change

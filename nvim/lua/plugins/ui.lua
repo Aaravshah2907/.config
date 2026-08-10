@@ -204,29 +204,46 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
-		opts = {
-			preset = "modern",
-			window = {
-				border = "single", -- Cosmere themed sharp borders
-			},
-			spec = {
+		config = function()
+			local wk = require("which-key")
+			wk.setup({
+				preset = "modern",
+				win = {
+					border = "single", -- Cosmere themed sharp borders
+				},
+				plugins = {
+					spelling = { enabled = true },
+				},
+			})
+			wk.add({
 				{ "<leader>b", group = "Buffer" },
 				{ "<leader>c", group = "Code" },
-				{ "<leader>g", group = "Git" },
-				{ "<leader>s", group = "Search/Sort" },
+				{ "<leader>d", group = "Debug" },
 				{ "<leader>f", group = "Find/File" },
+				{ "<leader>g", group = "Git" },
+				{ "<leader>n", group = "Notifications" },
+				{ "<leader>o", group = "Obsidian" },
+				{ "<leader>r", group = "Run" },
+				{ "<leader>s", group = "Search/Sort" },
 				{ "<leader>t", group = "Toggle/Terminal" },
-			},
-		},
-		keys = {
-			{
-				"<leader>wk",
-				function()
-					require("which-key").show()
-				end,
-				desc = "Show All Keymaps (Which-Key)",
-			},
-		},
+				{ "<leader>u", group = "UI / Toggles" },
+				{ "<leader>w", group = "Workspace" },
+				{ "<leader>x", group = "Trouble" },
+				{ "<leader>z", desc = "Zen Mode" },
+				{ "<leader>c", group = "Code", mode = "v" },
+				{ "<leader>d", group = "Debug", mode = "v" },
+				{ "<leader>g", group = "Git", mode = "v" },
+				{ "<leader>s", group = "Surround", mode = "v" },
+				{ "<leader>p", desc = "Paste (keep clipboard)", mode = "v" },
+				{
+					"<leader>wk",
+					function()
+						require("which-key").show()
+					end,
+					desc = "Show All Keymaps (Which-Key)",
+				},
+			})
+		end,
 	},
 
 	-- ---------------------------------------------------------------------------
@@ -252,6 +269,10 @@ return {
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		event = { "BufReadPost", "BufNewFile" },
+		keys = {
+			{ "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
+			{ "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+		},
 		opts = {
 			colors = {
 				error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
@@ -260,6 +281,20 @@ return {
 				hint = { "DiagnosticHint", "#10B981" },
 				default = { "Identifier", "#C3AEE8" }, -- Elsecaller Purple for default
 				test = { "Identifier", "#FF00FF" }
+			},
+		},
+	},
+
+	-- ---------------------------------------------------------------------------
+	-- Colorizer: Show hex colors visually
+	-- ---------------------------------------------------------------------------
+	{
+		"NvChad/nvim-colorizer.lua",
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {
+			user_default_options = {
+				css = true,
+				tailwind = true,
 			},
 		},
 	},
@@ -320,27 +355,43 @@ return {
 		lazy = false,
 		opts = {
 			dashboard = {
+				pane_gap = 4, -- Space between columns
+				width = 45, -- Optimize width for two panes
 				sections = {
-					{ section = "header" },
-					{ section = "keys", gap = 1, padding = 1 },
-					{ section = "startup" },
+					{
+						pane = 1,
+						section = "keys", gap = 1, padding = 1,
+					},
+					{
+						pane = 2,
+						padding = 1,
+						text = {
+							-- Sleek Neovim text art
+							{ [[              _   __               _         ]].."\n", hl = "SnacksHeaderGradient1" },
+							{ [[             / | / /__  ____ _   _(_)____ ___]].."\n", hl = "SnacksHeaderGradient2" },
+							{ [[            /  |/ / _ \/ __ \ | / / / __ `__ \]].."\n", hl = "SnacksHeaderGradient3" },
+							{ [[           / /|  /  __/ /_/ / |/ / / / / / / /]].."\n", hl = "SnacksHeaderGradient4" },
+							{ [[          /_/ |_/\___/\____/|___/_/_/ /_/ /_/]].."\n", hl = "SnacksHeaderGradient5" },
+							{ "\n", hl = "SnacksHeaderGradient6" },
+							{ [[                     Windrunner             ]].."\n", hl = "SnacksHeaderGradient7" },
+						},
+					},
+					{
+						pane = 2,
+						section = "startup", padding = 1,
+					},
 				},
 				preset = {
-					header = [[
-                                                                     
-       ████ ██████           █████      ██                     
-      ███████████             █████                             
-      █████████ ███████████████████ ███   ███████████   
-     █████████  ███    █████████████ █████ ██████████████   
-    █████████ ██████████ █████████ █████ █████ ████ █████   
-  ███████████ ███    ███ █████████ █████ █████ ████ █████  
- ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
 					keys = {
 						{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
 						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
 						{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
 						{ icon = " ", key = "c", desc = "Config", action = ":lua require('yazi').yazi({}, vim.fn.stdpath('config'))" },
+						{ icon = " ", key = "s", desc = "Restore Session", action = ":lua require('persistence').load()" },
+						{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy" },
+						{ icon = "󱌣 ", key = "M", desc = "Mason", action = ":Mason" },
+						{ icon = " ", key = "C", desc = "Cheatsheet", action = ":e ~/nvim_cheatsheet.md" },
 						{ icon = " ", key = "e", desc = "Open Yazi", action = ":Yazi" },
 						{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
 					},
@@ -365,11 +416,38 @@ return {
 			{ "<leader>t", function() Snacks.terminal() end, desc = "[T]oggle Terminal" },
 			{ "<leader>gg", function() Snacks.lazygit() end, desc = "[G]it [G]ui (Lazygit)" },
 			{ "<leader>gb", function() Snacks.gitbrowse() end, desc = "[G]it [B]rowse" },
+			{ "<leader>gl", function() Snacks.picker.git_log() end, desc = "[G]it [L]og" },
+			{ "<leader>gS", function() Snacks.picker.git_status() end, desc = "[G]it [S]tatus" },
 			{ "<leader>z", function() Snacks.zen() end, desc = "[Z]en Mode" },
 			{ "<leader>d", function() Snacks.dim() end, desc = "[D]im Mode" },
 			{ "<leader>.", function() Snacks.scratch() end, desc = "[.] Scratch Buffer" },
 			{ "<leader>bd", function() Snacks.bufdelete() end, desc = "[B]uffer [D]elete" },
 			{ "<leader>rn", function() Snacks.rename.rename_file() end, desc = "[R]e[N]ame File" },
+			{ "<leader>nh", function() Snacks.notifier.show_history() end, desc = "[N]otification [H]istory" },
+			
+			-- Toggles
+			{ "<leader>uw", function() Snacks.toggle.line_wrap():toggle() end, desc = "Toggle [W]rap" },
+			{ "<leader>us", function() Snacks.toggle.spell():toggle() end, desc = "Toggle [S]pelling" },
+			{ "<leader>ud", function() Snacks.toggle.diagnostics():toggle() end, desc = "Toggle [D]iagnostics" },
+			{ "<leader>un", function() Snacks.toggle.line_number():toggle() end, desc = "Toggle Line [N]umber" },
 		},
+		config = function(_, opts)
+			local gradient = {
+				"#001f3f", "#003366", "#004080", "#0059b3", 
+				"#0073e6", "#008cff", "#33a6ff", "#66c0ff"
+			}
+			local function apply_gradient()
+				for i, color in ipairs(gradient) do
+					vim.api.nvim_set_hl(0, "SnacksHeaderGradient" .. i, { fg = color, bold = true })
+				end
+			end
+			-- Apply immediately
+			apply_gradient()
+			-- Re-apply when colorscheme changes
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				callback = apply_gradient,
+			})
+			require("snacks").setup(opts)
+		end,
 	},
 }

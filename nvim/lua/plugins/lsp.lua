@@ -134,6 +134,21 @@ return {
 							},
 						})
 					end,
+
+					-- Special config for C++ (clangd)
+					["clangd"] = function()
+						lspconfig.clangd.setup({
+							on_attach = on_attach,
+							capabilities = capabilities,
+							cmd = {
+								"clangd",
+								"--background-index",
+								"--clang-tidy",
+								"--completion-style=detailed",
+								"--fallback-style=llvm",
+							},
+						})
+					end,
 				},
 			})
 

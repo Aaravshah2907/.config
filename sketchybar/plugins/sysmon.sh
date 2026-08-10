@@ -9,7 +9,8 @@ fi
 
 if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
   # Calculate CPU, RAM and Disk usage
-  CPU_RAW=$(ps -A -o %cpu | awk '{s+=$1} END {printf("%.1f\n", s)}')
+  CORES=$(sysctl -n hw.ncpu)
+  CPU_RAW=$(ps -A -o %cpu | awk -v cores="$CORES" '{s+=$1} END {printf("%.1f\n", s/cores)}')
   RAM_RAW=$(memory_pressure | grep "System-wide memory free percentage:" | awk '{ printf("%02.0f\n", 100-$5) }')
   DISK=$(df -h / | tail -1 | awk '{print $4}')
 
@@ -22,11 +23,14 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
     COLOR=$CRIMSON
     sketchybar --animate sin 15 --set sysmon icon.y_offset=-3
     sketchybar --animate sin 15 --set sysmon icon.y_offset=0
+    sketchybar --animate sin 30 --bar border_color=$RUIN_MAROON
   elif [ "$CPU_INT" -gt 85 ] || [ "$RAM_INT" -gt 85 ]; then
     COLOR=$WARN_COLOR
     sketchybar --set sysmon icon.y_offset=0
+    sketchybar --animate sin 30 --bar border_color=$RUIN_SPIKE
   else
     sketchybar --set sysmon icon.y_offset=0
+    sketchybar --animate sin 30 --bar border_color=$SAPPHIRE_TRANSLUCENT
   fi
 
   sketchybar --set sysmon icon.color=$COLOR \

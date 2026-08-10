@@ -185,6 +185,17 @@ sketchybar --add item bwifi right \
                        script="$PLUGIN_DIR/bwifi.sh" \
            --subscribe bwifi mouse.clicked mouse.entered mouse.exited
 
+# WARP: Preservation Shield (Cloudflare VPN)
+sketchybar --add item warp right \
+           --set warp update_freq=10 \
+                       icon=󰦞 \
+                       icon.color=$RUIN_MAROON \
+                       label.drawing=off \
+                       padding_left=8 \
+                       padding_right=8 \
+                       script="$PLUGIN_DIR/warp.sh" \
+           --subscribe warp mouse.clicked mouse.entered mouse.exited
+
 # GitHub Notification
 sketchybar --add item github right \
            --set github update_freq=300 \
@@ -278,7 +289,7 @@ sketchybar --add item battery right \
                          popup.y_offset=12 \
            --subscribe battery power_source_change system_woke mouse.entered mouse.exited \
   \
-           --add bracket system.pill battery bluetooth control_center \
+            --add bracket system.pill battery bluetooth control_center warp \
            --set system.pill background.color=$BAR_COLOR \
                              background.border_color=$PRES_GLACIAL_TRANSLUCENT \
                              background.border_width=1 \
@@ -480,7 +491,7 @@ sketchybar --add item trash right \
 # Reorder right items logically (first is rightmost)
 #sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
 
-sketchybar --reorder music volume audio_toggle battery bluetooth control_center net_speed bwifi sysmon pomodoro cpkb mic clipboard trash slack ntfy github utilities clock
+sketchybar --reorder music volume audio_toggle battery bluetooth control_center net_speed warp bwifi sysmon pomodoro cpkb mic clipboard trash slack ntfy github utilities clock
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change

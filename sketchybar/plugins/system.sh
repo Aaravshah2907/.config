@@ -27,7 +27,8 @@ else
 fi
 
 # CPU usage detection (average across cores)
-CPU_PCT=$(ps -A -o %cpu | awk '{sum+=$1} END {print int(sum/NR)}')
+CORES=$(sysctl -n hw.ncpu)
+CPU_PCT=$(ps -A -o %cpu | awk -v cores="$CORES" '{sum+=$1} END {print int(sum/cores)}')
 if [ -z "$CPU_PCT" ]; then CPU_PCT=0; fi
 
 # Set CPU color based on usage — Ruin's influence grows with heat

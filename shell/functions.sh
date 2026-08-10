@@ -146,3 +146,72 @@ wa() {
         wacli "${COMMAND[@]}"
     fi
 }
+
+# --- Tailscale Ntfy Toggles ---
+tailon() {
+    local secrets_file="$HOME/.local/share/alert-secrets.sh"
+    if [ -f "$secrets_file" ]; then
+        . "$secrets_file"
+    fi
+    if [ -z "$ALERT_NTFY_TOPIC" ]; then
+        echo "tailon: missing ALERT_NTFY_TOPIC in $secrets_file" >&2
+        return 1
+    fi
+    curl -d "Tailscale On" "https://ntfy.sh/$ALERT_NTFY_TOPIC"
+}
+
+tailoff() {
+    local secrets_file="$HOME/.local/share/alert-secrets.sh"
+    if [ -f "$secrets_file" ]; then
+        . "$secrets_file"
+    fi
+    if [ -z "$ALERT_NTFY_TOPIC" ]; then
+        echo "tailoff: missing ALERT_NTFY_TOPIC in $secrets_file" >&2
+        return 1
+    fi
+    curl -d "Tailscale Off" "https://ntfy.sh/$ALERT_NTFY_TOPIC"
+}
+
+# --- Scrcpy over Tailscale Workflow ---
+phonedis() {
+    local secrets_file="$HOME/.local/share/alert-secrets.sh"
+    if [ -f "$secrets_file" ]; then
+        . "$secrets_file"
+    fi
+    
+    if [ -z "$ALERT_PHONE_TS_IP" ]; then
+        echo "❌ phonedis: missing ALERT_PHONE_TS_IP in $secrets_file." >&2
+        echo "Please add 'export ALERT_PHONE_TS_IP=\"100.x.x.x\"' to that file!" >&2
+        return 1
+    fi
+
+    # Use port from secrets file, or default to 5555
+    local port="${ALERT_PHONE_TS_PORT:-5555}"
+
+    echo "🌐 Ensuring Tailscale is running on Mac..."
+    # Launch the app hidden in the background to ensure the daemon is alive
+    open -j -a Tailscale 2>/dev/null
+    sleep 1
+    # Try standard CLI path, fallback to Mac App Store CLI path
+    tailscale up 2>/dev/null || /Applications/Tailscale.app/Contents/MacOS/Tailscale up 2>/dev/null
+
+    echo "📱 Sending 'Tailscale On' trigger to Pixel..."
+    tailon
+    
+    echo "⏳ Waiting 4 seconds for phone to establish VPN connection..."
+    sleep 4
+    
+    echo "🔗 Connecting ADB on port $port..."
+    adb connect "$ALERT_PHONE_TS_IP:$port"
+    
+    echo "📺 Launching scrcpy..."
+    scrcpy
+    
+    echo "🧹 Scrcpy closed. Cleaning up connections..."
+    adb disconnect "$ALERT_PHONE_TS_IP:$port"
+    
+    echo "📱 Sending 'Tailscale Off' trigger to Pixel..."
+    tailoff
+    
+    echo "✅ Done."
+}

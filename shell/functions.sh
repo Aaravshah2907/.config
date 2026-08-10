@@ -204,6 +204,44 @@ phonedis() {
     echo "🔗 Connecting ADB on port $port..."
     adb connect "$ALERT_PHONE_TS_IP:$port"
     
+    # Check if device is actually connected and online
+    if ! adb devices | grep -q "$ALERT_PHONE_TS_IP:$port.*device"; then
+        echo "⚠️ ADB wireless connection failed or device is offline."
+        
+        # Check for locally attached USB device (ignores network devices with ':')
+        local usb_dev
+        usb_dev=$(adb devices | awk 'NR>1 && $2=="device" && $1 !~ /:/ {print $1}' | head -n 1)
+        
+        if [ -n "$usb_dev" ]; then
+            echo "🔌 USB device ($usb_dev) detected. Setting up wireless ADB..."
+            adb -s "$usb_dev" tcpip "$port"
+            echo "⏳ Waiting for ADB daemon to restart..."
+            sleep 4
+            echo "🔗 Retrying ADB connection..."
+            adb connect "$ALERT_PHONE_TS_IP:$port"
+        fi
+        
+        # Verify connection again
+        if ! adb devices | grep -q "$ALERT_PHONE_TS_IP:$port.*device"; then
+            echo "❌ Wireless connection could not be established."
+            echo ""
+            echo "If your phone was recently restarted, wireless ADB has been disabled."
+            echo "Please follow these steps to reconnect:"
+            echo "  1. Connect your Android phone to this Mac via a USB cable."
+            echo "  2. Ensure your phone is unlocked and 'USB debugging' is authorized."
+            echo "  3. Open your terminal and run:"
+            echo "       adb tcpip $port"
+            echo "  4. Disconnect the USB cable."
+            echo "  5. Run 'phonedis' again."
+            echo ""
+            echo "🧹 Cleaning up connections..."
+            adb disconnect "$ALERT_PHONE_TS_IP:$port" >/dev/null 2>&1
+            echo "📱 Sending 'Tailscale Off' trigger to Pixel..."
+            tailoff
+            return 1
+        fi
+    fi
+    
     echo "📺 Launching scrcpy..."
     scrcpy
     

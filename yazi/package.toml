@@ -28,6 +28,11 @@ use = "AminurAlam/yazi-plugins:spot-video"
 rev = "6206bae"
 hash = "1e3ea3fe62450615ceca63910c9b629b"
 
+[[plugin.deps]]
+use = "pakhromov/localsend"
+rev = "900aa77"
+hash = "25f91b7dc5282ed65a94e1be02ee6265"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"
 rev = "0f9204b"

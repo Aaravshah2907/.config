@@ -248,6 +248,11 @@ keymap = [
 	#{ on   = [ "b", "a" ], run  = "plugin mactag add", desc = "Tag selected files"},
 	#{ on   = [ "b", "r" ], run  = "plugin mactag remove", desc = "Untag selected files"},
 	
+	# Share / Send files
+	{ on = [ "e", "l" ], run = "plugin localsend-dashboard", desc = "LocalSend (Send/Receive)" },
+	{ on = [ "e", "a" ], run = '''shell 'osascript -e "set fileAlias to POSIX file \"%1\" as alias" -e "tell application \"Finder\" to reveal fileAlias" -e "tell application \"System Events\" to keystroke \"R\" using {command down, shift down}"' ''', desc = "Share selected file via AirDrop (macOS)" },
+	{ on = [ "e", "n" ], run = 'shell "open -a NearDrop %*" --block', desc = "Share selected files via NearDrop" },
+
 	# Tasks
 	{ on = "w", run = "tasks:show", desc = "Show task manager" },
 

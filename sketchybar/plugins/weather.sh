@@ -21,34 +21,38 @@ WIND=$(curl -s "wttr.in/?format=%w")
 # Cosmere weather color mapping with condition-specific icons
 LOWER=$(echo "$RAW_CONDITION" | tr '[:upper:]' '[:lower:]')
 
-if [[ "$LOWER" == *"storm"* ]] || [[ "$LOWER" == *"thunder"* ]]; then
+if [[ "$LOWER" == *"thunder"* ]] || [[ "$LOWER" == *"storm"* ]]; then
   CONDITION="Storm"
-  COLOR="$DEEP_SAPPHIRE"
+  COLOR="$VIOLET"
   CONDITION_ICON=""
+elif [[ "$LOWER" == *"snow"* ]] || [[ "$LOWER" == *"blizzard"* ]] || [[ "$LOWER" == *"ice"* ]] || [[ "$LOWER" == *"hail"* ]]; then
+  CONDITION="Snow"
+  COLOR="$PRES_MIST"
+  CONDITION_ICON=""
 elif [[ "$LOWER" == *"rain"* ]] || [[ "$LOWER" == *"drizzle"* ]] || [[ "$LOWER" == *"shower"* ]]; then
   CONDITION="Rain"
   COLOR="$PRES_GLACIAL"
   CONDITION_ICON=""
-elif [[ "$LOWER" == *"snow"* ]] || [[ "$LOWER" == *"ice"* ]] || [[ "$LOWER" == *"sleet"* ]] || [[ "$LOWER" == *"blizzard"* ]]; then
-  CONDITION="Snow"
+elif [[ "$LOWER" == *"fog"* ]] || [[ "$LOWER" == *"mist"* ]] || [[ "$LOWER" == *"haze"* ]]; then
+  CONDITION="Fog"
+  COLOR="$SPREN_LOGIC"
+  CONDITION_ICON=""
+elif [[ "$LOWER" == *"clear"* ]] || [[ "$LOWER" == *"sunny"* ]]; then
+  CONDITION="Clear"
+  COLOR="$SPREN_GLORY"
+  CONDITION_ICON=""
+elif [[ "$LOWER" == *"partly cloudy"* ]]; then
+  CONDITION="Partly Cloudy"
   COLOR="$PRES_SILVER"
-  CONDITION_ICON=""
+  CONDITION_ICON=""
+elif [[ "$LOWER" == *"cloud"* ]] || [[ "$LOWER" == *"overcast"* ]]; then
+  CONDITION="Cloudy"
+  COLOR="$SLATE"
+  CONDITION_ICON=""
 elif [[ "$LOWER" == *"dust"* ]] || [[ "$LOWER" == *"sand"* ]] || [[ "$LOWER" == *"smoke"* ]]; then
   CONDITION="Dust"
   COLOR="$SPREN_PEAK"
   CONDITION_ICON=""
-elif [[ "$LOWER" == *"clear"* ]] || [[ "$LOWER" == *"sunny"* ]]; then
-  CONDITION="Clear"
-  COLOR="$SPREN_SIBLING"
-  CONDITION_ICON=""
-elif [[ "$LOWER" == *"cloud"* ]] || [[ "$LOWER" == *"overcast"* ]]; then
-  CONDITION="Cloudy"
-  COLOR="$RUIN_ASH"
-  CONDITION_ICON=""
-elif [[ "$LOWER" == *"mist"* ]] || [[ "$LOWER" == *"fog"* ]] || [[ "$LOWER" == *"haze"* ]]; then
-  CONDITION="Mist"
-  COLOR="$PRES_MIST"
-  CONDITION_ICON=""
 else
   CONDITION="$RAW_CONDITION"
   COLOR="$WHITE"

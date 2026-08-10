@@ -51,7 +51,12 @@ sketchybar --add item apple left \
     --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$FRONTAPP_ACCENT icon.color=$FRONTAPP_ACCENT \
     --subscribe front_app front_app_switched \
   \
-  --add bracket apple.pill apple front_app \
+  --add item guilt left \
+    --set guilt update_freq=5 \
+                drawing=off \
+                script="$PLUGIN_DIR/guilt.sh" \
+  \
+  --add bracket apple.pill apple front_app guilt \
   --set apple.pill background.color=$BAR_COLOR \
                    background.border_color=$SPREN_HIGH_T \
                    background.border_width=1 \
@@ -168,6 +173,17 @@ sketchybar --add item control_center right \
   \
            --add item net_speed right \
            --set net_speed update_freq=2 script="$PLUGIN_DIR/net_speed.sh" drawing=off
+
+# BWifi: Oathgate Portal (University Auto-Login)
+sketchybar --add item bwifi right \
+           --set bwifi icon=󰛳 \
+                       icon.color=$SPREN_INK \
+                       icon.font="Hack Nerd Font:Bold:18.0" \
+                       label.drawing=off \
+                       padding_left=8 \
+                       padding_right=8 \
+                       script="$PLUGIN_DIR/bwifi.sh" \
+           --subscribe bwifi mouse.clicked mouse.entered mouse.exited
 
 # GitHub Notification
 sketchybar --add item github right \
@@ -287,7 +303,15 @@ sketchybar --add item clock right \
     --set clock.header icon=󰃤 label="CHRONICLES" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$CLOCK_ACCENT icon.color=$CLOCK_ACCENT \
   \
   --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
-  --add item clock.events popup.clock --set clock.events label="Destiny" \
+  --add item clock.events popup.clock --set clock.events label="" drawing=off \
+  --add item clock.event.1 popup.clock --set clock.event.1 label="Loading..." drawing=on \
+  --add item clock.event.2 popup.clock --set clock.event.2 label="" drawing=off \
+  --add item clock.event.3 popup.clock --set clock.event.3 label="" drawing=off \
+  --add item clock.event.4 popup.clock --set clock.event.4 label="" drawing=off \
+  --add item clock.event.5 popup.clock --set clock.event.5 label="" drawing=off \
+  --add item clock.event.6 popup.clock --set clock.event.6 label="" drawing=off \
+  --add item clock.event.7 popup.clock --set clock.event.7 label="" drawing=off \
+  --add item clock.event.8 popup.clock --set clock.event.8 label="" drawing=off \
   --add item clock.weather1 popup.clock --set clock.weather1 icon= script="$PLUGIN_DIR/weather.sh" \
   --add item clock.temperature popup.clock --set clock.temperature icon= script="$PLUGIN_DIR/weatherTemp.sh"
 
@@ -421,10 +445,42 @@ sketchybar --add item cpkb right \
                       script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/cpkb_plugin.sh" \
            --subscribe cpkb mouse.clicked mouse.entered mouse.exited
 
+# Microphone Toggle
+sketchybar --add item mic right \
+           --set mic update_freq=3 \
+                     icon=󰍬 \
+                     icon.color=$WARN_COLOR \
+                     label.drawing=off \
+                     script="$PLUGIN_DIR/mic.sh" \
+           --subscribe mic mouse.clicked
+
+# Clipboard Manager (Cmd+Space, Cmd+4)
+sketchybar --add item clipboard right \
+           --set clipboard icon=󰅍 \
+                           icon.color=$PRES_GLACIAL \
+                           label.drawing=off \
+                           click_script="$PLUGIN_DIR/clipboard_click.sh"
+
+# Audio Toggle
+sketchybar --add item audio_toggle right \
+           --set audio_toggle update_freq=5 \
+                              script="$PLUGIN_DIR/audio_toggle.sh" \
+           --subscribe audio_toggle mouse.clicked
+
+# Trash Purger
+sketchybar --add item trash right \
+           --set trash update_freq=60 \
+                       icon=󰩹 \
+                       icon.color=$SPREN_ASH \
+                       label.color=$SPREN_ASH \
+                       drawing=off \
+                       script="$PLUGIN_DIR/trash.sh" \
+           --subscribe trash mouse.clicked
+
 # Reorder right items logically (first is rightmost)
 #sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
 
-sketchybar --reorder music volume battery bluetooth control_center net_speed sysmon pomodoro cpkb slack ntfy github utilities clock
+sketchybar --reorder music volume audio_toggle battery bluetooth control_center net_speed bwifi sysmon pomodoro cpkb mic clipboard trash slack ntfy github utilities clock
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change

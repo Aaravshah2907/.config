@@ -127,7 +127,7 @@ if [[ "$CHARGING" == "" ]]; then
   fi
   # Clean up charging warning lock
   rm -f "/tmp/wacli_batt_95"
-  
+
   # Also trigger the original system notification logic for <=15
   if [ "$PERCENTAGE" -le 15 ] && [ ! -f "/tmp/syl_batt_warn" ]; then
     ya pub plugin --str "syl-notify custom '󰚌 Odium Approaches' 'Aarav, the stormlight is failing... we only have ${PERCENTAGE}% left!'" >/dev/null 2>&1
@@ -136,7 +136,7 @@ if [[ "$CHARGING" == "" ]]; then
 else
   # Clean up discharge warning locks
   rm -f "/tmp/wacli_batt_5" "/tmp/wacli_batt_10" "/tmp/wacli_batt_20" "/tmp/syl_batt_warn"
-  
+
   if [ "$PERCENTAGE" -ge 95 ]; then
     if [ ! -f "/tmp/wacli_batt_95" ]; then
       alert "⚡ Battery charged to ${PERCENTAGE}%. You can unplug now." &

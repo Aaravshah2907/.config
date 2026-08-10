@@ -1,0 +1,249 @@
+2026-07-28T09:32:02.542435Z  INFO herdr::platform::macos: raised server file descriptor soft limit previous=256 target=8192
+2026-07-28T09:32:02.543152Z  INFO herdr::api::server: api server listening path=/Users/aaravshah2975/.config/herdr/herdr.sock
+2026-07-28T09:32:02.543624Z  INFO herdr::app: using pane scrollback configuration pane_scrollback_limit_bytes=10000000
+2026-07-28T09:32:02.563889Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T09:32:02.570422Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=1 rows=24 cols=80 scrollback_limit_bytes=10000000
+2026-07-28T09:32:02.573755Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=1 pid=58758
+2026-07-28T09:32:02.574166Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w1" pane_id=1
+2026-07-28T09:32:02.574177Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-07-28T09:32:02.574200Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:32:02.574237Z  INFO herdr::server::headless: created startup workspace cwd=/Users/aaravshah2975/.config/herdr
+2026-07-28T09:32:02.574398Z  INFO herdr::server::headless: client protocol socket listening path=/Users/aaravshah2975/.config/herdr/herdr-client.sock
+2026-07-28T09:32:02.574439Z  INFO herdr::server::headless: herdr server started api_socket=/Users/aaravshah2975/.config/herdr/herdr.sock client_socket=/Users/aaravshah2975/.config/herdr/herdr-client.sock
+2026-07-28T09:32:02.574851Z  INFO herdr::logging: herdr starting event="app.startup" subsystem="server" outcome="started" pid=58701
+2026-07-28T09:32:02.634384Z  INFO herdr::server::headless: client connected client_id=2 cols=104 rows=28 cell_width_px=0 cell_height_px=0 render_encoding=SemanticFrame
+2026-07-28T09:32:07.579549Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:36:59.009358Z  INFO herdr::logging: api request received event="api.request.start" subsystem="api" outcome="started" request_id="cli:server:reload-config" method="server.reload_config" changes_ui=true
+2026-07-28T09:36:59.013512Z  INFO herdr::logging: api request completed event="api.request.complete" subsystem="api" outcome="ok" request_id="cli:server:reload-config" method="server.reload_config"
+2026-07-28T09:40:18.028427Z  INFO herdr::logging: api request received event="api.request.start" subsystem="api" outcome="started" request_id="cli:server:reload-config" method="server.reload_config" changes_ui=true
+2026-07-28T09:40:18.028839Z  INFO herdr::logging: api request completed event="api.request.complete" subsystem="api" outcome="ok" request_id="cli:server:reload-config" method="server.reload_config"
+2026-07-28T09:43:04.121294Z  INFO herdr::logging: api request received event="api.request.start" subsystem="api" outcome="started" request_id="cli:server:reload-config" method="server.reload_config" changes_ui=true
+2026-07-28T09:43:04.121725Z  INFO herdr::logging: api request completed event="api.request.complete" subsystem="api" outcome="ok" request_id="cli:server:reload-config" method="server.reload_config"
+2026-07-28T09:43:53.246197Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=2 rows=27 cols=100 scrollback_limit_bytes=10000000
+2026-07-28T09:43:53.255420Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=2 pid=79104
+2026-07-28T09:44:06.106083Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=3 rows=27 cols=100 scrollback_limit_bytes=10000000
+2026-07-28T09:44:06.110839Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=3 pid=79683
+2026-07-28T09:48:37.791577Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=3 status="ExitStatus { code: 2, signal: None }"
+2026-07-28T09:48:37.792183Z  INFO herdr::pane: pane session terminated pane=3 pid=79683 signal=Hangup
+2026-07-28T09:48:42.797194Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:48:51.437690Z  INFO herdr::server::headless: client detach requested via keybind client_id=2
+2026-07-28T09:48:51.441698Z  INFO herdr::server::headless: client disconnected client_id=2
+2026-07-28T09:48:54.507102Z  INFO herdr::server::headless: client connected client_id=4 cols=104 rows=28 cell_width_px=0 cell_height_px=0 render_encoding=SemanticFrame
+2026-07-28T09:48:59.675723Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=4 rows=27 cols=78 scrollback_limit_bytes=10000000
+2026-07-28T09:48:59.683281Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=4 pid=86418
+2026-07-28T09:51:55.249914Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=5 rows=27 cols=78 scrollback_limit_bytes=10000000
+2026-07-28T09:51:55.255611Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=5 pid=91280
+2026-07-28T09:52:02.390482Z  INFO herdr::app::actions: copied selection to clipboard
+2026-07-28T09:52:41.673741Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:52:42.272650Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:52:42.639539Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:52:42.806591Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:52:45.906710Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-07-28T09:52:45.906937Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:52:50.914351Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:52:57.318279Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=5 status="ExitStatus { code: 2, signal: None }"
+2026-07-28T09:52:57.318952Z  INFO herdr::pane: pane session terminated pane=5 pid=91280 signal=Hangup
+2026-07-28T09:53:00.008737Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=6 rows=27 cols=78 scrollback_limit_bytes=10000000
+2026-07-28T09:53:00.011930Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=6 pid=92684
+2026-07-28T09:53:02.326426Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:54:20.731188Z  INFO herdr::pane: agent changed pane=6 previous_agent=None agent=Some(Antigravity) process=agy pgid=Some(94769)
+2026-07-28T09:54:44.487215Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=7 rows=27 cols=78 scrollback_limit_bytes=10000000
+2026-07-28T09:54:44.493696Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=7 pid=96290
+2026-07-28T09:54:44.494258Z  INFO herdr::logging: tab renamed event="tab.rename" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T09:54:44.494570Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T09:54:49.498682Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:54:51.056426Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:54:56.059390Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:55:43.507528Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T09:55:48.533520Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:55:48.889638Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:55:53.896561Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:56:11.507017Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T09:56:16.524338Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:56:26.095698Z  INFO herdr::logging: api request received event="api.request.start" subsystem="api" outcome="started" request_id="cli:server:reload-config" method="server.reload_config" changes_ui=true
+2026-07-28T09:56:26.096554Z  INFO herdr::logging: api request completed event="api.request.complete" subsystem="api" outcome="ok" request_id="cli:server:reload-config" method="server.reload_config"
+2026-07-28T09:56:30.856782Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T09:56:35.859615Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T09:59:36.653975Z  INFO herdr::logging: api request received event="api.request.start" subsystem="api" outcome="started" request_id="cli:server:reload-config" method="server.reload_config" changes_ui=true
+2026-07-28T09:59:36.654442Z  INFO herdr::logging: api request completed event="api.request.complete" subsystem="api" outcome="ok" request_id="cli:server:reload-config" method="server.reload_config"
+2026-07-28T10:01:13.342506Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T10:01:18.371725Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T10:01:18.458870Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:01:23.481393Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T10:02:02.568681Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T10:14:05.690016Z  INFO herdr::pane: agent changed pane=6 previous_agent=Some(Antigravity) agent=None pgid=Some(92684)
+2026-07-28T10:14:38.756083Z  INFO herdr::logging: workspace renamed event="workspace.rename" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-07-28T10:14:43.041088Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-07-28T10:14:43.041221Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:43.907657Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:44.459891Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:44.640950Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:46.907415Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:47.774562Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T10:14:48.608870Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:50.157728Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T10:14:54.790732Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:14:56.957347Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T10:14:57.908768Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:15:02.916162Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T10:15:29.015028Z  INFO herdr::logging: tab renamed event="tab.rename" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:15:33.491730Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T10:15:34.074732Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:15:38.511914Z  INFO herdr::logging: tab renamed event="tab.rename" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-28T10:15:40.809630Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=6 status="ExitStatus { code: 0, signal: None }"
+2026-07-28T10:15:40.809760Z  INFO herdr::pane: pane session terminated pane=6 pid=92684 signal=Hangup
+2026-07-28T10:15:43.707844Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-28T10:15:48.716132Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-28T10:15:50.056716Z  INFO herdr::server::headless: client detach requested via keybind client_id=4
+2026-07-28T10:15:50.059447Z  INFO herdr::server::headless: client disconnected client_id=4
+2026-07-28T10:32:02.576139Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T11:02:02.534725Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T12:10:38.527203Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T13:29:18.276138Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T14:18:28.442309Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-28T14:59:20.814724Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-29T13:55:58.436396Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-29T13:56:01.491025Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-07-29T13:56:01.491944Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-07-30T00:59:59.497122Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T01:29:59.413470Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T01:59:59.435471Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T02:29:59.324003Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T02:59:59.378607Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T03:29:59.410615Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T03:59:59.403755Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T04:29:59.422914Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T04:59:59.485301Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T05:29:59.527769Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T05:59:59.555436Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T07:25:01.424507Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T07:55:01.444706Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T08:25:12.721965Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T08:55:12.712612Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T09:25:12.689095Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T09:55:12.699314Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T10:25:12.740907Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T10:55:12.761089Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T13:59:02.021848Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T14:29:02.098301Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T15:46:25.233666Z  INFO herdr::server::headless: client connected client_id=6 cols=104 rows=28 cell_width_px=0 cell_height_px=0 render_encoding=SemanticFrame
+2026-07-30T15:46:30.431683Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-30T15:46:34.865149Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-30T15:46:40.514675Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-30T15:46:44.415486Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t2"
+2026-07-30T15:46:49.420114Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/aaravshah2975/.config/herdr/session.json workspaces=1
+2026-07-30T15:47:02.764622Z  INFO herdr::pane: agent changed pane=7 previous_agent=None agent=Some(Antigravity) process=agy pgid=Some(63722)
+2026-07-30T15:48:36.795036Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T15:53:19.208519Z  INFO herdr::pane: agent changed pane=7 previous_agent=Some(Antigravity) agent=None pgid=Some(96290)
+2026-07-30T15:53:28.151851Z  INFO herdr::server::headless: client detach requested via keybind client_id=6
+2026-07-30T15:53:28.154657Z  INFO herdr::server::headless: client disconnected client_id=6
+2026-07-30T16:18:36.801896Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T16:48:36.819475Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T17:18:36.808542Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T17:48:36.806080Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T18:18:36.851567Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T18:48:36.856822Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T19:18:36.828485Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T20:41:53.807396Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T21:26:52.671390Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T21:56:52.708488Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T22:26:52.717712Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T22:56:52.750651Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-30T23:42:32.036835Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T00:12:32.036579Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T00:47:49.768893Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T01:17:49.775954Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T02:04:03.431186Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T02:04:06.469343Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-07-31T02:04:06.473523Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-07-31T02:34:03.445928Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T02:34:06.482623Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-07-31T02:34:06.482740Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-07-31T04:33:15.014459Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T05:03:15.015693Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T05:33:14.993684Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T06:03:14.948649Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T06:33:14.928769Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T07:06:15.211148Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T11:10:12.934022Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T11:42:42.006655Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T12:12:42.032629Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T12:42:42.010524Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T14:14:27.427584Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T14:44:27.415687Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T15:14:27.452481Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T15:44:27.476850Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T16:14:27.482655Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T16:44:27.487276Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T17:14:27.441484Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T17:44:27.493545Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T18:14:27.466064Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-31T18:44:27.494184Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T04:53:22.094757Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T07:11:56.497630Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T07:41:56.443631Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T08:49:42.830073Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T11:20:16.152084Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T11:50:16.157269Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T12:20:16.141244Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T12:50:16.130704Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T15:52:47.919257Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T16:22:47.905397Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T16:52:47.930407Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T17:22:47.910739Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T17:52:47.918320Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T18:22:47.931544Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-01T18:52:47.954511Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T01:22:05.003090Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T03:30:59.458104Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T04:15:58.269116Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T04:45:58.264107Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T05:15:58.239882Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T06:17:07.254160Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T06:47:07.244676Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T06:47:07.357226Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-08-02T06:47:07.433109Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-08-02T07:17:07.250515Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T07:17:10.301233Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-08-02T07:17:10.301311Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-08-02T07:47:07.254946Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T08:22:32.732728Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T08:52:32.760437Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T09:22:32.765539Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T09:52:32.779666Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T10:22:32.819118Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T12:28:37.018823Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T12:58:37.025389Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T13:28:37.026863Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T13:58:36.979281Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T14:49:58.105741Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T15:24:45.061695Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T15:54:45.043581Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T16:24:45.082967Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-02T16:54:45.126533Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T02:40:46.618859Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T03:19:51.884922Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T03:49:51.867613Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T04:19:51.863364Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T04:49:51.901384Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T06:25:23.427198Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T06:55:23.390910Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T07:25:23.394669Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T08:23:44.640009Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T08:53:44.663683Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T09:23:44.684972Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T09:53:44.612093Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T10:33:27.154642Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T11:03:27.202188Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T11:33:27.226762Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T12:12:31.563654Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T12:43:54.912446Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T13:13:54.869714Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T13:43:54.803507Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T14:13:54.761363Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T15:46:37.418811Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T15:46:40.457698Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-08-03T15:46:40.457698Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-08-03T16:19:31.100822Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T16:49:31.075478Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-08-03T17:31:41.224706Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"

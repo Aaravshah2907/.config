@@ -1,0 +1,82 @@
+{
+  "version": 3,
+  "workspaces": [
+    {
+      "id": "w1",
+      "custom_name": "Config Dir",
+      "identity_cwd": "/Users/aaravshah2975/.config/herdr",
+      "public_pane_numbers": {
+        "4": 4,
+        "2": 2,
+        "1": 1,
+        "7": 7
+      },
+      "next_public_pane_number": 8,
+      "public_tab_numbers": [
+        1,
+        2
+      ],
+      "next_public_tab_number": 3,
+      "tabs": [
+        {
+          "custom_name": "Config Dir",
+          "layout": {
+            "Split": {
+              "direction": "Horizontal",
+              "ratio": 0.5,
+              "first": {
+                "Pane": 1
+              },
+              "second": {
+                "Split": {
+                  "direction": "Horizontal",
+                  "ratio": 0.5,
+                  "first": {
+                    "Pane": 2
+                  },
+                  "second": {
+                    "Pane": 4
+                  }
+                }
+              }
+            }
+          },
+          "panes": {
+            "2": {
+              "cwd": "/Users/aaravshah2975/.config/herdr"
+            },
+            "1": {
+              "cwd": "/Users/aaravshah2975/.config/herdr"
+            },
+            "4": {
+              "cwd": "/Users/aaravshah2975/.config/herdr"
+            }
+          },
+          "zoomed": true,
+          "focused": 4,
+          "root_pane": 1
+        },
+        {
+          "custom_name": "File Exploring",
+          "layout": {
+            "Pane": 7
+          },
+          "panes": {
+            "7": {
+              "cwd": "/Users/aaravshah2975/.config"
+            }
+          },
+          "zoomed": false,
+          "focused": 7,
+          "root_pane": 7
+        }
+      ],
+      "active_tab": 1
+    }
+  ],
+  "active": 0,
+  "selected": 0,
+  "sidebar_width": 26,
+  "sidebar_section_split": 0.5,
+  "collapsed_space_keys": []
+}

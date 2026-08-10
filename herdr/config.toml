@@ -1,0 +1,96 @@
+# herdr configuration
+# Cosmere Theme — mapped from sketchybar/cosmere_colors.sh
+
+[theme]
+name = "catppuccin"
+
+# ── Full Cosmere Custom Theme ──
+# Every valid herdr token, mapped to your Stormlight/Scadrial palette
+[theme.custom]
+panel_bg    = "#001a33"  # DEEP_NIGHT — Bar background
+surface0    = "#003366"  # DEEP_SAPPHIRE — Active item backgrounds
+surface1    = "#1A2A3A"  # PRES_DEEP — Popup backgrounds, secondary surfaces
+surface_dim = "#1A0A0A"  # RUIN_OBSIDIAN — Dimmed/inactive surfaces
+overlay0    = "#708090"  # SLATE — Rosharan Stone, subtle overlays
+overlay1    = "#A0AAB5"  # PRES_SILVER — Frosted silver overlay
+text        = "#C8E8F5"  # PRES_MIST — Primary text (icy blue-white)
+subtext0    = "#607D8B"  # SPREN_STORM — Dimmed/secondary text (Stormfather)
+accent      = "#00BFFF"  # SAPPHIRE — Windrunner primary accent
+red         = "#ed8796"  # CRIMSON — Odium's Touch / errors
+green       = "#50fa7b"  # EMERALD — Lifebound / success
+yellow      = "#FFD700"  # HONOR_GOLD — Radiance of the Oaths / warnings
+blue        = "#00A8E8"  # SPREN_HONOR — Honorspren sky blue
+mauve       = "#8989ff"  # VIOLET — Shardblade / Elsecaller
+teal        = "#5DA8CC"  # PRES_GLACIAL — Well of Ascension
+peach       = "#ffb86c"  # AMBER — Lightweaver's Warmth
+
+[terminal]
+shell_mode = "auto"
+new_cwd = "follow"
+
+[keys]
+# Prefix: ctrl+space (aligned with Neovim's <Space> leader)
+prefix = "ctrl+space"
+
+# Split navigation (Neovim <C-h/j/k/l>)
+focus_pane_left = "ctrl+h"
+focus_pane_down = "ctrl+j"
+focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
+
+# Pane management
+split_vertical = "prefix+v"
+split_horizontal = "prefix+minus"
+close_pane = "prefix+x"
+zoom = "prefix+z"
+
+# Tab management (Yazi-style)
+new_tab = "prefix+t"
+close_tab = "prefix+w"
+switch_tab = "ctrl+1..9"
+
+# Navigate-mode movement (Vim/Yazi hjkl)
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"
+
+[ui]
+sidebar_width = 26
+pane_borders = true
+pane_gaps = true
+redraw_on_focus_gained = true
+
+[ui.toast]
+delivery = "herdr"
+
+[ui.toast.herdr]
+position = "bottom-right"
+
+# ─── Custom Floating Popups ───
+
+[[keys.command]]
+key = "prefix+f"
+type = "popup"
+command = "yazi"
+width = "85%"
+height = "85%"
+
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+width = "85%"
+height = "85%"
+
+[[keys.command]]
+key = "prefix+m"
+type = "popup"
+command = "~/.config/radiant-player/dashboard.sh"
+width = "85%"
+height = "85%"
+
+[[keys.command]]
+key = "prefix+i"
+type = "pane"
+command = "~/.local/bin/herdr_welcome.sh"

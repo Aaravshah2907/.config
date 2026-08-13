@@ -80,6 +80,9 @@ sketchybar --set weather.location label="$SHORT_LOC" \
            --set weather.condition label="$CONDITION" icon="$CONDITION_ICON" icon.color="$COLOR" label.color="$COLOR" \
            --set weather.feels label="Feels like $FEELS_LIKE" \
            --set weather.humidity label="$HUMIDITY Humidity" \
+           --set weather.wind label="$WIND Wind" \
+           --set weather.moon label="Phase: $MOON"
+
 # Notify Yazi and WhatsApp on extreme weather (Storm, Rain, Snow, Blizzard)
 if echo "$LOWER" | grep -iqE "storm|rain|snow|blizzard"; then
   if [ ! -f "/tmp/syl_weather_warn" ]; then

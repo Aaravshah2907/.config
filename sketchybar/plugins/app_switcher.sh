@@ -25,8 +25,10 @@ while read -r row; do
   CLEAN_NAME=$(echo "$APP" | sed 's/[^a-zA-Z0-9]//g')
   ITEM_NAME="app.switcher.$CLEAN_NAME"
   
-  # Fetch icon
-  ICON=$("$HOME/.config/sketchybar/plugins/icon_map.sh" "$APP" 2>/dev/null)
+  # Fetch icon using the new icon map function
+  source "$HOME/.config/sketchybar/plugins/icon_map.sh"
+  __icon_map "$APP"
+  ICON="$icon_result"
   [ -z "$ICON" ] && ICON="󰀱"
   
   if [ "$FOCUSED" = "true" ]; then
@@ -42,6 +44,7 @@ while read -r row; do
   ADD_CMD+=(--add item "$ITEM_NAME" left)
   ADD_CMD+=(--set "$ITEM_NAME" \
               icon="$ICON" \
+              icon.font="sketchybar-app-font:Regular:16.0" \
               label.drawing=off \
               icon.color="$COLOR" \
               background.color="$BG_COLOR" \

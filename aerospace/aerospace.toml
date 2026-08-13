@@ -232,23 +232,23 @@ gaps.outer.right =      8
     alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-    alt-shift-semicolon = 'mode service'
+    alt-shift-semicolon = ['mode service', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$HONOR_GOLD"']
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
-    esc = ['reload-config', 'mode main']
-    r = ['flatten-workspace-tree', 'mode main'] # reset layout
-    f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
-    backspace = ['close-all-windows-but-current', 'mode main']
+    esc = ['reload-config', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
+    r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
+    f = ['layout floating tiling', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
+    backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
 
     # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
     #s = ['layout sticky tiling', 'mode main']
 
-    alt-shift-h = ['join-with left', 'mode main']
-    alt-shift-j = ['join-with down', 'mode main']
-    alt-shift-k = ['join-with up', 'mode main']
-    alt-shift-l = ['join-with right', 'mode main']
+    alt-shift-h = ['join-with left', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
+    alt-shift-j = ['join-with down', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
+    alt-shift-k = ['join-with up', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
+    alt-shift-l = ['join-with right', 'mode main', 'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"']
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'iTerm2|iTerm|Terminal|Alacritty|kitty'

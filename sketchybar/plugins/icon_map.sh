@@ -1786,10 +1786,98 @@ function __icon_map() {
 }
 ### END-OF-ICON-MAP
 
+### START-OF-CUSTOM-ICON-MAP (User PWAs / Browser Apps)
+function __icon_map_custom() {
+    case "$1" in
+   "Amazon")
+        icon_result=":default:"
+        ;;
+   "Cashew")
+        icon_result=":dollar:"
+        ;;
+   "Codeforces")
+        icon_result=":code:"
+        ;;
+   "Ellipsus")
+        icon_result=":text:"
+        ;;
+   "Emochi")
+        icon_result=":stickies:"
+        ;;
+   "GitHub" | "GitHub Desktop")
+        icon_result=":git_hub:"
+        ;;
+   "Gmail - AS" | "Gmail" | "gmail")
+        icon_result=":mail:"
+        ;;
+   "Google Calendar" | "gcal")
+        icon_result=":calendar:"
+        ;;
+   "Google Classroom" | "Classroom" | "classroom")
+        icon_result=":book:"
+        ;;
+   "Google Colab" | "Colab")
+        icon_result=":code:"
+        ;;
+   "Google Photos")
+        icon_result=":photos:"
+        ;;
+   "Google Play Books")
+        icon_result=":apple_books:"
+        ;;
+   "LeetCode" | "leetcode")
+        icon_result=":code:"
+        ;;
+   "LinkedIn" | "linkedin")
+        icon_result=":default:"
+        ;;
+   "Microsoft OneDrive" | "OneDrive")
+        icon_result=":onedrive:"
+        ;;
+   "Nalanda")
+        icon_result=":book:"
+        ;;
+   "NotebookLM" | "notebooklm")
+        icon_result=":notes:"
+        ;;
+   "Pinterest" | "pinterest")
+        icon_result=":pinta:"
+        ;;
+   "Reddit" | "reddit")
+        icon_result=":default:"
+        ;;
+   "StudyDeck")
+        icon_result=":book:"
+        ;;
+   "Superset - Careers and Jobs" | "Superset")
+        icon_result=":default:"
+        ;;
+   "takeUforward" | "takeuforward")
+        icon_result=":code:"
+        ;;
+   "Chess - Play & Learn" | "Chess.com" | "chess.com")
+        icon_result=":chess:"
+        ;;
+   "Docs" | "Google Docs")
+        icon_result=":text:"
+        ;;
+   "Find Hub")
+        icon_result=":find_my:"
+        ;;
+   "Sheets" | "Google Sheets")
+        icon_result=":microsoft_excel:"
+        ;;
+   *)
+        return 1
+        ;;
+    esac
+}
+### END-OF-CUSTOM-ICON-MAP
+
 # When executed directly (not sourced), map all arguments and print space-separated results.
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     for app_name in "$@"; do
-        __icon_map "$app_name"
+        __icon_map_custom "$app_name" || __icon_map "$app_name"
         printf '%s ' "$icon_result"
     done
     [[ $# -gt 0 ]] && printf '\n'

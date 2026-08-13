@@ -28,8 +28,8 @@ while read -r row; do
   CLEAN_NAME=$(echo "$APP" | sed 's/[^a-zA-Z0-9]//g')
   ITEM_NAME="app.switcher.$CLEAN_NAME"
   
-  # Fetch icon using sketchybar-app-font
-  __icon_map "$APP"
+  # Fetch icon using sketchybar-app-font (custom overrides first)
+  __icon_map_custom "$APP" || __icon_map "$APP"
   ICON="$icon_result"
   [ -z "$ICON" ] && ICON=":default:"
   

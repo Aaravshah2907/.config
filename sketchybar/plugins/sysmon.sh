@@ -16,6 +16,9 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
 
   CPU_INT=${CPU_RAW%.*}
   RAM_INT=${RAM_RAW}
+  
+  CPU_FRAC=$(awk "BEGIN {print $CPU_INT / 100}")
+  RAM_FRAC=$(awk "BEGIN {print $RAM_INT / 100}")
 
   COLOR=$PRES_GLACIAL
   
@@ -35,6 +38,8 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
 
   sketchybar --set sysmon icon.color=$COLOR \
              --set sysmon.cpu label="CPU: ${CPU_RAW}%" \
+             --push sysmon.cpu $CPU_FRAC \
              --set sysmon.ram label="RAM: ${RAM_RAW}%" \
+             --push sysmon.ram $RAM_FRAC \
              --set sysmon.disk label="Disk: $DISK free"
 fi

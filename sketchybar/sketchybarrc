@@ -429,14 +429,21 @@ sketchybar --add item sysmon right \
                         popup.align=right \
            --subscribe sysmon mouse.entered mouse.exited \
   \
-           --add item sysmon.cpu popup.sysmon \
+           --add graph sysmon.cpu popup.sysmon 120 \
            --set sysmon.cpu icon=󰍛 label="CPU: ..." \
+                            icon.color=$SYS_CPU_COLOR \
+                            graph.color=$SYS_CPU_COLOR \
+                            graph.fill_color=$SYS_CPU_COLOR \
   \
-           --add item sysmon.ram popup.sysmon \
+           --add graph sysmon.ram popup.sysmon 120 \
            --set sysmon.ram icon=󰘚 label="RAM: ..." \
+                            icon.color=$SYS_RAM_COLOR \
+                            graph.color=$SYS_RAM_COLOR \
+                            graph.fill_color=$SYS_RAM_COLOR \
   \
            --add item sysmon.disk popup.sysmon \
-           --set sysmon.disk icon=󰋊 label="Disk: ..."
+           --set sysmon.disk icon=󰋊 label="Disk: ..." \
+                             icon.color=$SYS_DISK_COLOR
 
 # Pomodoro Timer
 sketchybar --add item pomodoro right \

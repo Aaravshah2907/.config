@@ -129,12 +129,16 @@ sketchybar --add bracket spaces.pill "/space\..*/" \
                              background.drawing=on
 
 # Front App Switcher (Current Space Apps)
-sketchybar --add bracket app_switcher '/app\.switcher\..*/' \
-           --set app_switcher background.color=$BAR_COLOR \
-                              background.border_color=$FRONTAPP_ACCENT_T \
-                              background.border_width=1 \
-                              background.corner_radius=10 \
-                              background.drawing=on \
+sketchybar --add item app_switcher_sep left \
+           --set app_switcher_sep icon="│" \
+                                  icon.font="Hack Nerd Font:Bold:12.0" \
+                                  icon.color=$PRES_GLACIAL_TRANSLUCENT \
+                                  label.drawing=off \
+                                  padding_left=2 \
+                                  padding_right=2 \
+  \
+           --add bracket app_switcher '/app\.switcher\..*/' \
+           --set app_switcher background.drawing=off \
   \
            --add item app_switcher_trigger left \
            --set app_switcher_trigger drawing=off \

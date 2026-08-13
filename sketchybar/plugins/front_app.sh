@@ -16,7 +16,7 @@ if [ "$SENDER" = "front_app_switched" ]; then
     *) APP_COLOR=$WHITE ;;
   esac
 
-  /opt/homebrew/bin/sketchybar --set "$NAME" icon="$ICON" label="$INFO" icon.color="$APP_COLOR" label.color="$APP_COLOR"
+  /opt/homebrew/bin/sketchybar --animate sin 15 --set "$NAME" icon="$ICON" label="$INFO" icon.color="$APP_COLOR" label.color="$APP_COLOR"
   # Also update the unified left pill border to match the app!
-  /opt/homebrew/bin/sketchybar --set apple.pill background.border_color="$APP_COLOR"
+  /opt/homebrew/bin/sketchybar --animate sin 15 --set apple.pill background.border_color="$APP_COLOR"
 fi

@@ -20,4 +20,4 @@ case "$VOLUME" in
 esac
 
 # Update slider
-sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" slider.percentage="$VOLUME"
+sketchybar --animate sin 10 --set "$NAME" icon="$ICON" icon.color="$COLOR" slider.percentage="$VOLUME"

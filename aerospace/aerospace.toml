@@ -268,7 +268,7 @@ run = 'move-node-to-workspace M'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Spotify'
-run = 'move-node-to-workspace S'
+run = ['move-node-to-workspace S', 'layout floating']
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Music|VLC|mpv|YouTube|Prime Video|Twitch|Netflix'

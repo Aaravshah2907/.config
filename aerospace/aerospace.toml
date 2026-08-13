@@ -283,7 +283,7 @@ if.app-name-regex-substring = 'Perplexity'
 run = 'move-node-to-workspace A'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'System Settings|Karabiner-Elements|QuickTime Player|Calculator|Finder|Activity Monitor|1Password|Bitwarden|App Store|Dictionary'
+if.app-name-regex-substring = 'System Settings|Karabiner-Elements|QuickTime Player|Calculator|Finder|Activity Monitor|1Password|Bitwarden|App Store|Dictionary|Tot'
 run = 'layout floating'
 
 [[on-window-detected]]

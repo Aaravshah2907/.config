@@ -68,31 +68,42 @@ case "$SPACE" in
   *) SPACE_ICON="" ;;
 esac
 
+if [ "$SENDER" = "mouse.scrolled" ]; then
+  if [ "$SCROLL_DELTA" -gt 0 ]; then
+    yabai -m space --focus next
+  else
+    yabai -m space --focus prev
+  fi
+  exit 0
+fi
+
+SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Misc" "Spotify" "8" "9" "10")
+SPACE_NAME="${SPACE_LABELS[$((SPACE - 1))]}"
+
 # Apply styling smoothly using animation to avoid glitches
 if [ -z "$ICON_STRIP" ]; then
   # Unoccupied Space (Empty)
   if [ "$SELECTED" = "true" ]; then
     # Selected but empty: Show Icon, solid white background
-    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label.drawing=off \
-      icon.color=$BAR_COLOR \
+    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label=" $SPACE_NAME" label.drawing=on \
+      icon.color=$BAR_COLOR label.color=$BAR_COLOR \
       background.drawing=on background.color=$WHITE background.border_width=0 background.corner_radius=8
   else
     # Unoccupied & Unselected: Just a dot, default dimmed color
-    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="•" label.drawing=off \
+    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on icon="•" label.drawing=off \
       icon.color=$PRES_GLACIAL_TRANSLUCENT background.drawing=on background.color=0x00000000
   fi
 else
   # Occupied Space (Apps inside)
   if [ "$SELECTED" = "true" ]; then
     # Selected AND Occupied: Solid space color background
-    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label="$ICON_STRIP" label.drawing=on \
+    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label=" $SPACE_NAME $ICON_STRIP" label.drawing=on \
       icon.color=$BAR_COLOR label.color=$BAR_COLOR \
       background.drawing=on background.color=$SPACE_COLOR background.border_width=0 background.corner_radius=8
   else
     # Occupied but Unselected: Space color, transparent background
-    sketchybar --animate tanh 10 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label="$ICON_STRIP" label.drawing=on \
+    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on icon="$SPACE_ICON" label="$ICON_STRIP" label.drawing=on \
       icon.color=$SPACE_COLOR label.color=$SPACE_COLOR \
       background.drawing=on background.color=0x00000000
   fi
 fi
-

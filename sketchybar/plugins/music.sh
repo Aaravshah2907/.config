@@ -243,5 +243,23 @@ if pgrep -x "VLC" >/dev/null; then
 fi
 
 if [ "$UPDATED" -eq 0 ]; then
+  rm -f /tmp/syl_paused_time
   hide_bar
+fi
+
+# Check if currently paused by looking at the set icon
+CURRENT_ICON=$(sketchybar --query "$NAME" | jq -r '.icon.value')
+if [ "$CURRENT_ICON" = "󰏤" ]; then
+  if [ ! -f /tmp/syl_paused_time ]; then
+    date +%s > /tmp/syl_paused_time
+  fi
+  PAUSED_TIME=$(cat /tmp/syl_paused_time 2>/dev/null || echo 0)
+  CURRENT_TIME=$(date +%s)
+  
+  # Hide after 5 seconds of being paused
+  if [ $((CURRENT_TIME - PAUSED_TIME)) -gt 5 ]; then
+    hide_bar
+  fi
+else
+  rm -f /tmp/syl_paused_time
 fi

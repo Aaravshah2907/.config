@@ -11,11 +11,11 @@ config-version = 2
 after-startup-command = []
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Automatically reload the config when the config file is saved
 # After setting this to true, reload once manually to start the auto-reloading
-auto-reload-config = false
+auto-reload-config = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -27,7 +27,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 accordion-padding = 30
 
 # Possible values: tiles|accordion
-default-root-container-layout = 'tiles'
+default-root-container-layout = 'accordion'
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
@@ -44,15 +44,15 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
-automatically-unhide-macos-hidden-apps = false
+automatically-unhide-macos-hidden-apps = true
 
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
-persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
-                         "C", "D", "E", "F", "G", "I", "M", "N", "O", "P", "Q",
-                         "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+# Active: T(erm) C(ode) B(rowser) M(sg) S(potify) V(ideo) E(du) A(I)
+# Spare:  1-4 for ad-hoc use
+persistent-workspaces = ["1", "2", "3", "4", "A", "B", "C", "E", "M", "S", "T", "V"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -113,11 +113,8 @@ gaps.outer.right =      8
 
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
-    # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
-    # You can uncomment the following lines to open up terminal with alt + enter shortcut
-    # (like in i3)
-    # alt-enter = '''exec-and-forget osascript -e \
-    # 'tell application "Terminal" to tell (do script) to activate' '''
+    # Launch iTerm (i3-style)
+    alt-enter = 'exec-and-forget open -a iTerm'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
@@ -258,15 +255,15 @@ if.app-name-regex-substring = 'iTerm2|iTerm|Terminal|Alacritty|kitty'
 run = 'move-node-to-workspace T'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode|Codeforces'
+if.app-name-regex-substring = 'Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode|Codeforces|LeetCode|takeUforward|Overleaf'
 run = 'move-node-to-workspace C'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'Brave Browser|Google Chrome|Safari|Firefox'
+if.app-name-regex-substring = 'Brave Browser|Google Chrome|Safari|Firefox|Colab|Calendar'
 run = 'move-node-to-workspace B'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'ChatGPT|Gemini|Slack|Discord|WhatsApp'
+if.app-name-regex-substring = 'ChatGPT|Gemini|Slack|Discord|WhatsApp|Gmail|Messages|Instagram|LinkedIn|Reddit|Pinterest|Meet'
 run = 'move-node-to-workspace M'
 
 [[on-window-detected]]
@@ -274,12 +271,19 @@ if.app-name-regex-substring = 'Spotify'
 run = 'move-node-to-workspace S'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'Music|VLC|mpv'
+if.app-name-regex-substring = 'Music|VLC|mpv|YouTube|Prime Video|Twitch|Netflix'
 run = 'move-node-to-workspace V'
 
-# Floating rules for apps that shouldn't be tiled
 [[on-window-detected]]
-if.app-name-regex-substring = 'System Settings|Karabiner-Elements|QuickTime Player|mpv|Calculator'
+if.app-name-regex-substring = 'Classroom|Nalanda|StudyDeck|NotebookLM'
+run = 'move-node-to-workspace E'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Perplexity'
+run = 'move-node-to-workspace A'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'System Settings|Karabiner-Elements|QuickTime Player|Calculator'
 run = 'layout floating'
 
 [[on-window-detected]]

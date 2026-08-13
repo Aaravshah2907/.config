@@ -4,41 +4,35 @@ import os
 import subprocess
 
 SECTIONS = [
-    ("WINDOWS & LAYOUT",[
-        ("⌥ HJKL", "Focus"),
-        ("⌥⇧ HJKL", "Swap"),
-        ("⌥⌃ HJKL", "Warp"),
-        ("⌥ S/G", "Display"),
-        ("⌥⇧ S/G", "Move Display"),
-        ("⌥⇧ R", "Rotate"),
-        ("⌥⇧ X/Y", "Mirror X/Y"),
-        ("⌥⇧ T", "Toggle Float"),
-        ("⌥⇧ M", "Fullscreen"),
-        ("⌥⇧ E", "Balance"),
+    ("FOCUS & MOVE",[
+        ("⌥ HJKL", "Focus Dir"),
+        ("⌥⇧ HJKL", "Move Dir"),
+        ("⌥⌃ HJKL", "Join With Dir"),
+        ("⌥ -/=", "Resize ∓50"),
+        ("⌥ ↩", "iTerm"),
     ]),
-    ("SPACES & SYSTEM",[
-        ("✦ 1-9", "Focus Space"),
-        ("✦⇧ 1-9", "Move to Space"),
-        ("✦ ←/→", "Prev/Next Space"),
-        ("✦ Space", "Toggle Split"),
-        ("✦ Q", "Close Window"),
-        ("⌥⌃ Q/S/R", "Yabai Control"),
-        ("⌥⌃ K", "Reload Bar"),
+    ("LAYOUT & SIZING",[
+        ("⌥ /", "Tiles H/V"),
+        ("⌥ ,", "Accordion H/V"),
+        ("⌃⌥ T", "Float ↔ Tile"),
+        ("⌃⌥ F", "Fullscreen"),
+        ("⌃⌥ E", "Balance Sizes"),
     ]),
-    ("APPS & SCRATCHPAD",[
-        ("✦ T", "iTerm"),
-        ("✦ B", "Brave"),
-        ("✦ O", "Obsidian"),
-        ("✦ F", "Finder"),
-        ("✦ C", "Codeforces"),
-        ("✦ D", "DSA Practice"),
-        ("✦ ↩", "Term Scratch"),
-        ("✦ A", "GPT Scratch"),
-        ("✦ M/S", "Mail/Spotify Scratch"),
-        ("✦ =", "Calc Scratch"),
-        ("✦ ,", "Control Center"),
-        ("✦ P", "VLC Speed"),
-    ])
+    ("WORKSPACES",[
+        ("⌥ 1-9", "Focus Space"),
+        ("⌥ A-Z", "Focus Named"),
+        ("⌥⇧ 1-9", "Move to Space"),
+        ("⌥⇧ A-Z", "Move to Named"),
+        ("⌥ Tab", "Back & Forth"),
+        ("⌥⇧ Tab", "WS → Monitor"),
+    ]),
+    ("CROSS-DISPLAY",[
+        ("⌃⌥ P/N", "Move Prev/Next WS"),
+        ("⌃⌥ S/G", "Move ←/→ Monitor"),
+        ("⌥⇧ ;", "Service Mode"),
+        ("Svc R", "Reset Layout"),
+        ("Svc F", "Float ↔ Tile"),
+    ]),
 ]
 
 def color(name, default):

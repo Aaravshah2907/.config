@@ -21,19 +21,20 @@ else
 fi
 
 # Define Space Colors
-case "$NAME" in
-  space.1) SPACE_COLOR=$SPREN_HONOR;;
-  space.2) SPACE_COLOR=$SPREN_INK;;
-  space.3) SPACE_COLOR=$SPREN_CULTIVATION;;
-  space.4) SPACE_COLOR=$SPREN_SIBLING;;
-  space.5) SPACE_COLOR=$SPREN_ASH;;
-  space.6) SPACE_COLOR=$SPREN_PEAK;;
-  space.7) SPACE_COLOR=$SPREN_WILL;;
-  *)       SPACE_COLOR=$SPACE_ACCENT;;
+case "$SPACE" in
+  1|T) SPACE_COLOR=$SPREN_HONOR;;
+  2|C) SPACE_COLOR=$SPREN_INK;;
+  3|B) SPACE_COLOR=$SPREN_CULTIVATION;;
+  4|M) SPACE_COLOR=$SPREN_SIBLING;;
+  5|V) SPACE_COLOR=$SPREN_ASH;;
+  6|S) SPACE_COLOR=$SPREN_PEAK;;
+  7|E) SPACE_COLOR=$SPREN_WILL;;
+  8|A) SPACE_COLOR=$SPREN_CRYPTIC;;
+  *)   SPACE_COLOR=$SPACE_ACCENT;;
 esac
 
-SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Spotify")
-SPACE_SIDS=("T" "C" "B" "M" "V" "S")
+SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Spotify" "Study" "AI")
+SPACE_SIDS=("T" "C" "B" "M" "V" "S" "E" "A")
 
 IDX=-1
 for i in "${!SPACE_SIDS[@]}"; do

@@ -20,7 +20,7 @@ if [ "$SENDER" = "mouse.clicked" ]; then
 fi
 
 # Fetch detailed weather data
-WEATHER_DATA=$(curl -s "wttr.in/?format=%C|%t|%h|%w|%f|%l|%m" || echo "Error")
+WEATHER_DATA=$(curl -s "wttr.in/Pilani?format=%C|%t|%h|%w|%f|%l|%m" || echo "Error")
 
 if [ -z "$WEATHER_DATA" ] || [[ "$WEATHER_DATA" == *"Error"* ]] || [[ "$WEATHER_DATA" == *"Unknown"* ]]; then
   sketchybar --set weather label="--" icon="?"

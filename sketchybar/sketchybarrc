@@ -9,6 +9,28 @@ sketchybar --add event window_focus \
            --add event app_switcher_update
 
 ##### Core Bar Appearance (Radiant Floating Bar) #####
+
+# Dynamic Notch
+sketchybar --add item notch center \
+           --set notch drawing=off \
+                       background.color=$BAR_COLOR \
+                       background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                       background.border_width=2 \
+                       background.corner_radius=12 \
+                       background.padding_left=0 \
+                       background.padding_right=0 \
+                       background.height=38 \
+                       icon.font="Hack Nerd Font:Bold:18.0" \
+                       icon.color=$WHITE \
+                       label.font="JetBrainsMono Nerd Font:Bold:16.0" \
+                       label.color=$WHITE \
+                       label.padding_left=8 \
+                       label.padding_right=8 \
+                       y_offset=-50 \
+                       topmost=window \
+                       shadow=on
+
+
 sketchybar --bar position=top \
                 height=42 \
                 y_offset=38 \

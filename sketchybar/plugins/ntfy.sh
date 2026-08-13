@@ -132,6 +132,11 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
     # Highlight unread rows using numeric timestamp comparison
     if [ "$MSG_TIME" -gt "$LAST_SEEN_TS" ] 2>/dev/null; then
       ROW_COLOR="$NOTIF_ACCENT"   # Gold — unread
+      
+      if [ ! -f "/tmp/ntfy_notch_$MSG_TIME" ]; then
+         touch "/tmp/ntfy_notch_$MSG_TIME"
+         "$HOME/.config/sketchybar/plugins/notify_notch.sh" "󰵙" "$NOTIF_ACCENT" "$MSG_TEXT"
+      fi
     else
       ROW_COLOR="$WHITE"          # White — already seen
     fi

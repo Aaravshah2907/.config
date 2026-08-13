@@ -19,5 +19,6 @@ case "$VOLUME" in
   *)              ICON="󰖁"; COLOR="$RUIN_MAROON" ;;           # Muted — Ruin silence
 esac
 
-# Update slider
-sketchybar --animate sin 10 --set "$NAME" icon="$ICON" icon.color="$COLOR" slider.percentage="$VOLUME"
+# Update icon and slider separately
+sketchybar --set volume_icon icon="$ICON" icon.color="$COLOR"
+sketchybar --animate sin 10 --set volume slider.percentage="$VOLUME"

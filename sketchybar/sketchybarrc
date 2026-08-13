@@ -67,7 +67,20 @@ sketchybar --add item apple left \
            --set apple icon= \
                         icon.color=$HONOR_GOLD \
                         label.drawing=off \
-                        click_script="$PLUGIN_DIR/reload.sh" \
+                        popup.align=left \
+                        click_script="sketchybar --set apple popup.drawing=toggle" \
+                        script="[ \"\$SENDER\" = \"mouse.exited.global\" ] && sketchybar --set apple popup.drawing=off" \
+           --subscribe apple mouse.exited.global \
+  \
+           --add item apple.lock popup.apple \
+           --set apple.lock icon=󰌾 label="Lock" click_script="pmset displaysleepnow; sketchybar --set apple popup.drawing=off" \
+  \
+           --add item apple.sleep popup.apple \
+           --set apple.sleep icon=󰒲 label="Sleep" click_script="pmset sleepnow; sketchybar --set apple popup.drawing=off" \
+  \
+           --add item apple.restart popup.apple \
+           --set apple.restart icon=󰑓 label="Restart Sketchybar" click_script="$PLUGIN_DIR/reload.sh; sketchybar --set apple popup.drawing=off"
+ \
   \
   --add item front_app left \
     --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$FRONTAPP_ACCENT icon.color=$FRONTAPP_ACCENT click_script="open -a 'Mission Control'" \
@@ -226,6 +239,7 @@ sketchybar --add item github right \
                         icon= \
                         icon.color=$WHITE \
                         label.drawing=off \
+                        drawing=off \
                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/github.sh" \
                         popup.align=right \
            --subscribe github mouse.entered mouse.exited \
@@ -371,20 +385,30 @@ sketchybar --add bracket clock.pill clock \
 
 
 
-# Volume: Resonance
-sketchybar --add slider volume right 100 \
+# Volume Toggle Icon & Slider
+sketchybar --add item volume_icon right \
+           --set volume_icon icon=󰕾 \
+                             icon.color=$SPREN_CULTIVATION \
+                             icon.padding_left=8 \
+                             icon.padding_right=8 \
+                             label.drawing=off \
+                             click_script="$PLUGIN_DIR/volume_toggle.sh" \
+                             script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume_icon volume_change \
+  \
+           --add slider volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
                         slider.background.height=4 \
                         slider.background.corner_radius=2 \
                         slider.background.color=$SPREN_CULTIVATION_T \
                         slider.highlight_color=$SPREN_CULTIVATION \
                         slider.knob.drawing=off \
-                        icon.padding_left=8 \
-                        icon.padding_right=8 \
+                        slider.width=0 \
+                        icon.drawing=off \
                         label.drawing=off \
-           --subscribe volume volume_change mouse.clicked \
+           --subscribe volume mouse.clicked \
   \
-           --add bracket volume.pill volume \
+           --add bracket volume.pill volume_icon volume \
            --set volume.pill background.color=$BAR_COLOR \
                              background.border_color=$SPREN_CULTIVATION_T \
                              background.border_width=1 \
@@ -423,6 +447,7 @@ sketchybar --add item utilities right \
            --set utilities icon=󰔡 \
                            icon.color=$PRES_GLACIAL \
                            label.drawing=off \
+                           drawing=off \
                            script="$PLUGIN_DIR/utilities.sh" \
                            popup.align=right \
            --subscribe utilities mouse.clicked mouse.exited.global \
@@ -453,12 +478,21 @@ sketchybar --add item utilities right \
 #                        icon.color=$WHITE \
 #                        label.drawing=off
 
+# Drawer
+sketchybar --add item drawer right \
+           --set drawer icon= \
+                        icon.color=$WHITE \
+                        icon.font="Hack Nerd Font:Bold:16.0" \
+                        label.drawing=off \
+                        click_script="$PLUGIN_DIR/drawer.sh"
+
 # System Monitor
 sketchybar --add item sysmon right \
            --set sysmon update_freq=5 \
                         icon=󰒓 \
                         icon.color=$PRES_GLACIAL \
                         label.drawing=off \
+                        drawing=off \
                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/sysmon.sh" \
                         popup.align=right \
            --subscribe sysmon mouse.entered mouse.exited \
@@ -485,6 +519,7 @@ sketchybar --add item pomodoro right \
                           icon=󰔟 \
                           icon.color=$SPREN_HONOR \
                           label.drawing=off \
+                          drawing=off \
                           script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/pomodoro.sh" \
            --subscribe pomodoro mouse.clicked mouse.entered mouse.exited
 
@@ -494,6 +529,7 @@ sketchybar --add item cpkb right \
                       icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
                       icon.color=$FRONTAPP_ACCENT \
                       label.drawing=off \
+                      drawing=off \
                       script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/cpkb_plugin.sh" \
            --subscribe cpkb mouse.clicked mouse.entered mouse.exited
 
@@ -503,6 +539,7 @@ sketchybar --add item mic right \
                      icon=󰍬 \
                      icon.color=$WARN_COLOR \
                      label.drawing=off \
+                     drawing=off \
                      script="$PLUGIN_DIR/mic.sh" \
            --subscribe mic mouse.clicked
 
@@ -511,11 +548,13 @@ sketchybar --add item clipboard right \
            --set clipboard icon=󰅍 \
                            icon.color=$PRES_GLACIAL \
                            label.drawing=off \
+                           drawing=off \
                            click_script="$PLUGIN_DIR/clipboard_click.sh"
 
 # Audio Toggle
 sketchybar --add item audio_toggle right \
            --set audio_toggle update_freq=5 \
+                              drawing=off \
                               script="$PLUGIN_DIR/audio_toggle.sh" \
            --subscribe audio_toggle mouse.clicked
 
@@ -532,7 +571,7 @@ sketchybar --add item trash right \
 # Reorder right items logically (first is rightmost)
 #sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
 
-sketchybar --reorder volume audio_toggle battery bluetooth control_center net_speed warp bwifi sysmon pomodoro cpkb mic clipboard trash slack ntfy github utilities clock
+sketchybar --reorder volume volume_icon audio_toggle battery bluetooth control_center net_speed warp bwifi drawer sysmon pomodoro cpkb mic clipboard trash slack ntfy github utilities clock
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change

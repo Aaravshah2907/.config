@@ -30,11 +30,13 @@ while read -r row; do
   [ -z "$ICON" ] && ICON="󰀱"
   
   if [ "$FOCUSED" = "true" ]; then
-    COLOR="$FRONTAPP_ACCENT"             # Cryptic shimmer — focused app
+    COLOR="$HONOR_GOLD"
     BG_DRAW="on"
+    BG_COLOR="$HONOR_GOLD_TRANSLUCENT"
   else
-    COLOR="$WHITE"
+    COLOR="$PRES_SILVER"
     BG_DRAW="off"
+    BG_COLOR="0x00000000"
   fi
   
   ADD_CMD+=(--add item "$ITEM_NAME" left)
@@ -42,7 +44,7 @@ while read -r row; do
               icon="$ICON" \
               label.drawing=off \
               icon.color="$COLOR" \
-              background.color="$FRONTAPP_ACCENT_T" \
+              background.color="$BG_COLOR" \
               background.drawing="$BG_DRAW" \
               background.corner_radius=6 \
               background.height=24 \

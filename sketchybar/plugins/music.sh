@@ -68,7 +68,6 @@ update_bar() {
   # Notify Yazi about new songs (10% chance)
   if [ "$label" != "$(cat /tmp/syl_last_track 2>/dev/null)" ] && [ "$label" != "Resting" ] && [ "$label" != "Playing in mpv" ]; then
       echo "$label" > /tmp/syl_last_track
-      "$HOME/.config/sketchybar/plugins/notify_notch.sh" "$icon" "$icon_color" "$label"
 
       if [ $((RANDOM % 10)) -eq 0 ]; then
           local quotes=("This rhythm... '$label' feels ancient." "Such strange human music... '$label'." "I can almost see the musicspren for '$label'!")

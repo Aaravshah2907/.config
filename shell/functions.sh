@@ -25,7 +25,7 @@ es() {
         --preview-window=wrap \
         --preview 'bat --color=always ~/.local/bin/{}')
     if [[ -n "$script" ]]; then
-        nano "$HOME/.local/bin/$script"
+        nvim "$HOME/.local/bin/$script"
     else
         echo "No script selected."
     fi
@@ -87,10 +87,10 @@ alert() {
         echo "alert: missing ALERT_WHATSAPP_TO or ALERT_NTFY_TOPIC in $secrets_file" >&2
         return 1
     fi
-    
+
     # 1. Send via WhatsApp (silently syncs to linked devices)
     wacli send text --to "$ALERT_WHATSAPP_TO" --message "$msg" --pick 1
-    
+
     # 2. Send via ntfy.sh (triggers push notification on phone)
     curl -s -d "$msg" "https://ntfy.sh/$ALERT_NTFY_TOPIC" > /dev/null
 }
@@ -128,7 +128,7 @@ wa() {
             echo "❌ Error: --to is required for sending."
             return 1
         fi
-        
+
         if [ -n "$FILE" ]; then
             if [ -n "$CAPTION" ]; then
                 wacli send file --to "$TO" --file "$FILE" --caption "$CAPTION" --pick 1
@@ -178,7 +178,7 @@ phonedis() {
     if [ -f "$secrets_file" ]; then
         . "$secrets_file"
     fi
-    
+
     if [ -z "$ALERT_PHONE_TS_IP" ]; then
         echo "❌ phonedis: missing ALERT_PHONE_TS_IP in $secrets_file." >&2
         echo "Please add 'export ALERT_PHONE_TS_IP=\"100.x.x.x\"' to that file!" >&2
@@ -197,21 +197,21 @@ phonedis() {
 
     echo "📱 Sending 'Tailscale On' trigger to Pixel..."
     tailon
-    
+
     echo "⏳ Waiting 4 seconds for phone to establish VPN connection..."
     sleep 4
-    
+
     echo "🔗 Connecting ADB on port $port..."
     adb connect "$ALERT_PHONE_TS_IP:$port"
-    
+
     # Check if device is actually connected and online
     if ! adb devices | grep -q "$ALERT_PHONE_TS_IP:$port.*device"; then
         echo "⚠️ ADB wireless connection failed or device is offline."
-        
+
         # Check for locally attached USB device (ignores network devices with ':')
         local usb_dev
         usb_dev=$(adb devices | awk 'NR>1 && $2=="device" && $1 !~ /:/ {print $1}' | head -n 1)
-        
+
         if [ -n "$usb_dev" ]; then
             echo "🔌 USB device ($usb_dev) detected. Setting up wireless ADB..."
             adb -s "$usb_dev" tcpip "$port"
@@ -220,7 +220,7 @@ phonedis() {
             echo "🔗 Retrying ADB connection..."
             adb connect "$ALERT_PHONE_TS_IP:$port"
         fi
-        
+
         # Verify connection again
         if ! adb devices | grep -q "$ALERT_PHONE_TS_IP:$port.*device"; then
             echo "❌ Wireless connection could not be established."
@@ -241,15 +241,15 @@ phonedis() {
             return 1
         fi
     fi
-    
+
     echo "📺 Launching scrcpy..."
     scrcpy
-    
+
     echo "🧹 Scrcpy closed. Cleaning up connections..."
     adb disconnect "$ALERT_PHONE_TS_IP:$port"
-    
+
     echo "📱 Sending 'Tailscale Off' trigger to Pixel..."
     tailoff
-    
+
     echo "✅ Done."
 }

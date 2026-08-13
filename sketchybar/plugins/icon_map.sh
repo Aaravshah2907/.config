@@ -1790,7 +1790,8 @@ function __icon_map() {
 function __icon_map_custom() {
     case "$1" in
    "Amazon")
-        icon_result=":default:"
+        icon_result="󰆧"
+        icon_font_override="nerd"
         ;;
    "Cashew")
         icon_result=":dollar:"
@@ -1829,7 +1830,8 @@ function __icon_map_custom() {
         icon_result=":code:"
         ;;
    "LinkedIn" | "linkedin")
-        icon_result=":default:"
+        icon_result="󰌻"
+        icon_font_override="nerd"
         ;;
    "Microsoft OneDrive" | "OneDrive")
         icon_result=":onedrive:"
@@ -1844,13 +1846,15 @@ function __icon_map_custom() {
         icon_result=":pinta:"
         ;;
    "Reddit" | "reddit")
-        icon_result=":default:"
+        icon_result="󰑍"
+        icon_font_override="nerd"
         ;;
    "StudyDeck")
         icon_result=":book:"
         ;;
    "Superset - Careers and Jobs" | "Superset")
-        icon_result=":default:"
+        icon_result="󰁯"
+        icon_font_override="nerd"
         ;;
    "takeUforward" | "takeuforward")
         icon_result=":code:"

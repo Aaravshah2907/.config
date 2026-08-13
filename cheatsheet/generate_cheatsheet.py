@@ -42,10 +42,9 @@ def toggle_lock():
 def get_frontmost_app():
     try:
         out = subprocess.check_output([
-            "/opt/homebrew/bin/yabai", "-m", "query", "--windows", "--window"
+            "/opt/homebrew/bin/aerospace", "list-windows", "--focused", "--format", "%{app-name}"
         ])
-        data = json.loads(out)
-        return data.get("app", "")
+        return out.decode("utf-8").strip()
     except:
         return ""
 

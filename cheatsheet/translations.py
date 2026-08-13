@@ -21,14 +21,14 @@ EXPLICIT_TRANSLATIONS = {
     "sketchybar --reload":
         "Reload SketchyBar",
 
-    "brew services start yabai":
-        "Start Yabai",
+    "open -a AeroSpace":
+        "Start AeroSpace",
 
-    "brew services stop yabai":
-        "Stop Yabai",
+    "killall AeroSpace":
+        "Stop AeroSpace",
 
-    "brew services restart yabai":
-        "Restart Yabai",
+    "aerospace reload-config":
+        "Reload AeroSpace",
 
     "toggle-sharing":
         "Toggle Sharing",
@@ -145,26 +145,20 @@ def prettify_keys(shortcut):
 def categorise(command):
     command = command.lower()
 
-    if "window --focus" in command:
+    if "aerospace focus" in command:
         return "🪟 Windows"
 
-    if "window --swap" in command:
+    if "aerospace move" in command or "join-with" in command:
         return "🪟 Windows"
 
-    if "window --warp" in command:
+    if "aerospace close" in command:
         return "🪟 Windows"
 
-    if "window --toggle" in command:
-        return "🪟 Windows"
-
-    if "window --close" in command:
-        return "🪟 Windows"
-
-    if "space --" in command:
+    if "workspace" in command or "flatten-workspace-tree" in command:
         return "📦 Spaces"
 
-    if "display --" in command:
-        return "🖥 Displays"
+    if "layout" in command or "fullscreen" in command or "balance-sizes" in command:
+        return "🪟 Windows"
 
     if "scratchpad.py" in command:
         return "📌 Scratchpads"
@@ -193,11 +187,11 @@ def translate(command):
 
     # Move window to space N and focus there
 
-    match = re.search( r'window --space (\d+).*space --focus \1', lower)
+    match = re.search( r'move-node-to-workspace ([A-Z0-9]).*workspace \1', lower)
 
     if match:
-        space = match.group(1)
-        return f"Move Window → Space {space}"
+        space = match.group(1).upper()
+        return f"Move Window → Workspace {space}"
 
     if "brave browser apps.localized" in lower:
         app = os.path.basename(command)
@@ -225,60 +219,64 @@ def translate(command):
     if "insert ->" in lower and "cheat" in lower:
         return "Open Shortcut Hub"
 
-    if "--focus west" in lower:
+    if "focus left" in lower:
         return "Focus Left"
-    if "--focus east" in lower:
+    if "focus right" in lower:
         return "Focus Right"
-    if "--focus north" in lower:
+    if "focus up" in lower:
         return "Focus Up"
-    if "--focus south" in lower:
+    if "focus down" in lower:
         return "Focus Down"
 
-    if "--swap west" in lower:
-        return "Swap Left"
-    if "--swap east" in lower:
-        return "Swap Right"
-    if "--swap north" in lower:
-        return "Swap Up"
-    if "--swap south" in lower:
-        return "Swap Down"
-
-    if "--warp west" in lower:
+    if "move left" in lower:
         return "Move Left"
-    if "--warp east" in lower:
+    if "move right" in lower:
         return "Move Right"
-    if "--warp north" in lower:
+    if "move up" in lower:
         return "Move Up"
-    if "--warp south" in lower:
+    if "move down" in lower:
         return "Move Down"
 
-    if "--display west" in lower:
-        return "Move To Left Display"
-    if "--display east" in lower:
-        return "Move To Right Display"
-    if "--move prev" in lower:
+    if "join-with left" in lower:
+        return "Join Left"
+    if "join-with right" in lower:
+        return "Join Right"
+    if "join-with up" in lower:
+        return "Join Up"
+    if "join-with down" in lower:
+        return "Join Down"
+
+    if "focus-monitor left" in lower:
+        return "Focus Left Monitor"
+    if "focus-monitor right" in lower:
+        return "Focus Right Monitor"
+
+    if "move-node-to-monitor left" in lower:
+        return "Move To Left Monitor"
+    if "move-node-to-monitor right" in lower:
+        return "Move To Right Monitor"
+
+    if "workspace prev" in lower:
         return "Move To Prev Space"
-    if "--move next" in lower:
+    if "workspace next" in lower:
         return "Move To Next Space"
 
-    if "--balance" in lower:
-        return "Balance Space"
-    if "--rotate" in lower:
-        return "Rotate Space"
+    if "balance-sizes" in lower:
+        return "Balance Window Sizes"
+    if "flatten-workspace-tree" in lower:
+        return "Flatten Workspace"
 
-    if "--mirror x-axis" in lower:
-        return "Mirror Vertical"
-    if "--mirror y-axis" in lower:
-        return "Mirror Horizontal"
+    if "layout tiles vertical horizontal" in lower:
+        return "Flip Layout Y"
+    if "layout tiles horizontal vertical" in lower:
+        return "Flip Layout X"
 
-    if "--toggle float" in lower:
+    if "layout floating" in lower:
         return "Toggle Float"
-    if "--toggle split" in lower:
-        return "Toggle Split"
-    if "--toggle zoom-fullscreen" in lower:
+    if "fullscreen" in lower:
         return "Toggle Fullscreen"
 
-    if "--close" in lower:
+    if "aerospace close" in lower:
         return "Close Window"
 
     if "scratchpad.py" in lower:

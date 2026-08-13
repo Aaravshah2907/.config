@@ -2,16 +2,14 @@
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-WINDOW_INFO=$(yabai -m query --windows --window 2>/dev/null)
+TITLE=$(aerospace list-windows --focused --format '%{window-title}' 2>/dev/null)
+APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
 
-if [ -z "$WINDOW_INFO" ] || [ "$WINDOW_INFO" = "null" ]; then
+if [ -z "$APP" ] && [ -z "$TITLE" ]; then
   # No active window focused or desktop is selected
   sketchybar --set "$NAME" label="" drawing=off
   exit 0
 fi
-
-TITLE=$(echo "$WINDOW_INFO" | jq -r '.title')
-APP=$(echo "$WINDOW_INFO" | jq -r '.app')
 
 # Fallback to app name if window has no title
 if [ -z "$TITLE" ] || [ "$TITLE" = "null" ]; then

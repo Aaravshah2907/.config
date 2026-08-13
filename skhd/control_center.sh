@@ -5,10 +5,10 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PAT
 
 # Define the menu options
 OPTIONS=(
-  "1: Edit Yabai Config"
+  "1: Edit AeroSpace Config"
   "2: Edit Skhd Config"
   "3: Edit SketchyBar Config"
-  "4: Reload Yabai"
+  "4: Reload AeroSpace"
   "5: Reload Skhd"
   "6: Reload SketchyBar"
   "7: Restart All Services"
@@ -36,8 +36,8 @@ if [ "$CHOICE" = "false" ] || [ -z "$CHOICE" ]; then
 fi
 
 case "$CHOICE" in
-  "1: Edit Yabai Config")
-    open -a "Cursor" ~/.config/yabai/yabairc
+  "1: Edit AeroSpace Config")
+    open -a "Cursor" ~/.config/aerospace/aerospace.toml
     ;;
   "2: Edit Skhd Config")
     open -a "Cursor" ~/.config/skhd/skhdrc
@@ -45,8 +45,8 @@ case "$CHOICE" in
   "3: Edit SketchyBar Config")
     open -a "Cursor" ~/.config/sketchybar/sketchybarrc
     ;;
-  "4: Reload Yabai")
-    yabai --restart-service
+  "4: Reload AeroSpace")
+    aerospace reload-config
     ;;
   "5: Reload Skhd")
     pkill -USR1 skhd
@@ -55,13 +55,13 @@ case "$CHOICE" in
     sketchybar --reload
     ;;
   "7: Restart All Services")
-    yabai --restart-service
+    aerospace reload-config
     brew services restart skhd
     sketchybar --reload
     ;;
   "8: Open Logs")
-    touch /tmp/yabai.log
-    open -a "Cursor" /tmp/yabai.log
+    echo "AeroSpace does not write to a log file by default." > /tmp/aerospace.log
+    open -a "Cursor" /tmp/aerospace.log
     ;;
   "9: Restore Workspace Session")
     bash ~/.config/skhd/session_restore.sh

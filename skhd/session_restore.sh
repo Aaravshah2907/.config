@@ -5,11 +5,11 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PAT
 
 # Target apps for workflow restoration aligned with your space mappings
 APPS=(
-  "iTerm"           # Space 1 (terminal)
-  "Cursor"          # Space 2 (code)
-  "Brave Browser"   # Space 3 (browser)
-  "ChatGPT"         # Space 4 (chat)
-  "Spotify"         # Space 5/6 (media)
+  "iTerm"           # Workspace T (terminal)
+  "Cursor"          # Workspace C (code)
+  "Brave Browser"   # Workspace B (browser)
+  "ChatGPT"         # Workspace M (chat)
+  "Spotify"         # Workspace S (media)
 )
 
 echo "Restoring workspace session..."
@@ -31,26 +31,21 @@ done
 sleep 1.5
 
 # Re-apply window placement rules to any newly opened windows
-yabai -m query --windows | python3 -c "
-import json, sys, subprocess
-windows = json.load(sys.stdin)
-for w in windows:
-    app = w.get('app', '')
-    wid = w.get('id')
-    # Move them to their assigned workspaces if they are out of place
-    if app == 'iTerm2' or app == 'Terminal' or app == 'iTerm':
-        subprocess.run(['yabai', '-m', 'window', str(wid), '--space', 'terminal'], stderr=subprocess.DEVNULL)
-    elif app in ['Code', 'VS Code', 'Cursor', 'Antigravity IDE', 'Claude']:
-        subprocess.run(['yabai', '-m', 'window', str(wid), '--space', 'code'], stderr=subprocess.DEVNULL)
-    elif app in ['Brave Browser', 'Google Chrome', 'Safari', 'Firefox']:
-        subprocess.run(['yabai', '-m', 'window', str(wid), '--space', 'browser'], stderr=subprocess.DEVNULL)
-    elif app in ['ChatGPT', 'Gemini']:
-        subprocess.run(['yabai', '-m', 'window', str(wid), '--space', 'chat'], stderr=subprocess.DEVNULL)
-    elif app in ['Spotify', 'Music'] and not w.get('is-native-fullscreen', False):
-        subprocess.run(['yabai', '-m', 'window', str(wid), '--space', 'media'], stderr=subprocess.DEVNULL)
-" 2>/dev/null
+aerospace list-windows --all --format '%{window-id}|%{app-name}' | while IFS='|' read -r wid app; do
+    if [[ "$app" == "iTerm2" || "$app" == "Terminal" || "$app" == "iTerm" ]]; then
+        aerospace move-node-to-workspace T --window-id "$wid" 2>/dev/null
+    elif [[ "$app" == "Code" || "$app" == "VS Code" || "$app" == "Cursor" || "$app" == "Antigravity IDE" || "$app" == "Claude" ]]; then
+        aerospace move-node-to-workspace C --window-id "$wid" 2>/dev/null
+    elif [[ "$app" == "Brave Browser" || "$app" == "Google Chrome" || "$app" == "Safari" || "$app" == "Firefox" ]]; then
+        aerospace move-node-to-workspace B --window-id "$wid" 2>/dev/null
+    elif [[ "$app" == "ChatGPT" || "$app" == "Gemini" ]]; then
+        aerospace move-node-to-workspace M --window-id "$wid" 2>/dev/null
+    elif [[ "$app" == "Spotify" || "$app" == "Music" ]]; then
+        aerospace move-node-to-workspace S --window-id "$wid" 2>/dev/null
+    fi
+done
 
-# Focus Space 1 (Terminal) to start clean
-yabai -m space --focus terminal 2>/dev/null || yabai -m space --focus 1
+# Focus Space T (Terminal) to start clean
+aerospace workspace T 2>/dev/null
 
 echo "Workspace restore complete."

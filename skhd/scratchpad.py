@@ -1,102 +1,71 @@
 #!/usr/bin/env python3
 import sys
-import json
 import subprocess
-import time
-
-# Use absolute path to yabai since skhd launchd daemon doesn't inherit user PATH
-YABAI_PATH = "/opt/homebrew/bin/yabai"
-
 import os
-# Brave PWA wrappers — these report their app name to yabai correctly,
-# but must be launched via explicit .app path since `open -a` may resolve
-# to the wrong binary when the app name is ambiguous.
+
+AEROSPACE_PATH = "/opt/homebrew/bin/aerospace"
+
 _BRAVE_APPS_DIR = os.path.expanduser("~/Applications/Brave Browser Apps.localized")
 BRAVE_APPS = {
     "ChatGPT": os.path.join(_BRAVE_APPS_DIR, "ChatGPT.app"),
-    "Gemini":  os.path.join(_BRAVE_APPS_DIR, "Gemini.app"),  # add others as needed
+    "Gemini":  os.path.join(_BRAVE_APPS_DIR, "Gemini.app"), 
     "GMail": os.path.join(_BRAVE_APPS_DIR, "GMail - AS.app")
 }
 
 def run_cmd(cmd):
     try:
-        # Resolve 'yabai' to its absolute path if it is the first argument
-        if cmd and cmd[0] == "yabai":
-            cmd[0] = YABAI_PATH
+        if cmd and cmd[0] == "aerospace":
+            cmd[0] = AEROSPACE_PATH
         result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
         return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         return ""
 
 def get_active_space():
-    space_info_str = run_cmd(["yabai", "-m", "query", "--spaces", "--space"])
-    if space_info_str:
-        try:
-            space_info = json.loads(space_info_str)
-            return space_info.get("index")
-        except:
-            pass
-    return None
+    return run_cmd(["aerospace", "list-workspaces", "--focused"])
 
 def toggle_scratchpad(app_name):
-    # Query all windows
-    windows_str = run_cmd(["yabai", "-m", "query", "--windows"])
     def launch_app():
-        """Launch using Brave wrapper path if available, else generic open."""
         brave_path = BRAVE_APPS.get(app_name)
         if brave_path and os.path.exists(brave_path):
             subprocess.run(["open", "-g", brave_path])
         else:
             subprocess.run(["open", "-g", "-a", app_name])
 
+    windows_str = run_cmd(["aerospace", "list-windows", "--all", "--format", "%{window-id}|%{app-name}|%{workspace}"])
     if not windows_str:
         launch_app()
         return
 
-    try:
-        windows = json.loads(windows_str)
-    except:
-        launch_app()
-        return
-
-    # Filter windows by app name (case-insensitive or exact)
-    app_windows = [w for w in windows if w.get("app", "").lower() == app_name.lower()]
+    app_windows = []
+    for line in windows_str.split("\n"):
+        parts = line.split("|")
+        if len(parts) >= 3:
+            wid, app, space = parts[0], parts[1], parts[2]
+            if app.lower() == app_name.lower():
+                app_windows.append({"id": wid, "space": space})
 
     if not app_windows:
-        # App is not running or has no windows — use Brave wrapper path if applicable
         launch_app()
         return
 
-    # Find active space
     active_space = get_active_space()
+    focused_id = run_cmd(["aerospace", "list-windows", "--focused", "--format", "%{window-id}"])
     
-    # We take the first window of the app
     window = app_windows[0]
-    window_id = window.get("id")
-    is_minimized = window.get("is-minimized", False)
-    window_space = window.get("space")
-    has_focus = window.get("has-focus", False)
+    window_id = window["id"]
+    window_space = window["space"]
+    has_focus = (window_id == focused_id)
 
-    if window_space == active_space and has_focus and not is_minimized:
-        # Window is active and focused on current space -> Hide it (minimize)
-        run_cmd(["yabai", "-m", "window", str(window_id), "--minimize"])
+    if window_space == active_space and has_focus:
+        # Hide it by moving to workspace Z (Scratchpad workspace)
+        run_cmd(["aerospace", "move-node-to-workspace", "Z", "--window-id", window_id])
     else:
-        # Window is not focused or on another space -> Bring to current space and focus
-        if is_minimized:
-            run_cmd(["yabai", "-m", "window", str(window_id), "--deminimize"])
-        
         if active_space and window_space != active_space:
-            run_cmd(["yabai", "-m", "window", str(window_id), "--space", str(active_space)])
-        
-        # Float the window to make sure it doesn't affect BSP layout
-        if not window.get("is-floating", False):
-            run_cmd(["yabai", "-m", "window", str(window_id), "--toggle", "float"])
-            
-        # Center the window nicely
-        run_cmd(["yabai", "-m", "window", str(window_id), "--grid", "4:4:1:1:2:2"])
+            run_cmd(["aerospace", "move-node-to-workspace", active_space, "--window-id", window_id])
         
         # Focus it
-        run_cmd(["yabai", "-m", "window", str(window_id), "--focus"])
+        run_cmd(["aerospace", "focus", "--window-id", window_id])
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

@@ -2,34 +2,34 @@
 # Window Focus (vim-style)
 # ================================
 
-alt - j : /opt/homebrew/bin/yabai -m window --focus south || /opt/homebrew/bin/yabai -m display --focus south
-alt - k : /opt/homebrew/bin/yabai -m window --focus north || /opt/homebrew/bin/yabai -m display --focus north
-alt - h : /opt/homebrew/bin/yabai -m window --focus west  || /opt/homebrew/bin/yabai -m display --focus west
-alt - l : /opt/homebrew/bin/yabai -m window --focus east  || /opt/homebrew/bin/yabai -m display --focus east
+alt - j : /opt/homebrew/bin/aerospace focus down
+alt - k : /opt/homebrew/bin/aerospace focus up
+alt - h : /opt/homebrew/bin/aerospace focus left
+alt - l : /opt/homebrew/bin/aerospace focus right
 
 # Focus displays directly
-alt - s : /opt/homebrew/bin/yabai -m display --focus west
-alt - g : /opt/homebrew/bin/yabai -m display --focus east
+alt - s : /opt/homebrew/bin/aerospace focus-monitor left
+alt - g : /opt/homebrew/bin/aerospace focus-monitor right
 
 
 # ================================
 # Layout Modifications
 # ================================
 
-shift + alt - r : /opt/homebrew/bin/yabai -m space --rotate 270
-shift + alt - y : /opt/homebrew/bin/yabai -m space --mirror y-axis
-shift + alt - x : /opt/homebrew/bin/yabai -m space --mirror x-axis
+shift + alt - r : /opt/homebrew/bin/aerospace flatten-workspace-tree
+shift + alt - y : /opt/homebrew/bin/aerospace layout tiles vertical horizontal
+shift + alt - x : /opt/homebrew/bin/aerospace layout tiles horizontal vertical
 
 # toggle float (centered)
-shift + alt - t : /opt/homebrew/bin/yabai -m window --toggle float; /opt/homebrew/bin/yabai -m window --grid 4:4:1:1:2:2
+shift + alt - t : /opt/homebrew/bin/aerospace layout floating tiling
 
 
 # ================================
 # Window Size / Layout
 # ================================
 
-shift + alt - m : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen
-shift + alt - e : /opt/homebrew/bin/yabai -m space --balance
+shift + alt - m : /opt/homebrew/bin/aerospace fullscreen
+shift + alt - e : /opt/homebrew/bin/aerospace balance-sizes
 
 
 # ================================
@@ -37,44 +37,44 @@ shift + alt - e : /opt/homebrew/bin/yabai -m space --balance
 # ================================
 
 # swap
-shift + alt - j : /opt/homebrew/bin/yabai -m window --swap south
-shift + alt - k : /opt/homebrew/bin/yabai -m window --swap north
-shift + alt - h : /opt/homebrew/bin/yabai -m window --swap west
-shift + alt - l : /opt/homebrew/bin/yabai -m window --swap east
+shift + alt - j : /opt/homebrew/bin/aerospace move down
+shift + alt - k : /opt/homebrew/bin/aerospace move up
+shift + alt - h : /opt/homebrew/bin/aerospace move left
+shift + alt - l : /opt/homebrew/bin/aerospace move right
 
 # warp (move + follow focus)
-ctrl + alt - j : /opt/homebrew/bin/yabai -m window --warp south
-ctrl + alt - k : /opt/homebrew/bin/yabai -m window --warp north
-ctrl + alt - h : /opt/homebrew/bin/yabai -m window --warp west
-ctrl + alt - l : /opt/homebrew/bin/yabai -m window --warp east
+ctrl + alt - j : /opt/homebrew/bin/aerospace join-with down
+ctrl + alt - k : /opt/homebrew/bin/aerospace join-with up
+ctrl + alt - h : /opt/homebrew/bin/aerospace join-with left
+ctrl + alt - l : /opt/homebrew/bin/aerospace join-with right
 
 
 # ================================
 # Move Windows Across Displays
 # ================================
 
-shift + alt - s : /opt/homebrew/bin/yabai -m window --display west && sleep 0.1 &&  /opt/homebrew/bin/yabai -m display --focus west
-shift + alt - g : /opt/homebrew/bin/yabai -m window --display east && sleep 0.1 &&  /opt/homebrew/bin/yabai -m display --focus east
+shift + alt - s : /opt/homebrew/bin/aerospace move-node-to-monitor left && sleep 0.1 && /opt/homebrew/bin/aerospace focus-monitor left
+shift + alt - g : /opt/homebrew/bin/aerospace move-node-to-monitor right && sleep 0.1 && /opt/homebrew/bin/aerospace focus-monitor right
 
 
 # ================================
 # Workspace Setup & Management (Hyper Key)
 # ================================
 # Rebalance current space layout
-hyper - r : /opt/homebrew/bin/yabai -m space --balance
+hyper - r : /opt/homebrew/bin/aerospace balance-sizes
 
 # Move active space left or right
-hyper - left : /opt/homebrew/bin/yabai -m space --move prev
-hyper - right : /opt/homebrew/bin/yabai -m space --move next
+hyper - left : /opt/homebrew/bin/aerospace workspace prev
+hyper - right : /opt/homebrew/bin/aerospace workspace next
 
 
 # ================================
 # Yabai Service Control
 # ================================
 
-ctrl + alt - q : brew services stop yabai
-ctrl + alt - s : brew services start yabai
-ctrl + alt - r : brew services restart yabai
+ctrl + alt - q : killall AeroSpace
+ctrl + alt - s : open -a AeroSpace
+ctrl + alt - r : /opt/homebrew/bin/aerospace reload-config
 
 # ================================
 # SketchyBar Control
@@ -99,25 +99,25 @@ ctrl + alt - k : sketchybar --reload
 #hyper - 9 : /opt/homebrew/bin/yabai -m space --focus 9
 
 # Move window to space 1-9
-hyper - 1 : /opt/homebrew/bin/yabai -m window --space 1 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 1
-hyper - 2 : /opt/homebrew/bin/yabai -m window --space 2 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 2
-hyper - 3 : /opt/homebrew/bin/yabai -m window --space 3 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 3
-hyper - 4 : /opt/homebrew/bin/yabai -m window --space 4 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 4
-hyper - 5 : /opt/homebrew/bin/yabai -m window --space 5 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 5
-hyper - 6 : /opt/homebrew/bin/yabai -m window --space 6 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 6
-hyper - 7 : /opt/homebrew/bin/yabai -m window --space 7 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 7
-hyper - 8 : /opt/homebrew/bin/yabai -m window --space 8 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 8
-hyper - 9 : /opt/homebrew/bin/yabai -m window --space 9 && sleep 0.1 && /opt/homebrew/bin/yabai -m space --focus 9
+hyper - 1 : /opt/homebrew/bin/aerospace move-node-to-workspace 1 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 1
+hyper - 2 : /opt/homebrew/bin/aerospace move-node-to-workspace 2 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 2
+hyper - 3 : /opt/homebrew/bin/aerospace move-node-to-workspace 3 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 3
+hyper - 4 : /opt/homebrew/bin/aerospace move-node-to-workspace 4 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 4
+hyper - 5 : /opt/homebrew/bin/aerospace move-node-to-workspace 5 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 5
+hyper - 6 : /opt/homebrew/bin/aerospace move-node-to-workspace 6 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 6
+hyper - 7 : /opt/homebrew/bin/aerospace move-node-to-workspace 7 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 7
+hyper - 8 : /opt/homebrew/bin/aerospace move-node-to-workspace 8 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 8
+hyper - 9 : /opt/homebrew/bin/aerospace move-node-to-workspace 9 && sleep 0.1 && /opt/homebrew/bin/aerospace workspace 9
 
 # ================================
 # Window Controls (Hyper Key)
 # ================================
 
 # Toggle split orientation
-hyper - space : /opt/homebrew/bin/yabai -m window --toggle split
+hyper - space : /opt/homebrew/bin/aerospace layout tiles horizontal vertical
 
 # Close window
-hyper - q : /opt/homebrew/bin/yabai -m window --close
+hyper - q : /opt/homebrew/bin/aerospace close
 
 # ================================
 

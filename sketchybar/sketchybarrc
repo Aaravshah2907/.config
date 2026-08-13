@@ -330,6 +330,39 @@ sketchybar --add item battery right \
 
 
 
+# Weather Widget
+sketchybar --add item weather right \
+           --set weather update_freq=900 \
+                         script="$PLUGIN_DIR/weather_widget.sh" \
+                         popup.align=right \
+                         popup.y_offset=12 \
+           --subscribe weather mouse.entered mouse.exited \
+  \
+           --add item weather.location popup.weather \
+           --set weather.location icon=📍 label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item weather.condition popup.weather \
+           --set weather.condition icon.font="JetBrainsMono Nerd Font:Bold:14.0" label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item weather.feels popup.weather \
+           --set weather.feels icon=🌡️ \
+  \
+           --add item weather.humidity popup.weather \
+           --set weather.humidity icon=💧 \
+  \
+           --add item weather.wind popup.weather \
+           --set weather.wind icon=💨 \
+  \
+           --add item weather.moon popup.weather \
+           --set weather.moon icon=🌒
+
+sketchybar --add bracket weather.pill weather \
+           --set weather.pill background.color=$BAR_COLOR \
+                              background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on
+
 # Clock: Chronicles
 sketchybar --add item clock right \
            --set clock update_freq=30 script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
@@ -348,9 +381,7 @@ sketchybar --add item clock right \
   --add item clock.event.5 popup.clock --set clock.event.5 label="" drawing=off \
   --add item clock.event.6 popup.clock --set clock.event.6 label="" drawing=off \
   --add item clock.event.7 popup.clock --set clock.event.7 label="" drawing=off \
-  --add item clock.event.8 popup.clock --set clock.event.8 label="" drawing=off \
-  --add item clock.weather1 popup.clock --set clock.weather1 icon= script="$PLUGIN_DIR/weather.sh" \
-  --add item clock.temperature popup.clock --set clock.temperature icon= script="$PLUGIN_DIR/weatherTemp.sh"
+  --add item clock.event.8 popup.clock --set clock.event.8 label="" drawing=off
 
 # Calendar Lines (Optional monthly calendar on click)
 for i in {1..8}

@@ -39,8 +39,8 @@ case "$SPACE" in
   *)   SPACE_COLOR=$SPACE_ACCENT;;
 esac
 
-SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Spotify" "Study" "AI")
-SPACE_SIDS=("T" "C" "B" "M" "V" "S" "E" "A")
+SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Spotify" "Study" "AI" "Preview")
+SPACE_SIDS=("T" "C" "B" "M" "V" "S" "E" "A" "P")
 
 IDX=-1
 for i in "${!SPACE_SIDS[@]}"; do

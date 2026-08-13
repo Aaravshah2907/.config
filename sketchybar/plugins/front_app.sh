@@ -13,6 +13,7 @@ if [ "$SENDER" = "front_app_switched" ]; then
     "Discord") APP_COLOR=$SPREN_SIBLING ;;
     "Terminal"|"iTerm2"|"WezTerm"|"kitty") APP_COLOR=$FRONTAPP_ACCENT ;;
     "Slack") APP_COLOR=$WARN_COLOR ;;
+    "Preview") APP_COLOR=$PRES_GLACIAL ;;
     *) APP_COLOR=$WHITE ;;
   esac
 

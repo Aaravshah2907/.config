@@ -50,9 +50,9 @@ automatically-unhide-macos-hidden-apps = true
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
-# Active: T(erm) C(ode) B(rowser) M(sg) S(potify) V(ideo) E(du) A(I)
+# Active: T(erm) C(ode) B(rowser) M(sg) S(potify) V(ideo) E(du) A(I) P(review)
 # Spare:  1-4 for ad-hoc use
-persistent-workspaces = ["1", "2", "3", "4", "A", "B", "C", "E", "M", "S", "T", "V"]
+persistent-workspaces = ["1", "2", "3", "4", "A", "B", "C", "E", "M", "P", "S", "T", "V"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -289,3 +289,7 @@ run = 'layout floating'
 [[on-window-detected]]
 if.window-title-regex-substring = '⌨️ Shortcut Hub'
 run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Preview'
+run = 'move-node-to-workspace P'

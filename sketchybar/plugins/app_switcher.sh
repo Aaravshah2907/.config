@@ -1,6 +1,12 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
+# Bail out if AeroSpace is disabled (exam mode)
+if [ -f /tmp/aerospace_disabled ]; then
+  sketchybar --remove '/app\.switcher\..*/' 2>/dev/null
+  exit 0
+fi
+
 # Query the running apps
 APPS_IN_SPACE=$(aerospace list-windows --workspace focused --format '%{app-name}' 2>/dev/null)
 FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)

@@ -1,6 +1,7 @@
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 rm -f /tmp/bluetooth_pinned
+rm -f /tmp/aerospace_disabled
 
 # Custom Events for event-driven updates
 sketchybar --add event window_focus \
@@ -95,6 +96,17 @@ sketchybar --add item apple left \
                    background.corner_radius=10 \
                    background.drawing=on
 
+
+# AeroSpace Toggle (Exam Mode)
+sketchybar --add item aero_toggle left \
+           --set aero_toggle icon=󱂬 \
+                             icon.color=$SPREN_HONOR \
+                             icon.font="Hack Nerd Font:Bold:18.0" \
+                             label.drawing=off \
+                             padding_left=6 \
+                             padding_right=2 \
+                             script="$PLUGIN_DIR/aerospace_toggle.sh" \
+           --subscribe aero_toggle mouse.clicked
 
 # Spaces
 AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all)

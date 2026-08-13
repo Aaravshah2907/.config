@@ -3,6 +3,12 @@ source "$HOME/.local/bin/cosmere_colors.sh"
 
 SPACE="${NAME#space.}"
 
+# Bail out if AeroSpace is disabled (exam mode)
+if [ -f /tmp/aerospace_disabled ]; then
+  sketchybar --set "space.$SPACE" drawing=off
+  exit 0
+fi
+
 if [ "$SENDER" = "aerospace_workspace_change" ]; then
   if [ "$SPACE" = "$FOCUSED_WORKSPACE" ]; then
     SELECTED="true"

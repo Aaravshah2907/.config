@@ -293,3 +293,7 @@ run = 'layout floating'
 [[on-window-detected]]
 if.app-name-regex-substring = 'Preview'
 run = 'move-node-to-workspace P'
+
+[[on-window-detected]]
+if.window-title-regex-substring = 'Picture-in-Picture|PIP'
+run = 'layout floating'

@@ -6,7 +6,8 @@ rm -f /tmp/bluetooth_pinned
 sketchybar --add event window_focus \
            --add event window_title_change \
            --add event space_change \
-           --add event app_switcher_update
+           --add event app_switcher_update \
+           --add event aerospace_workspace_change
 
 ##### Core Bar Appearance (Radiant Floating Bar) #####
 
@@ -96,29 +97,16 @@ sketchybar --add item apple left \
 
 
 # Spaces
-SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Misc" "Spotify" "8" "9" "10")
-SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
-for sid in "${SPACE_SIDS[@]}"
-do
-  label_idx=$((sid - 1))
-  space_label="${SPACE_LABELS[$label_idx]}"
-  sketchybar --add space space.$sid left \
-             --set space.$sid space=$sid \
-                               icon="$space_label" \
-                               icon.font="JetBrainsMono Nerd Font:Bold:12.0" \
-                               icon.color=$WHITE \
-                               icon.highlight_color=$SPACE_ACCENT \
-                               script="$PLUGIN_DIR/space.sh" \
-                               click_script="yabai -m space --focus $sid" \
-                               label.padding_right=8 \
-                               label.y_offset=-1 \
-                               padding_left=4 \
-                               padding_right=4 \
-                               background.corner_radius=8 \
-                               background.height=26 \
-             --subscribe space.$sid space_windows_change space_change mouse.scrolled
-#  sketchybar --add bracket space.highlight.$sid "/space.$sid/" \
-#             --set space.highlight.$sid background.drawing=on background.color=$BAR_COLOR background.border_color=$SPACE_COLOR background.border_width=2 background.corner_radius=6 background.height=48
+AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all)
+for sid in $AEROSPACE_WORKSPACES; do
+  sketchybar --add item space.$sid left \
+             --subscribe space.$sid aerospace_workspace_change \
+             --set space.$sid \
+                   background.drawing=off \
+                   label.drawing=off \
+                   icon.drawing=off \
+                   script="$PLUGIN_DIR/space.sh $sid" \
+                   click_script="aerospace workspace $sid"
 done
 
 sketchybar --add bracket spaces.pill "/space\..*/" \
@@ -143,7 +131,7 @@ sketchybar --add item app_switcher_sep left \
            --add item app_switcher_trigger left \
            --set app_switcher_trigger drawing=off \
                                       script="$PLUGIN_DIR/app_switcher.sh" \
-           --subscribe app_switcher_trigger app_switcher_update space_change window_focus
+           --subscribe app_switcher_trigger app_switcher_update aerospace_workspace_change front_app_switched
 
 # Optional Yabai Space Layout Status Item (uncomment to enable)
 # source "$CONFIG_DIR/yabai_status_item.sh"

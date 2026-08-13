@@ -3,8 +3,21 @@ source "$HOME/.local/bin/cosmere_colors.sh"
 
 SPACE="${NAME#space.}"
 
-if [ -z "$SELECTED" ]; then
-  SELECTED=$(sketchybar --query "$NAME" | jq -r '.selected')
+if [ "$SENDER" = "aerospace_workspace_change" ]; then
+  if [ "$SPACE" = "$FOCUSED_WORKSPACE" ]; then
+    SELECTED="true"
+  else
+    SELECTED="false"
+  fi
+else
+  if [ -z "$SELECTED" ]; then
+    CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
+    if [ "$SPACE" = "$CURRENT_WORKSPACE" ]; then
+      SELECTED="true"
+    else
+      SELECTED="false"
+    fi
+  fi
 fi
 
 # Define Space Colors
@@ -19,17 +32,31 @@ case "$NAME" in
   *)       SPACE_COLOR=$SPACE_ACCENT;;
 esac
 
-SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Misc" "Spotify" "8" "9" "10")
-SPACE_NAME="${SPACE_LABELS[$((SPACE - 1))]}"
+SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Spotify")
+SPACE_SIDS=("T" "C" "B" "M" "V" "S")
+
+IDX=-1
+for i in "${!SPACE_SIDS[@]}"; do
+  if [ "${SPACE_SIDS[$i]}" = "$SPACE" ]; then
+    IDX=$i
+    break
+  fi
+done
+
+if [ $IDX -ne -1 ]; then
+  SPACE_NAME="${SPACE_LABELS[$IDX]}"
+else
+  SPACE_NAME="$SPACE"
+fi
 
 # Check if space is occupied
-WINDOW_COUNT=$(yabai -m query --spaces --space "$SPACE" 2>/dev/null | jq '.windows | length')
+WINDOW_COUNT=$(aerospace list-windows --workspace "$SPACE" --count 2>/dev/null || echo 0)
 
 if [ "$SENDER" = "mouse.scrolled" ]; then
   if [ "$SCROLL_DELTA" -gt 0 ]; then
-    yabai -m space --focus next
+    aerospace workspace next
   else
-    yabai -m space --focus prev
+    aerospace workspace prev
   fi
   exit 0
 fi
@@ -51,10 +78,6 @@ elif [ "$WINDOW_COUNT" -gt 0 ] 2>/dev/null; then
     background.drawing=off \
     padding_left=4 padding_right=4
 else
-  # Empty & Unselected space: Dim dot
-  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="•" icon.color=$PRES_GLACIAL_TRANSLUCENT \
-    label.drawing=off \
-    background.drawing=off \
-    padding_left=4 padding_right=4
+  # Empty & Unselected space: Hide completely
+  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=off
 fi

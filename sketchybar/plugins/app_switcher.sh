@@ -1,28 +1,33 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-# Query the running apps in screen coordinate order (left-to-right)
-WINDOWS=$(yabai -m query --windows --space 2>/dev/null)
+# Query the running apps
+APPS_IN_SPACE=$(aerospace list-windows --workspace focused --format '%{app-name}' 2>/dev/null)
+FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
 
 # Clean up all existing app switcher items
 sketchybar --remove '/app\.switcher\..*/'
 
-if [ -z "$WINDOWS" ] || [ "$WINDOWS" = "null" ] || [ "$WINDOWS" = "[]" ]; then
+if [ -z "$APPS_IN_SPACE" ]; then
   exit 0
 fi
 
-# Parse unique apps preserving screen order (x-coordinate)
-APPS=$(echo "$WINDOWS" | jq -c 'map(select(."is-minimized" == false and .app != "")) | sort_by(.frame.x) | reduce .[] as $w ([]; if map(.app) | contains([$w.app]) then (map(if .app == $w.app then .focused = (.focused or $w."has-focus") else . end)) else . + [{app: $w.app, focused: $w."has-focus"}] end)')
+# Parse unique apps preserving order
+UNIQUE_APPS=$(echo "$APPS_IN_SPACE" | awk '!seen[$0]++')
 
 # Source the icon map once
 source "$HOME/.config/sketchybar/plugins/icon_map.sh"
 
 ADD_CMD=()
 
-while read -r row; do
-  [ -z "$row" ] && continue
-  APP=$(echo "$row" | jq -r '.app')
-  FOCUSED=$(echo "$row" | jq -r '.focused')
+while read -r APP; do
+  [ -z "$APP" ] && continue
+  
+  if [ "$APP" = "$FOCUSED_APP" ]; then
+    FOCUSED="true"
+  else
+    FOCUSED="false"
+  fi
   
   # Clean name for sketchybar item
   CLEAN_NAME=$(echo "$APP" | sed 's/[^a-zA-Z0-9]//g')
@@ -32,6 +37,12 @@ while read -r row; do
   __icon_map_custom "$APP" || __icon_map "$APP"
   ICON="$icon_result"
   [ -z "$ICON" ] && ICON=":default:"
+
+  if [ "$icon_font_override" = "nerd" ]; then
+    ICON_FONT="Hack Nerd Font:Bold:14.0"
+  else
+    ICON_FONT="sketchybar-app-font:Regular:14.0"
+  fi
   
   if [ "$FOCUSED" = "true" ]; then
     ICON_COLOR="$WHITE"
@@ -46,7 +57,7 @@ while read -r row; do
   ADD_CMD+=(--add item "$ITEM_NAME" left)
   ADD_CMD+=(--set "$ITEM_NAME" \
               icon="$ICON" \
-              icon.font="sketchybar-app-font:Regular:14.0" \
+              icon.font="$ICON_FONT" \
               icon.color="$ICON_COLOR" \
               label.drawing=off \
               background.color="$BG_COLOR" \
@@ -56,7 +67,7 @@ while read -r row; do
               padding_left=2 \
               padding_right=2 \
               click_script="open -a \"$APP\"")
-done <<< "$(echo "$APPS" | jq -c '.[]')"
+done <<< "$UNIQUE_APPS"
 
 if [ ${#ADD_CMD[@]} -gt 0 ]; then
   sketchybar "${ADD_CMD[@]}"

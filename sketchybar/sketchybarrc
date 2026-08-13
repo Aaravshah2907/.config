@@ -82,16 +82,12 @@ sketchybar --add item apple left \
            --set apple.restart icon=󰑓 label="Restart Sketchybar" click_script="$PLUGIN_DIR/reload.sh; sketchybar --set apple popup.drawing=off"
  \
   \
-  --add item front_app left \
-    --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" label.color=$FRONTAPP_ACCENT icon.color=$FRONTAPP_ACCENT click_script="open -a 'Mission Control'" \
-    --subscribe front_app front_app_switched \
-  \
   --add item guilt left \
     --set guilt update_freq=5 \
                 drawing=off \
                 script="$PLUGIN_DIR/guilt.sh" \
   \
-  --add bracket apple.pill apple front_app guilt \
+  --add bracket apple.pill apple guilt \
   --set apple.pill background.color=$BAR_COLOR \
                    background.border_color=$SPREN_HIGH_T \
                    background.border_width=1 \
@@ -575,7 +571,6 @@ sketchybar --reorder volume volume_icon audio_toggle battery bluetooth control_c
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change
-sketchybar --trigger front_app_switched
 sketchybar --trigger volume_change
 sketchybar --trigger wifi_change
 sketchybar --trigger media_change

@@ -19,8 +19,16 @@ if [ "$SENDER" = "mouse.clicked" ]; then
   exit 0
 fi
 
+# Location: read from config file, fall back to IP geolocation
+WEATHER_LOCATION_FILE="$HOME/.config/sketchybar/weather_location"
+if [ -f "$WEATHER_LOCATION_FILE" ]; then
+  WEATHER_LOCATION=$(cat "$WEATHER_LOCATION_FILE" | xargs)
+else
+  WEATHER_LOCATION=""
+fi
+
 # Fetch detailed weather data
-WEATHER_DATA=$(curl -s "wttr.in/?format=%C|%t|%h|%w|%f|%l|%m" || echo "Error")
+WEATHER_DATA=$(curl -s "wttr.in/${WEATHER_LOCATION}?format=%C|%t|%h|%w|%f|%l|%m" || echo "Error")
 
 if [ -z "$WEATHER_DATA" ] || [[ "$WEATHER_DATA" == *"Error"* ]] || [[ "$WEATHER_DATA" == *"Unknown"* ]]; then
   sketchybar --set weather label="--" icon="?"

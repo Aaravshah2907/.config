@@ -114,7 +114,7 @@ gaps.outer.right =      8
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
     # Launch iTerm (i3-style)
-    cmd-alt-shift-ctrl-enter = 'exec-and-forget open -a iTerm'
+    cmd-alt-shift-ctrl-enter = 'enable toggle'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     cmd-alt-shift-ctrl-slash = 'layout tiles horizontal vertical'
@@ -231,7 +231,7 @@ gaps.outer.right =      8
     alt-shift-z = 'move-node-to-workspace Z'
 
     # Enable/Disable AeroSpace globally
-    cmd-alt-shift-ctrl-backslash = 'enable toggle'
+    cmd-alt-shift-ctrl-backslash = 'exec-and-forget open -a iTerm'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     cmd-alt-shift-ctrl-tab = 'workspace-back-and-forth'

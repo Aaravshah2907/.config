@@ -9,7 +9,7 @@ SECTIONS = [
         ("⌥⇧ HJKL", "Move Dir"),
         ("⌥⌃ HJKL", "Join With Dir"),
         ("Hyper -/=", "Resize ∓50"),
-        ("Hyper ↩", "iTerm"),
+        ("Hyper ↩", "Toggle AeroSpace"),
     ]),
     ("LAYOUT & SIZING",[
         ("Hyper /", "Tiles H/V"),
@@ -29,7 +29,7 @@ SECTIONS = [
     ("SYSTEM & MODES",[
         ("⌃⌥ P/N", "Move Prev/Next WS"),
         ("⌥⇧ ;", "Service Mode"),
-        ("Hyper \\", "Toggle AeroSpace"),
+        ("Hyper \\", "iTerm"),
         ("Svc R", "Reset Layout"),
         ("Svc F", "Float ↔ Tile"),
     ]),

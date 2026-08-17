@@ -8,7 +8,7 @@
                 },
                 "rules": [
                     {
-                        "description": "Toggle AeroSpace (Hyper + ')",
+                        "description": "Toggle AeroSpace (Option + ')",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -16,10 +16,7 @@
                                     "key_code": "quote",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_command",
-                                            "left_control",
-                                            "left_option",
-                                            "left_shift"
+                                            "left_option"
                                         ]
                                     }
                                 },

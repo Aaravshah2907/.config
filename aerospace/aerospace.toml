@@ -114,21 +114,21 @@ gaps.outer.right =      8
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
     # Launch iTerm (i3-style)
-    cmd-alt-shift-ctrl-enter = 'exec-and-forget open -a iTerm'
+    alt-enter = 'exec-and-forget open -a iTerm'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-    cmd-alt-shift-ctrl-slash = 'layout tiles horizontal vertical'
-    cmd-alt-shift-ctrl-comma = 'layout accordion horizontal vertical'
+    alt-slash = 'layout tiles horizontal vertical'
+    alt-comma = 'layout accordion horizontal vertical'
 
     # Toggle between tiles and accordion for the focused container
-    cmd-alt-shift-ctrl-period = 'layout tiles accordion'
+    alt-period = 'layout tiles accordion'
 
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-    cmd-alt-shift-ctrl-h = 'focus left'
-    cmd-alt-shift-ctrl-j = 'focus down'
-    cmd-alt-shift-ctrl-k = 'focus up'
-    cmd-alt-shift-ctrl-l = 'focus right'
+    alt-h = 'focus left'
+    alt-j = 'focus down'
+    alt-k = 'focus up'
+    alt-l = 'focus right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
     alt-shift-h = 'move left'
@@ -137,8 +137,8 @@ gaps.outer.right =      8
     alt-shift-l = 'move right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-    cmd-alt-shift-ctrl-minus = 'resize smart -50'
-    cmd-alt-shift-ctrl-equal = 'resize smart +50'
+    alt-minus = 'resize smart -50'
+    alt-equal = 'resize smart +50'
 
     # --- Migrated from Skhd / Yabai ---
     
@@ -165,37 +165,37 @@ gaps.outer.right =      8
     # ----------------------------------
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-    cmd-alt-shift-ctrl-1 = 'workspace 1'
-    cmd-alt-shift-ctrl-2 = 'workspace 2'
-    cmd-alt-shift-ctrl-3 = 'workspace 3'
-    cmd-alt-shift-ctrl-4 = 'workspace 4'
-    cmd-alt-shift-ctrl-5 = 'workspace 5'
-    cmd-alt-shift-ctrl-6 = 'workspace 6'
-    cmd-alt-shift-ctrl-7 = 'workspace 7'
-    cmd-alt-shift-ctrl-8 = 'workspace 8'
-    cmd-alt-shift-ctrl-9 = 'workspace 9'
-    cmd-alt-shift-ctrl-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
-    cmd-alt-shift-ctrl-b = 'workspace B'
-    cmd-alt-shift-ctrl-c = 'workspace C'
-    cmd-alt-shift-ctrl-d = 'workspace D'
-    cmd-alt-shift-ctrl-e = 'workspace E'
-    cmd-alt-shift-ctrl-f = 'workspace F'
-    cmd-alt-shift-ctrl-g = 'workspace G'
-    cmd-alt-shift-ctrl-i = 'workspace I'
-    cmd-alt-shift-ctrl-m = 'workspace M'
-    cmd-alt-shift-ctrl-n = 'workspace N'
-    cmd-alt-shift-ctrl-o = 'workspace O'
-    cmd-alt-shift-ctrl-p = 'workspace P'
-    cmd-alt-shift-ctrl-q = 'workspace Q'
-    cmd-alt-shift-ctrl-r = 'workspace R'
-    cmd-alt-shift-ctrl-s = 'workspace S'
-    cmd-alt-shift-ctrl-t = 'workspace T'
-    cmd-alt-shift-ctrl-u = 'workspace U'
-    cmd-alt-shift-ctrl-v = 'workspace V'
-    cmd-alt-shift-ctrl-w = 'workspace W'
-    cmd-alt-shift-ctrl-x = 'workspace X'
-    cmd-alt-shift-ctrl-y = 'workspace Y'
-    cmd-alt-shift-ctrl-z = 'workspace Z'
+    alt-1 = 'workspace 1'
+    alt-2 = 'workspace 2'
+    alt-3 = 'workspace 3'
+    alt-4 = 'workspace 4'
+    alt-5 = 'workspace 5'
+    alt-6 = 'workspace 6'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
+    alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
+    alt-b = 'workspace B'
+    alt-c = 'workspace C'
+    alt-d = 'workspace D'
+    alt-e = 'workspace E'
+    alt-f = 'workspace F'
+    alt-g = 'workspace G'
+    alt-i = 'workspace I'
+    alt-m = 'workspace M'
+    alt-n = 'workspace N'
+    alt-o = 'workspace O'
+    alt-p = 'workspace P'
+    alt-q = 'workspace Q'
+    alt-r = 'workspace R'
+    alt-s = 'workspace S'
+    alt-t = 'workspace T'
+    alt-u = 'workspace U'
+    alt-v = 'workspace V'
+    alt-w = 'workspace W'
+    alt-x = 'workspace X'
+    alt-y = 'workspace Y'
+    alt-z = 'workspace Z'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -233,7 +233,7 @@ gaps.outer.right =      8
     # Enable/Disable AeroSpace globally
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-    cmd-alt-shift-ctrl-tab = 'workspace-back-and-forth'
+    alt-tab = 'workspace-back-and-forth'
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
     alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 

@@ -117,11 +117,11 @@ gaps.outer.right =      8
     alt-enter = 'exec-and-forget open -a iTerm'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-    alt-slash = 'layout tiles horizontal vertical'
-    alt-comma = 'layout accordion horizontal vertical'
+    alt-slash = ['layout tiles horizontal vertical', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
+    alt-comma = ['layout accordion horizontal vertical', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
 
     # Toggle between tiles and accordion for the focused container
-    alt-period = 'layout tiles accordion'
+    alt-period = ['layout tiles accordion', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
 
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus

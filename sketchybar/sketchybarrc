@@ -8,7 +8,8 @@ sketchybar --add event window_focus \
            --add event window_title_change \
            --add event space_change \
            --add event app_switcher_update \
-           --add event aerospace_workspace_change
+           --add event aerospace_workspace_change \
+           --add event aerospace_layout_change
 
 ##### Core Bar Appearance (Radiant Floating Bar) #####
 
@@ -107,6 +108,25 @@ sketchybar --add item aero_toggle left \
                              padding_right=2 \
                              script="$PLUGIN_DIR/aerospace_toggle.sh" \
            --subscribe aero_toggle mouse.clicked
+
+# AeroSpace Layout Status
+sketchybar --add item aero_root_layout left \
+           --set aero_root_layout icon=󰒡 \
+                                  icon.font="Hack Nerd Font:Bold:14.0" \
+                                  label.drawing=off \
+                                  padding_left=2 \
+                                  padding_right=2 \
+                                  script="$PLUGIN_DIR/aerospace_layout.sh" \
+           --subscribe aero_root_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked \
+  \
+           --add item aero_cont_layout left \
+           --set aero_cont_layout icon=󰕰 \
+                                  icon.font="Hack Nerd Font:Bold:14.0" \
+                                  label.drawing=off \
+                                  padding_left=2 \
+                                  padding_right=6 \
+                                  script="$PLUGIN_DIR/aerospace_layout.sh" \
+           --subscribe aero_cont_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked
 
 # Spaces
 AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all)

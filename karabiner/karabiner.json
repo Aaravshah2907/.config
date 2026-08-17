@@ -16,7 +16,10 @@
                                     "key_code": "quote",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_option"
+                                            "option"
+                                        ],
+                                        "optional": [
+                                            "any"
                                         ]
                                     }
                                 },

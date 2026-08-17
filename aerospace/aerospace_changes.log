@@ -3,3 +3,22 @@
 - Replaced all plain `alt-` keybindings with `cmd-alt-shift-ctrl-` (Hyper key via Karabiner).
 - Kept complex modifier bindings (e.g. `alt-shift-` and `ctrl-alt-`) unchanged as requested.
 - Added `cmd-alt-shift-ctrl-period` as a quick toggle between `tiles` and `accordion` layouts for the focused container.
+
+2026-08-17: Revert Hyper to Option (⌥)
+- Hyper key (cmd+alt+ctrl+shift) conflicts with shift-based modifiers (e.g. alt-shift-h for move).
+- Reverted all plain bindings back to `alt-` (Option key).
+- Toggle AeroSpace moved to Karabiner rule (⌥ + ') so it works even when AeroSpace is disabled.
+- Removed multi-monitor shortcuts (⌃⌥ S/G, ⌥⇧ Tab) since user doesn't use multi-monitor.
+
+2026-08-17: SketchyBar Layout Status Icons
+- Added two new icons next to the AeroSpace toggle in sketchybar:
+  - 󰒡 (aero_root_layout): Shows the root container layout of the focused workspace.
+  - 󰕰 (aero_cont_layout): Shows the parent container layout of the focused window.
+- Color scheme:
+  - Green (Cultivation / #3CB371): Layout is TILES mode.
+  - Blue (Honor / #00A8E8): Layout is ACCORDION mode.
+- Both icons are clickable:
+  - Click 󰒡 to toggle the workspace root layout between tiles ↔ accordion.
+  - Click 󰕰 to toggle the focused container layout between tiles ↔ accordion.
+- Icons update automatically on workspace change, window focus, and layout toggle.
+- Updated cheatsheet_data.py with all corrected shortcuts.

@@ -231,7 +231,6 @@ gaps.outer.right =      8
     alt-shift-z = 'move-node-to-workspace Z'
 
     # Enable/Disable AeroSpace globally
-    cmd-alt-shift-ctrl-quote = 'enable toggle'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     cmd-alt-shift-ctrl-tab = 'workspace-back-and-forth'

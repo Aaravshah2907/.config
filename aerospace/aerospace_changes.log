@@ -1,0 +1,5 @@
+2026-08-17: AeroSpace Config Update
+- Changed `default-root-container-layout` from 'accordion' to 'tiles' as requested.
+- Replaced all plain `alt-` keybindings with `cmd-alt-shift-ctrl-` (Hyper key via Karabiner).
+- Kept complex modifier bindings (e.g. `alt-shift-` and `ctrl-alt-`) unchanged as requested.
+- Added `cmd-alt-shift-ctrl-period` as a quick toggle between `tiles` and `accordion` layouts for the focused container.

@@ -22,6 +22,10 @@ if [ "$SENDER" = "mouse.clicked" ]; then
     # Trigger updates to redraw spaces + apps
     sketchybar --trigger aerospace_workspace_change
     sketchybar --trigger app_switcher_update
+    # Restore layout indicators
+    sketchybar --set aero_root_layout drawing=on \
+               --set aero_cont_layout drawing=on
+    sketchybar --trigger aerospace_layout_change
   else
     # Currently enabled → disable
     touch "$STATE_FILE"
@@ -38,6 +42,9 @@ if [ "$SENDER" = "mouse.clicked" ]; then
     sketchybar --set app_switcher_sep drawing=off
     # Remove app switcher icons
     sketchybar --remove '/app\.switcher\..*/' 2>/dev/null
+    # Hide layout indicators
+    sketchybar --set aero_root_layout drawing=off \
+               --set aero_cont_layout drawing=off
   fi
   exit 0
 fi
@@ -46,7 +53,11 @@ fi
 if [ -f "$STATE_FILE" ]; then
   sketchybar --set aero_toggle icon=󱂬 \
                       icon.color=$SPREN_ASH
+  sketchybar --set aero_root_layout drawing=off \
+             --set aero_cont_layout drawing=off
 else
   sketchybar --set aero_toggle icon=󱂬 \
                       icon.color=$SPREN_HONOR
+  sketchybar --set aero_root_layout drawing=on \
+             --set aero_cont_layout drawing=on
 fi

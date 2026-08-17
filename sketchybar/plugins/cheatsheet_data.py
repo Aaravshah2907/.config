@@ -5,31 +5,31 @@ import subprocess
 
 SECTIONS = [
     ("FOCUS & MOVE",[
-        ("⌥ HJKL", "Focus Dir"),
+        ("Hyper HJKL", "Focus Dir"),
         ("⌥⇧ HJKL", "Move Dir"),
         ("⌥⌃ HJKL", "Join With Dir"),
-        ("⌥ -/=", "Resize ∓50"),
-        ("⌥ ↩", "iTerm"),
+        ("Hyper -/=", "Resize ∓50"),
+        ("Hyper ↩", "iTerm"),
     ]),
     ("LAYOUT & SIZING",[
-        ("⌥ /", "Tiles H/V"),
-        ("⌥ ,", "Accordion H/V"),
+        ("Hyper /", "Tiles H/V"),
+        ("Hyper ,", "Accordion H/V"),
+        ("Hyper .", "Toggle Tiles/Acc"),
         ("⌃⌥ T", "Float ↔ Tile"),
         ("⌃⌥ F", "Fullscreen"),
         ("⌃⌥ E", "Balance Sizes"),
     ]),
     ("WORKSPACES",[
-        ("⌥ 1-9", "Focus Space"),
-        ("⌥ A-Z", "Focus Named"),
+        ("Hyper 1-9", "Focus Space"),
+        ("Hyper A-Z", "Focus Named"),
         ("⌥⇧ 1-9", "Move to Space"),
         ("⌥⇧ A-Z", "Move to Named"),
-        ("⌥ Tab", "Back & Forth"),
-        ("⌥⇧ Tab", "WS → Monitor"),
+        ("Hyper Tab", "Back & Forth"),
     ]),
-    ("CROSS-DISPLAY",[
+    ("SYSTEM & MODES",[
         ("⌃⌥ P/N", "Move Prev/Next WS"),
-        ("⌃⌥ S/G", "Move ←/→ Monitor"),
         ("⌥⇧ ;", "Service Mode"),
+        ("Hyper \\", "Toggle AeroSpace"),
         ("Svc R", "Reset Layout"),
         ("Svc F", "Float ↔ Tile"),
     ]),

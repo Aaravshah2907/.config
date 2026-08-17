@@ -230,6 +230,9 @@ gaps.outer.right =      8
     alt-shift-y = 'move-node-to-workspace Y'
     alt-shift-z = 'move-node-to-workspace Z'
 
+    # Enable/Disable AeroSpace globally
+    cmd-alt-shift-ctrl-backslash = 'enable toggle'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     cmd-alt-shift-ctrl-tab = 'workspace-back-and-forth'
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
@@ -301,3 +304,4 @@ run = 'move-node-to-workspace P'
 [[on-window-detected]]
 if.window-title-regex-substring = 'Picture-in-Picture|PIP'
 run = 'layout floating'
+

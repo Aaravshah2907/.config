@@ -304,3 +304,7 @@ run = 'move-node-to-workspace P'
 if.window-title-regex-substring = 'Picture-in-Picture|PIP'
 run = 'layout floating'
 
+[[on-window-detected]]
+if.app-name-regex-substring = 'Helium'
+run = 'move-node-to-workspace 1'
+

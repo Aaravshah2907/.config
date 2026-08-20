@@ -306,5 +306,5 @@ run = 'layout floating'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Helium'
-run = 'move-node-to-workspace 1'
+run = ['move-node-to-workspace 1', 'layout floating']
 

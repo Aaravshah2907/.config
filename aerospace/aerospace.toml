@@ -60,7 +60,7 @@ persistent-workspaces = ["1", "2", "3", "4", "A", "B", "C", "E", "M", "P", "S", 
 on-mode-changed = []
 
 # Notify Sketchybar about workspace changes
-exec-on-workspace-change = ['/bin/bash', '-c', 'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
+exec-on-workspace-change = ['/bin/bash', '-c', 'if [ "$AEROSPACE_FOCUSED_WORKSPACE" = "1" ]; then sketchybar --bar hidden=on; else sketchybar --bar hidden=off; fi; sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
 
 # Notify Sketchybar about window focus changes
 on-focus-changed = [

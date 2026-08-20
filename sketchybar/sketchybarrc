@@ -49,8 +49,8 @@ sketchybar --bar position=top \
 sketchybar --default \
   padding_left=5 \
   padding_right=5 \
-  icon.font="Hack Nerd Font:Bold:18.0" \
-  label.font="JetBrainsMono Nerd Font:Bold:16.0" \
+  icon.font="Hack Nerd Font:Bold:16.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
   icon.color=$WHITE \
   label.color=$WHITE \
   icon.padding_left=4 \
@@ -259,7 +259,7 @@ sketchybar --add item warp right \
 sketchybar --add item github right \
            --set github update_freq=300 \
                         icon= \
-                        icon.color=$WHITE \
+                        icon.color=$SPREN_CRYPTIC \
                         label.drawing=off \
                         drawing=off \
                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/github.sh" \
@@ -273,7 +273,7 @@ sketchybar --add item github right \
 sketchybar --add item ntfy right \
            --set ntfy update_freq=60 \
                        icon=󰵙 \
-                       icon.color=$PRES_MIST \
+                       icon.color=$SPREN_CRYPTIC \
                        label.drawing=off \
                        drawing=off \
                        script="$PLUGIN_DIR/ntfy.sh" \
@@ -306,7 +306,7 @@ sketchybar --add item ntfy right \
 sketchybar --add item slack right \
            --set slack update_freq=300 \
                         icon=󰒱 \
-                        icon.color=$WHITE \
+                        icon.color=$SPREN_CRYPTIC \
                         label.drawing=off \
                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/slack.sh" \
                         click_script="open -a Slack" \
@@ -350,12 +350,6 @@ sketchybar --add item battery right \
                          popup.y_offset=12 \
            --subscribe battery power_source_change system_woke mouse.entered mouse.exited \
   \
-            --add bracket system.pill battery \
-           --set system.pill background.color=$BAR_COLOR \
-                             background.border_color=$PRES_GLACIAL_TRANSLUCENT \
-                             background.border_width=1 \
-                             background.corner_radius=10 \
-                             background.drawing=on \
   \
            --add item battery.status popup.battery \
            --set battery.status icon=󰁹 \
@@ -572,7 +566,7 @@ sketchybar --add item sysmon right \
 sketchybar --add item pomodoro right \
            --set pomodoro update_freq=1 \
                           icon=󰔟 \
-                          icon.color=$SPREN_HONOR \
+                          icon.color=$HONOR_GOLD \
                           label.drawing=off \
                           script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/pomodoro.sh" \
            --subscribe pomodoro mouse.clicked mouse.entered mouse.exited
@@ -619,6 +613,21 @@ sketchybar --add item trash right \
                        drawing=off \
                        script="$PLUGIN_DIR/trash.sh" \
            --subscribe trash mouse.clicked
+
+# Network and System Brackets
+sketchybar --add bracket network.pill control_center bwifi warp net_speed \
+           --set network.pill background.color=$BAR_COLOR \
+                              background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on
+
+sketchybar --add bracket system.pill sysmon battery \
+           --set system.pill background.color=$BAR_COLOR \
+                             background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
 
 # Reorder right items logically (first is rightmost)
 #sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock

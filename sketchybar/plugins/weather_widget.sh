@@ -10,10 +10,7 @@ if [ "$SENDER" = "mouse.exited.global" ]; then
   exit 0
 fi
 
-if [ "$SENDER" = "mouse.clicked" ]; then
-  sketchybar --set "$NAME" popup.drawing=toggle
-  exit 0
-fi
+
 
 # Location: read from config file, fall back to IP geolocation
 WEATHER_LOCATION_FILE="$HOME/.config/sketchybar/weather_location"

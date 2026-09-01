@@ -388,7 +388,7 @@ sketchybar --add item weather right \
                          script="$PLUGIN_DIR/weather_widget.sh" \
                          popup.align=right \
                          popup.y_offset=12 \
-           click_script="sketchybar --set weather popup.drawing=toggle" \
+                         click_script="sketchybar --set weather popup.drawing=toggle" \
            --subscribe weather mouse.clicked mouse.exited.global \
   \
            --add item weather.location popup.weather \

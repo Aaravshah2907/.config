@@ -29,14 +29,7 @@ if [[ "$SENDER" == "mouse.clicked" ]]; then
   exit 0
 fi
 
-# Hover animations (delegated from hover.sh wrapper)
-if [[ "$SENDER" == "mouse.entered" ]]; then
-  sketchybar --animate tanh 15 --set "$NAME" icon.font.size=24
-  exit 0
-elif [[ "$SENDER" == "mouse.exited" ]]; then
-  sketchybar --animate tanh 15 --set "$NAME" icon.font.size=18
-  exit 0
-fi
+# ── Hover animations removed (click-based now) ──
 
 # Default state — Inkspren indigo
 sketchybar --set "$NAME" icon.color=$SPREN_INK

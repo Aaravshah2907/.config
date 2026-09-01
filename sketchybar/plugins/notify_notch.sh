@@ -33,6 +33,9 @@ sketchybar --set "$NOTCH_TO_USE" icon="$ICON" icon.color="$ICON_COLOR" label="$T
            --set "$NOTCH_TO_USE" drawing=on \
            --animate tanh 15 --set "$NOTCH_TO_USE" y_offset=0
 
+# Soft chime alert (same as Pomodoro)
+afplay /System/Library/Sounds/Glass.aiff &
+
 # Hide it after 15 seconds
 (
   sleep 15

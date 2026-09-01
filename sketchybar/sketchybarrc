@@ -325,30 +325,30 @@ sketchybar --add item ntfy right \
                    label.color=$PRES_MIST
 
 # Slack Notifications: Cryptic Whispers
-sketchybar --add item slack right \
-           --set slack update_freq=300 \
-                        icon=󰒱 \
-                        icon.color=$SPREN_CRYPTIC \
-                        label.drawing=off \
-                        script="$PLUGIN_DIR/slack.sh" \
-                        click_script="sketchybar --set slack popup.drawing=toggle" \
-                        popup.align=right \
-           --subscribe slack mouse.clicked mouse.exited.global \
-  \
-           --add item slack.header popup.slack \
-           --set slack.header label.font="JetBrainsMono Nerd Font:Bold:14.0" click_script="open -a Slack" \
-  \
-           --add item slack.status popup.slack \
-           --add item slack.dnd popup.slack \
-           --add item slack.unreads popup.slack \
-           --add item slack.mentions popup.slack \
-  \
-           --add item slack.ch1 popup.slack \
-           --add item slack.ch2 popup.slack \
-           --add item slack.ch3 popup.slack \
-           --add item slack.ch4 popup.slack \
-           --add item slack.ch5 popup.slack
-
+# sketchybar --add item slack right \
+#            --set slack update_freq=300 \
+#                         icon=󰒱 \
+#                         icon.color=$SPREN_CRYPTIC \
+#                         label.drawing=off \
+#                         script="$PLUGIN_DIR/slack.sh" \
+#                         click_script="sketchybar --set slack popup.drawing=toggle" \
+#                         popup.align=right \
+#            --subscribe slack mouse.clicked mouse.exited.global \
+#   \
+#            --add item slack.header popup.slack \
+#            --set slack.header label.font="JetBrainsMono Nerd Font:Bold:14.0" click_script="open -a Slack" \
+#   \
+#            --add item slack.status popup.slack \
+#            --add item slack.dnd popup.slack \
+#            --add item slack.unreads popup.slack \
+#            --add item slack.mentions popup.slack \
+#   \
+#            --add item slack.ch1 popup.slack \
+#            --add item slack.ch2 popup.slack \
+#            --add item slack.ch3 popup.slack \
+#            --add item slack.ch4 popup.slack \
+#            --add item slack.ch5 popup.slack
+# 
 # Bluetooth: Spiritweb
 sketchybar --add item bluetooth right \
            --set bluetooth update_freq=60 \
@@ -648,7 +648,7 @@ sketchybar --add bracket system.pill sysmon battery \
 # Reorder right items logically (first is rightmost)
 #sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
 
-sketchybar --reorder volume volume_icon audio_toggle battery bluetooth control_center net_speed warp bwifi drawer sysmon pomodoro cpkb mic clipboard trash slack ntfy github utilities clock
+sketchybar --reorder volume volume_icon audio_toggle battery bluetooth control_center net_speed warp bwifi drawer sysmon pomodoro cpkb mic clipboard trash ntfy github utilities clock
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change

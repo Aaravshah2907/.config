@@ -4,12 +4,8 @@ source "$HOME/.local/bin/cosmere_colors.sh"
 source "$HOME/.config/shell/functions.sh"
 
 # Handle hover for Weather popup
-if [ "$SENDER" = "mouse.entered" ]; then
-  sketchybar --set "$NAME" popup.drawing=on
-  exit 0
-fi
-
-if [ "$SENDER" = "mouse.exited" ]; then
+# Popup close on global exit (toggle handled by click_script in sketchybarrc)
+if [ "$SENDER" = "mouse.exited.global" ]; then
   sketchybar --set "$NAME" popup.drawing=off
   exit 0
 fi

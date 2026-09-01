@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-if [ "$SENDER" = "mouse.entered" ]; then
-  /opt/homebrew/bin/sketchybar --set control_center popup.drawing=on
-  exit 0
-elif [ "$SENDER" = "mouse.exited" ]; then
+# Popup close on global exit (toggle handled by click_script in sketchybarrc)
+if [ "$SENDER" = "mouse.exited.global" ]; then
   /opt/homebrew/bin/sketchybar --set control_center popup.drawing=off
   exit 0
 fi

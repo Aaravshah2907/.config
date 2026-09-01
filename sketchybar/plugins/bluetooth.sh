@@ -14,18 +14,15 @@ if [ "$1" = "click" ]; then
   exit 0
 fi
 
-# Handle hover for Bluetooth
-if [ "$SENDER" = "mouse.entered" ]; then
-  sketchybar --set "$NAME" popup.drawing=on
-  exit 0
-fi
-
-if [ "$SENDER" = "mouse.exited" ]; then
+# Popup close on global exit
+if [ "$SENDER" = "mouse.exited.global" ]; then
   if [ ! -f /tmp/bluetooth_pinned ]; then
     sketchybar --set "$NAME" popup.drawing=off
   fi
   exit 0
 fi
+
+
 
 # Blueutil check
 CONNECTED_DEVICES=$(blueutil --connected)

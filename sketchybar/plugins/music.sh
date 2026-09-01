@@ -3,12 +3,8 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PAT
 source "$HOME/.local/bin/cosmere_colors.sh"
 
 # Handle hover for Music (Peek mode)
-if [ "$SENDER" = "mouse.entered" ]; then
-  sketchybar --set "$NAME" popup.drawing=on
-  exit 0
-fi
-
-if [ "$SENDER" = "mouse.exited" ]; then
+# Popup close on global exit (toggle handled by click_script in sketchybarrc)
+if [ "$SENDER" = "mouse.exited.global" ]; then
   sketchybar --set "$NAME" popup.drawing=off
   exit 0
 fi

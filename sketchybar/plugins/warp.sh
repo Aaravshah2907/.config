@@ -33,14 +33,7 @@ if [[ "$SENDER" == "mouse.clicked" ]]; then
   # Fall through to status update below
 fi
 
-# ── Hover animations ──
-if [[ "$SENDER" == "mouse.entered" ]]; then
-  sketchybar --animate tanh 15 --set "$NAME" icon.font.size=24
-  exit 0
-elif [[ "$SENDER" == "mouse.exited" ]]; then
-  sketchybar --animate tanh 15 --set "$NAME" icon.font.size=18
-  exit 0
-fi
+# ── Hover animations removed (click-based now) ──
 
 # ── Status polling ──
 STATUS=$(/usr/local/bin/warp-cli status 2>/dev/null | head -1)

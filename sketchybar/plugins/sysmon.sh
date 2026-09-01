@@ -1,9 +1,8 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-if [ "$SENDER" = "mouse.entered" ]; then
-  sketchybar --set sysmon popup.drawing=on
-elif [ "$SENDER" = "mouse.exited" ]; then
+# Popup close on global exit (toggle handled by click_script in sketchybarrc)
+if [ "$SENDER" = "mouse.exited.global" ]; then
   sketchybar --set sysmon popup.drawing=off
 fi
 

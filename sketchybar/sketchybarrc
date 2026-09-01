@@ -13,15 +13,35 @@ sketchybar --add event window_focus \
 
 ##### Core Bar Appearance (Radiant Floating Bar) #####
 
-# Dynamic Notch
-sketchybar --add item notch center \
-           --set notch drawing=off \
+# Dynamic Notch 1
+sketchybar --add item notch1 center \
+           --set notch1 drawing=off \
                        background.color=$BAR_COLOR \
                        background.border_color=$PRES_GLACIAL_TRANSLUCENT \
                        background.border_width=2 \
                        background.corner_radius=12 \
-                       background.padding_left=0 \
-                       background.padding_right=0 \
+                       background.padding_left=5 \
+                       background.padding_right=5 \
+                       background.height=38 \
+                       icon.font="Hack Nerd Font:Bold:18.0" \
+                       icon.color=$WHITE \
+                       label.font="JetBrainsMono Nerd Font:Bold:16.0" \
+                       label.color=$WHITE \
+                       label.padding_left=8 \
+                       label.padding_right=8 \
+                       y_offset=-50 \
+                       topmost=window \
+                       shadow=on
+
+# Dynamic Notch 2
+sketchybar --add item notch2 center \
+           --set notch2 drawing=off \
+                       background.color=$BAR_COLOR \
+                       background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                       background.border_width=2 \
+                       background.corner_radius=12 \
+                       background.padding_left=5 \
+                       background.padding_right=5 \
                        background.height=38 \
                        icon.font="Hack Nerd Font:Bold:18.0" \
                        icon.color=$WHITE \
@@ -177,7 +197,7 @@ sketchybar --add item music center \
                        label.color=$WHITE \
                        script="$PLUGIN_DIR/music.sh" \
                        update_freq=5 \
-                       click_script="$PLUGIN_DIR/music_click.sh" \
+                       click_script="sketchybar --set music popup.drawing=toggle" \
                        popup.align=center \
                        popup.y_offset=12 \
                        scroll_texts=on \
@@ -192,10 +212,10 @@ sketchybar --add item music center \
                        background.height=38 \
                        background.drawing=on \
                        y_offset=-2 \
-           --subscribe music media_change system_woke front_app_switched mouse.entered mouse.exited
+           --subscribe music media_change system_woke front_app_switched mouse.clicked mouse.exited.global
 
 sketchybar --add item media.header popup.music \
-           --set media.header icon=󰎈 label="THE RADIANT SONG" \
+           --set media.header icon=󰎈 label="THE RADIANT SONG" click_script="$PLUGIN_DIR/music_click.sh" \
                                label.font="JetBrainsMono Nerd Font:Bold:14.0" \
                                label.color=$RADIANT_GOLD \
                                icon.color=$RADIANT_GOLD \
@@ -215,10 +235,11 @@ sketchybar --add item control_center right \
                        padding_left=8 \
                        padding_right=8 \
                        drawing=off \
-                       script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/network.sh" \
+                       script="$PLUGIN_DIR/network.sh" \
                        update_freq=120 \
                        popup.align=right \
-           --subscribe control_center mouse.entered mouse.exited \
+           click_script="sketchybar --set control_center popup.drawing=toggle" \
+           --subscribe control_center mouse.clicked mouse.exited.global \
   \
            --add item control_center.ssid popup.control_center \
            --set control_center.ssid icon=󰤨 label="SSID: ..." \
@@ -241,7 +262,7 @@ sketchybar --add item bwifi right \
                        padding_left=8 \
                        padding_right=8 \
                        script="$PLUGIN_DIR/bwifi.sh" \
-           --subscribe bwifi mouse.clicked mouse.entered mouse.exited
+           --subscribe bwifi mouse.clicked mouse.exited.global
 
 # WARP: Preservation Shield (Cloudflare VPN)
 sketchybar --add item warp right \
@@ -253,7 +274,7 @@ sketchybar --add item warp right \
                        padding_left=8 \
                        padding_right=8 \
                        script="$PLUGIN_DIR/warp.sh" \
-           --subscribe warp mouse.clicked mouse.entered mouse.exited
+           --subscribe warp mouse.clicked mouse.exited.global
 
 # GitHub Notification
 sketchybar --add item github right \
@@ -262,9 +283,10 @@ sketchybar --add item github right \
                         icon.color=$SPREN_CRYPTIC \
                         label.drawing=off \
                         drawing=off \
-                        script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/github.sh" \
+                        script="$PLUGIN_DIR/github.sh" \
                         popup.align=right \
-           --subscribe github mouse.entered mouse.exited \
+           click_script="sketchybar --set github popup.drawing=toggle" \
+           --subscribe github mouse.clicked mouse.exited.global \
   \
            --add item github.notifications popup.github \
            --set github.notifications icon=󰂚 label="No token"
@@ -279,7 +301,7 @@ sketchybar --add item ntfy right \
                        script="$PLUGIN_DIR/ntfy.sh" \
                        popup.align=right \
                        popup.y_offset=12 \
-           --subscribe ntfy mouse.entered mouse.exited mouse.clicked \
+           --subscribe ntfy mouse.clicked mouse.exited.global \
   \
            --add item ntfy.header popup.ntfy \
            --set ntfy.header \
@@ -308,13 +330,13 @@ sketchybar --add item slack right \
                         icon=󰒱 \
                         icon.color=$SPREN_CRYPTIC \
                         label.drawing=off \
-                        script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/slack.sh" \
-                        click_script="open -a Slack" \
+                        script="$PLUGIN_DIR/slack.sh" \
+                        click_script="sketchybar --set slack popup.drawing=toggle" \
                         popup.align=right \
-           --subscribe slack mouse.entered mouse.exited \
+           --subscribe slack mouse.clicked mouse.exited.global \
   \
            --add item slack.header popup.slack \
-           --set slack.header label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+           --set slack.header label.font="JetBrainsMono Nerd Font:Bold:14.0" click_script="open -a Slack" \
   \
            --add item slack.status popup.slack \
            --add item slack.dnd popup.slack \
@@ -333,10 +355,10 @@ sketchybar --add item bluetooth right \
                            padding_left=8 \
                            padding_right=8 \
                            drawing=off \
-                           script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/bluetooth.sh" \
+                           script="$PLUGIN_DIR/bluetooth.sh" \
                            click_script="$PLUGIN_DIR/bluetooth.sh click" \
                            popup.align=right \
-           --subscribe bluetooth mouse.entered mouse.exited
+           --subscribe bluetooth mouse.clicked mouse.exited.global
 
 
 
@@ -345,10 +367,11 @@ sketchybar --add item battery right \
            --set battery update_freq=120 \
                          padding_left=8 \
                          padding_right=8 \
-                         script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/battery.sh" \
+                         script="$PLUGIN_DIR/battery.sh" \
                          popup.align=right \
                          popup.y_offset=12 \
-           --subscribe battery power_source_change system_woke mouse.entered mouse.exited \
+           click_script="sketchybar --set battery popup.drawing=toggle" \
+           --subscribe battery power_source_change system_woke mouse.clicked mouse.exited.global \
   \
   \
            --add item battery.status popup.battery \
@@ -365,7 +388,8 @@ sketchybar --add item weather right \
                          script="$PLUGIN_DIR/weather_widget.sh" \
                          popup.align=right \
                          popup.y_offset=12 \
-           --subscribe weather mouse.entered mouse.exited \
+           click_script="sketchybar --set weather popup.drawing=toggle" \
+           --subscribe weather mouse.clicked mouse.exited.global \
   \
            --add item weather.location popup.weather \
            --set weather.location icon=📍 label.font="JetBrainsMono Nerd Font:Bold:14.0" \
@@ -394,8 +418,8 @@ sketchybar --add bracket weather.pill weather \
 
 # Clock: Chronicles
 sketchybar --add item clock right \
-           --set clock update_freq=30 script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock_click.sh" icon=󰃭 \
-           --subscribe clock mouse.entered mouse.exited \
+           --set clock update_freq=30 script="$PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock.sh" icon=󰃭 \
+           --subscribe clock mouse.clicked mouse.exited.global \
            popup.align=right \
   \
   --add item clock.header popup.clock \
@@ -412,16 +436,7 @@ sketchybar --add item clock right \
   --add item clock.event.7 popup.clock --set clock.event.7 label="" drawing=off \
   --add item clock.event.8 popup.clock --set clock.event.8 label="" drawing=off
 
-# Calendar Lines (Optional monthly calendar on click)
-for i in {1..8}
-do
-  sketchybar --add item clock.calendar.line.$i popup.clock \
-             --set clock.calendar.line.$i drawing=off \
-                                         label.font="Courier:Bold:12.0" \
-                                         label.color=$WHITE \
-                                         icon.drawing=off \
-                                         padding_left=20
-done
+# Calendar Lines Removed
 
 sketchybar --add bracket clock.pill clock \
            --set clock.pill background.color=$BAR_COLOR \
@@ -542,9 +557,10 @@ sketchybar --add item sysmon right \
                         icon.color=$PRES_GLACIAL \
                         label.drawing=off \
                         drawing=off \
-                        script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/sysmon.sh" \
+                        script="$PLUGIN_DIR/sysmon.sh" \
                         popup.align=right \
-           --subscribe sysmon mouse.entered mouse.exited \
+           click_script="sketchybar --set sysmon popup.drawing=toggle" \
+           --subscribe sysmon mouse.clicked mouse.exited.global \
   \
            --add graph sysmon.cpu popup.sysmon 120 \
            --set sysmon.cpu icon=󰍛 label="CPU: ..." \
@@ -568,8 +584,8 @@ sketchybar --add item pomodoro right \
                           icon=󰔟 \
                           icon.color=$HONOR_GOLD \
                           label.drawing=off \
-                          script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/pomodoro.sh" \
-           --subscribe pomodoro mouse.clicked mouse.entered mouse.exited
+                          script="$PLUGIN_DIR/pomodoro.sh" \
+           --subscribe pomodoro mouse.clicked mouse.exited.global
 
 # CPKB Snippets
 sketchybar --add item cpkb right \
@@ -577,8 +593,8 @@ sketchybar --add item cpkb right \
                       icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
                       icon.color=$FRONTAPP_ACCENT \
                       label.drawing=off \
-                      script="$PLUGIN_DIR/hover.sh $PLUGIN_DIR/cpkb_plugin.sh" \
-           --subscribe cpkb mouse.clicked mouse.entered mouse.exited
+                      script="$PLUGIN_DIR/cpkb_plugin.sh" \
+           --subscribe cpkb mouse.clicked mouse.exited.global
 
 # Microphone Toggle
 sketchybar --add item mic right \

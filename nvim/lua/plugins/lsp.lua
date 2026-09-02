@@ -104,6 +104,7 @@ return {
 					"marksman", -- Markdown
 					"pyright", -- Python
 					"clangd", -- C/C++
+					"texlab", -- LaTeX LSP
 				},
 				automatic_installation = true,
 				handlers = {

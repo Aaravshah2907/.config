@@ -23,26 +23,29 @@ if [ "$SENDER" = "mouse.clicked" ]; then
   fi
 fi
 
-# Check state
+# Distinct State Colors:
+# 1. Muted: Silver/Ash Gray (0xff8899a6)
+# 2. Standby / Unmuted: Cyan/Preservation Teal (0xff00E5FF)
+# 3. Active Recording / In Use: Pulsing Neon Red (0xffFF3B30)
+
 if [ "$MIC_VOLUME" -eq 0 ]; then
-  # Muted State: Clean minimal muted icon, muted gray color, no label text
-  sketchybar --set $NAME icon="󰍭" icon.color=$SPREN_ASH label.drawing=off drawing=on
+  # Muted State
+  sketchybar --set $NAME icon="󰍭" icon.color=0xff8899a6 label.drawing=off drawing=on
 else
   # Unmuted (Live)
   echo "$MIC_VOLUME" > "$STATE_FILE"
 
-  # Detect active app recording audio via coreaudio stream or active processes
-  IS_RECORDING=$(arecord_check 2>/dev/null)
-  if [ -z "$IS_RECORDING" ]; then
-    # Fallback process check for common recording apps
-    IS_RECORDING=$(pgrep -x "zoom.us|Slack|Discord|Teams|FaceTime|QuickTime Player|obs|Google Chrome|Brave Browser" 2>/dev/null)
+  # Detect if microphone audio stream is actively in use by any running app
+  IS_RECORDING=""
+  if pgrep -x "zoom.us|Slack|Discord|Teams|FaceTime|QuickTime Player|obs|Google Chrome|Brave Browser|Arc|iTerm2" >/dev/null 2>&1; then
+    IS_RECORDING="true"
   fi
 
   if [ -n "$IS_RECORDING" ]; then
-    # Active Recording / In Use State: Pulsing bright red/coral with sin wave animation
-    sketchybar --animate sin 20 --set $NAME icon="󰍬" icon.color=$WARN_COLOR label.drawing=off drawing=on
+    # Active Recording / In Use: Pulsing Neon Red (0xffFF3B30) with sin wave animation
+    sketchybar --animate sin 15 --set $NAME icon="󰍬" icon.color=0xffFF3B30 label.drawing=off drawing=on
   else
-    # Armed / Active Unmuted Standby: Clean emerald/cultivation color, minimal icon-only design
-    sketchybar --set $NAME icon="󰍬" icon.color=$SPREN_CULTIVATION label.drawing=off drawing=on
+    # Standby / Unmuted: Electric Cyan (0xff00E5FF)
+    sketchybar --set $NAME icon="󰍬" icon.color=0xff00E5FF label.drawing=off drawing=on
   fi
 fi

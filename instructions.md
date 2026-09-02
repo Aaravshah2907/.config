@@ -344,6 +344,12 @@ Keep components small.
 
 Never attempt to build everything at once.
 
+### Architecture Graphs & System State Rule
+Whenever modifying or analyzing project architecture (e.g. Neovim configuration, AI Workbench, CLI tools):
+1. Maintain a hidden architecture graph file (e.g. `.nvim_architecture_graph.md`) capturing system state, dependencies, and entrypoints.
+2. Ensure the hidden graph file is ignored in `.gitignore`.
+3. Always consult and update this graph file when proposing structural changes or reviewing configuration state.
+
 Always:
 
 1. Inspect existing files.

@@ -19,3 +19,4 @@ joplin-desktop/*
 github-copilot/*
 raycast/*
 .aider*
+.nvim_architecture_graph.md

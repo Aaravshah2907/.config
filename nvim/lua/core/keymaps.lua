@@ -81,7 +81,14 @@ map("x", "<leader>p", '"_dP', { desc = "Paste without losing clipboard" })
 --   Space+bn = next buffer, Space+bp = previous buffer, Space+bd = close
 map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "[B]uffer [N]ext" })
 map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "[B]uffer [P]revious" })
-map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "[B]uffer [D]elete" })
+map("n", "<leader>bd", function()
+	local ok, snacks = pcall(require, "snacks")
+	if ok and snacks.bufdelete then
+		snacks.bufdelete()
+	else
+		vim.cmd("bdelete")
+	end
+end, { desc = "[B]uffer [D]elete (preserve split)" })
 
 -- ─── Better Indenting ───────────────────────────────────────────────────────
 -- In visual mode, after indenting with < or >, keep the selection

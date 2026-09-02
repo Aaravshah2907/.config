@@ -31,6 +31,8 @@ return {
           python = { "isort", "black" },
           c = { "clang-format" },
           cpp = { "clang-format" },
+          tex = { "latexindent" },
+          latex = { "latexindent" },
         },
         format_on_save = {
           timeout_ms = 1000,
@@ -54,6 +56,7 @@ return {
           "black",
           "clang-format",
           "google-java-format",
+          "latexindent",
         },
       })
     end,

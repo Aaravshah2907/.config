@@ -34,6 +34,8 @@ return {
           "vimdoc",
           "bash",
           "regex",
+          "latex",
+          "bibtex",
         },
 
         -- Automatically install parsers when you open a new file type

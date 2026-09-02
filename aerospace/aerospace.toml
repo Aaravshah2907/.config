@@ -122,8 +122,8 @@ gaps.outer.right =      8
     alt-period = ['layout tiles accordion', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
 
     # Explicit orientation splits (horizontal / vertical split for next window)
-    alt-b = ['layout horizontal', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
-    alt-v = ['layout vertical', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
+    ctrl-alt-b = ['layout horizontal', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
+    ctrl-alt-v = ['layout vertical', 'exec-and-forget sketchybar --trigger aerospace_layout_change']
 
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus

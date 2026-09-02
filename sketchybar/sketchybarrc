@@ -650,7 +650,14 @@ sketchybar --add item trash right \
                        label.color=$SPREN_ASH \
                        drawing=off \
                        script="$PLUGIN_DIR/trash.sh" \
-           --subscribe trash mouse.clicked
+                       popup.align=right \
+           --subscribe trash mouse.clicked mouse.exited.global \
+  \
+           --add item trash.status popup.trash \
+           --set trash.status icon=󰩹 label="Trash: 0 MB" \
+  \
+           --add item trash.empty popup.trash \
+           --set trash.empty icon=󰃢 label="Empty Trash Now" click_script="rm -rf ~/.Trash/*; sketchybar --set trash popup.drawing=off --set trash drawing=off"
 
 # Network and System Brackets
 sketchybar --add bracket network.pill control_center bwifi warp net_speed \

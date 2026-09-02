@@ -136,8 +136,24 @@ sketchybar --add item aero_root_layout left \
                                   label.drawing=off \
                                   padding_left=2 \
                                   padding_right=2 \
+                                  popup.align=left \
                                   script="$PLUGIN_DIR/aerospace_layout.sh" \
-           --subscribe aero_root_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked \
+           --subscribe aero_root_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked mouse.exited.global \
+  \
+           --add item aero_layout.header popup.aero_root_layout \
+           --set aero_layout.header icon=󰒡 label="LAYOUT CONTROLS" label.font="JetBrainsMono Nerd Font:Bold:13.0" label.color=$HONOR_GOLD icon.color=$HONOR_GOLD \
+  \
+           --add item aero_layout.horiz popup.aero_root_layout \
+           --set aero_layout.horiz icon=󰒡 label="Horizontal Split (Ctrl+Alt+B)" click_script="aerospace layout horizontal; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+  \
+           --add item aero_layout.vert popup.aero_root_layout \
+           --set aero_layout.vert icon=󰕰 label="Vertical Split (Ctrl+Alt+V)" click_script="aerospace layout vertical; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+  \
+           --add item aero_layout.accordion popup.aero_root_layout \
+           --set aero_layout.accordion icon=󰓩 label="Toggle Accordion (Alt+.)" click_script="aerospace layout tiles accordion; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+  \
+           --add item aero_layout.balance popup.aero_root_layout \
+           --set aero_layout.balance icon=󰓢 label="Balance Window Sizes (Ctrl+Alt+E)" click_script="aerospace balance-sizes; sketchybar --set aero_root_layout popup.drawing=off" \
   \
            --add item aero_cont_layout left \
            --set aero_cont_layout icon=󰕰 \

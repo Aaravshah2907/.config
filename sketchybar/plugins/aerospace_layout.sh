@@ -1,16 +1,9 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-# On click: toggle the relevant layout
+# On click: toggle layout menu popup
 if [ "$SENDER" = "mouse.clicked" ]; then
-    if [ "$NAME" = "aero_root_layout" ]; then
-        # Toggle root layout between tiles and accordion
-        aerospace layout --workspace focused tiles accordion 2>/dev/null
-    elif [ "$NAME" = "aero_cont_layout" ]; then
-        # Toggle focused container layout between tiles and accordion
-        aerospace layout tiles accordion 2>/dev/null
-    fi
-    sketchybar --trigger aerospace_layout_change
+    sketchybar --set aero_root_layout popup.drawing=toggle
     exit 0
 fi
 

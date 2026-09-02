@@ -68,12 +68,16 @@ if [ "$SENDER" = "mouse.scrolled" ]; then
   exit 0
 fi
 
-# Zen Dots Logic
+# Zen Dots Logic with Window Counter
 if [ "$SELECTED" = "true" ]; then
-  # Selected space: Expand into pill
+  # Selected space: Expand into pill showing label and open window count
+  DISPLAY_LABEL="$SPACE_NAME"
+  if [ "$WINDOW_COUNT" -gt 0 ] 2>/dev/null; then
+    DISPLAY_LABEL="$SPACE_NAME ($WINDOW_COUNT)"
+  fi
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
     icon=" " \
-    label="$SPACE_NAME" label.drawing=on \
+    label="$DISPLAY_LABEL" label.drawing=on \
     label.color=$BAR_COLOR \
     background.drawing=on background.color=$SPACE_COLOR background.border_width=0 background.corner_radius=8 \
     padding_left=4 padding_right=4 label.padding_right=8

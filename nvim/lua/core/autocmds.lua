@@ -154,6 +154,17 @@ autocmd("FileType", {
 	desc = "Markdown-friendly settings (wrap, spell check)",
 })
 
+autocmd("FileType", {
+	group = "FileTypeSettings",
+	pattern = { "tex", "latex" },
+	callback = function()
+		vim.opt_local.wrap = true -- Wrap long lines in LaTeX
+		vim.opt_local.linebreak = true -- Wrap at word boundaries
+		vim.opt_local.spell = true -- Enable spell checking for documentation/papers
+	end,
+	desc = "LaTeX-friendly settings (wrap, spell check)",
+})
+
 -- ─── File Templates (Competitive Programming) ───────────────────────────
 -- Automatically load a template when creating a new C++ or Python file.
 -- Also handles files created externally (e.g. by CPOS) that exist but are

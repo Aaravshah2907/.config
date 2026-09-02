@@ -52,6 +52,19 @@ return {
     opts = {},
   },
 
+  -- Repeat plugin actions with `.`
+  {
+    "tpope/vim-repeat",
+    event = "VeryLazy",
+  },
+
+  -- Auto-close & auto-rename HTML/JSX/XML tags
+  {
+    "windwp/nvim-ts-autotag",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {},
+  },
+
 
   -- ---------------------------------------------------------------------------
   -- Gitsigns: Git integration in the gutter

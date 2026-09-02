@@ -44,25 +44,36 @@ if [[ "$CHARGING" != "" ]]; then
   ICON="󰂄"
 fi
 
+# Parse remaining time (HH:MM) from pmset output
+TIME_REMAINING="$(pmset -g batt | grep -Eo "\d+:\d+" | head -n 1)"
+TIME_LABEL=""
+if [ -n "$TIME_REMAINING" ]; then
+  if [[ "$CHARGING" != "" ]]; then
+    TIME_LABEL=" (${TIME_REMAINING} to full)"
+  else
+    TIME_LABEL=" (${TIME_REMAINING} remaining)"
+  fi
+fi
+
 if [[ "$CHARGING" != "" ]]; then
   COLOR="$BATT_ACCENT"
-  LABEL="󰇚 Infusing ${PERCENTAGE}%"
+  LABEL="󰇚 Infusing ${PERCENTAGE}%${TIME_LABEL}"
 
 elif [ "$PERCENTAGE" -le 15 ]; then
   COLOR="$RUIN_MAROON"
-  LABEL="Dun Gem ${PERCENTAGE}%"
+  LABEL="Dun Gem ${PERCENTAGE}%${TIME_LABEL}"
 
 elif [ "$PERCENTAGE" -le 30 ]; then
   COLOR="$RUIN_SPIKE"
-  LABEL="Dun Gem ${PERCENTAGE}%"
+  LABEL="Dun Gem ${PERCENTAGE}%${TIME_LABEL}"
 
 elif [ "$PERCENTAGE" -le 80 ]; then
   COLOR="$PRES_LAVENDER"
-  LABEL="Reserve ${PERCENTAGE}%"
+  LABEL="Reserve ${PERCENTAGE}%${TIME_LABEL}"
 
 else
   COLOR="$BATT_ACCENT"
-  LABEL="Infused ${PERCENTAGE}%"
+  LABEL="Infused ${PERCENTAGE}%${TIME_LABEL}"
 fi
 
 

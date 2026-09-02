@@ -20,10 +20,29 @@ else
   WEATHER_LOCATION=""
 fi
 
-# Fetch detailed weather data
-WEATHER_DATA=$(curl -s "wttr.in/${WEATHER_LOCATION}?format=%C|%t|%h|%w|%f|%l|%m" || echo "Error")
+CACHE_FILE="/tmp/sketchybar_weather_cache"
 
-if [ -z "$WEATHER_DATA" ] || [[ "$WEATHER_DATA" == *"Error"* ]] || [[ "$WEATHER_DATA" == *"Unknown"* ]]; then
+# Function to perform fast non-blocking fetch with short timeout
+fetch_weather() {
+  NEW_DATA=$(curl -s -m 3 "wttr.in/${WEATHER_LOCATION}?format=%C|%t|%h|%w|%f|%l|%m" 2>/dev/null)
+  if [ -n "$NEW_DATA" ] && [[ "$NEW_DATA" != *"Error"* ]] && [[ "$NEW_DATA" != *"Unknown"* ]]; then
+    echo "$NEW_DATA" > "$CACHE_FILE"
+  fi
+}
+
+# If cache file doesn't exist or is older than 15 minutes (900s), trigger background fetch
+if [ ! -f "$CACHE_FILE" ] || [ $(($(date +%s) - $(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0))) -gt 900 ]; then
+  fetch_weather &
+fi
+
+# Read data from cache or fallback to current payload
+if [ -f "$CACHE_FILE" ]; then
+  WEATHER_DATA=$(cat "$CACHE_FILE")
+else
+  WEATHER_DATA=""
+fi
+
+if [ -z "$WEATHER_DATA" ]; then
   sketchybar --set weather label="--" icon="?"
   exit 0
 fi

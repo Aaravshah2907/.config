@@ -35,17 +35,20 @@ else
   # Unmuted (Live)
   echo "$MIC_VOLUME" > "$STATE_FILE"
 
-  # Detect if microphone audio stream is actively in use by any running app
+  # Query hardware CoreAudio hardware state using compiled Swift tool
+  DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   IS_RECORDING=""
-  if pgrep -x "zoom.us|Slack|Discord|Teams|FaceTime|QuickTime Player|obs|Google Chrome|Brave Browser|Arc|iTerm2" >/dev/null 2>&1; then
-    IS_RECORDING="true"
+  if [ -x "$DIR/check_mic_active" ]; then
+    if "$DIR/check_mic_active" >/dev/null 2>&1; then
+      IS_RECORDING="true"
+    fi
   fi
 
   if [ -n "$IS_RECORDING" ]; then
-    # Active Recording / In Use: Pulsing Neon Red (0xffFF3B30) with sin wave animation
+    # Mode 1: Active Hardware Recording / In Use (Pulsing Neon Red)
     sketchybar --animate sin 15 --set $NAME icon="󰍬" icon.color=0xffFF3B30 label.drawing=off drawing=on
   else
-    # Standby / Unmuted: Electric Cyan (0xff00E5FF)
+    # Mode 2: Unmuted Standby / Armed (Electric Cyan)
     sketchybar --set $NAME icon="󰍬" icon.color=0xff00E5FF label.drawing=off drawing=on
   fi
 fi

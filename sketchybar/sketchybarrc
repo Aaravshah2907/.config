@@ -260,6 +260,12 @@ sketchybar --add item control_center right \
            --add item control_center.ssid popup.control_center \
            --set control_center.ssid icon=󰤨 label="SSID: ..." \
   \
+           --add item control_center.ip popup.control_center \
+           --set control_center.ip icon=󰩟 label="Local IP: ..." \
+  \
+           --add item control_center.public_ip popup.control_center \
+           --set control_center.public_ip icon=󰇧 label="Public IP: Loading..." \
+  \
            --add item control_center.down popup.control_center \
            --set control_center.down icon=󰇚 label="Download: ..." \
   \

@@ -86,6 +86,18 @@ else
     LOCATION="Severed Bond"
 fi
 
+# Public IP Cache logic
+PUBLIC_IP_CACHE="/tmp/sketchybar_public_ip"
+if [ ! -f "$PUBLIC_IP_CACHE" ] || [ $(($(date +%s) - $(stat -f %m "$PUBLIC_IP_CACHE" 2>/dev/null || echo 0))) -gt 3600 ]; then
+  (
+    PUB_IP=$(curl -s -m 2 https://ifconfig.me 2>/dev/null || echo "Unavailable")
+    [ -n "$PUB_IP" ] && echo "$PUB_IP" > "$PUBLIC_IP_CACHE"
+  ) &
+fi
+
+PUBLIC_IP="Loading..."
+[ -f "$PUBLIC_IP_CACHE" ] && PUBLIC_IP=$(cat "$PUBLIC_IP_CACHE")
+
 # Icon and Color Logic — Preservation (order/connection) vs Ruin (severed bond)
 ICON="󰤨"
 COLOR="$PRES_GLACIAL"                    # Glacial teal — Preservation's calm bond
@@ -95,5 +107,9 @@ if [ "$LOCATION" = "Severed Bond" ]; then
     COLOR="$RUIN_MAROON"                  # Ruin's bloodline — connection destroyed
 fi
 
+LOCAL_IP_DISP="${INTERNAL_IP:-Disconnected}"
+
 /opt/homebrew/bin/sketchybar --set control_center icon="$ICON" label.drawing=off icon.color="$COLOR" \
-                             --set control_center.ssid label="SSID: $LOCATION" icon=󰤨 icon.color="$COLOR"
+                             --set control_center.ssid label="SSID: $LOCATION" icon=󰤨 icon.color="$COLOR" \
+                             --set control_center.ip label="Local IP: $LOCAL_IP_DISP" icon=󰩟 icon.color="$PRES_SILVER" \
+                             --set control_center.public_ip label="Public IP: $PUBLIC_IP" icon=󰇧 icon.color="$PRES_ATIUM"

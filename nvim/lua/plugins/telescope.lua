@@ -18,6 +18,8 @@ return {
       "nvim-telescope/telescope-fzf-native.nvim",
       build = "make", -- Compiles a C library for speed
     },
+    -- Undo history visualizer extension
+    "debugloop/telescope-undo.nvim",
   },
   event = "VimEnter", -- Load on startup so keys work immediately
 
@@ -41,10 +43,21 @@ return {
           "dist/",
         },
       },
+      extensions = {
+        undo = {
+          use_delta = true,
+          side_by_side = true,
+          layout_strategy = "vertical",
+          layout_config = {
+            preview_height = 0.7,
+          },
+        },
+      },
     })
 
-    -- Load the FZF extension for better fuzzy matching
+    -- Load extensions
     pcall(telescope.load_extension, "fzf")
+    pcall(telescope.load_extension, "undo")
 
     -- ── Keymaps ──────────────────────────────────────────────────────────
     -- All Telescope keymaps start with <leader>f (f = Find)
@@ -62,5 +75,6 @@ return {
     map("n", "<leader>fw", builtin.grep_string, { desc = "Find Word under cursor" })
     map("n", "<leader>fn", function() builtin.find_files({ cwd = vim.fn.stdpath("config") }) end, { desc = "Find Neovim config files" })
     map("n", "<leader>fR", builtin.registers, { desc = "Find Registers" })
+    map("n", "<leader>fu", "<cmd>Telescope undo<cr>", { desc = "Find Undo Tree" })
   end,
 }

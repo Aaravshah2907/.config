@@ -2,17 +2,15 @@
 source "$HOME/.local/bin/cosmere_colors.sh"
 
 STATE_FILE="/tmp/sketchybar_mic_volume"
-
 MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
 
+# Click handler: Toggle Mute / Restore
 if [ "$SENDER" = "mouse.clicked" ]; then
   if [ "$MIC_VOLUME" -gt 0 ]; then
-    # Save current volume level so we can restore it accurately later
     echo "$MIC_VOLUME" > "$STATE_FILE"
     osascript -e 'set volume input volume 0'
-    sketchybar --set $NAME icon="󰍭" icon.color=$SPREN_ASH label="Muted" label.color=$SPREN_ASH label.drawing=on drawing=on
+    MIC_VOLUME=0
   else
-    # Restore previous volume level or default to 80% if no stored level exists
     TARGET_VOL=80
     if [ -f "$STATE_FILE" ]; then
       SAVED_VOL=$(cat "$STATE_FILE" 2>/dev/null)
@@ -21,17 +19,30 @@ if [ "$SENDER" = "mouse.clicked" ]; then
       fi
     fi
     osascript -e "set volume input volume $TARGET_VOL"
-    sketchybar --set $NAME icon="󰍬" icon.color=$WARN_COLOR label="LIVE" label.color=$WARN_COLOR label.drawing=on drawing=on
+    MIC_VOLUME=$TARGET_VOL
   fi
-  exit 0
 fi
 
-if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
-  if [ "$MIC_VOLUME" -gt 0 ]; then
-    # Continuously update saved volume while unmuted
-    echo "$MIC_VOLUME" > "$STATE_FILE"
-    sketchybar --set $NAME icon="󰍬" icon.color=$WARN_COLOR label="LIVE" label.color=$WARN_COLOR label.drawing=on drawing=on
+# Check state
+if [ "$MIC_VOLUME" -eq 0 ]; then
+  # Muted State: Clean minimal muted icon, muted gray color, no label text
+  sketchybar --set $NAME icon="󰍭" icon.color=$SPREN_ASH label.drawing=off drawing=on
+else
+  # Unmuted (Live)
+  echo "$MIC_VOLUME" > "$STATE_FILE"
+
+  # Detect active app recording audio via coreaudio stream or active processes
+  IS_RECORDING=$(arecord_check 2>/dev/null)
+  if [ -z "$IS_RECORDING" ]; then
+    # Fallback process check for common recording apps
+    IS_RECORDING=$(pgrep -x "zoom.us|Slack|Discord|Teams|FaceTime|QuickTime Player|obs|Google Chrome|Brave Browser" 2>/dev/null)
+  fi
+
+  if [ -n "$IS_RECORDING" ]; then
+    # Active Recording / In Use State: Pulsing bright red/coral with sin wave animation
+    sketchybar --animate sin 20 --set $NAME icon="󰍬" icon.color=$WARN_COLOR label.drawing=off drawing=on
   else
-    sketchybar --set $NAME icon="󰍭" icon.color=$SPREN_ASH label="Muted" label.color=$SPREN_ASH label.drawing=on drawing=on
+    # Armed / Active Unmuted Standby: Clean emerald/cultivation color, minimal icon-only design
+    sketchybar --set $NAME icon="󰍬" icon.color=$SPREN_CULTIVATION label.drawing=off drawing=on
   fi
 fi

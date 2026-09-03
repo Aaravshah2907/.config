@@ -1,0 +1,104 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Geometry & Margins ---
+\usepackage[margin=0.8in,top=1in,bottom=1in]{geometry}
+
+% --- Colors (Modern Slate & Royal Accent Palette) ---
+\usepackage[table]{xcolor}
+\definecolor{primary}{HTML}{003366}     % Deep Royal Blue
+\definecolor{secondary}{HTML}{008080}   % Teal Accent
+\definecolor{darkslate}{HTML}{1E293B}   % Main Text Body
+\definecolor{lightgray}{HTML}{F8FAFC}   % Box Background
+\definecolor{bordergray}{HTML}{E2E8F0}  % Subtle Border
+
+% --- Fonts & Microtypography ---
+\usepackage[utf8]{utf8}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Headers & Footers ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{primary}{\small \textbf{LaTeX Modern Note}}}
+\lhead{\textcolor{darkslate}{\small \leftmark}}
+\rfoot{\textcolor{darkslate}{\small Page \thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% --- Callout Boxes & Styling ---
+\usepackage[most]{tcolorbox}
+\newtcolorbox{infobox}[1][]{
+  enhanced,
+  colback=lightgray,
+  colframe=primary,
+  boxrule=0.8pt,
+  arc=3pt,
+  left=12pt,
+  right=12pt,
+  top=10pt,
+  bottom=10pt,
+  title=\textbf{#1},
+  coltitle=white,
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=primary, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{warningbox}[1][Warning]{
+  enhanced,
+  colback=red!5!white,
+  colframe=red!75!black,
+  boxrule=0.8pt,
+  arc=3pt,
+  title=\textbf{#1},
+  coltitle=white,
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=red!75!black, arc=2pt, boxrule=0pt}
+}
+
+% --- Hyperlinks ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=secondary,
+    urlcolor=secondary
+}
+
+\title{\textcolor{primary}{\Huge \textbf{Structured Technical Notes}}\\[0.3em] \large \textcolor{secondary}{AI-Enhanced Study \& Synthesis Guide}}
+\author{\textbf{Aarav Shah}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{infobox}[Executive Summary]
+This template provides styled headers, callout alert boxes, custom color palettes, and structured layouts ideal for AI summaries, study guides, and technical notes.
+\end{infobox}
+
+\section{Key Concepts}
+Here is a list of primary takeaways:
+
+\begin{itemize}[label=\textcolor{secondary}{$\bullet$}]
+    \item \textbf{High-Performance PDF Compilation:} Integrated via VimTeX and \texttt{latexmk}.
+    \item \textbf{Structured UI Boxes:} Custom \texttt{tcolorbox} callouts for alerts, warnings, and code breakdowns.
+    \item \textbf{Clean Typography:} Pre-configured headers and footers with page numbering.
+\end{itemize}
+
+\begin{warningbox}[Critical Pre-requisite]
+Ensure all required TeX packages (\texttt{tcolorbox}, \texttt{xcolor}, \texttt{fancyhdr}) are available in your TeX distribution.
+\end{warningbox}
+
+\section{Code Implementation}
+Below is an example of an embedded snippet box:
+
+\begin{infobox}[Algorithm Pseudocode]
+\texttt{function QuickSort(arr, low, high):}\\
+\hspace*{1em}\texttt{if low < high then}\\
+\hspace*{2em}\texttt{pivot := Partition(arr, low, high)}\\
+\hspace*{2em}\texttt{QuickSort(arr, low, pivot - 1)}\\
+\hspace*{2em}\texttt{QuickSort(arr, pivot + 1, high)}
+\end{infobox}
+
+\end{document}

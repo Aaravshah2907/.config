@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{utf8}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+% --- Hyperlink Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Academic Paper / Technical Report},
+    pdfpagemode=FullName,
+}
+
+% --- Theorem Environments ---
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
+
+\title{\textbf{Title of the Document}}
+\author{\textbf{Aarav Shah} \\ \small Department of Computer Science \\ \small \href{mailto:email@example.com}{email@example.com}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This is a clean abstract summarizing the main objectives, methodologies, results, and implications of this paper.
+\end{abstract}
+
+\section{Introduction}
+Welcome to your LaTeX document. You can cite equations like Equation~\ref{eq:example} or refer to sections easily.
+
+\begin{equation}
+\label{eq:example}
+E = mc^2
+\end{equation}
+
+\section{Methodology}
+Describing the primary technical process or algorithm.
+
+\begin{theorem}
+For any non-negative integer $n$, the summation of the first $n$ integers is given by $\frac{n(n+1)}{2}$.
+\end{theorem}
+
+\section{Results \& Evaluation}
+\begin{table}[h]
+\centering
+\caption{Performance Overview}
+\label{tab:results}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Metric} & \textbf{Baseline} & \textbf{Proposed System} \\
+\midrule
+Accuracy        & 84.5\%            & 96.2\%                   \\
+Latency (ms)    & 120ms             & 42ms                     \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+Final remarks and future work directions.
+
+\end{document}

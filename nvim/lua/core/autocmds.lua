@@ -205,3 +205,49 @@ for _, tpl in ipairs(templates) do
 		desc = "Load template for empty existing " .. pattern .. " files",
 	})
 end
+
+-- ─── Interactive LaTeX Template Selector ────────────────────────────────────
+-- When opening a brand new or empty .tex file, present a Telescope picker
+-- to choose between Article, Modern Notes, or Beamer presentation templates.
+local function select_tex_template(bufnr)
+	local templates_dir = vim.fn.expand("~/.config/nvim/templates/tex/")
+	local choices = {
+		{ label = "📄 Academic Article / Paper", file = "article.tex" },
+		{ label = "📝 Modern Structured Notes & Callouts", file = "notes.tex" },
+		{ label = "📊 Beamer Presentation Slides (16:9)", file = "beamer.tex" },
+		{ label = "❌ Empty File (No Template)", file = nil },
+	}
+
+	vim.ui.select(choices, {
+		prompt = "Select LaTeX Template for new document:",
+		format_item = function(item)
+			return item.label
+		end,
+	}, function(choice)
+		if choice and choice.file then
+			local full_path = templates_dir .. choice.file
+			if vim.fn.filereadable(full_path) == 1 then
+				vim.cmd("0r " .. full_path)
+				vim.api.nvim_win_set_cursor(0, { 1, 0 })
+				vim.bo[bufnr].modified = true
+				vim.notify("Loaded template: " .. choice.label, vim.log.levels.INFO)
+			end
+		end
+	end)
+end
+
+autocmd({ "BufNewFile", "BufRead" }, {
+	group = "Templates",
+	pattern = { "*.tex" },
+	callback = function(args)
+		-- Trigger prompt if buffer is empty
+		if vim.api.nvim_buf_line_count(args.buf) == 1 and vim.api.nvim_buf_get_lines(args.buf, 0, 1, false)[1] == "" then
+			-- Defer execution slightly to ensure UI is ready
+			vim.defer_fn(function()
+				select_tex_template(args.buf)
+			end, 50)
+		end
+	end,
+	desc = "Interactive LaTeX Template Selector",
+})
+

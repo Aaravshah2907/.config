@@ -214,6 +214,7 @@ local function select_tex_template(bufnr)
 	local choices = {
 		{ label = "📄 Academic Article / Paper", file = "article.tex" },
 		{ label = "📝 Modern Structured Notes & Callouts", file = "notes.tex" },
+		{ label = "⚛️ Physics & Self Study Research Notes", file = "physics_research.tex" },
 		{ label = "📊 Beamer Presentation Slides (16:9)", file = "beamer.tex" },
 		{ label = "❌ Empty File (No Template)", file = nil },
 	}

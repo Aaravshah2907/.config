@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 LaTeX Snippet Exporter & CPKB Exporter Utility
-Exports UI/Note LaTeX snippets and documents into JSON format matching the CPKB export format schema.
+Exports UI, Physics, Math, and Note LaTeX snippets matching the CPKB export format schema.
 """
 
 import json
@@ -165,6 +165,102 @@ def compute_fibonacci(n: int) -> int:
     pdftitle={Technical Synthesis Document},
     pdfauthor={Aarav Shah}
 }"""
+    },
+    {
+        "id": "LATEX-000009",
+        "title": "Physics Bra-Ket & Expectation Value",
+        "description": "Quantum mechanics state vectors, operators, and matrix elements via physics package.",
+        "use_case": "Writing quantum mechanics equations, operators, and inner products.",
+        "tags": "physics, quantum, braket, operator, math",
+        "code": """% Requires \\usepackage{physics}
+\\ket{\\psi_n} = \\sum_k c_{nk} \\ket{\\phi_k}
+\\mel{\\psi}{\\hat{A}}{\\phi} = \\int \\psi^*(x) \\hat{A} \\phi(x) \\dd{x}
+\\pdv{\\psi}{t} = -\\frac{i}{\\hbar} \\hat{H}\\psi"""
+    },
+    {
+        "id": "LATEX-000010",
+        "title": "SI Units Physical Quantities",
+        "description": "Typeset physical quantities with numbers and SI units via siunitx.",
+        "use_case": "Self study notes, experimental lab data, and physical constant declarations.",
+        "tags": "physics, units, siunitx, experimental, math",
+        "code": """% Requires \\usepackage{siunitx}
+\\SI{9.80665}{\\meter\\per\\second\\squared}
+\\SI{6.626e-34}{\\joule\\second}
+\\SI{1.602e-19}{\\coulomb}"""
+    },
+    {
+        "id": "LATEX-000011",
+        "title": "Step-by-Step Mathematical Derivation Box",
+        "description": "Styled tcolorbox derivation block with aligned equations.",
+        "use_case": "Proving math theorems or showing step-by-step physics derivations in notes.",
+        "tags": "math, physics, derivation, proof, box",
+        "code": """\\begin{tcolorbox}[
+  enhanced,
+  colback=gray!5!white,
+  colframe=gray!60!black,
+  boxrule=0.8pt,
+  arc=3pt,
+  title=\\textbf{Derivation: Conservation of Energy},
+  coltitle=white
+]
+\\begin{align}
+E_{\\text{total}} &= T + V \\\\
+&= \\frac{1}{2} m v^2 + m g h \\\\
+\\pdv{E}{t} &= m v \\dot{v} + m g \\dot{h} = 0
+\\end{align}
+\\end{tcolorbox}"""
+    },
+    {
+        "id": "LATEX-000012",
+        "title": "Clean Algorithm Pseudocode Listing",
+        "description": "Algorithm pseudocode layout using algorithm2e / algpseudocode style.",
+        "use_case": "Writing computer science algorithms, dynamic programming, or graph methods.",
+        "tags": "coding, algorithm, pseudocode, computer-science",
+        "code": """\\begin{tcolorbox}[
+  colback=slate!5!white,
+  colframe=royalblue!80!black,
+  title=\\textbf{Algorithm: Dijkstra Shortest Path}
+]
+\\texttt{\\textbf{Input:} Graph $G=(V,E)$, Source vertex $s$}\\\\
+\\texttt{1. Initialize $dist[u] \\gets \\infty$ for all $u \\in V$, $dist[s] \\gets 0$}\\\\
+\\texttt{2. Insert all vertices into priority queue $Q$}\\\\
+\\texttt{3. \\textbf{while} $Q$ is not empty \\textbf{do}}\\\\
+\\texttt{4. \\quad $u \\gets \\text{extract\\_min}(Q)$}\\\\
+\\texttt{5. \\quad \\textbf{for each} neighbor $v$ of $u$ \\textbf{do}}\\\\
+\\texttt{6. \\qquad \\textbf{if} $dist[v] > dist[u] + w(u,v)$ \\textbf{then}}\\\\
+\\texttt{7. \\qquad\\quad $dist[v] \\gets dist[u] + w(u,v)$}
+\\end{tcolorbox}"""
+    },
+    {
+        "id": "LATEX-000013",
+        "title": "TikZ Neural Network Layer Diagram",
+        "description": "Visual multi-layer neural network diagram drawn with TikZ.",
+        "use_case": "Deep learning notes, machine learning research papers, and architectural diagrams.",
+        "tags": "coding, ml, neural-network, tikz, diagram",
+        "code": """\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[x=1.5cm, y=1.2cm, >=stealth]
+  % Input Layer
+  \\foreach \\m[count=\\y] in {1,2,3}
+    \\node[circle,fill=blue!20,draw=blue!80,inner sep=0pt,minimum size=17pt] (I-\\m) at (0,-\\y) {$x_\\m$};
+
+  % Hidden Layer
+  \\foreach \\m[count=\\y] in {1,2,3,4}
+    \\node[circle,fill=green!20,draw=green!80,inner sep=0pt,minimum size=17pt] (H-\\m) at (1.5,-\\y+0.5) {$h_\\m$};
+
+  % Output Layer
+  \\node[circle,fill=red!20,draw=red!80,inner sep=0pt,minimum size=17pt] (O) at (3,-2.5) {$\\hat{y}$};
+
+  % Connect Layers
+  \\foreach \\i in {1,2,3}
+    \\foreach \\j in {1,2,3,4}
+      \\draw[->] (I-\\i) -- (H-\\j);
+
+  \\foreach \\i in {1,2,3,4}
+    \\draw[->] (H-\\i) -- (O);
+\\end{tikzpicture}
+\\caption{Multi-Layer Perceptron Architecture}
+\\end{figure}"""
     }
 ]
 

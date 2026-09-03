@@ -1,0 +1,75 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Math & Physics Packages ---
+\usepackage[utf8]{utf8}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathtools}
+\usepackage{physics}      % Bra-ket notation, derivatives, operators
+\usepackage{siunitx}      % Physical quantities with units: \SI{9.81}{\meter\per\second\squared}
+\usepackage{slashed}      % Feynman slashed notation for particle physics
+\usepackage{tikz}         % Diagrams
+\usetikzlibrary{shapes,arrows.meta,positioning,decorations.pathmorphing}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+% --- Custom Environments ---
+\newtcolorbox{theorembox}[1][Theorem]{
+  enhanced,
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  boxrule=0.8pt,
+  arc=3pt,
+  title=\textbf{#1},
+  coltitle=white
+}
+
+\newtcolorbox{derivationbox}[1][Derivation Steps]{
+  enhanced,
+  colback=gray!5!white,
+  colframe=gray!60!black,
+  boxrule=0.8pt,
+  arc=3pt,
+  title=\textbf{#1},
+  coltitle=white
+}
+
+\title{\textbf{Quantum Field Theory / Mathematical Physics Research Notes}\\[0.3em] \large \textcolor{blue!80!black}{Field Operators \& Canonical Quantization}}
+\author{\textbf{Aarav Shah}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Core Field Equations}
+The Dirac Lagrangian density for a free spin-$1/2$ field is given by:
+\begin{equation}
+\mathcal{L} = \bar{\psi}(i\gamma^\mu \partial_\mu - m)\psi
+\end{equation}
+
+Using bra-ket notation provided by the \texttt{physics} package:
+\begin{equation}
+\hat{H} \ket{\psi(t)} = i\hbar \pdv{}{t} \ket{\psi(t)}
+\end{equation}
+
+\section{Mathematical Derivations}
+
+\begin{derivationbox}[Canonical Commutation Relations]
+For scalar fields $\phi(x)$ and conjugate momenta $\pi(y)$:
+\begin{align}
+[\phi(\vec{x}, t), \pi(\vec{y}, t)] &= i\hbar \delta^{(3)}(\vec{x} - \vec{y}) \\
+[\phi(\vec{x}, t), \phi(\vec{y}, t)] &= 0 \\
+[\pi(\vec{x}, t), \pi(\vec{y}, t)] &= 0
+\end{align}
+\end{derivationbox}
+
+\section{Physical Quantities \& Units}
+Using the \texttt{siunitx} package:
+\begin{itemize}
+    \item Speed of light: $c = \SI{2.9979e8}{\meter\per\second}$
+    \item Planck's reduced constant: $\hbar \approx \SI{1.05457e-34}{\joule\second}$
+    \item Electron charge: $e \approx \SI{1.602e-19}{\coulomb}$
+\end{itemize}
+
+\end{document}

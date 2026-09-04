@@ -423,6 +423,7 @@ return {
 					},
 					{
 						padding = 1,
+						align = "center",
 						text = {
 							{ "“Life before death. Strength before weakness. Journey before destination.” ⚔️", hl = "AlphaFooter" },
 						},

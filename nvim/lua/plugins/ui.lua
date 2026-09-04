@@ -414,7 +414,7 @@ return {
 						section = "recent_files",
 						indent = 1,
 						padding = 1,
-						limit = 5,
+						limit = 15,
 					},
 					{
 						pane = 2,
@@ -432,7 +432,6 @@ return {
 					keys = {
 						{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
 						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-						{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
 						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 						{ icon = " ", key = "s", desc = "Session", action = ":lua require('persistence').load()" },
 						{ icon = " ", key = "C", desc = "Cheatsheet", action = ":e ~/nvim_cheatsheet.md" },

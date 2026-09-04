@@ -69,8 +69,12 @@ return {
 		config = function()
 			require("bufferline").setup({
 				options = {
+					numbers = "ordinal", -- Show buffer numbers (1, 2, 3...)
 					diagnostics = "nvim_lsp", -- Show error/warning counts on tabs
-					-- (Using default bufferline highlights which pick up our colorscheme)
+					diagnostics_indicator = function(count, level)
+						local icon = level:match("error") and " " or " "
+						return " " .. icon .. count
+					end,
 					separator_style = "slant", -- Angled tab separators
 					show_buffer_close_icons = true,
 					show_close_icon = false,

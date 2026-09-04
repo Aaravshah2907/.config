@@ -387,26 +387,25 @@ return {
 		opts = {
 			dashboard = {
 				pane_gap = 4, -- Space between columns
-				width = 50, -- Optimize width for two panes
+				width = 44, -- Optimize width for two panes
 				sections = {
 					{
-						pane = 1,
-						padding = 1,
+						section = "text",
+						padding = 0,
 						text = {
-							-- Sleek Windrunner Neovim text art
-							{ [[              _   __               _         ]].."\n", hl = "SnacksHeaderGradient1" },
-							{ [[             / | / /__  ____ _   _(_)____ ___]].."\n", hl = "SnacksHeaderGradient2" },
-							{ [[            /  |/ / _ \/ __ \ | / / / __ `__ \]].."\n", hl = "SnacksHeaderGradient3" },
-							{ [[           / /|  /  __/ /_/ / |/ / / / / / / /]].."\n", hl = "SnacksHeaderGradient4" },
-							{ [[          /_/ |_/\___/\____/|___/_/_/ /_/ /_/]].."\n", hl = "SnacksHeaderGradient5" },
-							{ "\n", hl = "SnacksHeaderGradient6" },
-							{ [[                  ⚡ Windrunner ⚡             ]].."\n", hl = "SnacksHeaderGradient7" },
+							-- Sleek compact Windrunner Neovim text art
+							{ [[  _   __               _         ]].."\n", hl = "SnacksHeaderGradient1" },
+							{ [[ / | / /__  ____ _   _(_)____ ___]].."\n", hl = "SnacksHeaderGradient2" },
+							{ [[/  |/ / _ \/ __ \ | / / / __ `__ \]].."\n", hl = "SnacksHeaderGradient3" },
+							{ [[/ /|  /  __/ /_/ / |/ / / / / / / /]].."\n", hl = "SnacksHeaderGradient4" },
+							{ [[/_/ |_/\___/\____/|___/_/_/ /_/ /_/ ]].."\n", hl = "SnacksHeaderGradient5" },
+							{ [[          ⚡ Windrunner ⚡             ]].."\n", hl = "SnacksHeaderGradient7" },
 						},
 					},
 					{
 						pane = 1,
 						section = "keys",
-						gap = 1,
+						gap = 0,
 						padding = 1,
 					},
 					{
@@ -414,23 +413,9 @@ return {
 						icon = " ",
 						title = "Recent Files",
 						section = "recent_files",
-						indent = 2,
+						indent = 1,
 						padding = 1,
-						limit = 6,
-					},
-					{
-						pane = 2,
-						icon = " ",
-						title = "Git Status",
-						section = "terminal",
-						enabled = function()
-							return Snacks.git.get_root() ~= nil
-						end,
-						cmd = "git status -short --branch --renames",
-						height = 5,
-						padding = 1,
-						ttl = 5 * 60,
-						indent = 2,
+						limit = 5,
 					},
 					{
 						pane = 2,
@@ -438,7 +423,7 @@ return {
 						padding = 1,
 					},
 					{
-						pane = 1,
+						section = "text",
 						padding = 1,
 						text = {
 							{ "“Life before death. Strength before weakness. Journey before destination.” ⚔️", hl = "AlphaFooter" },
@@ -451,12 +436,10 @@ return {
 						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
 						{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
 						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-						{ icon = " ", key = "s", desc = "Restore Session", action = ":lua require('persistence').load()" },
+						{ icon = " ", key = "s", desc = "Session", action = ":lua require('persistence').load()" },
 						{ icon = " ", key = "C", desc = "Cheatsheet", action = ":e ~/nvim_cheatsheet.md" },
 						{ icon = " ", key = "c", desc = "Config", action = ":lua require('yazi').yazi({}, vim.fn.stdpath('config'))" },
-						{ icon = " ", key = "e", desc = "Open Yazi", action = ":Yazi" },
 						{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy" },
-						{ icon = "󱌣 ", key = "M", desc = "Mason", action = ":Mason" },
 						{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
 					},
 				},

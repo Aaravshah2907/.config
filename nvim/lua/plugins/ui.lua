@@ -390,8 +390,7 @@ return {
 				width = 44, -- Optimize width for two panes
 				sections = {
 					{
-						section = "text",
-						padding = 0,
+						padding = 1,
 						text = {
 							-- Sleek compact Windrunner Neovim text art
 							{ [[  _   __               _         ]].."\n", hl = "SnacksHeaderGradient1" },
@@ -405,7 +404,7 @@ return {
 					{
 						pane = 1,
 						section = "keys",
-						gap = 0,
+						gap = 1,
 						padding = 1,
 					},
 					{
@@ -423,7 +422,6 @@ return {
 						padding = 1,
 					},
 					{
-						section = "text",
 						padding = 1,
 						text = {
 							{ "“Life before death. Strength before weakness. Journey before destination.” ⚔️", hl = "AlphaFooter" },

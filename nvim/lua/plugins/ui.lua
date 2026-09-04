@@ -345,6 +345,17 @@ return {
 					inc_rename = false, -- Don't use for rename
 					lsp_doc_border = true, -- Add border to LSP hover docs
 				},
+				routes = {
+					-- Skip "written" messages on save so they don't spam notifications
+					{
+						filter = {
+							event = "msg_show",
+							kind = "",
+							find = "written",
+						},
+						opts = { skip = true },
+					},
+				},
 			})
 		end,
 	},

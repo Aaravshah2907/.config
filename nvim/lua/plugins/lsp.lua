@@ -17,28 +17,14 @@ return {
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" }, -- Load when opening a file
 		dependencies = {
-			-- Mason: auto-installs LSP servers (you don't need to install them manually!)
-			{ "williamboman/mason.nvim", config = true },
+			-- Mason: auto-installs LSP servers
+			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 			{ "antosha417/nvim-lsp-file-operations", config = true },
 		},
 
 		config = function()
-			-- ── Mason Setup ──────────────────────────────────────────────────
-			-- Mason manages external tools. It installs LSP servers, formatters,
-			-- and linters into ~/.local/share/nvim/mason/
-			require("mason").setup({
-				ui = {
-					border = "rounded", -- Rounded borders on the Mason window
-					icons = {
-						package_installed = "✓",
-						package_pending = "➜",
-						package_uninstalled = "✗",
-					},
-				},
-			})
-
 			-- ── Capabilities ────────────────────────────────────────────────
 			-- Tell LSP servers what our editor can do (e.g., snippet support).
 			-- nvim-cmp adds extra capabilities for better completions.

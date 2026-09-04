@@ -47,22 +47,4 @@ return {
       end, { desc = "Format file/selection" })
     end,
   },
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-tool-installer").setup({
-        ensure_installed = {
-          "prettier",
-          "stylua",
-          "ruff",
-          "clang-format",
-          "google-java-format",
-          "latexindent",
-          "shfmt",
-          "shellcheck",
-        },
-      })
-    end,
-  }
 }

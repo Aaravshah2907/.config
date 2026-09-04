@@ -392,13 +392,13 @@ return {
 					{
 						padding = 1,
 						text = {
-							-- Sleek compact Windrunner Neovim text art
-							{ [[  _   __               _         ]].."\n", hl = "SnacksHeaderGradient1" },
-							{ [[ / | / /__  ____ _   _(_)____ ___]].."\n", hl = "SnacksHeaderGradient2" },
-							{ [[/  |/ / _ \/ __ \ | / / / __ `__ \]].."\n", hl = "SnacksHeaderGradient3" },
-							{ [[/ /|  /  __/ /_/ / |/ / / / / / / /]].."\n", hl = "SnacksHeaderGradient4" },
-							{ [[/_/ |_/\___/\____/|___/_/_/ /_/ /_/ ]].."\n", hl = "SnacksHeaderGradient5" },
-							{ [[          ⚡ Windrunner ⚡             ]].."\n", hl = "SnacksHeaderGradient7" },
+							-- Sleek centered Windrunner Neovim text art
+							{ [[               _   __               _                 ]].."\n", hl = "SnacksHeaderGradient1" },
+							{ [[              / | / /__  ____ _   _(_)____ ___        ]].."\n", hl = "SnacksHeaderGradient2" },
+							{ [[             /  |/ / _ \/ __ \ | / / / __ `__ \       ]].."\n", hl = "SnacksHeaderGradient3" },
+							{ [[            / /|  /  __/ /_/ / |/ / / / / / / /       ]].."\n", hl = "SnacksHeaderGradient4" },
+							{ [[           /_/ |_/\___/\____/|___/_/_/ /_/ /_/        ]].."\n", hl = "SnacksHeaderGradient5" },
+							{ [[                      ⚡ Windrunner ⚡                 ]].."\n", hl = "SnacksHeaderGradient7" },
 						},
 					},
 					{

@@ -387,43 +387,76 @@ return {
 		opts = {
 			dashboard = {
 				pane_gap = 4, -- Space between columns
-				width = 45, -- Optimize width for two panes
+				width = 50, -- Optimize width for two panes
 				sections = {
 					{
 						pane = 1,
-						section = "keys", gap = 1, padding = 1,
-					},
-					{
-						pane = 2,
 						padding = 1,
 						text = {
-							-- Sleek Neovim text art
+							-- Sleek Windrunner Neovim text art
 							{ [[              _   __               _         ]].."\n", hl = "SnacksHeaderGradient1" },
 							{ [[             / | / /__  ____ _   _(_)____ ___]].."\n", hl = "SnacksHeaderGradient2" },
 							{ [[            /  |/ / _ \/ __ \ | / / / __ `__ \]].."\n", hl = "SnacksHeaderGradient3" },
 							{ [[           / /|  /  __/ /_/ / |/ / / / / / / /]].."\n", hl = "SnacksHeaderGradient4" },
 							{ [[          /_/ |_/\___/\____/|___/_/_/ /_/ /_/]].."\n", hl = "SnacksHeaderGradient5" },
 							{ "\n", hl = "SnacksHeaderGradient6" },
-							{ [[                     Windrunner             ]].."\n", hl = "SnacksHeaderGradient7" },
+							{ [[                  ⚡ Windrunner ⚡             ]].."\n", hl = "SnacksHeaderGradient7" },
 						},
 					},
 					{
+						pane = 1,
+						section = "keys",
+						gap = 1,
+						padding = 1,
+					},
+					{
 						pane = 2,
-						section = "startup", padding = 1,
+						icon = " ",
+						title = "Recent Files",
+						section = "recent_files",
+						indent = 2,
+						padding = 1,
+						limit = 6,
+					},
+					{
+						pane = 2,
+						icon = " ",
+						title = "Git Status",
+						section = "terminal",
+						enabled = function()
+							return Snacks.git.get_root() ~= nil
+						end,
+						cmd = "git status -short --branch --renames",
+						height = 5,
+						padding = 1,
+						ttl = 5 * 60,
+						indent = 2,
+					},
+					{
+						pane = 2,
+						section = "startup",
+						padding = 1,
+					},
+					{
+						pane = 1,
+						padding = 1,
+						text = {
+							{ "“Life before death. Strength before weakness. Journey before destination.” ⚔️", hl = "AlphaFooter" },
+						},
 					},
 				},
 				preset = {
 					keys = {
 						{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
 						{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-						{ icon = " ", key = "c", desc = "Config", action = ":lua require('yazi').yazi({}, vim.fn.stdpath('config'))" },
+						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 						{ icon = " ", key = "s", desc = "Restore Session", action = ":lua require('persistence').load()" },
+						{ icon = " ", key = "C", desc = "Cheatsheet", action = ":e ~/nvim_cheatsheet.md" },
+						{ icon = " ", key = "c", desc = "Config", action = ":lua require('yazi').yazi({}, vim.fn.stdpath('config'))" },
+						{ icon = " ", key = "e", desc = "Open Yazi", action = ":Yazi" },
 						{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy" },
 						{ icon = "󱌣 ", key = "M", desc = "Mason", action = ":Mason" },
-						{ icon = " ", key = "C", desc = "Cheatsheet", action = ":e ~/nvim_cheatsheet.md" },
-						{ icon = " ", key = "e", desc = "Open Yazi", action = ":Yazi" },
 						{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
 					},
 				},

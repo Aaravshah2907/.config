@@ -31,7 +31,23 @@ return {
 					lualine_a = { "mode" }, -- Current mode (NORMAL, INSERT, etc.)
 					lualine_b = { "branch", "diff", "diagnostics" }, -- Git info + errors
 					lualine_c = { "filename" }, -- Current file name
-					lualine_x = { "filetype" }, -- File type (lua, python, etc.)
+					lualine_x = {
+						{
+							function()
+								local clients = vim.lsp.get_clients({ bufnr = 0 })
+								if #clients == 0 then return "" end
+								local names = {}
+								for _, c in ipairs(clients) do
+									table.insert(names, c.name)
+								end
+								return "󰒋 " .. table.concat(names, ", ")
+							end,
+							cond = function()
+								return #vim.lsp.get_clients({ bufnr = 0 }) > 0
+							end,
+						},
+						"filetype",
+					},
 					lualine_y = { "progress" }, -- How far through the file (%)
 					lualine_z = { "location" }, -- Line:Column number
 				},

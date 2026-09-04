@@ -40,4 +40,14 @@ return {
 			})
 		end,
 	},
+
+	-- Inline math rendering for equations in LaTeX and Markdown
+	{
+		"jbyuki/nabla.nvim",
+		ft = { "tex", "latex", "markdown" },
+		keys = {
+			{ "<leader>lp", function() require("nabla").popup() end, desc = "LaTeX: Preview equation popup" },
+			{ "<leader>lv", function() require("nabla").toggle_virt() end, desc = "LaTeX: Toggle virtual math text" },
+		},
+	},
 }

@@ -15,6 +15,7 @@ return {
     dependencies = {
       -- Completion sources (where suggestions come from):
       "hrsh7th/cmp-nvim-lsp",   -- Suggestions from LSP (functions, variables)
+      "hrsh7th/cmp-nvim-lsp-signature-help", -- Parameter hints while typing function arguments
       "hrsh7th/cmp-buffer",     -- Words from the current file
       "hrsh7th/cmp-path",       -- File paths (type ./ to see files)
       "saadparwaiz1/cmp_luasnip", -- Snippet completions
@@ -36,15 +37,16 @@ return {
           local s = ls.snippet
           local t = ls.text_node
           local i = ls.insert_node
+          local rep = require("luasnip.extras").rep
           local fmt = require("luasnip.extras.fmt").fmt
           
-          -- Custom dynamic snippets for Competitive Programming
+          -- ── C++ Snippets ──────────────────────────────────────────────
           ls.add_snippets("cpp", {
             s("for", fmt([[
               for (int {} = 0; {} < {}; {}++) {{
                 {}
               }}
-            ]], { i(1, "i"), require("luasnip.extras").rep(1), i(2, "n"), require("luasnip.extras").rep(1), i(3) })),
+            ]], { i(1, "i"), rep(1), i(2, "n"), rep(1), i(3) })),
             
             s("bfs", fmt([[
               queue<int> q;
@@ -64,7 +66,7 @@ return {
                   }}
                 }}
               }}
-            ]], { i(1, "n + 1"), i(2, "start_node"), require("luasnip.extras").rep(2) })),
+            ]], { i(1, "n + 1"), i(2, "start_node"), rep(2) })),
             
             s("segtree", fmt([[
               struct SegTree {{
@@ -107,6 +109,153 @@ return {
                 }}
               }};
             ]], {})),
+
+            s("dsu", fmt([[
+              struct DSU {{
+                vector<int> parent, rank;
+                DSU(int n) : parent(n + 1), rank(n + 1, 0) {{
+                  iota(parent.begin(), parent.end(), 0);
+                }}
+                int find(int x) {{
+                  return parent[x] == x ? x : parent[x] = find(parent[x]);
+                }}
+                bool unite(int a, int b) {{
+                  a = find(a); b = find(b);
+                  if (a == b) return false;
+                  if (rank[a] < rank[b]) swap(a, b);
+                  parent[b] = a;
+                  if (rank[a] == rank[b]) rank[a]++;
+                  return true;
+                }}
+              }};
+            ]], {})),
+
+            s("mint", fmt([[
+              struct Mint {{
+                long long val;
+                static constexpr long long MOD = {};
+                Mint(long long v = 0) : val((v % MOD + MOD) % MOD) {{}}
+                Mint operator+(const Mint& o) const {{ return Mint(val + o.val); }}
+                Mint operator-(const Mint& o) const {{ return Mint(val - o.val); }}
+                Mint operator*(const Mint& o) const {{ return Mint(val * o.val); }}
+                Mint power(long long b) const {{
+                  Mint res(1), base(val);
+                  while (b > 0) {{ if (b & 1) res = res * base; base = base * base; b >>= 1; }}
+                  return res;
+                }}
+                Mint operator/(const Mint& o) const {{ return *this * o.power(MOD - 2); }}
+              }};
+            ]], { i(1, "998244353") })),
+
+            s("fenwick", fmt([[
+              struct Fenwick {{
+                int n;
+                vector<long long> tree;
+                Fenwick(int _n) : n(_n), tree(n + 1, 0) {{}}
+                void update(int idx, long long delta) {{
+                  for (; idx <= n; idx += idx & (-idx)) tree[idx] += delta;
+                }}
+                long long query(int idx) {{
+                  long long sum = 0;
+                  for (; idx > 0; idx -= idx & (-idx)) sum += tree[idx];
+                  return sum;
+                }}
+                long long query(int l, int r) {{ return query(r) - query(l - 1); }}
+              }};
+            ]], {})),
+          })
+
+          -- ── Python Snippets ───────────────────────────────────────────
+          ls.add_snippets("python", {
+            s("main", fmt([[
+              def main():
+                  {}
+
+              if __name__ == "__main__":
+                  main()
+            ]], { i(1, "pass") })),
+
+            s("dc", fmt([[
+              @dataclass
+              class {}:
+                  {}: {}
+            ]], { i(1, "ClassName"), i(2, "field"), i(3, "str") })),
+
+            s("tc", fmt([[
+              class Test{}(unittest.TestCase):
+                  def test_{}(self):
+                      {}
+            ]], { i(1, "Name"), i(2, "case"), i(3, "pass") })),
+          })
+
+          -- ── LaTeX Snippets ────────────────────────────────────────────
+          ls.add_snippets("tex", {
+            s("beg", fmt([[
+              \begin{{{}}}
+                {}
+              \end{{{}}}
+            ]], { i(1, "environment"), i(2), rep(1) })),
+
+            s("fig", fmt([[
+              \begin{{figure}}[{}]
+                \centering
+                \includegraphics[width={}\textwidth]{{{}}}
+                \caption{{{}}}
+                \label{{fig:{}}}
+              \end{{figure}}
+            ]], { i(1, "htbp"), i(2, "0.8"), i(3, "image"), i(4, "Caption"), i(5, "label") })),
+
+            s("eq", fmt([[
+              \begin{{equation}}
+                {}
+                \label{{eq:{}}}
+              \end{{equation}}
+            ]], { i(1), i(2, "label") })),
+
+            s("ali", fmt([[
+              \begin{{align}}
+                {} &= {} \\\\
+                {} &= {}
+              \end{{align}}
+            ]], { i(1), i(2), i(3), i(4) })),
+          })
+
+          -- ── Markdown Snippets ─────────────────────────────────────────
+          ls.add_snippets("markdown", {
+            s("cb", fmt([[
+              ```{}
+              {}
+              ```
+            ]], { i(1, "language"), i(2) })),
+            s("task", t("- [ ] ")),
+            s("tbl", fmt([[
+              | {} | {} |
+              |---|---|
+              | {} | {} |
+            ]], { i(1, "Header 1"), i(2, "Header 2"), i(3), i(4) })),
+            s("link", fmt("[{}]({})", { i(1, "text"), i(2, "url") })),
+          })
+
+          -- ── Shell / Bash Snippets ─────────────────────────────────────
+          ls.add_snippets("sh", {
+            s("shebang", t("#!/usr/bin/env bash")),
+            s("strict", t({ "set -euo pipefail", "IFS=$'\\n\\t'" })),
+            s("fn", fmt([[
+              {}() {{{{
+                local {}="$1"
+                {}
+              }}}}
+            ]], { i(1, "function_name"), i(2, "arg"), i(3, "# body") })),
+            s("if", fmt([[
+              if [ {} ]; then
+                {}
+              fi
+            ]], { i(1, "condition"), i(2) })),
+            s("forfile", fmt([[
+              while IFS= read -r {}; do
+                {}
+              done < "{}"
+            ]], { i(1, "line"), i(2), i(3, "file.txt") })),
           })
         end,
       },
@@ -183,6 +332,7 @@ return {
         -- then words from the buffer, then file paths.
         sources = cmp.config.sources({
           { name = "nvim_lsp" },  -- Language server suggestions
+          { name = "nvim_lsp_signature_help" }, -- Parameter hints
           { name = "luasnip" },   -- Snippet suggestions
         }, {
           { name = "buffer" },    -- Words from current file

@@ -20,6 +20,8 @@ return {
 			-- Mason: auto-installs LSP servers (you don't need to install them manually!)
 			{ "williamboman/mason.nvim", config = true },
 			"williamboman/mason-lspconfig.nvim",
+			{ "folke/lazydev.nvim", ft = "lua", opts = {} },
+			{ "antosha417/nvim-lsp-file-operations", config = true },
 		},
 
 		config = function()
@@ -103,8 +105,10 @@ return {
 					"lua_ls", -- Lua
 					"marksman", -- Markdown
 					"pyright", -- Python
+					"ruff", -- Python linter & code action helper
 					"clangd", -- C/C++
 					"texlab", -- LaTeX LSP
+					"bashls", -- Bash/Shell Scripting LSP
 				},
 				automatic_installation = true,
 				handlers = {
@@ -147,6 +151,64 @@ return {
 								"--clang-tidy",
 								"--completion-style=detailed",
 								"--fallback-style=llvm",
+								"--header-insertion=iwyu",
+								"--header-insertion-decorators",
+								"--all-scopes-completion",
+								"--pch-storage=memory",
+								"--function-arg-placeholders=true",
+							},
+						})
+					end,
+
+					-- Special config for Python (Ruff)
+					["ruff"] = function()
+						lspconfig.ruff.setup({
+							on_attach = function(client, bufnr)
+								-- Disable hover so pyright handles documentation
+								client.server_capabilities.hoverProvider = false
+								on_attach(client, bufnr)
+							end,
+							capabilities = capabilities,
+						})
+					end,
+
+					-- Special config for LaTeX (Texlab)
+					["texlab"] = function()
+						lspconfig.texlab.setup({
+							on_attach = on_attach,
+							capabilities = capabilities,
+							settings = {
+								texlab = {
+									build = {
+										executable = "latexmk",
+										args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+										onSave = true,
+									},
+									forwardSearch = {
+										executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
+										args = { "%l", "%p", "%f" },
+									},
+									chktex = {
+										onOpenAndSave = true,
+									},
+									diagnostics = {
+										ignoredPatterns = { "^Overfull", "^Underfull" },
+									},
+								},
+							},
+						})
+					end,
+
+					-- Special config for Shell / Bash (bashls)
+					["bashls"] = function()
+						lspconfig.bashls.setup({
+							on_attach = on_attach,
+							capabilities = capabilities,
+							filetypes = { "sh", "bash", "zsh" },
+							settings = {
+								bashIde = {
+									globPattern = "*@(.sh|.inc|.bash|.command|.zsh)",
+								},
 							},
 						})
 					end,

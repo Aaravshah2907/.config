@@ -71,4 +71,6 @@ alias h='cht.sh'
 # --- cfdash ---
 alias cfdash='/Users/aaravshah2975/.config/cfdash/.venv/bin/python /Users/aaravshah2975/.config/cfdash/main.py'
 
-
+# --- sketchybar & aerospace on / off ---
+alias on='brew services start sketchybar && aerospace enable on'
+alias off='brew services stop sketchybar && aerospace enable off'

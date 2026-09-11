@@ -253,3 +253,15 @@ phonedis() {
 
     echo "✅ Done."
 }
+
+# --- Tmux Session Manager ---
+# Usage: ts [session_name]
+ts() {
+    if [[ -z "$1" ]]; then
+        # No argument: Attach to the most recent session, or create a new default one
+        tmux attach 2>/dev/null || tmux new-session
+    else
+        # Argument provided: Attach to it, or create it if it doesn't exist
+        tmux attach -t "$1" 2>/dev/null || tmux new-session -s "$1"
+    fi
+}

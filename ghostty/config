@@ -1,0 +1,45 @@
+# Ghostty Configuration
+# Cosmere / Deep Night Theme
+
+# ── Headless Window Settings ──
+window-decoration = false
+macos-titlebar-style = hidden
+window-padding-x = 10
+window-padding-y = 10
+background-opacity = 0.95
+background-blur-radius = 20
+
+# ── Font Settings (Radiant Profile) ──
+font-family = "FiraCode Nerd Font"
+font-size = 24
+
+# ── Background Image (Radiant Profile) ──
+background-image = /Users/aaravshah2975/.config/ghostty/Jeseh_glyph.png
+background-image-opacity = 0.15
+
+# ── Cosmere Theme ──
+background = #001a33
+foreground = #C8E8F5
+selection-background = #1A2A3A
+selection-foreground = #00BFFF
+cursor-color = #00BFFF
+
+# Normal colors
+palette = 0=#1A0A0A
+palette = 1=#ed8796
+palette = 2=#50fa7b
+palette = 3=#FFD700
+palette = 4=#00A8E8
+palette = 5=#8989ff
+palette = 6=#5DA8CC
+palette = 7=#C8E8F5
+
+# Bright colors
+palette = 8=#607D8B
+palette = 9=#ed8796
+palette = 10=#50fa7b
+palette = 11=#ffb86c
+palette = 12=#00BFFF
+palette = 13=#DA70D6
+palette = 14=#5DA8CC
+palette = 15=#ffffff

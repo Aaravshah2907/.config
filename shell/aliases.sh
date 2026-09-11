@@ -74,3 +74,7 @@ alias cfdash='/Users/aaravshah2975/.config/cfdash/.venv/bin/python /Users/aaravs
 # --- sketchybar & aerospace on / off ---
 alias on='brew services start sketchybar && aerospace enable on'
 alias off='brew services stop sketchybar && aerospace enable off'
+
+# Tmux & Tmuxinator
+alias mux="tmuxinator"
+alias tmux-help="bat --style=plain ~/.config/tmux/cheatsheet.md"

@@ -131,8 +131,8 @@ gaps.outer.right = 8
 
 # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
-# Launch iTerm (i3-style)
-alt-enter = 'exec-and-forget open -a iTerm'
+# Launch Ghostty (i3-style)
+alt-enter = 'exec-and-forget open -a Ghostty'
 
 # Layout & orientation switching
 alt-slash = [
@@ -327,7 +327,7 @@ alt-shift-l = [
 ]
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'iTerm2|iTerm|Terminal|Alacritty|kitty'
+if.app-name-regex-substring = 'iTerm2|iTerm|Terminal|Alacritty|kitty|Ghostty'
 run = 'move-node-to-workspace T'
 
 [[on-window-detected]]

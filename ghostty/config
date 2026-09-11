@@ -10,6 +10,15 @@ background-opacity = 0.95
 background-blur-radius = 20
 quit-after-last-window-closed = true
 
+# ── Usability ──
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+shell-integration = detect
+
+# ── FiraCode Ligatures ──
+font-feature = calt
+font-feature = liga
+
 # ── Font Settings (Radiant Profile) ──
 font-family = "FiraCode Nerd Font"
 font-size = 24

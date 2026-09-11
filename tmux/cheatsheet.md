@@ -26,6 +26,27 @@
 
 ---
 
+## 🛠️ Terminal Tools (Shell-Level)
+| Command | Action |
+| --- | --- |
+| `t -h` / `ts -h` | Inline usage summary for `t` |
+| `t cheat` / `tmux-help` | Full cheatsheet |
+| `fv` | Open Yazi file manager (cds on exit) |
+| `mux landing` | Launch dashboard Tmuxinator layout |
+| `mux dev` | Launch dev Tmuxinator layout |
+
+---
+
+## 🌍 Shell Environment (direnv + fzf-tab)
+| Command | Action |
+| --- | --- |
+| `TAB` after any command | Interactive fuzzy completion (fzf-tab) |
+| `echo 'source .venv/bin/activate' > .envrc && direnv allow` | Auto-activate venv in a project |
+| `direnv allow` | Trust a new/updated `.envrc` file |
+| `direnv deny` | Revoke trust for current directory |
+
+---
+
 ## 🧭 Navigation (Seamless Neovim ↔ Tmux)
 | Command | Action |
 | --- | --- |

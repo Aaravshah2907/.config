@@ -8,6 +8,7 @@ window-padding-x = 10
 window-padding-y = 10
 background-opacity = 0.95
 background-blur-radius = 20
+quit-after-last-window-closed = true
 
 # ── Font Settings (Radiant Profile) ──
 font-family = "FiraCode Nerd Font"

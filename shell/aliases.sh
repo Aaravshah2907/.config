@@ -78,3 +78,8 @@ alias off='brew services stop sketchybar && aerospace enable off'
 # Tmux & Tmuxinator
 alias mux="tmuxinator"
 alias tmux-help="bat --style=plain ~/.config/tmux/cheatsheet.md"
+
+# --- Notifications (gnotify) ---
+alias syl="gnotify '󰌵 Sylphrena'"
+alias stormfather="gnotify '🌩️ The Stormfather'"
+alias notify="gnotify"

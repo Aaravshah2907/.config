@@ -254,38 +254,74 @@ phonedis() {
     echo "✅ Done."
 }
 
-# --- Tmux Session Manager (simple shorthand kept for compatibility) ---
-# Usage: ts [session_name]
-ts() {
-    if [[ -z "$1" ]]; then
-        tmux attach 2>/dev/null || tmux new-session
-    else
-        tmux attach -t "$1" 2>/dev/null || tmux new-session -s "$1"
-    fi
-}
-
-# --- Tmux Swiss Army Knife (prefix-free control) ---
-# Usage: t [subcommand] [args]
-# Run 't cheat' to see all available commands.
+# --- Tmux Command Center (unified, prefix-free control) ---
+# Replaces both ts() and t() — attach, split, manage, everything.
+# Usage: t [-h] [subcommand] [args]
 t() {
     local cmd="${1:-}"
     case "$cmd" in
+        # ── Help ──────────────────────────────────────────
+        -h|--help)
+            echo "Tmux Command Center  (prefix: Ctrl+b)"
+            echo ""
+            echo "  Sessions:"
+            echo "    t                   attach to last session (or create new)"
+            echo "    t <name>            attach to <name> (create if missing)"
+            echo "    t ls                list all sessions"
+            echo "    t new [name]        create new session"
+            echo "    t kill <name>       kill a session"
+            echo "    t kill-all          kill ALL sessions"
+            echo ""
+            echo "  Panes:"
+            echo "    t vs                split vertically (left/right)"
+            echo "    t hs                split horizontally (top/bottom)"
+            echo "    t float             floating popup shell"
+            echo ""
+            echo "  Windows:"
+            echo "    t win [name]        new window"
+            echo "    t wins              list windows"
+            echo "    t next / t prev     switch windows"
+            echo ""
+            echo "  Persistence:"
+            echo "    t save              save layout (resurrect)"
+            echo "    t restore           restore last layout"
+            echo ""
+            echo "  Reference:"
+            echo "    t cheat             full cheatsheet (bat)"
+            echo "    t guide             tmux guide & concepts"
+            echo "    t -h                this help message"
+            ;;
+
+        # ── Sessions ──────────────────────────────────────
         "")         tmux attach 2>/dev/null || tmux new-session ;;
         ls)         tmux list-sessions ;;
         new)        tmux new-session ${2:+-s "$2"} ;;
         kill)       [[ -n "$2" ]] && tmux kill-session -t "$2" || echo "Usage: t kill <session>" ;;
         kill-all)   tmux kill-server ;;
+
+        # ── Panes ─────────────────────────────────────────
         vs)         tmux split-window -h ;;
         hs)         tmux split-window -v ;;
+        float)      tmux display-popup -E "$SHELL" ;;
+
+        # ── Windows ───────────────────────────────────────
         win)        tmux new-window ${2:+-n "$2"} ;;
         wins)       tmux list-windows ;;
         next)       tmux next-window ;;
         prev)       tmux previous-window ;;
-        float)      tmux display-popup -E "$SHELL" ;;
+
+        # ── Persistence ───────────────────────────────────
         save)       tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh ;;
         restore)    tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh ;;
+
+        # ── Reference ─────────────────────────────────────
         cheat|help) bat --style=plain ~/.config/tmux/cheatsheet.md ;;
-        # Fallback: treat any unknown arg as a session name
+        guide)      bat --style=plain ~/.config/tmux/guide.md ;;
+
+        # ── Fallback: treat as session name ───────────────
         *)          tmux attach -t "$cmd" 2>/dev/null || tmux new-session -s "$cmd" ;;
     esac
 }
+
+# Keep 'ts' as a short alias for backwards compat — just calls t
+ts() { t "$@"; }

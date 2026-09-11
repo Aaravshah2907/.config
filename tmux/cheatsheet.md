@@ -77,11 +77,12 @@
 
 ---
 
-## ❓ Help & Extras
+## ❓ Help & Reference
 | Command | Action |
 | --- | --- |
-| `t cheat` | Show this cheatsheet in shell |
-| `tmux-help` | Alias — same as above |
-| `Prefix + ?` | Show cheatsheet in Tmux popup |
-| `Prefix + :` | Tmux Command Prompt |
-
+| `t -h` | Inline usage summary (quick!) |
+| `t cheat` | Full cheatsheet (this file, via bat) |
+| `t guide` | Full Tmux guide & concepts |
+| `tmux-help` | Alias — same as `t cheat` |
+| `Prefix + ?` | Show cheatsheet in floating Tmux popup |
+| `Prefix + :` | Tmux command prompt |

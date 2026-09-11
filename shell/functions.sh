@@ -254,14 +254,38 @@ phonedis() {
     echo "✅ Done."
 }
 
-# --- Tmux Session Manager ---
+# --- Tmux Session Manager (simple shorthand kept for compatibility) ---
 # Usage: ts [session_name]
 ts() {
     if [[ -z "$1" ]]; then
-        # No argument: Attach to the most recent session, or create a new default one
         tmux attach 2>/dev/null || tmux new-session
     else
-        # Argument provided: Attach to it, or create it if it doesn't exist
         tmux attach -t "$1" 2>/dev/null || tmux new-session -s "$1"
     fi
+}
+
+# --- Tmux Swiss Army Knife (prefix-free control) ---
+# Usage: t [subcommand] [args]
+# Run 't cheat' to see all available commands.
+t() {
+    local cmd="${1:-}"
+    case "$cmd" in
+        "")         tmux attach 2>/dev/null || tmux new-session ;;
+        ls)         tmux list-sessions ;;
+        new)        tmux new-session ${2:+-s "$2"} ;;
+        kill)       [[ -n "$2" ]] && tmux kill-session -t "$2" || echo "Usage: t kill <session>" ;;
+        kill-all)   tmux kill-server ;;
+        vs)         tmux split-window -h ;;
+        hs)         tmux split-window -v ;;
+        win)        tmux new-window ${2:+-n "$2"} ;;
+        wins)       tmux list-windows ;;
+        next)       tmux next-window ;;
+        prev)       tmux previous-window ;;
+        float)      tmux display-popup -E "$SHELL" ;;
+        save)       tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh ;;
+        restore)    tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh ;;
+        cheat|help) bat --style=plain ~/.config/tmux/cheatsheet.md ;;
+        # Fallback: treat any unknown arg as a session name
+        *)          tmux attach -t "$cmd" 2>/dev/null || tmux new-session -s "$cmd" ;;
+    esac
 }

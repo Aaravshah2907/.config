@@ -34,6 +34,21 @@
 | `fv` | Open Yazi file manager (cds on exit) |
 | `mux landing` | Launch dashboard Tmuxinator layout |
 | `mux dev` | Launch dev Tmuxinator layout |
+| `gnotify "Title" "Msg"` | Dual-layer notification (Tmux toast + Desktop banner) |
+| `syl "Msg"` | Sylphrena notification alias |
+| `stormfather "Msg"` | Stormfather notification alias |
+
+---
+
+## 💻 Raw Tmux Commands (Under the hood)
+If you ever find yourself on a server without your custom `t` command, here is what you need to type natively:
+| Command | Action |
+| --- | --- |
+| `tmux ls` | List active sessions |
+| `tmux attach -t <name>` | Attach to a specific session |
+| `tmux new -s <name>` | Create a new session |
+| `tmux kill-server` | Kill all sessions |
+| `tmux source ~/.tmux.conf` | Reload configuration |
 
 ---
 

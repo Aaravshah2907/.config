@@ -315,8 +315,8 @@ t() {
         restore)    tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh ;;
 
         # ── Reference ─────────────────────────────────────
-        cheat|help) bat --style=plain ~/.config/tmux/cheatsheet.md ;;
-        guide)      bat --style=plain ~/.config/tmux/guide.md ;;
+        cheat|help) bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
+        guide)      bat --style=plain --paging=never ~/.config/tmux/guide.md ;;
 
         # ── Fallback: treat as session name ───────────────
         *)          tmux attach -t "$cmd" 2>/dev/null || tmux new-session -s "$cmd" ;;

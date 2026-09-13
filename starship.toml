@@ -26,10 +26,13 @@
 # --- Global format: two-line prompt with powerline separators ---
 # Custom modules for Radiant Order detection are appended after language modules
 format = """
-[╭─](bold #607D8B)$os$username$hostname$directory$git_branch$git_status$git_state\
+[╭─](bold #607D8B)$os$username$hostname$directory$git_branch$git_status$git_metrics$git_state\
 $c$python$nodejs$rust$golang$java$kotlin$lua$docker_context\
-$cmd_duration$status$jobs
+$status$jobs
 [╰─](bold #607D8B)$character"""
+
+# Right side info
+right_format = """$custom_weather$cmd_duration$time"""
 
 # Right side info (time always visible on right)
 # right_format = """$time$battery"""
@@ -376,3 +379,16 @@ disabled = true
 
 [line_break]
 disabled = true
+
+# Enable Git Metrics
+[git_metrics]
+disabled = false
+format = "([+$added]($added_style) )([-$deleted]($deleted_style) )"
+added_style = "bold #50fa7b"
+deleted_style = "bold #ed8796"
+
+# Weather module reading sketchybar cache (Zero network overhead)
+[custom.weather]
+command = "cat /tmp/sketchybar_weather_cache | cut -d'|' -f2,4 | sed 's/|/ /'"
+when = "test -f /tmp/sketchybar_weather_cache"
+format = "[$output ](bold #5DA8CC)"

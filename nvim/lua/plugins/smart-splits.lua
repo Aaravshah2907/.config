@@ -10,6 +10,7 @@ return {
 			local ss = require("smart-splits")
 			ss.setup({
 				at_edge = "wrap",
+				multiplexer_integration = "tmux",
 			})
 
 			-- Keymaps for navigating splits seamlessly

@@ -1,0 +1,8 @@
+name: dev
+root: ~/Documents/Code
+windows:
+  - Editor:
+      layout: main-vertical
+      panes:
+        - nvim .
+        - ""

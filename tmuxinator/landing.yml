@@ -1,0 +1,9 @@
+name: landing
+root: ~/
+windows:
+  - Dashboard:
+      layout: main-vertical
+      panes:
+        - btop
+        - clear && fastfetch
+        - ""

@@ -1,4 +1,4 @@
---- @since 25.5.31
+--- @since 26.5.6
 
 local PackageName = "simple-tag"
 local M = {}
@@ -393,8 +393,11 @@ end)
 
 local selected_files = ya.sync(function()
 	local tab, raw_urls = cx.active, {}
-	local is_search = get_cwd().is_search
-	for _, u in pairs(tab.selected) do
+	local _cwd = get_cwd()
+	local is_search = (_cwd.spec and _cwd.spec.is_search) or (not _cwd.spec and _cwd.is_search)
+	for _, f in pairs(tab.selected) do
+		-- TODO: remove this after next yazi released
+		local u = f.url or f
 		raw_urls[#raw_urls + 1] = tostring(is_search and u.path or u)
 	end
 	return raw_urls
@@ -403,7 +406,8 @@ end)
 local selected_or_hovered_files = ya.sync(function()
 	local tab, raw_urls = cx.active, selected_files()
 	if #raw_urls == 0 and tab.current.hovered then
-		local is_search = get_cwd().is_search
+		local _cwd = get_cwd()
+		local is_search = (_cwd.spec and _cwd.spec.is_search) or (not _cwd.spec and _cwd.is_search)
 		raw_urls[1] = tostring(is_search and tab.current.hovered.url.path or tab.current.hovered.url)
 	end
 	return raw_urls
@@ -483,8 +487,19 @@ end
 --          ╰─────────────────────────────────────────────────────────╯
 
 function M:fetch(job)
+	if ya.throttle then
+		M:fetch_orig(job)
+		return require("noop"):fetch(job)
+	else
+		return M:fetch_orig(job)
+	end
+end
+
+function M:fetch_orig(job)
 	local tags_db = get_state(STATE_KEY.tags_database)
-	local is_search = get_cwd().is_search
+	local _cwd = get_cwd()
+	local is_search = (_cwd.spec and _cwd.spec.is_search) or (not _cwd.spec and _cwd.is_search)
+
 	for _, file in ipairs(job.files) do
 		local tags_tbl = tostring(is_search and file.url.parent.path or file.url.parent)
 		if tags_db[tags_tbl] == nil then
@@ -503,7 +518,8 @@ function M:has_tags(file, filter_tags)
 	else
 		url = file.url
 	end
-	local is_search = get_cwd().is_search
+	local _cwd = get_cwd()
+	local is_search = (_cwd.spec and _cwd.spec.is_search) or (not _cwd.spec and _cwd.is_search)
 	local tags_tbl = tostring(is_search and url.parent.path or url.parent)
 	local fname = tostring(url.name)
 
@@ -580,7 +596,8 @@ function M:setup(opts)
 	if is_left_side and replace_default_icon then
 		local orig_icon = Entity.icon
 		function Entity:icon()
-			local is_search = cx.active.current.cwd.is_search
+			local is_search = (cx.active.current.cwd.spec and cx.active.current.cwd.spec.is_search)
+				or (not cx.active.current.cwd.spec and cx.active.current.cwd.is_search)
 			local tags_tbl = tostring(is_search and self._file.url.parent.path or self._file.url.parent)
 			local fname = self._file.name
 			local tags = st[STATE_KEY.tags_database][tags_tbl] and st[STATE_KEY.tags_database][tags_tbl][fname] or {}
@@ -619,7 +636,8 @@ function M:setup(opts)
 		if st[STATE_KEY.ui_mode] == UI_MODE.hidden then
 			return ""
 		end
-		local is_search = cx.active.current.cwd.is_search
+		local is_search = (cx.active.current.cwd.spec and cx.active.current.cwd.spec.is_search)
+			or (not cx.active.current.cwd.spec and cx.active.current.cwd.is_search)
 		local tags_tbl = tostring(is_search and _self._file.url.parent.path or _self._file.url.parent)
 		local fname = _self._file.name
 		local spans = {}
@@ -656,6 +674,14 @@ function M:setup(opts)
 		end
 		return ui.Line(spans)
 	end, st[STATE_KEY.render_order])
+
+	-- NOTE: Force to fetch files/folders under preview pane
+	ps.sub("ind-sort", function(args)
+		if cx.active.preview and cx.active.preview.folder then
+			M:fetch({ files = cx.active.preview.folder.window })
+		end
+		return args
+	end)
 
 	ps.sub(PUBSUB_KIND.files_move, function(payload)
 		local changed_files = {}
@@ -1098,7 +1124,8 @@ function M:entry(job)
 			end
 
 			local cwd = get_cwd()
-			local tags_tbl = tostring(cwd.is_search and cwd.path or cwd)
+			local is_search = (cwd.spec and cwd.spec.is_search) or (not cwd.spec and cwd.is_search)
+			local tags_tbl = tostring(is_search and cwd.path or cwd)
 			local tags_db = get_state(STATE_KEY.tags_database)
 			local tagged_filenames = tags_db[tags_tbl] or {}
 			for fname, tags in pairs(tagged_filenames) do
@@ -1155,7 +1182,7 @@ function M:entry(job)
 		end
 		local input_mode = job.args.input
 		local cwd = get_cwd()
-		local is_virtual = cwd.scheme and cwd.scheme.is_virtual
+		local is_virtual = (cwd.spec and cwd.spec.is_virtual) or (not cwd.spec and cwd.scheme.is_virtual)
 		if is_virtual then
 			warn("Filtering by tags is not supported for virtual files")
 			return
@@ -1175,7 +1202,8 @@ function M:entry(job)
 			table.insert(filter_tags, key)
 		end
 
-		local tags_tbl = tostring(cwd.is_search and cwd.path or cwd)
+		local is_search = (cwd.spec and cwd.spec.is_search) or (not cwd.spec and cwd.is_search)
+		local tags_tbl = tostring(is_search and cwd.path or cwd)
 		local tags_db = get_state(STATE_KEY.tags_database)
 		local tagged_filenames_with_tags = tags_db[tags_tbl] or {}
 

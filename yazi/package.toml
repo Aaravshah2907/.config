@@ -1,12 +1,12 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "598cdb6"
-hash = "f0c8c378184d5f8abd1b095a443d336d"
+rev = "4dc7f1b"
+hash = "87472b05a8c420100f6a2b9cde1e7746"
 
 [[plugin.deps]]
 use = "boydaihungst/simple-tag"
-rev = "e8be031"
-hash = "50ba6725b86ae62c626d27eb5836decb"
+rev = "d019de3"
+hash = "c1c9aaf057e2347942361b7155a0308c"
 
 [[plugin.deps]]
 use = "AminurAlam/yazi-plugins:preview-git"

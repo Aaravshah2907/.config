@@ -26,48 +26,48 @@ ueberzug_offset = [0, 0, 0, 0]
 
 [opener]
 edit = [
-    { run = "${EDITOR:-nano} %s", desc = "$EDITOR", for = "unix", block = true },
-    { run = "code %s", desc = "code", for = "windows", orphan = true },
-    { run = "code -w %s", desc = "code (block)", for = "windows", block = true },
+    { run = "${EDITOR:-nano} \"$@\"", desc = "$EDITOR", for = "unix", block = true },
+    { run = "code \"$@\"", desc = "code", for = "windows", orphan = true },
+    { run = "code -w \"$@\"", desc = "code (block)", for = "windows", block = true },
 ]
 play = [
     { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py play "$@"', desc = "Add to Queue", for = "macos", orphan = true },
     { run = '/Users/aaravshah2975/.config/radiant-player/fzf-interface.sh', desc = "Edit Queue", for = "macos", block = true },
-    { run = "xdg-open %s1", desc = "Play", for = "linux", orphan = true },
-    { run = 'start "" %s1', desc = "Play", for = "windows", orphan = true },
-    { run = "termux-open %s1", desc = "Play", for = "android" },
+    { run = "xdg-open \"$1\"", desc = "Play", for = "linux", orphan = true },
+    { run = 'start "" "$1"', desc = "Play", for = "windows", orphan = true },
+    { run = "termux-open \"$1\"", desc = "Play", for = "android" },
 ]
 mediainfo_view = [
-    { run = "mediainfo %s1 | bat --style=plain; echo 'Press enter'; read _", block = true, desc = "Show Media Info", for = "unix" },
+    { run = "mediainfo \"$1\" | bat --style=plain; echo 'Press enter'; read _", block = true, desc = "Show Media Info", for = "unix" },
 ]
 exif_view = [
-    { run = "exiftool %s1 | bat --style=plain; echo 'Press enter'; read _", block = true, desc = "Show EXIF Data", for = "unix" },
+    { run = "exiftool \"$1\" | bat --style=plain; echo 'Press enter'; read _", block = true, desc = "Show EXIF Data", for = "unix" },
 ]
 open = [
-    { run = "xdg-open %s1", desc = "Open", for = "linux" },
-    { run = "open %s", desc = "Open", for = "macos" },
-    { run = 'start "" %s1', desc = "Open", for = "windows", orphan = true },
-    { run = "termux-open %s1", desc = "Open", for = "android" },
+    { run = "xdg-open \"$1\"", desc = "Open", for = "linux" },
+    { run = "open \"$@\"", desc = "Open", for = "macos" },
+    { run = 'start "" "$1"', desc = "Open", for = "windows", orphan = true },
+    { run = "termux-open \"$1\"", desc = "Open", for = "android" },
 ]
 reveal = [
-    { run = "xdg-open %d1", desc = "Reveal", for = "linux" },
-    { run = "open -R %s1", desc = "Reveal", for = "macos" },
-    { run = "explorer /select,%s1", desc = "Reveal", for = "windows", orphan = true },
-    { run = "termux-open %d1", desc = "Reveal", for = "android" },
+    { run = "xdg-open \"$1\"", desc = "Reveal", for = "linux" },
+    { run = "open -R \"$1\"", desc = "Reveal", for = "macos" },
+    { run = "explorer /select,\"$1\"", desc = "Reveal", for = "windows", orphan = true },
+    { run = "termux-open \"$1\"", desc = "Reveal", for = "android" },
 ]
-extract = [{ run = "ya pub extract --list %s", desc = "Extract here" }]
+extract = [{ run = "ya pub extract --list \"$@\"", desc = "Extract here" }]
 extract_ouch = [
-    { run = "ouch decompress %s", desc = "Extract (ouch)", for = "unix" },
+    { run = "ouch decompress \"$@\"", desc = "Extract (ouch)", for = "unix" },
 ]
 download = [
-    { run = "ya emit download --open %S", desc = "Download and open" },
-    { run = "ya emit download %S", desc = "Download" },
+    { run = "ya emit download --open \"$@\"", desc = "Download and open" },
+    { run = "ya emit download \"$@\"", desc = "Download" },
 ]
 vlc = [
     { run = '/bin/bash /Users/aaravshah2975/.config/yazi/scripts/vlc_playlist.sh "$@"', desc = "Open in VLC Playlist", for = "macos", orphan = true },
 ]
 playlist = [
-    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py load %*', desc = "Load Playlist", for = "macos", orphan = true },
+    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py load "$@"', desc = "Load Playlist", for = "macos", orphan = true },
 ]
 spotify_add = [
     { run = '/bin/zsh -lc "uri=$(awk \"NF{print; exit}\" \"$1\"); /opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py add_spotify \"$uri\""', desc = "Add Spotify URI to queue", for = "macos", orphan = true },

@@ -43,6 +43,10 @@ command_timeout = 800
 # Newline between prompts for breathing room
 add_newline = true
 
+# --- Multiline continuation prompt (Level 2 icon-led indentation) ---
+continuation_prompt = "[│ ](bold #607D8B)[󰅂](bold #50fa7b) "
+
+
 # =============================================================================
 # PROMPT CHARACTER — Shardblade Slash ⟫ (P10k Transient Friendly)
 # Success: Lifebound Emerald  |  Error: Odium Crimson  |  Vim: Lightweaver Amber

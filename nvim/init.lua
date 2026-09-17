@@ -18,8 +18,8 @@
 --
 -- We set this FIRST because some plugins read the leader key when they load.
 -- If we set it after, those plugins would use the wrong key.
-vim.g.mapleader = " "       -- Space as the leader key
-vim.g.maplocalleader = " "  -- Same for buffer-local leader (used by some plugins)
+vim.g.mapleader = " " -- Space as the leader key
+vim.g.maplocalleader = " " -- Same for buffer-local leader (used by some plugins)
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true }) -- Prevent space from moving cursor
 -- ────────────────────────────────────────────────────────────────────────────
 -- 2. LOAD CORE SETTINGS
@@ -27,9 +27,9 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true }) -- Prevent s
 -- These files live in lua/core/. Neovim automatically looks in the lua/
 -- directory when you call require(), so "core.options" means:
 --   ~/.config/nvim/lua/core/options.lua
-require("core.options")    -- Editor behavior: tabs, line numbers, etc.
-require("core.keymaps")    -- Your keyboard shortcuts
-require("core.autocmds")   -- Automatic actions (like "flash text when copied")
+require("core.options") -- Editor behavior: tabs, line numbers, etc.
+require("core.keymaps") -- Your keyboard shortcuts
+require("core.autocmds") -- Automatic actions (like "flash text when copied")
 
 -- ────────────────────────────────────────────────────────────────────────────
 -- 3. BOOTSTRAP LAZY.NVIM (Plugin Manager)
@@ -44,15 +44,15 @@ require("core.autocmds")   -- Automatic actions (like "flash text when copied")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
-  -- lazy.nvim isn't installed yet, so clone it from GitHub
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",                             -- Don't download file history (faster)
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",                                -- Use the latest stable release
-    lazypath,
-  })
+	-- lazy.nvim isn't installed yet, so clone it from GitHub
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none", -- Don't download file history (faster)
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- Use the latest stable release
+		lazypath,
+	})
 end
 
 -- Add lazy.nvim to the runtime path so Neovim can find it
@@ -71,30 +71,30 @@ vim.opt.rtp:prepend(lazypath)
 --   - Load them in the right order
 --   - Handle updates when you run :Lazy update
 require("lazy").setup({
-  -- Import all plugin spec files from lua/plugins/*.lua
-  spec = {
-    { import = "plugins" },
-  },
+	-- Import all plugin spec files from lua/plugins/*.lua
+	spec = {
+		{ import = "plugins" },
+	},
 
-  -- These are lazy.nvim's own settings (not plugin settings)
-  defaults = {
-    lazy = false,  -- Don't lazy-load by default (simpler to understand)
-  },
+	-- These are lazy.nvim's own settings (not plugin settings)
+	defaults = {
+		lazy = false, -- Don't lazy-load by default (simpler to understand)
+	},
 
-  install = {
-    -- When installing plugins for the first time, use this colorscheme
-    -- so things look nice even before your theme plugin loads
-    colorscheme = { "catppuccin-mocha" },
-  },
+	install = {
+		-- When installing plugins for the first time, use this colorscheme
+		-- so things look nice even before your theme plugin loads
+		colorscheme = { "catppuccin-mocha" },
+	},
 
-  checker = {
-    enabled = true,   -- Automatically check for plugin updates
-    notify = false,   -- Don't pop up a notification every time
-  },
+	checker = {
+		enabled = true, -- Automatically check for plugin updates
+		notify = false, -- Don't pop up a notification every time
+	},
 
-  change_detection = {
-    notify = false,   -- Don't notify when config files change
-  },
+	change_detection = {
+		notify = false, -- Don't notify when config files change
+	},
 })
 
 -- ────────────────────────────────────────────────────────────────────────────
@@ -105,4 +105,5 @@ require("lazy").setup({
 --
 -- If the colorscheme isn't installed yet (first run), this will silently
 -- fall back to Neovim's default — no ugly error messages.
+vim.opt.termguicolors = true
 vim.cmd.colorscheme("catppuccin-mocha")

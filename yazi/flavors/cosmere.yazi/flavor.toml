@@ -236,6 +236,9 @@ dirs = [
 	{ name = "Pictures",     text = "", fg = "#00A8E8" },  # Honorspren Sky Blue
 	{ name = "Public",       text = "", fg = "#3CB371" },  # Cultivationspren Green
 	{ name = "Videos",       text = "", fg = "#8A2BE2" },  # Inkspren Indigo
+
+	# Default fallback — any folder not matched above
+	{ name = "*",            text = "", fg = "#5DA8CC" },  # Preservation Glacial
 ]
 conds = [
 	# Orphan — Preservation Mist (lost in the Cognitive Realm)

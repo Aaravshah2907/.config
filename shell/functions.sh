@@ -64,6 +64,11 @@ alias chsk='bat ~/Documents/Cheat-Codes/SKHD_CHEATSHEET.md | fzf --no-sort --tie
   --layout=reverse --header="⌨️ SKHD Cheatsheet | ↑↓ navigate | Tab multi‑select | Enter=jump" \
   --height=80% --border --ansi'
 
+alias chtm='bat ~/Documents/Cheat-Codes/TMUX_CHEATSHEET.md 2>/dev/null || bat ~/.config/tmux/cheatsheet.md | fzf --no-sort --tiebreak=index \
+  --layout=reverse --header="🖥️ Tmux Cheatsheet | ↑↓ navigate | Tab multi‑select | Enter=jump" \
+  --height=80% --border --ansi'
+
+
 # --- Spicetify apply wrapper ---
 spa() {
     spicetify apply
@@ -271,6 +276,7 @@ t() {
             echo "    t new [name]        create new session"
             echo "    t kill <name>       kill a session"
             echo "    t kill-all          kill ALL sessions"
+            echo "    t todo              open Tuxedo TUI in dedicated auto-kill session"
             echo ""
             echo "  Panes:"
             echo "    t vs                split vertically (left/right)"
@@ -298,6 +304,7 @@ t() {
         new)        tmux new-session ${2:+-s "$2"} ;;
         kill)       [[ -n "$2" ]] && tmux kill-session -t "$2" || echo "Usage: t kill <session>" ;;
         kill-all)   tmux kill-server ;;
+        todo|tux)   todo ;;
 
         # ── Panes ─────────────────────────────────────────
         vs)         tmux split-window -h ;;
@@ -325,3 +332,31 @@ t() {
 
 # Keep 'ts' as a short alias for backwards compat — just calls t
 ts() { t "$@"; }
+
+# --- Tuxedo Todo Workspace in Dedicated Tmux Session ---
+# Attaches to session 'Tuxedo' in ~/.tuxedo-todo running tuxedo.
+# Upon closing tuxedo in it, the tmux session is killed.
+todo() {
+    local session="Tuxedo"
+    local todo_dir="${TODO_DIR:-$HOME/.tuxedo-todo}"
+    mkdir -p "$todo_dir"
+
+    if [ -n "$TMUX" ]; then
+        if tmux has-session -t "$session" 2>/dev/null; then
+            tmux switch-client -t "$session"
+        else
+            tmux new-session -d -s "$session" -c "$todo_dir" "tuxedo; tmux kill-session -t $session"
+            tmux switch-client -t "$session"
+        fi
+    else
+        if tmux has-session -t "$session" 2>/dev/null; then
+            tmux attach-session -t "$session"
+        else
+            tmux new-session -s "$session" -c "$todo_dir" "tuxedo; tmux kill-session -t $session"
+        fi
+    fi
+}
+
+# Backwards compatibility alias for todo
+tux() { todo "$@"; }
+

@@ -22,3 +22,9 @@ export PATH="$HOME/.local/bin/cpkb:$PATH"
 
 # Physics KB scripts
 export PATH="$PATH:$HOME/Documents/Physics-KB/scripts"
+
+# Tuxedo Todo
+export TODO_DIR="$HOME/.tuxedo-todo"
+export TODO_FILE="$HOME/.tuxedo-todo/todo.txt"
+export DONE_FILE="$HOME/.tuxedo-todo/done.txt"
+

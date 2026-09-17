@@ -26,7 +26,9 @@ ueberzug_offset = [0, 0, 0, 0]
 
 [opener]
 edit = [
-    { run = "${EDITOR:-nano} \"$@\"", desc = "$EDITOR", for = "unix", block = true },
+    # Use nvim explicitly — $EDITOR may not expand correctly in yazi's shell context
+    { run = "/opt/homebrew/bin/nvim \"$@\"", desc = "nvim", for = "macos", block = true },
+    { run = "nvim \"$@\"", desc = "nvim", for = "linux", block = true },
     { run = "code \"$@\"", desc = "code", for = "windows", orphan = true },
     { run = "code -w \"$@\"", desc = "code (block)", for = "windows", block = true },
 ]

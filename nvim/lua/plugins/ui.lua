@@ -18,11 +18,28 @@ return {
 		event = "VeryLazy", -- Load after startup for speed
 
 		config = function()
+			local function recording_macro()
+				local reg = vim.fn.reg_recording()
+				if reg == "" then return "" end
+				return "recording @" .. reg
+			end
+
+			local function search_count()
+				if vim.v.hlsearch == 0 then return "" end
+				local ok, count = pcall(vim.fn.searchcount, { maxcount = 999, timeout = 120 })
+				if not ok or count.total == 0 then return "" end
+				return string.format("%d/%d", count.current, count.total)
+			end
+
 			require("lualine").setup({
 				options = {
 					theme = "auto", -- Match our colorscheme
 					section_separators = { left = "", right = "" },
 					component_separators = { left = "", right = "" },
+					globalstatus = true,
+					disabled_filetypes = {
+						statusline = { "alpha", "dashboard", "snacks_dashboard" },
+					},
 				},
 				-- Sections control what appears in each part of the statusline:
 				--   a | b | c              x | y | z
@@ -30,8 +47,21 @@ return {
 				sections = {
 					lualine_a = { "mode" }, -- Current mode (NORMAL, INSERT, etc.)
 					lualine_b = { "branch", "diff", "diagnostics" }, -- Git info + errors
-					lualine_c = { "filename" }, -- Current file name
+					lualine_c = {
+						{
+							"filename",
+							path = 1,
+							symbols = {
+								modified = " [+]",
+								readonly = " [ro]",
+								unnamed = "[No Name]",
+								newfile = "[New]",
+							},
+						},
+					},
 					lualine_x = {
+						{ recording_macro, color = { fg = "#FFD700", gui = "bold" } },
+						{ search_count },
 						{
 							function()
 								local clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -47,9 +77,17 @@ return {
 							end,
 						},
 						"filetype",
+						"encoding",
 					},
 					lualine_y = { "progress" }, -- How far through the file (%)
 					lualine_z = { "location" }, -- Line:Column number
+				},
+				extensions = {
+					"lazy",
+					"mason",
+					"nvim-tree",
+					"quickfix",
+					"trouble",
 				},
 			})
 		end,
@@ -79,6 +117,23 @@ return {
 					show_buffer_close_icons = true,
 					show_close_icon = false,
 					always_show_bufferline = true, -- Show even with one file open
+					indicator = {
+						style = "underline",
+					},
+					offsets = {
+						{
+							filetype = "NvimTree",
+							text = "Project",
+							highlight = "Directory",
+							text_align = "left",
+							separator = true,
+						},
+					},
+					hover = {
+						enabled = true,
+						delay = 200,
+						reveal = { "close" },
+					},
 				},
 			})
 		end,

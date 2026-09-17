@@ -80,7 +80,8 @@ return {
 			-- Alert via WhatsApp/Ntfy if run takes longer than 15 seconds
 			local timed_cmd = string.format(
 				"_start=$(date +%%s); %s; _end=$(date +%%s); _dur=$((_end-_start)); if [ $_dur -gt 15 ]; then source ~/.config/shell/functions.sh && alert \"✅ Neovim: '%s' finished in ${_dur}s.\"; fi",
-				cmd, fname
+				cmd,
+				fname
 			)
 			vim.cmd("belowright 15split | terminal " .. timed_cmd)
 			vim.cmd("startinsert")
@@ -128,7 +129,8 @@ return {
 			-- Alert only if run takes longer than 15 seconds (skip for quick CP runs)
 			local timed_cmd = string.format(
 				"_start=$(date +%%s); %s; _end=$(date +%%s); _dur=$((_end-_start)); if [ $_dur -gt 15 ]; then source ~/.config/shell/functions.sh && alert \"✅ Neovim: '%s' finished in ${_dur}s.\"; fi",
-				cmd, fname
+				cmd,
+				fname
 			)
 			vim.cmd("belowright 15split | terminal " .. timed_cmd)
 			vim.cmd("startinsert")

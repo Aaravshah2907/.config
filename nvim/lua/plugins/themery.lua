@@ -74,6 +74,64 @@ return {
 						vim.opt.background = "light"
 					]],
 				},
+				{
+					name = "Roshar Highstorm",
+					colorscheme = "duskfox",
+					before = [[
+						vim.opt.background = "dark"
+					]],
+				},
+				{
+					name = "Scadrial Ashfall",
+					colorscheme = "carbonfox",
+					before = [[
+						vim.opt.background = "dark"
+					]],
+				},
+				{
+					name = "Taldain Dayside",
+					colorscheme = "dayfox",
+					before = [[
+						vim.opt.background = "light"
+					]],
+				},
+				{
+					name = "Shadesmar",
+					colorscheme = "terafox",
+					before = [[
+						vim.opt.background = "dark"
+					]],
+				},
+				{
+					name = "Elantris Glow",
+					colorscheme = "dawnfox",
+					before = [[
+						vim.opt.background = "light"
+					]],
+				},
+				{
+					name = "Nalthis BioChromatic",
+					colorscheme = "material",
+					before = [[
+						vim.opt.background = "dark"
+						vim.g.material_style = "deep ocean"
+					]],
+				},
+				{
+					name = "Selish Dor",
+					colorscheme = "everforest",
+					before = [[
+						vim.opt.background = "dark"
+						vim.g.everforest_background = "hard"
+					]],
+				},
+				{
+					name = "Silverlight",
+					colorscheme = "onelight",
+					before = [[
+						vim.opt.background = "light"
+					]],
+				},
 			},
 			livePreview = true,
 		})

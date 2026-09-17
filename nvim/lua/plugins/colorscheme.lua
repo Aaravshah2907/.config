@@ -62,6 +62,7 @@ return {
           },
           noice = true,      -- Better command-line UI
           notify = true,     -- Notification popups
+          nvimtree = true,   -- File explorer
           which_key = true,  -- Keybinding helper popup
           illuminate = {     -- Word highlighting under cursor
             enabled = true,
@@ -110,6 +111,47 @@ return {
     priority = 900,
     opts = {
       styles = {
+        transparency = true,
+      },
+    },
+  },
+  {
+    "EdenEast/nightfox.nvim",
+    lazy = false,
+    priority = 900,
+    opts = {
+      options = {
+        transparent = true,
+      },
+    },
+  },
+  {
+    "sainnhe/everforest",
+    lazy = false,
+    priority = 900,
+    config = function()
+      vim.g.everforest_transparent_background = 1
+      vim.g.everforest_background = "medium"
+    end,
+  },
+  {
+    "marko-cerovac/material.nvim",
+    lazy = false,
+    priority = 900,
+    opts = {
+      contrast = {
+        terminal = true,
+        sidebars = true,
+        floating_windows = true,
+      },
+    },
+  },
+  {
+    "olimorris/onedarkpro.nvim",
+    lazy = false,
+    priority = 900,
+    opts = {
+      options = {
         transparency = true,
       },
     },

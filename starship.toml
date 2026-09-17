@@ -88,15 +88,13 @@ trim_at = "."
 # =============================================================================
 [directory]
 format = "[](#00BFFF)[$path]($style)[$read_only]($read_only_style)[](fg:#00BFFF) "
-repo_root_format = "[](#00BFFF)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style)[](fg:#00BFFF) "
 style = "bold #001a33 bg:#00BFFF"
-repo_root_style = "bold #001a33 bg:#00BFFF underline"
-before_repo_root_style = "bold #001a33 bg:#00BFFF"
 read_only = " 󰌾"
 read_only_style = "bold #1A0A0A bg:#00BFFF"
 truncation_length = 4
-truncate_to_repo = true
+truncate_to_repo = false
 home_symbol = " ~"
+
 
 [directory.substitutions]
 # Deep Project & Knowledge Base Paths

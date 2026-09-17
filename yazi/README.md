@@ -11,7 +11,7 @@ My custom configuration for [Yazi](https://github.com/sxyazi/yazi), a blazing fa
 
 ## Features
 
-- **Dracula Theme**: Consistent and beautiful styling using the `dracula` flavor.
+- **Cosmere Theme**: Immersive styling using a custom `cosmere` flavor — drawn from Brandon Sanderson's Roshar (Stormlight), Scadrial (Mistborn), and Spren color palettes.
 - **Radiant Player Integration**: Custom opener rules to instantly send audio files (`.mp3`, `.flac`, etc.) or `.spot`/`.spotify` pointer files directly to the `radiant-player` queue.
 - **Enhanced Previews**: Rich file previews for images, videos, audio, and git repositories directly in the terminal.
 - **Custom Keybindings**: Highly customized `keymap.toml` for efficient navigation and file manipulation.

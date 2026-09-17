@@ -60,7 +60,7 @@ keymap = [
 	# Operation
 	{ on = "o",         run = "open",                        desc = "Open selected files" },
 	{ on = "O",         run = "open --interactive",          desc = "Open selected files interactively" },
-	{ on = "<Enter>",   run = "open",                        desc = "Open selected files" },
+	{ on = "<Enter>",   run = "plugin smart-enter",          desc = "Enter child directory or open file" },
 	{ on = "<S-Enter>", run = "open --interactive",          desc = "Open selected files interactively" },
 	{ on = "y",         run = [ "yank", "plugin syl-notify -- \"custom\" \"󰌵 Sylphrena\" \"I'll keep this pattern safe for you.\"" ], desc = "Yank selected files (copy)" },
 	{ on = "x",         run = [ "yank --cut", "plugin syl-notify -- \"custom\" \"󰌵 Sylphrena\" \"I've gathered these for moving!\"" ], desc = "Yank selected files (cut)" },
@@ -250,8 +250,8 @@ keymap = [
 	
 	# Share / Send files
 	{ on = [ "e", "l" ], run = "plugin localsend-dashboard", desc = "LocalSend (Send/Receive)" },
-	{ on = [ "e", "a" ], run = '''shell 'osascript -e "set fileAlias to POSIX file \"%1\" as alias" -e "tell application \"Finder\" to reveal fileAlias" -e "tell application \"System Events\" to keystroke \"R\" using {command down, shift down}"' ''', desc = "Share selected file via AirDrop (macOS)" },
-	{ on = [ "e", "n" ], run = 'shell "open -a NearDrop %*" --block', desc = "Share selected files via NearDrop" },
+	{ on = [ "e", "a" ], run = '''shell 'osascript -e "set fileAlias to POSIX file \"%s1\" as alias" -e "tell application \"Finder\" to reveal fileAlias" -e "tell application \"System Events\" to keystroke \"R\" using {command down, shift down}"' ''', desc = "Share selected file via AirDrop (macOS)" },
+	{ on = [ "e", "n" ], run = 'shell "open -a NearDrop %s" --block', desc = "Share selected files via NearDrop" },
 
 	# Tasks
 	{ on = "w", run = "tasks:show", desc = "Show task manager" },

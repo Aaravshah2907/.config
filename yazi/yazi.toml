@@ -26,53 +26,52 @@ ueberzug_offset = [0, 0, 0, 0]
 
 [opener]
 edit = [
-    # Use nvim explicitly — $EDITOR may not expand correctly in yazi's shell context
-    { run = "/opt/homebrew/bin/nvim \"$@\"", desc = "nvim", for = "macos", block = true },
-    { run = "nvim \"$@\"", desc = "nvim", for = "linux", block = true },
-    { run = "code \"$@\"", desc = "code", for = "windows", orphan = true },
-    { run = "code -w \"$@\"", desc = "code (block)", for = "windows", block = true },
+    { run = '/opt/homebrew/bin/nvim %s', desc = "nvim", for = "macos", block = true },
+    { run = 'nvim %s', desc = "nvim", for = "linux", block = true },
+    { run = 'code %s', desc = "code", for = "windows", orphan = true },
+    { run = 'code -w %s', desc = "code (block)", for = "windows", block = true },
 ]
 play = [
-    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py play "$@"', desc = "Add to Queue", for = "macos", orphan = true },
+    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py play %s', desc = "Add to Queue", for = "macos", orphan = true },
     { run = '/Users/aaravshah2975/.config/radiant-player/fzf-interface.sh', desc = "Edit Queue", for = "macos", block = true },
-    { run = "xdg-open \"$1\"", desc = "Play", for = "linux", orphan = true },
-    { run = 'start "" "$1"', desc = "Play", for = "windows", orphan = true },
-    { run = "termux-open \"$1\"", desc = "Play", for = "android" },
+    { run = 'xdg-open %s1', desc = "Play", for = "linux", orphan = true },
+    { run = 'start "" %s1', desc = "Play", for = "windows", orphan = true },
+    { run = 'termux-open %s1', desc = "Play", for = "android" },
 ]
 mediainfo_view = [
-    { run = "mediainfo \"$1\" | bat --style=plain; echo 'Press enter'; read _", block = true, desc = "Show Media Info", for = "unix" },
+    { run = 'mediainfo %s1 | bat --style=plain; echo "Press enter"; read _', block = true, desc = "Show Media Info", for = "unix" },
 ]
 exif_view = [
-    { run = "exiftool \"$1\" | bat --style=plain; echo 'Press enter'; read _", block = true, desc = "Show EXIF Data", for = "unix" },
+    { run = 'exiftool %s1 | bat --style=plain; echo "Press enter"; read _', block = true, desc = "Show EXIF Data", for = "unix" },
 ]
 open = [
-    { run = "xdg-open \"$1\"", desc = "Open", for = "linux" },
-    { run = "open \"$@\"", desc = "Open", for = "macos" },
-    { run = 'start "" "$1"', desc = "Open", for = "windows", orphan = true },
-    { run = "termux-open \"$1\"", desc = "Open", for = "android" },
+    { run = 'xdg-open %s1', desc = "Open", for = "linux" },
+    { run = 'open %s', desc = "Open", for = "macos" },
+    { run = 'start "" %s1', desc = "Open", for = "windows", orphan = true },
+    { run = 'termux-open %s1', desc = "Open", for = "android" },
 ]
 reveal = [
-    { run = "xdg-open \"$1\"", desc = "Reveal", for = "linux" },
-    { run = "open -R \"$1\"", desc = "Reveal", for = "macos" },
-    { run = "explorer /select,\"$1\"", desc = "Reveal", for = "windows", orphan = true },
-    { run = "termux-open \"$1\"", desc = "Reveal", for = "android" },
+    { run = 'xdg-open %d1', desc = "Reveal", for = "linux" },
+    { run = 'open -R %s1', desc = "Reveal", for = "macos" },
+    { run = 'explorer /select,%s1', desc = "Reveal", for = "windows", orphan = true },
+    { run = 'termux-open %d1', desc = "Reveal", for = "android" },
 ]
-extract = [{ run = "ya pub extract --list \"$@\"", desc = "Extract here" }]
+extract = [{ run = 'ya pub extract --list %s', desc = "Extract here" }]
 extract_ouch = [
-    { run = "ouch decompress \"$@\"", desc = "Extract (ouch)", for = "unix" },
+    { run = 'ouch decompress %s', desc = "Extract (ouch)", for = "unix" },
 ]
 download = [
-    { run = "ya emit download --open \"$@\"", desc = "Download and open" },
-    { run = "ya emit download \"$@\"", desc = "Download" },
+    { run = 'ya emit download --open %s', desc = "Download and open" },
+    { run = 'ya emit download %s', desc = "Download" },
 ]
 vlc = [
-    { run = '/bin/bash /Users/aaravshah2975/.config/yazi/scripts/vlc_playlist.sh "$@"', desc = "Open in VLC Playlist", for = "macos", orphan = true },
+    { run = '/bin/bash /Users/aaravshah2975/.config/yazi/scripts/vlc_playlist.sh %s', desc = "Open in VLC Playlist", for = "macos", orphan = true },
 ]
 playlist = [
-    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py load "$@"', desc = "Load Playlist", for = "macos", orphan = true },
+    { run = '/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py load %s', desc = "Load Playlist", for = "macos", orphan = true },
 ]
 spotify_add = [
-    { run = '/bin/zsh -lc "uri=$(awk \"NF{print; exit}\" \"$1\"); /opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py add_spotify \"$uri\""', desc = "Add Spotify URI to queue", for = "macos", orphan = true },
+    { run = '/bin/zsh -lc "uri=$(awk \"NF{print; exit}\" \"%s1\"); /opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py add_spotify \"$uri\""', desc = "Add Spotify URI to queue", for = "macos", orphan = true },
 ]
 
 [open]
@@ -82,6 +81,17 @@ rules = [
         "edit",
         "open",
         "reveal",
+    ] },
+    # Playlist
+    { url = "*.m3u", use = [
+        "playlist",
+    ] },
+    # Spotify pointer files
+    { url = "*.spotify", use = [
+        "spotify_add",
+    ] },
+    { url = "*.spot", use = [
+        "spotify_add",
     ] },
     # Text
     { mime = "text/*", use = [
@@ -130,21 +140,11 @@ rules = [
     ] },
     # Virtual file system
     { mime = "vfs/{absent,stale}", use = "download" },
-    # Fallback
+    # Fallback (include edit so unclassified code/config files open in nvim)
     { url = "*", use = [
+        "edit",
         "open",
         "reveal",
-    ] },
-    # Playlist
-    { mime = "*.m3u", use = [
-        "playlist",
-    ] },
-    # Spotify pointer files
-    { mime = "*.spotify", use = [
-        "spotify_add",
-    ] },
-    { mime = "*.spot", use = [
-        "spotify_add",
     ] },
 ]
 
@@ -162,7 +162,7 @@ prepend_previewers = [
     { mime = "application/{csv,tsv}", run = "miller", group = "data" },
     { mime = "audio/*", run = "exifaudio", group = "preview" },
     { url = '**/.git/', run = 'preview-git', group = "preview" },
-    { mime = '', run = 'preview-epub', group = "preview" },
+    #{ mime = 'application/epub+zip', run = 'preview-epub', group = "preview" },
 ]
 prepend_fetchers = [
     #{id  = "mactag", url = "*/", run = "mactag", group = "tag" },
@@ -212,7 +212,7 @@ preloaders = [
     { mime = "font/*", run = "font", group = "font" },
     { mime = "application/ms-opentype", run = "font", group = "font" },
     # Epubs
-    { mime = '', run = 'preview-epub', group = "preview-epub" },
+    #{ mime = 'application/epub+zip', run = 'preview-epub', group = "preview-epub" },
 ]
 previewers = [
     { url = "*/", run = "folder", group = "folder" },

@@ -214,8 +214,11 @@ prepend_dirs = [
 	{ name = "Music",         text = "󰎇", fg = "#FFAB40" },
 	{ name = "Pictures",      text = "󰉏", fg = "#DA70D6" },
 	{ name = "Videos",        text = "󰈫", fg = "#E040FB" },  # Willshaper Amethyst
+]
 
-	# --- Catch-all default folder icon ---
+# Catch-all fallback: any folder not matched by prepend_dirs or the flavor
+# uses append_dirs so it's truly the last resort — after all specific rules
+append_dirs = [
 	{ name = "*", text = "", fg = "#5DA8CC" },  # Preservation Glacial
 ]
 

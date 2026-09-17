@@ -170,6 +170,55 @@ prepend_rules = [
 	{ name = "*.flac", text = "󰎇", fg = "#FFAB40" },
 	{ name = "*.wav",  text = "󰎇", fg = "#FFAB40" },
 ]
+
+# Folder icons — matched by exact directory name, then the catch-all "*"
+prepend_dirs = [
+	# --- Version Control ---
+	{ name = ".git",          text = "󰊢", fg = "#ed8796" },  # Rosepine red
+
+	# --- Language / Toolchain Dirs ---
+	{ name = ".cargo",        text = "󱘗", fg = "#FF4500" },  # Ashspren orange (Rust)
+	{ name = "node_modules",  text = "", fg = "#3CB371" },  # Cultivation green
+	{ name = "target",        text = "󰊢", fg = "#607D8B" },  # Stormfather slate (build output)
+	{ name = "dist",          text = "󰆏", fg = "#607D8B" },
+	{ name = "build",         text = "󰆏", fg = "#607D8B" },
+	{ name = "__pycache__",   text = "󰌠", fg = "#5DA8CC" },  # Preservation Glacial (Python)
+	{ name = ".venv",         text = "󰌠", fg = "#5DA8CC" },
+	{ name = "venv",          text = "󰌠", fg = "#5DA8CC" },
+
+	# --- Common Project Dirs ---
+	{ name = "src",           text = "󰴉", fg = "#00A8E8" },  # Honorspren sky blue
+	{ name = "lib",           text = "󰏗", fg = "#00A8E8" },
+	{ name = "bin",           text = "", fg = "#FFD700" },  # Gloryspren gold
+	{ name = "docs",          text = "󰈙", fg = "#B0C4DE" },  # Mist Blue
+	{ name = "doc",           text = "󰈙", fg = "#B0C4DE" },
+	{ name = "tests",         text = "󰙨", fg = "#3CB371" },  # Cultivation green
+	{ name = "test",          text = "󰙨", fg = "#3CB371" },
+	{ name = "assets",        text = "󰉏", fg = "#DA70D6" },  # Cryptic Orchid
+	{ name = "public",        text = "󰉏", fg = "#DA70D6" },
+	{ name = "static",        text = "󰉏", fg = "#DA70D6" },
+	{ name = "images",        text = "󰉏", fg = "#DA70D6" },
+	{ name = "img",           text = "󰉏", fg = "#DA70D6" },
+	{ name = "icons",         text = "󰯉", fg = "#C3AEE8" },
+	{ name = "fonts",         text = "", fg = "#C3AEE8" },  # Spren violet
+	{ name = "scripts",       text = "󰍹", fg = "#3CB371" },
+
+	# --- Config / Hidden Dirs ---
+	{ name = ".config",       text = "󰒓", fg = "#5DA8CC" },  # Preservation Glacial
+	{ name = ".local",        text = "󰒓", fg = "#5DA8CC" },
+	{ name = ".ssh",          text = "󰌾", fg = "#FFD700" },  # Gloryspren gold (security)
+	{ name = ".gnupg",        text = "󰌾", fg = "#FFD700" },
+	{ name = "Downloads",     text = "󰉍", fg = "#FFAB40" },  # Sibling amber
+	{ name = "Desktop",       text = "󰇄", fg = "#00BFFF" },  # Windrunner Sapphire
+	{ name = "Documents",     text = "󰈙", fg = "#B0C4DE" },
+	{ name = "Music",         text = "󰎇", fg = "#FFAB40" },
+	{ name = "Pictures",      text = "󰉏", fg = "#DA70D6" },
+	{ name = "Videos",        text = "󰈫", fg = "#E040FB" },  # Willshaper Amethyst
+
+	# --- Catch-all default folder icon ---
+	{ name = "*", text = "", fg = "#5DA8CC" },  # Preservation Glacial
+]
+
 [filetype]
 # Cosmere-themed filetype coloring by MIME type
 rules = [

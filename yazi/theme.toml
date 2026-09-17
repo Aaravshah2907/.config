@@ -56,26 +56,153 @@ icon_error = "󰚌" # Ruin / Danger
 
 [icon]
 prepend_rules = [
-	{ name = "*.sh", text = "󰍹", fg = "#3CB371" },
-	{ name = "*.md", text = "󰈙", fg = "#B0C4DE" },
-	{ name = "*.json", text = "", fg = "#C3AEE8" },
-	{ name = "*.toml", text = "", fg = "#C3AEE8" },
-	{ name = "*.rs", text = "󱘗", fg = "#FF4500" },
-	{ name = "*.py", text = "󰌠", fg = "#5DA8CC" },
-	{ name = "*.c", text = "", fg = "#B0C4DE" },
-	{ name = "*.cpp", text = "", fg = "#B0C4DE" },
-	{ name = "*.txt", text = "󰈙", fg = "#C8E8F5" },
-	{ name = ".git", text = "󰊢", fg = "#ed8796" },
-	{ name = ".config", text = "󰒓", fg = "#5DA8CC" },
+	# --- Shell & Scripting ---
+	{ name = "*.sh",   text = "󰍹", fg = "#3CB371" },  # Cultivation green
+	{ name = "*.bash", text = "󰍹", fg = "#3CB371" },
+	{ name = "*.zsh",  text = "󰍹", fg = "#3CB371" },
+	{ name = "*.fish", text = "󰈺", fg = "#5DA8CC" },  # Preservation Glacial
+
+	# --- Markup & Docs ---
+	{ name = "*.md",      text = "󰈙", fg = "#B0C4DE" },  # Mist Blue
+	{ name = "*.mdx",     text = "󰈙", fg = "#B0C4DE" },
+	{ name = "*.txt",     text = "󰈙", fg = "#C8E8F5" },  # Preservation Mist
+	{ name = "*.pdf",     text = "󰈦", fg = "#FF4500" },  # Ashspren orange
+	{ name = "*.html",    text = "󰌝", fg = "#FFAB40" },  # Sibling amber
+	{ name = "*.htm",     text = "󰌝", fg = "#FFAB40" },
+	{ name = "*.css",     text = "󰌜", fg = "#00BFFF" },  # Windrunner Sapphire
+	{ name = "*.scss",    text = "󰌜", fg = "#DA70D6" },  # Cryptic Orchid
+	{ name = "*.sass",    text = "󰌜", fg = "#DA70D6" },
+
+	# --- Config & Data ---
+	{ name = "*.json",    text = "", fg = "#C3AEE8" },   # Spren violet
+	{ name = "*.json5",   text = "", fg = "#C3AEE8" },
+	{ name = "*.jsonc",   text = "", fg = "#C3AEE8" },
+	{ name = "*.toml",    text = "", fg = "#C3AEE8" },
+	{ name = "*.yaml",    text = "󰈙", fg = "#FFAB40" },  # Sibling amber
+	{ name = "*.yml",     text = "󰈙", fg = "#FFAB40" },
+	{ name = "*.xml",     text = "󰗀", fg = "#B0C4DE" },
+	{ name = "*.ini",     text = "󰒓", fg = "#607D8B" },
+	{ name = "*.env",     text = "󰒓", fg = "#FFD700" },  # Gloryspren gold
+	{ name = ".env",      text = "󰒓", fg = "#FFD700" },
+	{ name = "*.lock",    text = "󰌾", fg = "#8B6914" },  # Hemalurgic spike
+
+	# --- Systems Languages ---
+	{ name = "*.rs",   text = "󱘗", fg = "#FF4500" },  # Ashspren orange
+	{ name = "*.c",    text = "", fg = "#B0C4DE" },
+	{ name = "*.h",    text = "", fg = "#B0C4DE" },
+	{ name = "*.cpp",  text = "", fg = "#5DA8CC" },  # Glacial blue for C++
+	{ name = "*.cc",   text = "", fg = "#5DA8CC" },
+	{ name = "*.hpp",  text = "", fg = "#5DA8CC" },
+	{ name = "*.zig",  text = "", fg = "#FFAB40" },  # Sibling amber (Zig's brand color)
+	{ name = "*.go",   text = "", fg = "#00A8E8" },  # Honorspren sky blue (Go teal)
+
+	# --- Scripting & App Languages ---
+	{ name = "*.py",   text = "󰌠", fg = "#5DA8CC" },  # Preservation Glacial
+	{ name = "*.lua",  text = "", fg = "#00BFFF" },  # Windrunner Sapphire
+	{ name = "*.rb",   text = "", fg = "#FF4500" },  # Ashspren red (Ruby)
+	{ name = "*.php",  text = "󰌟", fg = "#C3AEE8" },  # Spren violet
+
+	# --- JavaScript / TypeScript Ecosystem ---
+	{ name = "*.js",   text = "󰌞", fg = "#FFD700" },  # Gloryspren gold (JS yellow)
+	{ name = "*.mjs",  text = "󰌞", fg = "#FFD700" },
+	{ name = "*.cjs",  text = "󰌞", fg = "#FFD700" },
+	{ name = "*.ts",   text = "󰛦", fg = "#00BFFF" },  # Windrunner Sapphire (TS blue)
+	{ name = "*.mts",  text = "󰛦", fg = "#00BFFF" },
+	{ name = "*.tsx",  text = "", fg = "#00BFFF" },
+	{ name = "*.jsx",  text = "", fg = "#FFD700" },
+	{ name = "*.vue",  text = "󰡄", fg = "#3CB371" },  # Cultivation green (Vue)
+	{ name = "*.svelte", text = "", fg = "#FF4500" }, # Ashspren orange (Svelte)
+
+	# --- JVM ---
+	{ name = "*.java",  text = "", fg = "#FF4500" },  # Ashspren orange (Java red)
+	{ name = "*.kt",    text = "", fg = "#DA70D6" },  # Cryptic Orchid (Kotlin purple)
+	{ name = "*.kts",   text = "", fg = "#DA70D6" },
+	{ name = "*.scala", text = "", fg = "#FF4500" },
+
+	# --- Database & Query ---
+	{ name = "*.sql",   text = "", fg = "#00A8E8" },  # Honorspren blue
+	{ name = "*.db",    text = "", fg = "#8B6914" },  # Hemalurgic spike
+	{ name = "*.sqlite", text = "", fg = "#8B6914" },
+
+	# --- DevOps & Build ---
+	{ name = "Dockerfile",     text = "󰡨", fg = "#00A8E8" },  # Honorspren sky blue
+	{ name = "*.dockerfile",   text = "󰡨", fg = "#00A8E8" },
+	{ name = "docker-compose.yml",  text = "󰡨", fg = "#5DA8CC" },
+	{ name = "docker-compose.yaml", text = "󰡨", fg = "#5DA8CC" },
+	{ name = "Makefile",  text = "", fg = "#607D8B" },  # Stormfather slate
+	{ name = "*.nix",    text = "", fg = "#5DA8CC" },  # Preservation Glacial
+
+	# --- Git ---
+	{ name = ".git",           text = "󰊢", fg = "#ed8796" },
+	{ name = ".gitignore",     text = "󰊢", fg = "#607D8B" },  # Stormfather slate
+	{ name = ".gitattributes", text = "󰊢", fg = "#607D8B" },
+	{ name = ".gitmodules",    text = "󰊢", fg = "#607D8B" },
+
+	# --- Config Dirs / Dotfiles ---
+	{ name = ".config",   text = "󰒓", fg = "#5DA8CC" },
+	{ name = ".cargo",    text = "󱘗", fg = "#FF4500" },
+	{ name = "node_modules", text = "", fg = "#3CB371" },
+	{ name = "target",    text = "󰊢", fg = "#607D8B" },
+
+	# --- Archives ---
+	{ name = "*.zip",  text = "󰗄", fg = "#8B6914" },  # Hemalurgic spike
+	{ name = "*.tar",  text = "󰗄", fg = "#8B6914" },
+	{ name = "*.gz",   text = "󰗄", fg = "#8B6914" },
+	{ name = "*.xz",   text = "󰗄", fg = "#8B6914" },
+	{ name = "*.7z",   text = "󰗄", fg = "#8B6914" },
+	{ name = "*.rar",  text = "󰗄", fg = "#8B6914" },
+	{ name = "*.zst",  text = "󰗄", fg = "#8B6914" },
+
+	# --- Images ---
+	{ name = "*.png",  text = "󰈟", fg = "#DA70D6" },  # Cryptic Orchid
+	{ name = "*.jpg",  text = "󰈟", fg = "#DA70D6" },
+	{ name = "*.jpeg", text = "󰈟", fg = "#DA70D6" },
+	{ name = "*.gif",  text = "󰈟", fg = "#E040FB" },  # Willshaper Amethyst
+	{ name = "*.webp", text = "󰈟", fg = "#DA70D6" },
+	{ name = "*.svg",  text = "󰜡", fg = "#FFAB40" },  # Sibling amber
+	{ name = "*.ico",  text = "󰯉", fg = "#C3AEE8" },
+
+	# --- Video & Audio ---
+	{ name = "*.mp4",  text = "󰈫", fg = "#E040FB" },  # Willshaper Amethyst
+	{ name = "*.mkv",  text = "󰈫", fg = "#E040FB" },
+	{ name = "*.webm", text = "󰈫", fg = "#E040FB" },
+	{ name = "*.mp3",  text = "󰎇", fg = "#FFAB40" },  # Sibling amber
+	{ name = "*.flac", text = "󰎇", fg = "#FFAB40" },
+	{ name = "*.wav",  text = "󰎇", fg = "#FFAB40" },
 ]
 [filetype]
-# Added more Cosmere colors to filetypes
+# Cosmere-themed filetype coloring by MIME type
 rules = [
-	{ mime = "image/*", fg = "#DA70D6" },         # Cryptic Orchid
-	{ mime = "video/*", fg = "#E040FB" },         # Willshaper Amethyst
-	{ mime = "audio/*", fg = "#FFAB40" },         # Sibling amber
-	{ mime = "application/zip", fg = "#8B6914" }, # Hemalurgic spike
-	{ mime = "application/x-tar", fg = "#8B6914" },
-	{ mime = "text/plain", fg = "#C8E8F5" },      # Preservation Mist
+	# Media
+	{ mime = "image/*", fg = "#DA70D6" },          # Cryptic Orchid
+	{ mime = "video/*", fg = "#E040FB" },          # Willshaper Amethyst
+	{ mime = "audio/*", fg = "#FFAB40" },          # Sibling amber
+
+	# Archives & Compressed
+	{ mime = "application/zip",             fg = "#8B6914" },  # Hemalurgic spike
+	{ mime = "application/x-tar",           fg = "#8B6914" },
+	{ mime = "application/x-bzip2",         fg = "#8B6914" },
+	{ mime = "application/x-xz",            fg = "#8B6914" },
+	{ mime = "application/x-7z-compressed", fg = "#8B6914" },
+	{ mime = "application/x-rar",           fg = "#8B6914" },
+	{ mime = "application/zstd",            fg = "#8B6914" },
+	{ mime = "application/gzip",            fg = "#8B6914" },
+
+	# Documents
+	{ mime = "application/pdf",             fg = "#FF4500" },  # Ashspren orange
+	{ mime = "text/plain",                  fg = "#C8E8F5" },  # Preservation Mist
+	{ mime = "text/html",                   fg = "#FFAB40" },  # Sibling amber
+	{ mime = "text/css",                    fg = "#00BFFF" },  # Windrunner Sapphire
+	{ mime = "text/x-shellscript",          fg = "#3CB371" },  # Cultivation green
+
+	# Binaries & Executables
+	{ mime = "application/x-executable",   fg = "#FFD700" },  # Gloryspren gold
+	{ mime = "application/x-sharedlib",    fg = "#FFD700" },
+	{ mime = "application/x-object",       fg = "#607D8B" },  # Stormfather slate
+
+	# Fonts
+	{ mime = "font/*",                      fg = "#C3AEE8" },  # Spren violet
+	{ mime = "application/x-font-ttf",     fg = "#C3AEE8" },
+	{ mime = "application/font-woff",      fg = "#C3AEE8" },
 ]
 

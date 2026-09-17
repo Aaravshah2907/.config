@@ -97,13 +97,4 @@ require("lazy").setup({
 	},
 })
 
--- ────────────────────────────────────────────────────────────────────────────
--- 5. SET THE COLORSCHEME
--- ────────────────────────────────────────────────────────────────────────────
--- Catppuccin Mocha is a beautiful dark theme with warm, easy-on-the-eyes
--- colors. We set it here AFTER plugins load so the theme is available.
---
--- If the colorscheme isn't installed yet (first run), this will silently
--- fall back to Neovim's default — no ugly error messages.
 vim.opt.termguicolors = true
-vim.cmd.colorscheme("catppuccin-mocha")

@@ -44,7 +44,8 @@ command_timeout = 800
 add_newline = true
 
 # --- Multiline continuation prompt ---
-continuation_prompt = "[>>>>](bold #50fa7b) "
+continuation_prompt = "[⟫⟫](bold #50fa7b) "
+
 
 
 

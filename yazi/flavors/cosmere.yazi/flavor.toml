@@ -1,0 +1,263 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+#
+# Cosmere Flavor for Yazi
+# Inspired by Brandon Sanderson's Cosmere universe:
+#   - Stormlight Archive (Roshar): Honor Gold, Sapphire, Emerald, Crimson, Amber, Violet
+#   - Scadrial (Preservation & Ruin): Preservation Mist, Glacial, Lavender, Deep Night
+#   - Spren Accents: Honorspren Sky Blue, Cryptic Orchid, Cultivationspren Green,
+#                    Inkspren Indigo, Willshaper Amethyst, Ashspren Volcanic
+
+# Color Palette Reference:
+#   Background (Scadrial Deep Night):   #0D1B2A
+#   Panel / Selection bg:               #1A2A3A  (Preservation Deep)
+#   Surface bg:                         #243040  (slightly lighter)
+#   Text (foreground):                  #C8E8F5  (Preservation Mist)
+#   Dim text:                           #708090  (Roshar Slate)
+#   Borders (Honorspren Sky Blue):      #00A8E8
+#   ---
+#   Willshaper Amethyst (active/mode):  #E040FB
+#   Cryptic Orchid (keywords/find):     #DA70D6
+#   Honor Gold (find kw / headings):    #FFD700
+#   Honorspren Sky Blue (cwd/tabs):     #00A8E8
+#   Cultivationspren Green (exec/ok):   #3CB371
+#   Emerald (success/perm_exec):        #50fa7b
+#   Amber (warnings / special):         #ffb86c
+#   Crimson (cut / delete):             #ed8796
+#   Ashspren Volcanic (hard error):     #FF4500
+#   Inkspren Indigo (media/archive):    #8A2BE2
+#   Preservation Lavender (dirs):       #C3AEE8
+#   Preservation Glacial (borders alt): #5DA8CC
+
+
+# : Manager {{{
+
+[mgr]
+# Current working directory shown at top — Honorspren Sky Blue
+cwd = { fg = "#00A8E8" }
+
+# Find
+# keyword highlighted in Honor Gold (Gloryspren); position in Cryptic Orchid
+find_keyword  = { fg = "#FFD700", bold = true, italic = true, underline = true }
+find_position = { fg = "#DA70D6", bg = "reset", bold = true, italic = true }
+
+# Marker sidebar strips — each state has a distinct Cosmere hue
+marker_copied   = { fg = "#3CB371", bg = "#3CB371" }   # Cultivationspren Green
+marker_cut      = { fg = "#ed8796", bg = "#ed8796" }   # Roshar Crimson
+marker_marked   = { fg = "#00A8E8", bg = "#00A8E8" }   # Honorspren Sky Blue
+marker_selected = { fg = "#FFD700", bg = "#FFD700" }   # Honor Gold
+
+# Count badges (text on colored bg)
+count_copied   = { fg = "#0D1B2A", bg = "#3CB371" }   # dark text on Green
+count_cut      = { fg = "#0D1B2A", bg = "#ed8796" }   # dark text on Crimson
+count_selected = { fg = "#0D1B2A", bg = "#FFD700" }   # dark text on Gold
+
+# Border — Preservation Glacial for a cool, misty feel
+border_symbol = "│"
+border_style  = { fg = "#5DA8CC" }
+
+# : }}}
+
+
+# : Tabs {{{
+
+[tabs]
+# Active tab: Willshaper Amethyst bg with deep night text
+active   = { fg = "#0D1B2A", bg = "#E040FB", bold = true }
+# Inactive tab: Amethyst text on Preservation Deep surface
+inactive = { fg = "#E040FB", bg = "#1A2A3A" }
+
+# : }}}
+
+
+# : Mode {{{
+
+[mode]
+
+# Normal mode: Willshaper Amethyst (matches active tab)
+normal_main = { fg = "#0D1B2A", bg = "#E040FB", bold = true }
+normal_alt  = { fg = "#E040FB", bg = "#1A2A3A" }
+
+# Select mode: Honorspren Sky Blue
+select_main = { fg = "#0D1B2A", bg = "#00A8E8", bold = true }
+select_alt  = { fg = "#00A8E8", bg = "#1A2A3A" }
+
+# Unset mode: Amber (Roshar — warm caution)
+unset_main = { fg = "#0D1B2A", bg = "#ffb86c", bold = true }
+unset_alt  = { fg = "#ffb86c", bg = "#1A2A3A" }
+
+# : }}}
+
+
+# : Status bar {{{
+
+[status]
+# Permissions
+# Separator in Glacial, type in Amethyst, read in Gold, write in Crimson, exec in Green
+perm_sep   = { fg = "#5DA8CC" }
+perm_type  = { fg = "#E040FB" }
+perm_read  = { fg = "#FFD700" }
+perm_write = { fg = "#ed8796" }
+perm_exec  = { fg = "#3CB371" }
+
+# Progress bar
+progress_label  = { fg = "#C8E8F5", bold = true }
+progress_normal = { fg = "#3CB371", bg = "#243040" }
+progress_error  = { fg = "#FFD700", bg = "#FF4500" }
+
+# : }}}
+
+
+# : Pick {{{
+
+[pick]
+border   = { fg = "#E040FB" }
+active   = { fg = "#DA70D6", bold = true }
+inactive = {}
+
+# : }}}
+
+
+# : Input {{{
+
+[input]
+border   = { fg = "#E040FB" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+# : }}}
+
+
+# : Completion {{{
+
+[cmp]
+border = { fg = "#E040FB" }
+
+# : }}}
+
+
+# : Tasks {{{
+
+[tasks]
+border  = { fg = "#E040FB" }
+title   = {}
+hovered = { fg = "#DA70D6", bold = true }
+
+# : }}}
+
+
+# : Which {{{
+
+[which]
+# Mask in Preservation Deep, candidate keys in Sky Blue,
+# rest in Glacial, descriptions in Cryptic Orchid
+mask            = { bg = "#1A2A3A" }
+cand            = { fg = "#00A8E8" }
+rest            = { fg = "#5DA8CC" }
+desc            = { fg = "#DA70D6" }
+separator       = "  "
+separator_style = { fg = "#708090" }
+
+# : }}}
+
+
+# : Help {{{
+
+[help]
+on      = { fg = "#00A8E8" }
+run     = { fg = "#DA70D6" }
+hovered = { reversed = true, bold = true }
+# Footer: Preservation Mist text on near-black
+footer  = { fg = "#1A2A3A", bg = "#C8E8F5" }
+
+# : }}}
+
+
+# : Spotter {{{
+
+[spot]
+border   = { fg = "#E040FB" }
+title    = { fg = "#E040FB" }
+# Table column headers in Sky Blue, cells in Cryptic Orchid on surface bg
+tbl_col  = { fg = "#00A8E8" }
+tbl_cell = { fg = "#DA70D6", bg = "#243040" }
+
+# : }}}
+
+
+# : Notification {{{
+
+[notify]
+title_info  = { fg = "#3CB371" }   # Cultivationspren Green
+title_warn  = { fg = "#ffb86c" }   # Roshar Amber
+title_error = { fg = "#FF4500" }   # Ashspren Volcanic
+
+# : }}}
+
+
+# : File-specific styles {{{
+
+[filetype]
+
+rules = [
+	# Image — Honorspren Sky Blue (clear and crisp like stormlight)
+	{ mime = "image/*", fg = "#00A8E8" },
+	# Media — Honor Gold (vibrant, attention-drawing)
+	{ mime = "{audio,video}/*", fg = "#FFD700" },
+	# Archive — Inkspren Indigo (deep, compressed, mysterious)
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#8A2BE2" },
+	# Document — Cultivationspren Green (growth, knowledge)
+	{ mime = "application/{pdf,doc,rtf}", fg = "#3CB371" },
+	# Virtual / stale — Slate (muted, non-functional)
+	{ mime = "vfs/{absent,stale}", fg = "#708090" },
+	# Fallback — Preservation Mist for regular files
+	{ url = "*", fg = "#C8E8F5" },
+	# Directories — Preservation Lavender
+	{ url = "*/", fg = "#C3AEE8" },
+]
+
+# : }}}
+
+[icon]
+
+dirs = [
+	# Named dirs get Cosmere-flavored accent colors
+	{ name = ".config",      text = "", fg = "#DA70D6" },  # Cryptic Orchid
+	{ name = ".git",         text = "", fg = "#00A8E8" },  # Honorspren Sky Blue
+	{ name = ".github",      text = "", fg = "#E040FB" },  # Willshaper Amethyst
+	{ name = ".npm",         text = "", fg = "#ffb86c" },  # Amber
+	{ name = "Desktop",      text = "", fg = "#5DA8CC" },  # Glacial
+	{ name = "Development",  text = "", fg = "#3CB371" },  # Cultivationspren Green
+	{ name = "Documents",    text = "", fg = "#C3AEE8" },  # Preservation Lavender
+	{ name = "Downloads",    text = "", fg = "#FFD700" },  # Honor Gold
+	{ name = "Library",      text = "", fg = "#5DA8CC" },  # Glacial
+	{ name = "Movies",       text = "", fg = "#8A2BE2" },  # Inkspren Indigo
+	{ name = "Music",        text = "", fg = "#E040FB" },  # Willshaper Amethyst
+	{ name = "Pictures",     text = "", fg = "#00A8E8" },  # Honorspren Sky Blue
+	{ name = "Public",       text = "", fg = "#3CB371" },  # Cultivationspren Green
+	{ name = "Videos",       text = "", fg = "#8A2BE2" },  # Inkspren Indigo
+]
+conds = [
+	# Orphan — Preservation Mist (lost in the Cognitive Realm)
+	{ if = "orphan", text = "", fg = "#C8E8F5" },
+	# Symlink — Glacial blue
+	{ if = "link",   text = "", fg = "#5DA8CC" },
+	# Block/char/fifo/sock/sticky — Amber warning
+	{ if = "block",  text = "", fg = "#ffb86c" },
+	{ if = "char",   text = "", fg = "#ffb86c" },
+	{ if = "fifo",   text = "", fg = "#ffb86c" },
+	{ if = "sock",   text = "", fg = "#ffb86c" },
+	{ if = "sticky", text = "", fg = "#ffb86c" },
+	# Dummy/error — Ashspren Volcanic
+	{ if = "dummy",  text = "", fg = "#FF4500" },
+
+	# Fallback
+	# Hovered dir — Willshaper Amethyst
+	{ if = "dir & hovered", text = "", fg = "#E040FB" },
+	# Dir — Preservation Lavender
+	{ if = "dir",           text = "", fg = "#C3AEE8" },
+	# Executable — Cultivationspren Green
+	{ if = "exec",          text = "", fg = "#3CB371" },
+	# Regular file — Preservation Mist
+	{ if = "!dir",          text = "", fg = "#C8E8F5" },
+]

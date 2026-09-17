@@ -1,0 +1,1104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Cosmere Theme for Yazi
+     Inspired by Brandon Sanderson's Cosmere universe.
+
+     Stormlight (Roshar):
+       Honor Gold      #FFD700  — keywords, headings, find highlights
+       Sapphire        #00BFFF  — types, storage
+       Emerald         #50fa7b  — exec, inserted diff, raw inline
+       Amber           #ffb86c  — markup bold/italic, function args, JSON depth 1/5
+       Crimson         #ed8796  — deleted diff, invalid, punctuation
+       Violet          #8989ff  — numbers, constants, deprecated
+
+     Scadrial:
+       Preservation Mist    #C8E8F5  — foreground / base text
+       Preservation Glacial #5DA8CC  — lib functions, library constant, lib class
+       Preservation Lavender #C3AEE8 — headings underline, diff filename
+       Preservation Deep    #1A2A3A  — selection, line highlight
+       Scadrial Night       #0D1B2A  — background
+
+     Spren Accents:
+       Honorspren Sky Blue  #00A8E8  — class names, entity names, storage type
+       Cryptic Orchid       #DA70D6  — strings, tag names, punctuation accessors
+       Cultivationspren Green #3CB371 — function names, tag attrs, diff inserted
+       Inkspren Indigo      #8A2BE2  — JSON structure keys, variable language
+       Willshaper Amethyst  #E040FB  — keywords, storage, important accents
+       Ashspren Volcanic    #FF4500  — hard errors, message.error
+-->
+
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Cosmere</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>settings</key>
+			<dict>
+				<!-- Scadrial Deep Night background -->
+				<key>background</key>
+				<string>#0D1B2A</string>
+				<!-- Caret in Preservation Mist -->
+				<key>caret</key>
+				<string>#C8E8F5</string>
+				<key>block_caret</key>
+				<string>#708090</string>
+				<!-- Foreground: Preservation Mist -->
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+				<!-- Invisibles: barely visible on dark bg -->
+				<key>invisibles</key>
+				<string>#243040</string>
+				<!-- Line highlight: Preservation Deep -->
+				<key>lineHighlight</key>
+				<string>#1A2A3A</string>
+				<!-- Selection: Preservation Deep -->
+				<key>selection</key>
+				<string>#1A2A3A</string>
+				<!-- Find highlight: Honor Gold -->
+				<key>findHighlight</key>
+				<string>#FFD700</string>
+				<key>findHighlightForeground</key>
+				<string>#0D1B2A</string>
+				<!-- Selection border: dark mist -->
+				<key>selectionBorder</key>
+				<string>#0D1B2A</string>
+				<key>activeGuide</key>
+				<string>#E040FBB0</string>
+				<!-- Brackets: Preservation Mist semi-transparent -->
+				<key>bracketsForeground</key>
+				<string>#C8E8F5A5</string>
+				<key>bracketsOptions</key>
+				<string>underline</string>
+				<key>bracketContentsForeground</key>
+				<string>#C8E8F5A5</string>
+				<key>bracketContentsOptions</key>
+				<string>underline</string>
+				<key>tagsOptions</key>
+				<string>stippled_underline</string>
+			</dict>
+		</dict>
+
+		<!-- Comment: Slate (muted, background exposition) -->
+		<dict>
+			<key>name</key>
+			<string>Comment</string>
+			<key>scope</key>
+			<string>comment</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#708090</string>
+				<key>fontStyle</key>
+				<string>italic</string>
+			</dict>
+		</dict>
+
+		<!-- String: Cryptic Orchid (enigmatic, Pattern-like) -->
+		<dict>
+			<key>name</key>
+			<string>String</string>
+			<key>scope</key>
+			<string>string</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#DA70D6</string>
+			</dict>
+		</dict>
+
+		<!-- Number: Roshar Violet (Stormlight numerics) -->
+		<dict>
+			<key>name</key>
+			<string>Number</string>
+			<key>scope</key>
+			<string>constant.numeric</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8989ff</string>
+			</dict>
+		</dict>
+
+		<!-- Built-in constant: Roshar Violet -->
+		<dict>
+			<key>name</key>
+			<string>Built-in constant</string>
+			<key>scope</key>
+			<string>constant.language</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8989ff</string>
+			</dict>
+		</dict>
+
+		<!-- User-defined constant: Roshar Violet -->
+		<dict>
+			<key>name</key>
+			<string>User-defined constant</string>
+			<key>scope</key>
+			<string>constant.character, constant.other</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8989ff</string>
+			</dict>
+		</dict>
+
+		<!-- Variable: default foreground -->
+		<dict>
+			<key>name</key>
+			<string>Variable</string>
+			<key>scope</key>
+			<string>variable</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+			</dict>
+		</dict>
+
+		<!-- Ruby @variable: Amber (Roshar warmth) -->
+		<dict>
+			<key>name</key>
+			<string>Ruby's @variable</string>
+			<key>scope</key>
+			<string>variable.other.readwrite.instance</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#ffb86c</string>
+			</dict>
+		</dict>
+
+		<!-- String interpolation: Crimson (Roshar danger-spark) -->
+		<dict>
+			<key>name</key>
+			<string>String interpolation</string>
+			<key>scope</key>
+			<string>constant.character.escaped, constant.character.escape, string source, string source.ruby</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+
+		<!-- Ruby Regexp: Ashspren Volcanic (dangerous patterns) -->
+		<dict>
+			<key>name</key>
+			<string>Ruby Regexp</string>
+			<key>scope</key>
+			<string>source.ruby string.regexp.classic.ruby,source.ruby string.regexp.mod-r.ruby</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#FF4500</string>
+			</dict>
+		</dict>
+
+		<!-- Keyword: Willshaper Amethyst (radiant power) -->
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#E040FB</string>
+			</dict>
+		</dict>
+
+		<!-- Storage: Willshaper Amethyst -->
+		<dict>
+			<key>name</key>
+			<string>Storage</string>
+			<key>scope</key>
+			<string>storage</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#E040FB</string>
+			</dict>
+		</dict>
+
+		<!-- Storage type: Roshar Sapphire (clear, typed structure) -->
+		<dict>
+			<key>name</key>
+			<string>Storage type</string>
+			<key>scope</key>
+			<string>storage.type</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#00BFFF</string>
+			</dict>
+		</dict>
+
+		<!-- Storage Type Namespace: Roshar Sapphire -->
+		<dict>
+			<key>name</key>
+			<string>Storage Type Namespace</string>
+			<key>scope</key>
+			<string>storage.type.namespace</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#00BFFF</string>
+			</dict>
+		</dict>
+
+		<!-- Storage Type Class: Cryptic Orchid (enigmatic class shapes) -->
+		<dict>
+			<key>name</key>
+			<string>Storage Type Class</string>
+			<key>scope</key>
+			<string>storage.type.class</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#DA70D6</string>
+			</dict>
+		</dict>
+
+		<!-- Class name: Honorspren Sky Blue (bonded, luminous) -->
+		<dict>
+			<key>name</key>
+			<string>Class name</string>
+			<key>scope</key>
+			<string>entity.name.class</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>underline</string>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+
+		<!-- Meta Path: Honorspren Sky Blue underline -->
+		<dict>
+			<key>name</key>
+			<string>Meta Path</string>
+			<key>scope</key>
+			<string>meta.path</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>underline</string>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+
+		<!-- Inherited class: Honorspren Sky Blue italic (inherited radiance) -->
+		<dict>
+			<key>name</key>
+			<string>Inherited class</string>
+			<key>scope</key>
+			<string>entity.other.inherited-class</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic underline</string>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+
+		<!-- Function name: Cultivationspren Green (growth, action) -->
+		<dict>
+			<key>name</key>
+			<string>Function name</string>
+			<key>scope</key>
+			<string>entity.name.function</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#3CB371</string>
+			</dict>
+		</dict>
+
+		<!-- Function argument: Amber (warm parameter glow) -->
+		<dict>
+			<key>name</key>
+			<string>Function argument</string>
+			<key>scope</key>
+			<string>variable.parameter</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#ffb86c</string>
+			</dict>
+		</dict>
+
+		<!-- Tag name: Cryptic Orchid (structured markup, Pattern) -->
+		<dict>
+			<key>name</key>
+			<string>Tag name</string>
+			<key>scope</key>
+			<string>entity.name.tag</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#DA70D6</string>
+			</dict>
+		</dict>
+
+		<!-- Tag attribute: Cultivationspren Green -->
+		<dict>
+			<key>name</key>
+			<string>Tag attribute</string>
+			<key>scope</key>
+			<string>entity.other.attribute-name</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#3CB371</string>
+			</dict>
+		</dict>
+
+		<!-- Library function: Preservation Glacial (framework mist) -->
+		<dict>
+			<key>name</key>
+			<string>Library function</string>
+			<key>scope</key>
+			<string>support.function</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#5DA8CC</string>
+			</dict>
+		</dict>
+
+		<!-- Library constant: Preservation Glacial (lighter variant) -->
+		<dict>
+			<key>name</key>
+			<string>Library constant</string>
+			<key>scope</key>
+			<string>support.constant</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#5DA8CC</string>
+			</dict>
+		</dict>
+
+		<!-- Library class/type: Preservation Glacial italic -->
+		<dict>
+			<key>name</key>
+			<string>Library class&#x2f;type</string>
+			<key>scope</key>
+			<string>support.type, support.class</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#5DA8CC</string>
+			</dict>
+		</dict>
+
+		<!-- Library variable: default -->
+		<dict>
+			<key>name</key>
+			<string>Library variable</string>
+			<key>scope</key>
+			<string>support.other.variable</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+			</dict>
+		</dict>
+
+		<!-- Support Other Namespace: Preservation Glacial italic -->
+		<dict>
+			<key>name</key>
+			<string>Support Other Namespace</string>
+			<key>scope</key>
+			<string>support.other.namespace</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#5DA8CC</string>
+			</dict>
+		</dict>
+
+		<!-- Invalid: Cryptic Orchid bg with Mist foreground -->
+		<dict>
+			<key>name</key>
+			<string>Invalid</string>
+			<key>scope</key>
+			<string>invalid</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#DA70D6</string>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#0D1B2A</string>
+			</dict>
+		</dict>
+
+		<!-- Invalid deprecated: Inkspren Indigo bg (deep, deprecated knowledge) -->
+		<dict>
+			<key>name</key>
+			<string>Invalid deprecated</string>
+			<key>scope</key>
+			<string>invalid.deprecated</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#8A2BE2</string>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- JSON String: Preservation Mist (structured data) -->
+		<dict>
+			<key>name</key>
+			<string>JSON String</string>
+			<key>scope</key>
+			<string>meta.structure.dictionary.json string.quoted.double.json</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- diff.header: Slate -->
+		<dict>
+			<key>name</key>
+			<string>diff.header</string>
+			<key>scope</key>
+			<string>meta.diff, meta.diff.header</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- diff.deleted: Crimson (Roshar danger) -->
+		<dict>
+			<key>name</key>
+			<string>diff.deleted</string>
+			<key>scope</key>
+			<string>markup.deleted</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+
+		<!-- diff.inserted: Cultivationspren Green (growth) -->
+		<dict>
+			<key>name</key>
+			<string>diff.inserted</string>
+			<key>scope</key>
+			<string>markup.inserted</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#3CB371</string>
+			</dict>
+		</dict>
+
+		<!-- diff.changed: Honor Gold (attention, worth noting) -->
+		<dict>
+			<key>name</key>
+			<string>diff.changed</string>
+			<key>scope</key>
+			<string>markup.changed</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#FFD700</string>
+			</dict>
+		</dict>
+
+		<!-- Line number find-in-files: Roshar Violet -->
+		<dict>
+			<key>scope</key>
+			<string>constant.numeric.line-number.find-in-files - match</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8989ff</string>
+			</dict>
+		</dict>
+
+		<!-- Filename: Preservation Lavender (files are precious) -->
+		<dict>
+			<key>scope</key>
+			<string>entity.name.filename</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C3AEE8</string>
+			</dict>
+		</dict>
+
+		<!-- message.error: Ashspren Volcanic -->
+		<dict>
+			<key>scope</key>
+			<string>message.error</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#FF4500</string>
+			</dict>
+		</dict>
+
+		<!-- JSON Punctuation: bright Mist -->
+		<dict>
+			<key>name</key>
+			<string>JSON Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.string.begin.json - meta.structure.dictionary.value.json, punctuation.definition.string.end.json - meta.structure.dictionary.value.json</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- JSON Structure (keys): Honorspren Sky Blue -->
+		<dict>
+			<key>name</key>
+			<string>JSON Structure</string>
+			<key>scope</key>
+			<string>meta.structure.dictionary.json string.quoted.double.json</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+
+		<!-- JSON String (values): Cryptic Orchid -->
+		<dict>
+			<key>name</key>
+			<string>JSON String</string>
+			<key>scope</key>
+			<string>meta.structure.dictionary.value.json string.quoted.double.json</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#DA70D6</string>
+			</dict>
+		</dict>
+
+		<!-- JSON depth levels — cycling through Cosmere accents -->
+		<dict>
+			<key>name</key>
+			<string>JSON: 6 deep</string>
+			<key>scope</key>
+			<string>meta meta meta meta meta meta meta.structure.dictionary.value string</string>
+			<key>settings</key>
+			<dict>
+				<!-- Cultivationspren Green -->
+				<key>foreground</key>
+				<string>#3CB371</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSON: 5 deep</string>
+			<key>scope</key>
+			<string>meta meta meta meta meta meta.structure.dictionary.value string</string>
+			<key>settings</key>
+			<dict>
+				<!-- Amber -->
+				<key>foreground</key>
+				<string>#ffb86c</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSON: 4 deep</string>
+			<key>scope</key>
+			<string>meta meta meta meta meta.structure.dictionary.value string</string>
+			<key>settings</key>
+			<dict>
+				<!-- Crimson -->
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSON: 3 deep</string>
+			<key>scope</key>
+			<string>meta meta meta meta.structure.dictionary.value string</string>
+			<key>settings</key>
+			<dict>
+				<!-- Roshar Violet -->
+				<key>foreground</key>
+				<string>#8989ff</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSON: 2 deep</string>
+			<key>scope</key>
+			<string>meta meta meta.structure.dictionary.value string</string>
+			<key>settings</key>
+			<dict>
+				<!-- Cultivationspren Green -->
+				<key>foreground</key>
+				<string>#3CB371</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JSON:  1 deep</string>
+			<key>scope</key>
+			<string>meta meta.structure.dictionary.value string</string>
+			<key>settings</key>
+			<dict>
+				<!-- Amber -->
+				<key>foreground</key>
+				<string>#ffb86c</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown Tweaks -->
+		<!-- Markup: strike — Slate italic (faded words) -->
+		<dict>
+			<key>name</key>
+			<string>Markup: strike</string>
+			<key>scope</key>
+			<string>markup.strike</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- Markup: bold — Honor Gold bold -->
+		<dict>
+			<key>name</key>
+			<string>Markup: bold</string>
+			<key>scope</key>
+			<string>markup.bold</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#FFD700</string>
+			</dict>
+		</dict>
+
+		<!-- Markup: italic — Amber italic -->
+		<dict>
+			<key>name</key>
+			<string>Markup: italic</string>
+			<key>scope</key>
+			<string>markup.italic</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#ffb86c</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: heading — Honorspren Sky Blue (clear Stormlight beacon) -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: heading</string>
+			<key>scope</key>
+			<string>markup.heading</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: List Items Punctuation — Cryptic Orchid -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: List Items Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.list_item.markdown</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#DA70D6</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: Blockquote — Slate italic (muted wisdom) -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: Blockquote</string>
+			<key>scope</key>
+			<string>markup.quote</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: Blockquote Punctuation — Slate -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: Blockquote Punctuation</string>
+			<key>scope</key>
+			<string>punctuation.definition.blockquote.markdown</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>background</key>
+				<string>#708090</string>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: Separator — Slate -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: Separator</string>
+			<key>scope</key>
+			<string>meta.separator</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- Markup: raw inline — Emerald (stormlight bright) -->
+		<dict>
+			<key>name</key>
+			<string>Markup: raw inline</string>
+			<key>scope</key>
+			<string>text.html.markdown markup.raw.inline</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#50fa7b</string>
+			</dict>
+		</dict>
+
+		<!-- Markup: underline — Preservation Lavender underline -->
+		<dict>
+			<key>name</key>
+			<string>Markup: underline</string>
+			<key>scope</key>
+			<string>markup.underline</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>underline</string>
+				<key>foreground</key>
+				<string>#C3AEE8</string>
+			</dict>
+		</dict>
+
+		<!-- Markup: Raw block — Mist (neutral data block) -->
+		<dict>
+			<key>name</key>
+			<string>Markup: Raw block</string>
+			<key>scope</key>
+			<string>markup.raw.block</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: Raw Block fenced source — Preservation Mist -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: Raw Block fenced source</string>
+			<key>scope</key>
+			<string>markup.raw.block.fenced.markdown source</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: Fenced Code Block — Slate italic -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: Fenced Bode Block</string>
+			<key>scope</key>
+			<string>punctuation.definition.fenced.markdown, variable.language.fenced.markdown</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- Markdown: Fenced Language — Slate italic -->
+		<dict>
+			<key>name</key>
+			<string>Markdown: Fenced Language</string>
+			<key>scope</key>
+			<string>variable.language.fenced.markdown</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#708090</string>
+			</dict>
+		</dict>
+
+		<!-- Punctuation Accessor: Crimson -->
+		<dict>
+			<key>name</key>
+			<string>Punctuation Accessor</string>
+			<key>scope</key>
+			<string>punctuation.accessor</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+
+		<!-- Meta Function Return Type: Willshaper Amethyst -->
+		<dict>
+			<key>name</key>
+			<string>Meta Function Return Type</string>
+			<key>scope</key>
+			<string>meta.function.return-type</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#E040FB</string>
+			</dict>
+		</dict>
+
+		<!-- Punctuation Section Block Begin/End: Preservation Mist -->
+		<dict>
+			<key>name</key>
+			<string>Punctuation Section Block Begin</string>
+			<key>scope</key>
+			<string>punctuation.section.block.begin</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Punctuation Section Block End</string>
+			<key>scope</key>
+			<string>punctuation.section.block.end</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- Punctuation Section Embedded: Crimson (embedded danger) -->
+		<dict>
+			<key>name</key>
+			<string>Punctuation Section Embedded Begin</string>
+			<key>scope</key>
+			<string>punctuation.section.embedded.begin</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Punctuation Section Embedded End</string>
+			<key>scope</key>
+			<string>punctuation.section.embedded.end</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+
+		<!-- Punctuation Separator Namespace: Crimson -->
+		<dict>
+			<key>name</key>
+			<string>Punctuation Separator Namespace</string>
+			<key>scope</key>
+			<string>punctuation.separator.namespace</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#ed8796</string>
+			</dict>
+		</dict>
+
+		<!-- Variable Function: Cultivationspren Green -->
+		<dict>
+			<key>name</key>
+			<string>Variable Function</string>
+			<key>scope</key>
+			<string>variable.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#3CB371</string>
+			</dict>
+		</dict>
+
+		<!-- Variable Other: Preservation Mist -->
+		<dict>
+			<key>name</key>
+			<string>Variable Other</string>
+			<key>scope</key>
+			<string>variable.other</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- Variable Language: Inkspren Indigo (deep language constructs) -->
+		<dict>
+			<key>name</key>
+			<string>Variable Language</string>
+			<key>scope</key>
+			<string>variable.language</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8A2BE2</string>
+			</dict>
+		</dict>
+
+		<!-- Entity Name Module Ruby: Honorspren Sky Blue -->
+		<dict>
+			<key>name</key>
+			<string>Entity Name Module Ruby</string>
+			<key>scope</key>
+			<string>entity.name.module.ruby</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+
+		<!-- Entity Name Constant Ruby: Roshar Violet -->
+		<dict>
+			<key>name</key>
+			<string>Entity Name Constant Ruby</string>
+			<key>scope</key>
+			<string>entity.name.constant.ruby</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8989ff</string>
+			</dict>
+		</dict>
+
+		<!-- Support Function Builtin Ruby: Preservation Mist -->
+		<dict>
+			<key>name</key>
+			<string>Support Function Builtin Ruby</string>
+			<key>scope</key>
+			<string>support.function.builtin.ruby</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C8E8F5</string>
+			</dict>
+		</dict>
+
+		<!-- Storage Type Namespace CS: Willshaper Amethyst -->
+		<dict>
+			<key>name</key>
+			<string>Storage Type Namespace CS</string>
+			<key>scope</key>
+			<string>storage.type.namespace.cs</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#E040FB</string>
+			</dict>
+		</dict>
+
+		<!-- Entity Name Namespace CS: Honorspren Sky Blue -->
+		<dict>
+			<key>name</key>
+			<string>Entity Name Namespace CS</string>
+			<key>scope</key>
+			<string>entity.name.namespace.cs</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#00A8E8</string>
+			</dict>
+		</dict>
+	</array>
+	<key>uuid</key>
+	<string>C05MER3-5T0R-M11G-HT4R-CH1V3000001</string>
+	<key>colorSpaceName</key>
+	<string>sRGB</string>
+	<key>semanticClass</key>
+	<string>theme.cosmere</string>
+	<key>author</key>
+	<string>Cosmere Theme — Inspired by Brandon Sanderson's Cosmere</string>
+</dict>
+</plist>

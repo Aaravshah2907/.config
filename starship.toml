@@ -44,7 +44,8 @@ command_timeout = 800
 add_newline = true
 
 # --- Multiline continuation prompt (Level 2 icon-led indentation) ---
-continuation_prompt = "[│ ](bold #607D8B)[󰅂](bold #50fa7b) "
+continuation_prompt = "[│  ](bold #607D8B)[⟫](bold #50fa7b) "
+
 
 
 # =============================================================================

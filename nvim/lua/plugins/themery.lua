@@ -1,6 +1,23 @@
 return {
 	"zaldih/themery.nvim",
 	lazy = false,
+	keys = {
+		{
+			"<leader>ut",
+			function()
+				local themery = require("themery")
+				local current = themery.getCurrentTheme()
+				local current_name = current and current.name or ""
+				if current_name == "Cosmere" then
+					themery.setThemeByName("Silverlight", true)
+				else
+					themery.setThemeByName("Cosmere", true)
+				end
+			end,
+			desc = "[U]I [T]heme toggle",
+		},
+		{ "<leader>uT", "<cmd>Themery<cr>", desc = "[U]I [T]hemery picker" },
+	},
 	config = function()
 		require("themery").setup({
 			themes = {

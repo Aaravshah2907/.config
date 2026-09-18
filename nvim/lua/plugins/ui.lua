@@ -94,6 +94,96 @@ return {
 	},
 
 	-- ---------------------------------------------------------------------------
+	-- Incline: Compact floating winbar with file context
+	-- ---------------------------------------------------------------------------
+	{
+		"b0o/incline.nvim",
+		event = "BufReadPre",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {
+			hide = {
+				cursorline = true,
+				focused_win = false,
+				only_win = false,
+			},
+			window = {
+				margin = {
+					vertical = 0,
+					horizontal = 1,
+				},
+				padding = 0,
+				placement = {
+					horizontal = "right",
+					vertical = "top",
+				},
+				winhighlight = {
+					active = {
+						EndOfBuffer = "None",
+						Normal = "InclineNormal",
+						Search = "None",
+					},
+					inactive = {
+						EndOfBuffer = "None",
+						Normal = "InclineNormalNC",
+						Search = "None",
+					},
+				},
+			},
+			ignore = {
+				buftypes = "special",
+				filetypes = {
+					"aerial",
+					"alpha",
+					"dashboard",
+					"lazy",
+					"mason",
+					"NvimTree",
+					"snacks_dashboard",
+					"toggleterm",
+					"Trouble",
+					"yazi",
+				},
+				unlisted_buffers = true,
+			},
+			render = function(props)
+				local bufname = vim.api.nvim_buf_get_name(props.buf)
+				local filename = vim.fn.fnamemodify(bufname, ":t")
+				if filename == "" then filename = "[No Name]" end
+
+				local devicons = require("nvim-web-devicons")
+				local icon, icon_color = devicons.get_icon_color(filename)
+				local modified = vim.bo[props.buf].modified and " +" or ""
+				local readonly = vim.bo[props.buf].readonly and " ro" or ""
+				local directory = vim.fn.fnamemodify(bufname, ":~:.:h")
+				local label = {}
+
+				if icon then
+					table.insert(label, { " " .. icon .. " ", guifg = icon_color })
+				end
+				if directory ~= "." and directory ~= "" then
+					table.insert(label, { directory .. "/", guifg = "#708090" })
+				end
+				table.insert(label, { filename, gui = "bold" })
+				table.insert(label, { modified .. readonly .. " " })
+
+				return label
+			end,
+		},
+		config = function(_, opts)
+			local function set_incline_highlights()
+				vim.api.nvim_set_hl(0, "InclineNormal", { fg = "#C8E8F5", bg = "#001a33", bold = true })
+				vim.api.nvim_set_hl(0, "InclineNormalNC", { fg = "#708090", bg = "#001122" })
+			end
+
+			set_incline_highlights()
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				callback = set_incline_highlights,
+			})
+			require("incline").setup(opts)
+		end,
+	},
+
+	-- ---------------------------------------------------------------------------
 	-- Bufferline: Tabs at the top of the screen
 	-- ---------------------------------------------------------------------------
 	-- Each open file gets a "tab" at the top, like browser tabs.
@@ -273,6 +363,83 @@ return {
 	},
 
 	-- ---------------------------------------------------------------------------
+	-- Edgy: Keep sidebars, terminals, and diagnostics panels organized
+	-- ---------------------------------------------------------------------------
+	{
+		"folke/edgy.nvim",
+		event = "VeryLazy",
+		init = function()
+			vim.opt.splitkeep = "screen"
+		end,
+		opts = {
+			animate = {
+				enabled = false,
+			},
+			options = {
+				left = { size = 34 },
+				right = { size = 36 },
+				bottom = { size = 12 },
+			},
+			left = {
+				{
+					title = "Project",
+					ft = "NvimTree",
+					pinned = true,
+					open = "NvimTreeOpen",
+				},
+			},
+			right = {
+				{
+					title = "Symbols",
+					ft = "aerial",
+					pinned = true,
+					open = "AerialOpen",
+				},
+			},
+			bottom = {
+				{
+					title = "Diagnostics",
+					ft = "trouble",
+					filter = function(_, win)
+						return vim.w[win].trouble
+					end,
+				},
+				{
+					title = "Quickfix",
+					ft = "qf",
+				},
+				{
+					title = "Terminal",
+					ft = "toggleterm",
+					size = { height = 0.35 },
+				},
+			},
+			keys = {
+				["q"] = function(win)
+					win:close()
+				end,
+				["<c-q>"] = false,
+			},
+		},
+		keys = {
+			{
+				"<leader>ue",
+				function()
+					require("edgy").toggle()
+				end,
+				desc = "[U]I [E]dgy toggle",
+			},
+			{
+				"<leader>uE",
+				function()
+					require("edgy").select()
+				end,
+				desc = "[U]I [E]dgy select window",
+			},
+		},
+	},
+
+	-- ---------------------------------------------------------------------------
 	-- Which-key: Keymap popup menu
 	-- ---------------------------------------------------------------------------
 	-- Displays a popup with possible keybindings of the command you started typing
@@ -441,8 +608,7 @@ return {
 		lazy = false,
 		opts = {
 			dashboard = {
-				pane_gap = 4, -- Space between columns
-				width = 44, -- Optimize width for two panes
+				width = 44,
 				sections = {
 					{
 						padding = 1,
@@ -457,24 +623,16 @@ return {
 						},
 					},
 					{
-						pane = 1,
 						section = "keys",
-						gap = 1,
 						padding = 1,
 					},
 					{
-						pane = 2,
 						icon = " ",
 						title = "Recent Files",
 						section = "recent_files",
 						indent = 1,
 						padding = 1,
-						limit = 15,
-					},
-					{
-						pane = 2,
-						section = "startup",
-						padding = 1,
+						limit = 6,
 					},
 					{
 						padding = 1,
@@ -489,10 +647,10 @@ return {
 						{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
 						{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
 						{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-						{ icon = " ", key = "e", desc = "Open Yazi", action = ":Yazi cwd" },
+						{ icon = "󰙅 ", key = "t", desc = "File Tree", action = ":NvimTreeToggle" },
+						{ icon = " ", key = "e", desc = "Yazi", action = ":Yazi cwd" },
+						{ icon = "󰔎 ", key = "T", desc = "Themes", action = ":Themery" },
 						{ icon = " ", key = "s", desc = "Session", action = ":lua require('persistence').load()" },
-						{ icon = " ", key = "C", desc = "Cheatsheet", action = ":e ~/nvim_cheatsheet.md" },
-						{ icon = " ", key = "c", desc = "Config (Yazi)", action = ":lua require('yazi').yazi({}, vim.fn.stdpath('config'))" },
 						{ icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy" },
 						{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
 					},

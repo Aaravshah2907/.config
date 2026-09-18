@@ -81,6 +81,8 @@ map("x", "<leader>p", '"_dP', { desc = "Paste without losing clipboard" })
 --   Space+bn = next buffer, Space+bp = previous buffer, Space+bd = close
 map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "[B]uffer [N]ext" })
 map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "[B]uffer [P]revious" })
+map("n", "<Tab>", "<cmd>bnext<cr>", { desc = "Next buffer" })
+map("n", "<S-Tab>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 map("n", "<leader>bd", function()
 	local ok, snacks = pcall(require, "snacks")
 	if ok and snacks.bufdelete then

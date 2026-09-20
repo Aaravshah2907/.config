@@ -293,7 +293,8 @@ t() {
             echo "    t restore           restore last layout"
             echo ""
             echo "  Reference:"
-            echo "    t cheat             full cheatsheet (bat)"
+            echo "    t docs              full cheatsheet (bat)"
+            echo "    t cheat [--edit]    fuzzy searchable command runner"
             echo "    t guide             tmux guide & concepts"
             echo "    t -h                this help message"
             ;;
@@ -322,7 +323,9 @@ t() {
         restore)    tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh ;;
 
         # ── Reference ─────────────────────────────────────
-        cheat|help) bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
+        docs)       bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
+        cheat)      shift; cheat_generate_json "$HOME/.config/tmux/cheatsheet.md" "$HOME/.config/tmux/cheatsheet.json" && cheat_run "$HOME/.config/tmux/cheatsheet.json" "$@" ;;
+        help)       bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
         guide)      bat --style=plain --paging=never ~/.config/tmux/guide.md ;;
 
         # ── Fallback: treat as session name ───────────────
@@ -360,3 +363,143 @@ todo() {
 # Backwards compatibility alias for todo
 tux() { todo "$@"; }
 
+# --- Reusable Markdown -> JSON Cheatsheet Generator ---
+# Converts simple Markdown tables to the JSON shape consumed by cheat_run.
+cheat_generate_json() {
+    local md_file="$1"
+    local json_file="${2:-${md_file%.*}.json}"
+    local generator="$HOME/.config/tmux/cheatsheet_md_to_json.py"
+
+    if [ -z "$md_file" ] || [ ! -r "$md_file" ]; then
+        echo "cheat_generate_json: cannot read markdown file: $md_file" >&2
+        return 1
+    fi
+
+    if [ ! -x "$generator" ]; then
+        echo "cheat_generate_json: missing executable generator: $generator" >&2
+        return 1
+    fi
+
+    "$generator" "$md_file" "$json_file"
+}
+
+# --- Reusable JSON Cheatsheet Runner ---
+# Selects a command from a JSON cheatsheet and executes it. Expected JSON shape:
+# { "commands": [{ "name": "...", "command": "...", "description": "...", "tags": [] }] }
+cheat_run() {
+    local json_file="$HOME/.config/tmux/cheatsheet.json"
+    local edit_before_run=0
+
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --edit|-e) edit_before_run=1 ;;
+            *) json_file="$1" ;;
+        esac
+        shift
+    done
+
+    if [ ! -r "$json_file" ]; then
+        echo "cheat_run: cannot read $json_file" >&2
+        return 1
+    fi
+
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "cheat_run: jq is required" >&2
+        return 1
+    fi
+
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "cheat_run: fzf is required" >&2
+        return 1
+    fi
+
+    local jq_filter selected command selection_file
+    jq_filter='.commands[] | [
+        (.name // "untitled"),
+        (.command // ""),
+        (.description // ""),
+        ((.tags // []) | join(","))
+    ] | @tsv'
+
+    if [ -n "$TMUX" ]; then
+        selection_file="$(mktemp -t cheat-run.XXXXXX)"
+        jq -r "$jq_filter" "$json_file" | tmux display-popup -E -w 85% -h 75% \
+            "fzf --with-nth=1,3,4 --delimiter=\$'\\t' --header='Enter runs command | Esc cancels' --preview='printf \"%s\\n\" {2}; printf \"\\n%s\\n\" {3}' > '$selection_file'"
+        selected="$(cat "$selection_file" 2>/dev/null)"
+        rm -f "$selection_file"
+    else
+        selected=$(jq -r "$jq_filter" "$json_file" | fzf \
+            --with-nth=1,3,4 \
+            --delimiter=$'\t' \
+            --height=80% \
+            --border \
+            --header="Enter runs command | Esc cancels" \
+            --preview='printf "%s\n" {2}; printf "\n%s\n" {3}')
+    fi
+
+    [ -n "$selected" ] || return 0
+    command=$(printf "%s" "$selected" | cut -f2)
+
+    if [ -z "$command" ]; then
+        echo "cheat_run: selected entry has no command" >&2
+        return 1
+    fi
+
+    if [ "$edit_before_run" -eq 1 ] || printf "%s" "$command" | grep -Eq ' $|<$|\[.*\]$|<[^>]+>|\[[^]]+\]'; then
+        printf "edit command [%s]: " "$command"
+        IFS= read -r edited_command
+        if [ -n "$edited_command" ]; then
+            command="$edited_command"
+        fi
+    fi
+
+    printf "running: %s\n" "$command"
+    eval "$command"
+}
+
+# --- Cosmere UI Theme Switcher ---
+# Updates Ghostty and Yazi together. Pick the matching Neovim theme via :Themery
+# or <leader>uT; the Sylphrena entry is registered there.
+cosmere_theme() {
+    local theme="${1:-sylphrena}"
+    local ghostty_config="$HOME/.config/ghostty/config"
+    local ghostty_theme="$HOME/.config/ghostty/themes/$theme.conf"
+    local yazi_theme="$HOME/.config/yazi/theme.toml"
+    local yazi_flavor="$theme"
+    local tmp
+
+    case "$theme" in
+        sylphrena|cosmere) ;;
+        *)
+            echo "Usage: cosmere_theme [sylphrena|cosmere]" >&2
+            return 2
+            ;;
+    esac
+
+    if [ ! -r "$ghostty_theme" ]; then
+        echo "cosmere_theme: missing Ghostty theme $ghostty_theme" >&2
+        return 1
+    fi
+
+    tmp="$(mktemp -t ghostty-theme.XXXXXX)"
+    awk '
+        /^# -- BEGIN managed ghostty theme --$/ { skip = 1; next }
+        /^# -- END managed ghostty theme --$/ { skip = 0; next }
+        skip != 1 { print }
+    ' "$ghostty_config" > "$tmp"
+    printf "\n" >> "$tmp"
+    cat "$ghostty_theme" >> "$tmp"
+    mv "$tmp" "$ghostty_config"
+
+    if [ "$theme" = "cosmere" ]; then
+        yazi_flavor="cosmere"
+    fi
+
+    if [ -w "$yazi_theme" ]; then
+        tmp="$(mktemp -t yazi-theme.XXXXXX)"
+        sed -E "s/^(dark[[:space:]]*=[[:space:]]*)\"[^\"]+\"/\\1\"$yazi_flavor\"/; s/^(light[[:space:]]*=[[:space:]]*)\"[^\"]+\"/\\1\"$yazi_flavor\"/" "$yazi_theme" > "$tmp"
+        mv "$tmp" "$yazi_theme"
+    fi
+
+    echo "Applied $theme to Ghostty and Yazi. Restart Ghostty windows and Yazi sessions to see it."
+}

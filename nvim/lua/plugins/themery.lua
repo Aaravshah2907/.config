@@ -149,6 +149,13 @@ return {
 						vim.opt.background = "light"
 					]],
 				},
+				{
+					name = "Sylphrena",
+					colorscheme = "sylphrena",
+					before = [[
+						vim.opt.background = "dark"
+					]],
+				},
 			},
 			livePreview = true,
 		})

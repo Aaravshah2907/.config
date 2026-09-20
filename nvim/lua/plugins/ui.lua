@@ -18,6 +18,20 @@ return {
 		event = "VeryLazy", -- Load after startup for speed
 
 		config = function()
+			local syl = {
+				bg = "#031521",
+				surface = "#0D2A3A",
+				surface_alt = "#123C56",
+				fg = "#D9F4FF",
+				dim = "#86AFC4",
+				blue = "#7FDBFF",
+				sapphire = "#4FB6E8",
+				green = "#8FE7C0",
+				gold = "#E7D37A",
+				violet = "#C9B8FF",
+				red = "#F08AA3",
+			}
+
 			local function recording_macro()
 				local reg = vim.fn.reg_recording()
 				if reg == "" then return "" end
@@ -31,11 +45,49 @@ return {
 				return string.format("%d/%d", count.current, count.total)
 			end
 
+			local function file_progress()
+				local current = vim.fn.line(".")
+				local total = math.max(vim.fn.line("$"), 1)
+				return string.format("%d%%%%", math.floor((current / total) * 100))
+			end
+
+			local custom_theme = {
+				normal = {
+					a = { fg = syl.bg, bg = syl.blue, gui = "bold" },
+					b = { fg = syl.fg, bg = syl.surface_alt },
+					c = { fg = syl.fg, bg = syl.surface },
+					x = { fg = syl.dim, bg = syl.surface },
+					y = { fg = syl.fg, bg = syl.surface_alt },
+					z = { fg = syl.bg, bg = syl.sapphire, gui = "bold" },
+				},
+				insert = {
+					a = { fg = syl.bg, bg = syl.green, gui = "bold" },
+					z = { fg = syl.bg, bg = syl.green, gui = "bold" },
+				},
+				visual = {
+					a = { fg = syl.bg, bg = syl.violet, gui = "bold" },
+					z = { fg = syl.bg, bg = syl.violet, gui = "bold" },
+				},
+				replace = {
+					a = { fg = syl.bg, bg = syl.red, gui = "bold" },
+					z = { fg = syl.bg, bg = syl.red, gui = "bold" },
+				},
+				command = {
+					a = { fg = syl.bg, bg = syl.gold, gui = "bold" },
+					z = { fg = syl.bg, bg = syl.gold, gui = "bold" },
+				},
+				inactive = {
+					a = { fg = syl.dim, bg = syl.surface },
+					b = { fg = syl.dim, bg = syl.surface },
+					c = { fg = syl.dim, bg = syl.surface },
+				},
+			}
+
 			require("lualine").setup({
 				options = {
-					theme = "auto", -- Match our colorscheme
-					section_separators = { left = "", right = "" },
-					component_separators = { left = "", right = "" },
+					theme = custom_theme,
+					section_separators = { left = "", right = "" },
+					component_separators = { left = "", right = "" },
 					globalstatus = true,
 					disabled_filetypes = {
 						statusline = { "alpha", "dashboard", "snacks_dashboard" },
@@ -77,9 +129,8 @@ return {
 							end,
 						},
 						"filetype",
-						"encoding",
 					},
-					lualine_y = { "progress" }, -- How far through the file (%)
+					lualine_y = { file_progress, "encoding" },
 					lualine_z = { "location" }, -- Line:Column number
 				},
 				extensions = {

@@ -110,7 +110,22 @@ sketchybar --add item apple left \
                 drawing=off \
                 script="$PLUGIN_DIR/guilt.sh" \
   \
-  --add bracket apple.pill apple guilt \
+  --add item tuxedo_tasks left \
+    --set tuxedo_tasks update_freq=120 \
+                drawing=off \
+                icon.color=$HONOR_GOLD \
+                label.max_chars=32 \
+                script="$PLUGIN_DIR/tuxedo_tasks.sh" \
+                popup.align=left \
+                click_script="sketchybar --set tuxedo_tasks popup.drawing=toggle" \
+  \
+  --add item tuxedo_tasks.top popup.tuxedo_tasks \
+    --set tuxedo_tasks.top icon=󰁕 label="Week: none" \
+  \
+  --add item tuxedo_tasks.more popup.tuxedo_tasks \
+    --set tuxedo_tasks.more icon=󰄱 label="Top: none" \
+  \
+  --add bracket apple.pill apple guilt tuxedo_tasks \
   --set apple.pill background.color=$BAR_COLOR \
                    background.border_color=$SPREN_HIGH_T \
                    background.border_width=1 \
@@ -690,4 +705,3 @@ sketchybar --trigger window_focus
 # Run scripts once on startup/reload to populate values immediately
 #pkill -f runcat.sh
 #NAME=runcat $PLUGIN_DIR/runcat.sh &
-

@@ -1,0 +1,670 @@
+{
+  "commands": [
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): todo",
+      "command": "todo",
+      "description": "Open Tuxedo TUI in dedicated Tuxedo session (auto-kills on exit)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): tux",
+      "command": "tux",
+      "description": "Open Tuxedo TUI in dedicated Tuxedo session (auto-kills on exit)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t todo",
+      "command": "t todo",
+      "description": "Dispatch Tuxedo session via t command center",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t tux",
+      "command": "t tux",
+      "description": "Dispatch Tuxedo session via t command center",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t",
+      "command": "t",
+      "description": "Attach to last session (or create new default)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t <name>",
+      "command": "t ",
+      "description": "Attach to session by name (creates if missing)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t ls",
+      "command": "t ls",
+      "description": "List all active sessions",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t new [name]",
+      "command": "t new ",
+      "description": "Create a new named session",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t kill <name>",
+      "command": "t kill ",
+      "description": "Kill a specific session",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t kill-all",
+      "command": "t kill-all",
+      "description": "Kill ALL sessions (server kill)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t vs",
+      "command": "t vs",
+      "description": "Split pane vertically (left/right)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t hs",
+      "command": "t hs",
+      "description": "Split pane horizontally (top/bottom)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t win [name]",
+      "command": "t win ",
+      "description": "Open a new window",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t wins",
+      "command": "t wins",
+      "description": "List all windows in current session",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t next",
+      "command": "t next",
+      "description": "Switch to next window",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t prev",
+      "command": "t prev",
+      "description": "Switch to previous window",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t float",
+      "command": "t float",
+      "description": "Open a floating popup shell",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t save",
+      "command": "t save",
+      "description": "Manually save session (resurrect)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t restore",
+      "command": "t restore",
+      "description": "Manually restore last saved session",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): t cheat",
+      "command": "t cheat",
+      "description": "Show this cheatsheet",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "🐚 Shell t Command & Helpers (Prefix-Free!): chtm",
+      "command": "chtm",
+      "description": "Interactive fuzzy search tmux cheatsheet (bat + fzf)",
+      "tags": [
+        "shell-t-command-helpers-prefix-free",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + d",
+      "command": "tmux detach-client",
+      "description": "Detach from current session (leaves background running)",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + D",
+      "command": "tmux choose-client",
+      "description": "Choose client to detach interactively",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + s",
+      "command": "tmux choose-tree -s",
+      "description": "Session tree: Interactively switch between active sessions",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + $",
+      "command": "tmux command-prompt -I \"#S\" \"rename-session -- '%%'\"",
+      "description": "Rename session",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + (",
+      "command": "tmux switch-client -p",
+      "description": "Switch to previous session",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + )",
+      "command": "tmux switch-client -n",
+      "description": "Switch to next session",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + L",
+      "command": "tmux switch-client -l",
+      "description": "Switch to the last active session",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + t",
+      "command": "tmux clock-mode",
+      "description": "Display digital clock in current pane",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + :",
+      "command": "tmux command-prompt",
+      "description": "Open Tmux command prompt (:)",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + ?",
+      "command": "tmux list-keys",
+      "description": "Show keybindings / popup cheatsheet",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + ~",
+      "command": "tmux show-messages",
+      "description": "Show Tmux message and window log history",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + o",
+      "command": "tmux display-popup -E 'tmux-sessionx'",
+      "description": "Visual switcher (tmux-sessionx with zoxide integration)",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + c",
+      "command": "tmux new-window",
+      "description": "Create new window",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + ,",
+      "command": "tmux command-prompt -I \"#W\" \"rename-window -- '%%'\"",
+      "description": "Rename current window",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + &",
+      "command": "tmux kill-window",
+      "description": "Kill / close current window (prompts for confirmation)",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + n",
+      "command": "tmux next-window",
+      "description": "Select next window",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + p",
+      "command": "tmux previous-window",
+      "description": "Select previous window",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + l",
+      "command": "tmux last-window",
+      "description": "Select last active window (toggle back and forth)",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + 1 .. 9",
+      "command": "tmux command-prompt \"select-window -t ':%%'\"",
+      "description": "Select window by number (1 through 9)",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + w",
+      "command": "tmux choose-tree -w",
+      "description": "Choose window from interactive tree",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + f",
+      "command": "tmux find-window",
+      "description": "Find / search window by text",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + .",
+      "command": "tmux command-prompt \"move-window -t '%%'\"",
+      "description": "Move / renumber window index",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + '",
+      "command": "tmux command-prompt \"select-window -t ':%%'\"",
+      "description": "Select window by index prompt",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + |",
+      "command": "tmux split-window -h",
+      "description": "Split vertically (left / right)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + %",
+      "command": "tmux split-window -h",
+      "description": "Split vertically (left / right)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + v",
+      "command": "tmux split-window -h",
+      "description": "Split vertically (left / right)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + -",
+      "command": "tmux split-window -v",
+      "description": "Split horizontally (top / bottom)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + \"",
+      "command": "tmux split-window -v",
+      "description": "Split horizontally (top / bottom)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + s",
+      "command": "tmux split-window -v",
+      "description": "Split horizontally (top / bottom)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + x",
+      "command": "tmux kill-pane",
+      "description": "Kill current pane (prompts confirmation)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + z",
+      "command": "tmux resize-pane -Z",
+      "description": "Zoom / unzoom current pane (toggle full screen)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + {",
+      "command": "tmux swap-pane -U",
+      "description": "Swap current pane with previous pane",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + }",
+      "command": "tmux swap-pane -D",
+      "description": "Swap current pane with next pane",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + q",
+      "command": "tmux display-panes",
+      "description": "Display pane numbers (type number 1..9 to jump immediately)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + !",
+      "command": "tmux break-pane",
+      "description": "Break pane out into a new standalone window",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + ;",
+      "command": "tmux last-pane",
+      "description": "Move to previously active pane",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + Space",
+      "command": "tmux next-layout",
+      "description": "Cycle pane layout presets (even-horiz, even-vert, main-horiz, main-vert, tiled)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + ↑",
+      "command": "tmux select-pane -U",
+      "description": "Select pane in specified direction",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + Alt + ↑",
+      "command": "tmux resize-pane -U 5",
+      "description": "Resize active pane in steps of 5 cells",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + Ctrl + ↑",
+      "command": "tmux resize-pane -U 1",
+      "description": "Resize active pane in steps of 1 cell",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "📜 Copy Mode & Paste Buffers (Vi Keys): Prefix + [",
+      "command": "tmux copy-mode",
+      "description": "Enter Copy / Scroll mode",
+      "tags": [
+        "copy-mode-paste-buffers-vi-keys",
+        "generated"
+      ]
+    },
+    {
+      "name": "📜 Copy Mode & Paste Buffers (Vi Keys): Prefix + ]",
+      "command": "tmux paste-buffer",
+      "description": "Paste most recently copied buffer",
+      "tags": [
+        "copy-mode-paste-buffers-vi-keys",
+        "generated"
+      ]
+    },
+    {
+      "name": "📜 Copy Mode & Paste Buffers (Vi Keys): Prefix + #",
+      "command": "tmux list-buffers",
+      "description": "List all paste buffers",
+      "tags": [
+        "copy-mode-paste-buffers-vi-keys",
+        "generated"
+      ]
+    },
+    {
+      "name": "📜 Copy Mode & Paste Buffers (Vi Keys): Prefix + =",
+      "command": "tmux choose-buffer",
+      "description": "Interactively choose and paste from paste buffer history",
+      "tags": [
+        "copy-mode-paste-buffers-vi-keys",
+        "generated"
+      ]
+    },
+    {
+      "name": "📜 Copy Mode & Paste Buffers (Vi Keys): Prefix + -",
+      "command": "tmux delete-buffer",
+      "description": "Delete top paste buffer",
+      "tags": [
+        "copy-mode-paste-buffers-vi-keys",
+        "generated"
+      ]
+    },
+    {
+      "name": "💾 Persistence & Automated Session Recovery: t save",
+      "command": "t save",
+      "description": "Manually save active layout and sessions (tmux-resurrect)",
+      "tags": [
+        "persistence-automated-session-recovery",
+        "generated"
+      ]
+    },
+    {
+      "name": "💾 Persistence & Automated Session Recovery: t restore",
+      "command": "t restore",
+      "description": "Manually restore last saved layout (tmux-resurrect)",
+      "tags": [
+        "persistence-automated-session-recovery",
+        "generated"
+      ]
+    },
+    {
+      "name": "💻 Raw Native Tmux Commands (Shell Under the Hood): tmux ls",
+      "command": "tmux ls",
+      "description": "List active sessions",
+      "tags": [
+        "raw-native-tmux-commands-shell-under-the-hood",
+        "generated"
+      ]
+    },
+    {
+      "name": "💻 Raw Native Tmux Commands (Shell Under the Hood): tmux attach -t <name>",
+      "command": "tmux attach -t ",
+      "description": "Attach to a specific session",
+      "tags": [
+        "raw-native-tmux-commands-shell-under-the-hood",
+        "generated"
+      ]
+    },
+    {
+      "name": "💻 Raw Native Tmux Commands (Shell Under the Hood): tmux new -s <name>",
+      "command": "tmux new -s ",
+      "description": "Create a new session",
+      "tags": [
+        "raw-native-tmux-commands-shell-under-the-hood",
+        "generated"
+      ]
+    },
+    {
+      "name": "💻 Raw Native Tmux Commands (Shell Under the Hood): tmux kill-session -t <name>",
+      "command": "tmux kill-session -t ",
+      "description": "Kill specific session",
+      "tags": [
+        "raw-native-tmux-commands-shell-under-the-hood",
+        "generated"
+      ]
+    },
+    {
+      "name": "💻 Raw Native Tmux Commands (Shell Under the Hood): tmux kill-server",
+      "command": "tmux kill-server",
+      "description": "Kill entire tmux server and all sessions",
+      "tags": [
+        "raw-native-tmux-commands-shell-under-the-hood",
+        "generated"
+      ]
+    },
+    {
+      "name": "💻 Raw Native Tmux Commands (Shell Under the Hood): tmux source ~/.tmux.conf",
+      "command": "tmux source ~/.tmux.conf",
+      "description": "Reload configuration",
+      "tags": [
+        "raw-native-tmux-commands-shell-under-the-hood",
+        "generated"
+      ]
+    }
+  ]
+}

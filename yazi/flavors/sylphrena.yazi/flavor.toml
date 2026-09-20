@@ -1,0 +1,95 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+# Sylphrena / Honorspren Mist flavor for Yazi.
+
+[mgr]
+cwd = { fg = "#7FDBFF", bold = true }
+find_keyword = { fg = "#E7D37A", bold = true, italic = true, underline = true }
+find_position = { fg = "#A8ECFF", bg = "reset", bold = true }
+marker_copied = { fg = "#8FE7C0", bg = "#8FE7C0" }
+marker_cut = { fg = "#F08AA3", bg = "#F08AA3" }
+marker_marked = { fg = "#7FDBFF", bg = "#7FDBFF" }
+marker_selected = { fg = "#E7D37A", bg = "#E7D37A" }
+count_copied = { fg = "#031521", bg = "#8FE7C0" }
+count_cut = { fg = "#031521", bg = "#F08AA3" }
+count_selected = { fg = "#031521", bg = "#E7D37A" }
+border_symbol = "│"
+border_style = { fg = "#7FDBFF" }
+
+[tabs]
+active = { fg = "#031521", bg = "#7FDBFF", bold = true }
+inactive = { fg = "#86AFC4", bg = "#071E2D" }
+
+[mode]
+normal_main = { fg = "#031521", bg = "#7FDBFF", bold = true }
+normal_alt = { fg = "#7FDBFF", bg = "#071E2D" }
+select_main = { fg = "#031521", bg = "#8FE7C0", bold = true }
+select_alt = { fg = "#8FE7C0", bg = "#071E2D" }
+unset_main = { fg = "#031521", bg = "#E7D37A", bold = true }
+unset_alt = { fg = "#E7D37A", bg = "#071E2D" }
+
+[status]
+perm_sep = { fg = "#4FB6E8" }
+perm_type = { fg = "#C9B8FF" }
+perm_read = { fg = "#E7D37A" }
+perm_write = { fg = "#F08AA3" }
+perm_exec = { fg = "#8FE7C0" }
+progress_label = { fg = "#D9F4FF", bold = true }
+progress_normal = { fg = "#7FDBFF", bg = "#0D2A3A" }
+progress_error = { fg = "#031521", bg = "#F08AA3" }
+
+[pick]
+border = { fg = "#7FDBFF" }
+active = { fg = "#A8ECFF", bold = true }
+inactive = {}
+
+[input]
+border = { fg = "#7FDBFF" }
+title = { fg = "#E7D37A", bold = true }
+value = {}
+selected = { reversed = true }
+
+[cmp]
+border = { fg = "#7FDBFF" }
+
+[tasks]
+border = { fg = "#7FDBFF" }
+title = { fg = "#A8ECFF", bold = true }
+hovered = { fg = "#E7D37A", bold = true }
+
+[which]
+mask = { bg = "#071E2D" }
+cand = { fg = "#7FDBFF" }
+rest = { fg = "#86AFC4" }
+desc = { fg = "#A8ECFF" }
+separator = "  "
+separator_style = { fg = "#4FB6E8" }
+
+[help]
+on = { fg = "#7FDBFF", bold = true }
+run = { fg = "#A8ECFF" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "#031521", bg = "#D9F4FF" }
+
+[spot]
+border = { fg = "#7FDBFF" }
+title = { fg = "#7FDBFF" }
+tbl_col = { fg = "#A8ECFF" }
+tbl_cell = { fg = "#D9F4FF", bg = "#0D2A3A" }
+
+[notify]
+title_info = { fg = "#8FE7C0" }
+title_warn = { fg = "#E7D37A" }
+title_error = { fg = "#F08AA3" }
+
+# TODO: Complete the work from other theme styles to complete the entire sylphrena theme with all the remaining options and add the remaining files in the plugin as well. @config @yazi @themeRelatedg
+
+[filetype]
+rules = [
+    { mime = "image/*", fg = "#7FDBFF" },
+    { mime = "{audio,video}/*", fg = "#C9B8FF" },
+    { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#C9B8FF" },
+    { mime = "application/{pdf,doc,rtf}", fg = "#E7D37A" },
+    { mime = "vfs/{absent,stale}", fg = "#86AFC4" },
+    { url = "*", fg = "#D9F4FF" },
+    { url = "*/", fg = "#A8ECFF" },
+]

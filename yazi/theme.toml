@@ -1,8 +1,8 @@
 # Activate the Cosmere flavor as the dark base.
 # Any sections below override the flavor's defaults (Yazi merges theme.toml on top).
 [flavor]
-dark  = "cosmere"
-light = "cosmere"
+dark  = "sylphrena"
+light = "sylphrena"
 
 [manager]
 # Border: Honorspren Sky Blue (clean on dark, not orchid)

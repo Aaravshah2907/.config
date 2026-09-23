@@ -1,95 +1,221 @@
 # vim:fileencoding=utf-8:foldmethod=marker
 # Sylphrena / Honorspren Mist flavor for Yazi.
 
+# : Manager {{{
+
 [mgr]
 cwd = { fg = "#7FDBFF", bold = true }
-find_keyword = { fg = "#E7D37A", bold = true, italic = true, underline = true }
-find_position = { fg = "#A8ECFF", bg = "reset", bold = true }
-marker_copied = { fg = "#8FE7C0", bg = "#8FE7C0" }
-marker_cut = { fg = "#F08AA3", bg = "#F08AA3" }
-marker_marked = { fg = "#7FDBFF", bg = "#7FDBFF" }
+
+# Find
+find_keyword  = { fg = "#E7D37A", bold = true, italic = true, underline = true }
+find_position = { fg = "#A8ECFF", bg = "reset", bold = true, italic = true }
+
+# Marker
+marker_copied   = { fg = "#8FE7C0", bg = "#8FE7C0" }
+marker_cut      = { fg = "#F08AA3", bg = "#F08AA3" }
+marker_marked   = { fg = "#7FDBFF", bg = "#7FDBFF" }
 marker_selected = { fg = "#E7D37A", bg = "#E7D37A" }
-count_copied = { fg = "#031521", bg = "#8FE7C0" }
-count_cut = { fg = "#031521", bg = "#F08AA3" }
+
+# Count
+count_copied   = { fg = "#031521", bg = "#8FE7C0" }
+count_cut      = { fg = "#031521", bg = "#F08AA3" }
 count_selected = { fg = "#031521", bg = "#E7D37A" }
+
+# Border
 border_symbol = "│"
-border_style = { fg = "#7FDBFF" }
+border_style  = { fg = "#4FB6E8" }
+
+# : }}}
+
+
+# : Tabs {{{
 
 [tabs]
-active = { fg = "#031521", bg = "#7FDBFF", bold = true }
+active   = { fg = "#031521", bg = "#7FDBFF", bold = true }
 inactive = { fg = "#86AFC4", bg = "#071E2D" }
+
+# : }}}
+
+
+# : Mode {{{
 
 [mode]
 normal_main = { fg = "#031521", bg = "#7FDBFF", bold = true }
-normal_alt = { fg = "#7FDBFF", bg = "#071E2D" }
+normal_alt  = { fg = "#7FDBFF", bg = "#071E2D" }
+
+# Select mode
 select_main = { fg = "#031521", bg = "#8FE7C0", bold = true }
-select_alt = { fg = "#8FE7C0", bg = "#071E2D" }
+select_alt  = { fg = "#8FE7C0", bg = "#071E2D" }
+
+# Unset mode
 unset_main = { fg = "#031521", bg = "#E7D37A", bold = true }
-unset_alt = { fg = "#E7D37A", bg = "#071E2D" }
+unset_alt  = { fg = "#E7D37A", bg = "#071E2D" }
+
+# : }}}
+
+
+# : Status bar {{{
 
 [status]
-perm_sep = { fg = "#4FB6E8" }
-perm_type = { fg = "#C9B8FF" }
-perm_read = { fg = "#E7D37A" }
+# Permissions
+perm_sep   = { fg = "#4FB6E8" }
+perm_type  = { fg = "#C9B8FF" }
+perm_read  = { fg = "#E7D37A" }
 perm_write = { fg = "#F08AA3" }
-perm_exec = { fg = "#8FE7C0" }
-progress_label = { fg = "#D9F4FF", bold = true }
+perm_exec  = { fg = "#8FE7C0" }
+
+# Progress
+progress_label  = { fg = "#D9F4FF", bold = true }
 progress_normal = { fg = "#7FDBFF", bg = "#0D2A3A" }
-progress_error = { fg = "#031521", bg = "#F08AA3" }
+progress_error  = { fg = "#031521", bg = "#F08AA3" }
+
+# : }}}
+
+
+# : Pick {{{
 
 [pick]
-border = { fg = "#7FDBFF" }
-active = { fg = "#A8ECFF", bold = true }
+border   = { fg = "#7FDBFF" }
+active   = { fg = "#A8ECFF", bold = true }
 inactive = {}
 
+# : }}}
+
+
+# : Input {{{
+
 [input]
-border = { fg = "#7FDBFF" }
-title = { fg = "#E7D37A", bold = true }
-value = {}
+border   = { fg = "#7FDBFF" }
+title    = { fg = "#E7D37A", bold = true }
+value    = {}
 selected = { reversed = true }
+
+# : }}}
+
+
+# : Completion {{{
 
 [cmp]
 border = { fg = "#7FDBFF" }
 
+# : }}}
+
+
+# : Tasks {{{
+
 [tasks]
-border = { fg = "#7FDBFF" }
-title = { fg = "#A8ECFF", bold = true }
+border  = { fg = "#7FDBFF" }
+title   = { fg = "#A8ECFF", bold = true }
 hovered = { fg = "#E7D37A", bold = true }
 
+# : }}}
+
+
+# : Which {{{
+
 [which]
-mask = { bg = "#071E2D" }
-cand = { fg = "#7FDBFF" }
-rest = { fg = "#86AFC4" }
-desc = { fg = "#A8ECFF" }
-separator = "  "
+mask            = { bg = "#071E2D" }
+cand            = { fg = "#7FDBFF" }
+rest            = { fg = "#86AFC4" }
+desc            = { fg = "#A8ECFF" }
+separator       = "  "
 separator_style = { fg = "#4FB6E8" }
 
+# : }}}
+
+
+# : Help {{{
+
 [help]
-on = { fg = "#7FDBFF", bold = true }
-run = { fg = "#A8ECFF" }
+on      = { fg = "#7FDBFF", bold = true }
+run     = { fg = "#A8ECFF" }
 hovered = { reversed = true, bold = true }
-footer = { fg = "#031521", bg = "#D9F4FF" }
+footer  = { fg = "#031521", bg = "#D9F4FF" }
+
+# : }}}
+
+
+# : Spotter {{{
 
 [spot]
-border = { fg = "#7FDBFF" }
-title = { fg = "#7FDBFF" }
-tbl_col = { fg = "#A8ECFF" }
+border   = { fg = "#7FDBFF" }
+title    = { fg = "#7FDBFF" }
+tbl_col  = { fg = "#A8ECFF" }
 tbl_cell = { fg = "#D9F4FF", bg = "#0D2A3A" }
 
+# : }}}
+
+
+# : Notification {{{
+
 [notify]
-title_info = { fg = "#8FE7C0" }
-title_warn = { fg = "#E7D37A" }
+title_info  = { fg = "#8FE7C0" }
+title_warn  = { fg = "#E7D37A" }
 title_error = { fg = "#F08AA3" }
 
-# TODO: Complete the work from other theme styles to complete the entire sylphrena theme with all the remaining options and add the remaining files in the plugin as well. @config @yazi @themeRelatedg
+# : }}}
+
+
+# : File-specific styles {{{
 
 [filetype]
+
 rules = [
-    { mime = "image/*", fg = "#7FDBFF" },
-    { mime = "{audio,video}/*", fg = "#C9B8FF" },
-    { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#C9B8FF" },
-    { mime = "application/{pdf,doc,rtf}", fg = "#E7D37A" },
-    { mime = "vfs/{absent,stale}", fg = "#86AFC4" },
-    { url = "*", fg = "#D9F4FF" },
-    { url = "*/", fg = "#A8ECFF" },
+	# Image
+	{ mime = "image/*", fg = "#7FDBFF" },
+	# Media
+	{ mime = "{audio,video}/*", fg = "#C9B8FF" },
+	# Archive
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#C9B8FF" },
+	# Document
+	{ mime = "application/{pdf,doc,rtf}", fg = "#E7D37A" },
+	# Virtual file system
+	{ mime = "vfs/{absent,stale}", fg = "#86AFC4" },
+	# Fallback
+	{ url = "*", fg = "#D9F4FF" },
+	{ url = "*/", fg = "#A8ECFF" },
 ]
+
+# : }}}
+
+
+# : Icons {{{
+
+[icon]
+
+dirs = [
+	{ name = ".config", text = "", fg = "#7FDBFF" },
+	{ name = ".git", text = "", fg = "#4FB6E8" },
+	{ name = ".github", text = "", fg = "#C9B8FF" },
+	{ name = ".npm", text = "", fg = "#F08AA3" },
+	{ name = "Desktop", text = "", fg = "#7FDBFF" },
+	{ name = "Development", text = "", fg = "#8FE7C0" },
+	{ name = "Documents", text = "", fg = "#E7D37A" },
+	{ name = "Downloads", text = "", fg = "#A8ECFF" },
+	{ name = "Library", text = "", fg = "#86AFC4" },
+	{ name = "Movies", text = "", fg = "#C9B8FF" },
+	{ name = "Music", text = "", fg = "#C9B8FF" },
+	{ name = "Pictures", text = "", fg = "#8FE7C0" },
+	{ name = "Public", text = "", fg = "#A8ECFF" },
+	{ name = "Videos", text = "", fg = "#C9B8FF" },
+]
+
+conds = [
+	# Special files
+	{ if = "orphan", text = "", fg = "#F08AA3" },
+	{ if = "link", text = "", fg = "#4FB6E8" },
+	{ if = "block", text = "", fg = "#E7D37A" },
+	{ if = "char", text = "", fg = "#E7D37A" },
+	{ if = "fifo", text = "", fg = "#E7D37A" },
+	{ if = "sock", text = "", fg = "#C9B8FF" },
+	{ if = "sticky", text = "", fg = "#E7D37A" },
+	{ if = "dummy", text = "", fg = "#F08AA3" },
+
+	# Fallback
+	{ if = "dir & hovered", text = "", fg = "#7FDBFF" },
+	{ if = "dir", text = "", fg = "#7FDBFF" },
+	{ if = "exec", text = "", fg = "#8FE7C0" },
+	{ if = "!dir", text = "", fg = "#D9F4FF" },
+]
+
+# : }}}

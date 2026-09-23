@@ -32,8 +32,9 @@ return {
     end, { desc = "Open Tuxedo TUI inside Neovim" })
 
     -- ── Keymaps (<leader>t namespace) ──────────────────────────────────────────
-    -- <leader>ta : Add TODO under cursor to Tuxedo
+    -- <leader>ta : Add TODO under cursor / visual selection to Tuxedo
     map("n", "<leader>ta", tuxedo.extract_cursor_todo, { desc = "Tuxedo: Add TODO under cursor" })
+    map("v", "<leader>ta", tuxedo.extract_visual_selection, { desc = "Tuxedo: Add visual selection to Tuxedo" })
 
     -- <leader>tt : Browse project-filtered tasks in Telescope
     map("n", "<leader>tt", tuxedo.project_todos, { desc = "Tuxedo: Project tasks picker" })

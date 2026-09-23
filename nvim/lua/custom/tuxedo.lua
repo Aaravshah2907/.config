@@ -143,6 +143,61 @@ function M.extract_cursor_todo()
 	end)
 end
 
+---Extract visual selection and send to Tuxedo
+function M.extract_visual_selection()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local abs_path = vim.api.nvim_buf_get_name(bufnr)
+	if abs_path == "" then
+		vim.notify("Cannot extract todo from unnamed buffer", vim.log.levels.WARN, { title = "Tuxedo" })
+		return
+	end
+
+	-- Exit visual mode to save visual selection marks
+	vim.cmd("normal! \27")
+
+	local start_line = vim.fn.line("'<")
+	local end_line = vim.fn.line("'>")
+	local lines = vim.api.nvim_buf_get_lines(bufnr, start_line - 1, end_line, false)
+
+	local cleaned_lines = {}
+	for _, line in ipairs(lines) do
+		local clean_text = M.clean_todo_line(line)
+		if clean_text ~= "" then
+			table.insert(cleaned_lines, clean_text)
+		end
+	end
+
+	local combined_text = table.concat(cleaned_lines, " ")
+	if combined_text == "" then
+		combined_text = "Multi-line task"
+	end
+
+	local project_tag = M.get_project_tag(bufnr)
+	local file_ref = string.format("file://%s#L%d-L%d", abs_path, start_line, end_line)
+	local default_input = string.format("(T) %s +%s @nvim %s", combined_text, project_tag, file_ref)
+
+	vim.ui.input({
+		prompt = "Add visual selection to Tuxedo: ",
+		default = default_input,
+	}, function(input)
+		if not input or input:match("^%s*$") then
+			return
+		end
+
+		M.add_task_to_tuxedo(input, function(success)
+			if success then
+				vim.notify(
+					string.format("Visual selection added to Tuxedo (+%s)", project_tag),
+					vim.log.levels.INFO,
+					{ title = "Tuxedo" }
+				)
+			else
+				vim.notify("Failed to add task to Tuxedo", vim.log.levels.ERROR, { title = "Tuxedo" })
+			end
+		end)
+	end)
+end
+
 ---Parse a task raw string to extract file and line reference if available
 ---@param raw_text string
 ---@return string? filename, integer? lnum

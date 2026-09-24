@@ -59,31 +59,33 @@ palette = 15=#ffffff
 
 
 
+
+
 # -- BEGIN managed ghostty theme --
-# Active profile: Sylphrena / Honorspren Mist
+# Active profile: Sylphrena & Kaladin / Windrunner Honor
 background-image = /Users/aaravshah2975/.config/ghostty/sylphrena-cutout.png
-background-image-opacity = 0.11
-background-opacity = 0.91
+background-image-opacity = 0.12
+background-opacity = 0.93
 background-blur-radius = 24
-background = #031521
-foreground = #D9F4FF
-selection-background = #123C56
-selection-foreground = #EAFBFF
-cursor-color = #7FDBFF
-palette = 0=#06111B
-palette = 1=#D76E8A
-palette = 2=#8FE7C0
-palette = 3=#E7D37A
-palette = 4=#4FB6E8
-palette = 5=#9FA8FF
-palette = 6=#7FDBFF
-palette = 7=#D9F4FF
-palette = 8=#48677A
-palette = 9=#F08AA3
-palette = 10=#A9F0D0
-palette = 11=#F4E7A5
-palette = 12=#82D8FF
-palette = 13=#C9B8FF
-palette = 14=#A8ECFF
-palette = 15=#F6FDFF
+background = #090D16
+foreground = #F0F8FF
+selection-background = #1E293B
+selection-foreground = #00E5FF
+cursor-color = #00E5FF
+palette = 0=#090D16
+palette = 1=#991B1B
+palette = 2=#38BDF8
+palette = 3=#FACC15
+palette = 4=#1D4ED8
+palette = 5=#2563EB
+palette = 6=#00E5FF
+palette = 7=#E2E8F0
+palette = 8=#475569
+palette = 9=#DC2626
+palette = 10=#A5F3FC
+palette = 11=#FDE047
+palette = 12=#3B82F6
+palette = 13=#60A5FA
+palette = 14=#22D3EE
+palette = 15=#F0F8FF
 # -- END managed ghostty theme --

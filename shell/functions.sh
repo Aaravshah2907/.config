@@ -68,7 +68,6 @@ alias chtm='bat ~/Documents/Cheat-Codes/TMUX_CHEATSHEET.md 2>/dev/null || bat ~/
   --layout=reverse --header="🖥️ Tmux Cheatsheet | ↑↓ navigate | Tab multi‑select | Enter=jump" \
   --height=80% --border --ansi'
 
-
 # --- Spicetify apply wrapper ---
 spa() {
     spicetify apply
@@ -97,7 +96,7 @@ alert() {
     wacli send text --to "$ALERT_WHATSAPP_TO" --message "$msg" --pick 1
 
     # 2. Send via ntfy.sh (triggers push notification on phone)
-    curl -s -d "$msg" "https://ntfy.sh/$ALERT_NTFY_TOPIC" > /dev/null
+    curl -s -d "$msg" "https://ntfy.sh/$ALERT_NTFY_TOPIC" >/dev/null
 }
 
 # --- Wacli Smart Wrapper ---
@@ -119,11 +118,30 @@ wa() {
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --to) TO="$2"; shift 2; IS_SEND=1 ;;
-            --msg) MSG="$2"; shift 2; IS_SEND=1 ;;
-            --file) FILE="$2"; shift 2; IS_SEND=1 ;;
-            --caption) CAPTION="$2"; shift 2; IS_SEND=1 ;;
-            *) COMMAND+=("$1"); shift ;;
+        --to)
+            TO="$2"
+            shift 2
+            IS_SEND=1
+            ;;
+        --msg)
+            MSG="$2"
+            shift 2
+            IS_SEND=1
+            ;;
+        --file)
+            FILE="$2"
+            shift 2
+            IS_SEND=1
+            ;;
+        --caption)
+            CAPTION="$2"
+            shift 2
+            IS_SEND=1
+            ;;
+        *)
+            COMMAND+=("$1")
+            shift
+            ;;
         esac
     done
 
@@ -265,71 +283,74 @@ phonedis() {
 t() {
     local cmd="${1:-}"
     case "$cmd" in
-        # ── Help ──────────────────────────────────────────
-        -h|--help)
-            echo "Tmux Command Center  (prefix: Ctrl+b)"
-            echo ""
-            echo "  Sessions:"
-            echo "    t                   attach to last session (or create new)"
-            echo "    t <name>            attach to <name> (create if missing)"
-            echo "    t ls                list all sessions"
-            echo "    t new [name]        create new session"
-            echo "    t kill <name>       kill a session"
-            echo "    t kill-all          kill ALL sessions"
-            echo "    t todo              open Tuxedo TUI in dedicated auto-kill session"
-            echo ""
-            echo "  Panes:"
-            echo "    t vs                split vertically (left/right)"
-            echo "    t hs                split horizontally (top/bottom)"
-            echo "    t float             floating popup shell"
-            echo ""
-            echo "  Windows:"
-            echo "    t win [name]        new window"
-            echo "    t wins              list windows"
-            echo "    t next / t prev     switch windows"
-            echo ""
-            echo "  Persistence:"
-            echo "    t save              save layout (resurrect)"
-            echo "    t restore           restore last layout"
-            echo ""
-            echo "  Reference:"
-            echo "    t docs              full cheatsheet (bat)"
-            echo "    t cheat [--edit]    fuzzy searchable command runner"
-            echo "    t guide             tmux guide & concepts"
-            echo "    t -h                this help message"
-            ;;
+    # ── Help ──────────────────────────────────────────
+    -h | --help)
+        echo "Tmux Command Center  (prefix: Ctrl+b)"
+        echo ""
+        echo "  Sessions:"
+        echo "    t                   attach to last session (or create new)"
+        echo "    t <name>            attach to <name> (create if missing)"
+        echo "    t ls                list all sessions"
+        echo "    t new [name]        create new session"
+        echo "    t kill <name>       kill a session"
+        echo "    t kill-all          kill ALL sessions"
+        echo "    t todo              open Tuxedo TUI in dedicated auto-kill session"
+        echo ""
+        echo "  Panes:"
+        echo "    t vs                split vertically (left/right)"
+        echo "    t hs                split horizontally (top/bottom)"
+        echo "    t float             floating popup shell"
+        echo ""
+        echo "  Windows:"
+        echo "    t win [name]        new window"
+        echo "    t wins              list windows"
+        echo "    t next / t prev     switch windows"
+        echo ""
+        echo "  Persistence:"
+        echo "    t save              save layout (resurrect)"
+        echo "    t restore           restore last layout"
+        echo ""
+        echo "  Reference:"
+        echo "    t docs              full cheatsheet (bat)"
+        echo "    t cheat [--edit]    fuzzy searchable command runner"
+        echo "    t guide             tmux guide & concepts"
+        echo "    t -h                this help message"
+        ;;
 
-        # ── Sessions ──────────────────────────────────────
-        "")         tmux attach 2>/dev/null || tmux new-session ;;
-        ls)         tmux list-sessions ;;
-        new)        tmux new-session ${2:+-s "$2"} ;;
-        kill)       [[ -n "$2" ]] && tmux kill-session -t "$2" || echo "Usage: t kill <session>" ;;
-        kill-all)   tmux kill-server ;;
-        todo|tux)   todo ;;
+    # ── Sessions ──────────────────────────────────────
+    "") tmux attach 2>/dev/null || tmux new-session ;;
+    ls) tmux list-sessions ;;
+    new) tmux new-session ${2:+-s "$2"} ;;
+    kill) [[ -n "$2" ]] && tmux kill-session -t "$2" || echo "Usage: t kill <session>" ;;
+    kill-all) tmux kill-server ;;
+    todo | tux) todo ;;
 
-        # ── Panes ─────────────────────────────────────────
-        vs)         tmux split-window -h ;;
-        hs)         tmux split-window -v ;;
-        float)      tmux display-popup -E "$SHELL" ;;
+    # ── Panes ─────────────────────────────────────────
+    vs) tmux split-window -h ;;
+    hs) tmux split-window -v ;;
+    float) tmux display-popup -E "$SHELL" ;;
 
-        # ── Windows ───────────────────────────────────────
-        win)        tmux new-window ${2:+-n "$2"} ;;
-        wins)       tmux list-windows ;;
-        next)       tmux next-window ;;
-        prev)       tmux previous-window ;;
+    # ── Windows ───────────────────────────────────────
+    win) tmux new-window ${2:+-n "$2"} ;;
+    wins) tmux list-windows ;;
+    next) tmux next-window ;;
+    prev) tmux previous-window ;;
 
-        # ── Persistence ───────────────────────────────────
-        save)       tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh ;;
-        restore)    tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh ;;
+    # ── Persistence ───────────────────────────────────
+    save) tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh ;;
+    restore) tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh ;;
 
-        # ── Reference ─────────────────────────────────────
-        docs)       bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
-        cheat)      shift; cheat_generate_json "$HOME/.config/tmux/cheatsheet.md" "$HOME/.config/tmux/cheatsheet.json" && cheat_run "$HOME/.config/tmux/cheatsheet.json" "$@" ;;
-        help)       bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
-        guide)      bat --style=plain --paging=never ~/.config/tmux/guide.md ;;
+    # ── Reference ─────────────────────────────────────
+    docs) bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
+    cheat)
+        shift
+        cheat_generate_json "$HOME/.config/tmux/cheatsheet.md" "$HOME/.config/tmux/cheatsheet.json" && cheat_run "$HOME/.config/tmux/cheatsheet.json" "$@"
+        ;;
+    help) bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md ;;
+    guide) bat --style=plain --paging=never ~/.config/tmux/guide.md ;;
 
-        # ── Fallback: treat as session name ───────────────
-        *)          tmux attach -t "$cmd" 2>/dev/null || tmux new-session -s "$cmd" ;;
+    # ── Fallback: treat as session name ───────────────
+    *) tmux attach -t "$cmd" 2>/dev/null || tmux new-session -s "$cmd" ;;
     esac
 }
 
@@ -392,8 +413,8 @@ cheat_run() {
 
     while [ $# -gt 0 ]; do
         case "$1" in
-            --edit|-e) edit_before_run=1 ;;
-            *) json_file="$1" ;;
+        --edit | -e) edit_before_run=1 ;;
+        *) json_file="$1" ;;
         esac
         shift
     done
@@ -469,11 +490,11 @@ cosmere_theme() {
     local tmp
 
     case "$theme" in
-        sylphrena|cosmere) ;;
-        *)
-            echo "Usage: cosmere_theme [sylphrena|cosmere]" >&2
-            return 2
-            ;;
+    sylphrena | cosmere) ;;
+    *)
+        echo "Usage: cosmere_theme [sylphrena|cosmere]" >&2
+        return 2
+        ;;
     esac
 
     if [ ! -r "$ghostty_theme" ]; then
@@ -486,9 +507,9 @@ cosmere_theme() {
         /^# -- BEGIN managed ghostty theme --$/ { skip = 1; next }
         /^# -- END managed ghostty theme --$/ { skip = 0; next }
         skip != 1 { print }
-    ' "$ghostty_config" > "$tmp"
-    printf "\n" >> "$tmp"
-    cat "$ghostty_theme" >> "$tmp"
+    ' "$ghostty_config" >"$tmp"
+    printf "\n" >>"$tmp"
+    cat "$ghostty_theme" >>"$tmp"
     mv "$tmp" "$ghostty_config"
 
     if [ "$theme" = "cosmere" ]; then
@@ -497,9 +518,12 @@ cosmere_theme() {
 
     if [ -w "$yazi_theme" ]; then
         tmp="$(mktemp -t yazi-theme.XXXXXX)"
-        sed -E "s/^(dark[[:space:]]*=[[:space:]]*)\"[^\"]+\"/\\1\"$yazi_flavor\"/; s/^(light[[:space:]]*=[[:space:]]*)\"[^\"]+\"/\\1\"$yazi_flavor\"/" "$yazi_theme" > "$tmp"
+        sed -E "s/^(dark[[:space:]]*=[[:space:]]*)\"[^\"]+\"/\\1\"$yazi_flavor\"/; s/^(light[[:space:]]*=[[:space:]]*)\"[^\"]+\"/\\1\"$yazi_flavor\"/" "$yazi_theme" >"$tmp"
         mv "$tmp" "$yazi_theme"
     fi
 
     echo "Applied $theme to Ghostty and Yazi. Restart Ghostty windows and Yazi sessions to see it."
 }
+
+alias ctc='cosmere_theme cosmere'
+alias cts='cosmere_theme sylphrena'

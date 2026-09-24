@@ -50,7 +50,7 @@ alias bwifi='automator ~/Desktop/Wifi-Login.app/Contents/document.wflow'
 alias bwifilink='cat ~/Desktop/Wifi-Login.app/Contents/lastlink.txt | pbcopy'
 
 # --- Media / script tools ---
-alias pyytdl='python ~/Documents/Code/My_code/Youtube\ \(Audio,Video\)\ Downloader/Songs.Downloader.Youtube.py'
+alias pyytdl='python3 /Users/aaravshah2975/yt_downloader/Songs.Downloader.Youtube.py'
 alias photo_metadata_merger='~/.local/bin/photo_metadata_combiner.sh'
 alias audiobook_merger='~/.local/bin/audiofilescombiner.sh'
 alias m4b_merger='~/.local/bin/merge_m4b.sh'

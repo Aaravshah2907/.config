@@ -78,8 +78,11 @@ alias off='brew services stop sketchybar && aerospace enable off'
 # Tmux & Tmuxinator
 alias mux="tmuxinator"
 alias tmux-help="bat --style=plain --paging=never ~/.config/tmux/cheatsheet.md"
+alias acad='cd ~/Acads && tuxedo todo.txt && cd -'
 
 # --- Notifications (gnotify) ---
 alias syl="gnotify '󰌵 Sylphrena'"
 alias stormfather="gnotify '🌩️ The Stormfather'"
 alias notify="gnotify"
+
+

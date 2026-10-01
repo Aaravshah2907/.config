@@ -527,3 +527,21 @@ cosmere_theme() {
 
 alias ctc='cosmere_theme cosmere'
 alias cts='cosmere_theme sylphrena'
+
+# --- BookOrbit On-Demand Launcher ---
+bookorbit() {
+    echo "🚀 Starting background services (PostgreSQL & Redis)..."
+    /opt/homebrew/bin/brew services start postgresql@17
+    /opt/homebrew/bin/brew services start redis
+
+    # Stop services on exit/Ctrl+C
+    trap '/opt/homebrew/bin/brew services stop postgresql@17 >/dev/null 2>&1; /opt/homebrew/bin/brew services stop redis >/dev/null 2>&1; echo "\n🛑 Stopped background services (PostgreSQL & Redis)."' EXIT INT TERM
+
+    echo "📚 Starting BookOrbit..."
+    if [ -d "$HOME/bookorbit" ]; then
+        cd "$HOME/bookorbit" && /opt/homebrew/bin/pnpm run dev
+    else
+        echo "❌ BookOrbit directory not found at $HOME/bookorbit"
+    fi
+}
+

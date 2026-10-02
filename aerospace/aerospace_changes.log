@@ -22,3 +22,26 @@
   - Click 󰕰 to toggle the focused container layout between tiles ↔ accordion.
 - Icons update automatically on workspace change, window focus, and layout toggle.
 - Updated cheatsheet_data.py with all corrected shortcuts.
+
+
+2026-10-02: Battery Drain Optimization (Option B — Zero SIP, AeroSpace-only)
+- Set automatically-unhide-macos-hidden-apps = false so macOS App Nap
+  can sleep background workspace apps (was preventing WindowServer throttling).
+- Removed redundant window_title_change event from on-focus-changed
+  (was double-triggering sketchybar on every window focus).
+- Passed PREV_WORKSPACE to exec-on-workspace-change so space.sh can
+  early-exit for all 11 unaffected workspaces (saves 11 aerospace socket calls per switch).
+
+New file: sketchybar/plugins/battery_power.sh
+  Shared battery detection helper used by all plugin scripts.
+  Caches pmset result for 10s to avoid repeated pmset spawns.
+
+SketchyBar plugin polling throttles (AC → Battery):
+  sysmon: 5s → 15s
+  pomodoro: 1s → 30s idle (stays 1s when timer active)
+  mic: 3s → 10s standby (stays 3s when recording)
+  net_speed: 2s → 10s
+  guilt: 5s → 20s idle (restores to 5s when distracting app focused)
+  audio_toggle: 5s → 30s
+
+Zero AeroSpace keybindings were modified.

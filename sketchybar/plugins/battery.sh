@@ -16,6 +16,9 @@ fi
 PERCENTAGE="$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)"
 CHARGING="$(pmset -g batt | grep 'AC Power')"
 
+# Invalidate shared battery cache immediately on power source transitions
+rm -f /tmp/sketchybar_on_battery
+
 if [ "$PERCENTAGE" = "" ]; then
   exit 0
 fi

@@ -7,13 +7,14 @@ macos-titlebar-style = hidden
 window-padding-x = 10
 window-padding-y = 10
 background-opacity = 0.95
-background-blur-radius = 20
+background-blur-radius = 0
 quit-after-last-window-closed = true
 
-# ── Usability ──
+# ── Usability & Power ──
 mouse-hide-while-typing = true
 copy-on-select = clipboard
 shell-integration = detect
+cursor-style-blink = false
 
 # ── FiraCode Ligatures ──
 font-feature = calt
@@ -66,7 +67,7 @@ palette = 15=#ffffff
 background-image = /Users/aaravshah2975/.config/ghostty/sylphrena-cutout.png
 background-image-opacity = 0.12
 background-opacity = 0.93
-background-blur-radius = 24
+background-blur-radius = 0
 background = #090D16
 foreground = #F0F8FF
 selection-background = #1E293B

@@ -58,7 +58,7 @@ sketchybar --bar position=top \
                 height=42 \
                 y_offset=38 \
                 margin=12 \
-                blur_radius=30 \
+                blur_radius=0 \
                 color=$DEEP_NIGHT \
                 corner_radius=35 \
                 border_width=1 \
@@ -82,7 +82,7 @@ sketchybar --default \
   popup.background.border_color=$PRES_GLACIAL \
   popup.background.border_width=2 \
   popup.background.corner_radius=12 \
-  popup.blur_radius=30
+  popup.blur_radius=10
 
 
 ##### LEFT SIDE ITEMS #####

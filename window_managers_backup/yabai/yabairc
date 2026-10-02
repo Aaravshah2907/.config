@@ -1,0 +1,90 @@
+#!/usr/bin/env sh
+
+# --- General ---
+
+# default layout
+yabai -m config layout bsp
+
+# new window placement
+yabai -m config window_placement second_child
+
+# auto balance splits
+yabai -m config auto_balance on
+yabai -m config split_ratio 0.50
+
+# focus follows mouse (feels natural)
+yabai -m config focus_follows_mouse autofocus
+
+# mouse follows focus (optional but nice)
+yabai -m config mouse_follows_focus on
+
+# --- Gaps & Padding (clean look) ---
+# Bar floats at y_offset=38 + height=42 → top of windows must clear y=80
+# top_padding = 50 → windows start at menubar(24) + 50 = y=74 (or 88 on notch displays)
+
+yabai -m config top_padding 50
+yabai -m config bottom_padding 12
+yabai -m config left_padding 8
+yabai -m config right_padding 8
+yabai -m config window_gap 8
+
+# --- Mouse controls ---
+
+yabai -m config mouse_modifier alt
+yabai -m config mouse_action1 move
+yabai -m config mouse_action2 resize
+
+# --- Rules (don’t manage these apps) ---
+
+yabai -m rule --add app="^System Settings$" manage=off
+# yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="^QuickTime Player$" manage=off
+yabai -m rule --add app="^mpv$" manage=off
+yabai -m rule --add title="^⌨️ Shortcut Hub$" manage=off
+
+# --- Space labels (dynamically assigned to ignore macOS native fullscreen spaces) ---
+yabai -m query --spaces | python3 -c "
+import json, sys, subprocess
+spaces = json.load(sys.stdin)
+normal_spaces = [s for s in spaces if not s['is-native-fullscreen']]
+labels = ['terminal', 'code', 'browser', 'chat', 'media', 'misc']
+for i, s in enumerate(normal_spaces):
+    if i < len(labels):
+        subprocess.run(['yabai', '-m', 'space', str(s['index']), '--label', labels[i]])
+"
+
+# Workflow routing rules (use labels with '^' modifier to automatically follow focus — immune to space index drift)
+yabai -m rule --add app="^(iTerm2|iTerm|Terminal|Alacritty|kitty)$" space=^terminal
+yabai -m rule --add app="^(Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode|Codeforces)$" space=^code
+yabai -m rule --add app="^(Brave Browser|Google Chrome|Safari|Firefox)$" space=^browser
+yabai -m rule --add app="^(ChatGPT|Gemini|Slack|Discord|WhatsApp)$" space=^chat
+yabai -m rule --add app="^Spotify$" space=^spotify
+yabai -m rule --add app="^(Music|VLC|mpv)$" space=^media
+
+
+# --- IMPORTANT: force all spaces to bsp (fixes your earlier issue) ---
+
+yabai -m config window_opacity on
+yabai -m config active_window_opacity 1.0
+yabai -m config normal_window_opacity 0.9
+
+# ensure every NEW space is bsp
+yabai -m signal --add event=space_created action="yabai -m space --layout bsp"
+yabai -m signal --add event=space_changed action="yabai -m space --layout bsp"
+
+# SketchyBar event-driven triggers
+yabai -m signal --add event=space_changed action="sketchybar --trigger space_change"
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+yabai -m signal --add event=window_title_changed action="sketchybar --trigger window_title_change"
+yabai -m signal --add event=application_launched action="sketchybar --trigger app_switcher_update"
+yabai -m signal --add event=application_terminated action="sketchybar --trigger app_switcher_update"
+yabai -m signal --add event=window_created action="sketchybar --trigger app_switcher_update"
+yabai -m signal --add event=window_destroyed action="sketchybar --trigger app_switcher_update"
+
+echo "YABAI LOADED" > /tmp/yabai.log
+
+# Alert on reload — useful when yabai crashes and auto-restarts
+source "$HOME/.config/shell/functions.sh"
+alert "🪟 Yabai reloaded at $(date '+%H:%M:%S') — window manager is back." &
+

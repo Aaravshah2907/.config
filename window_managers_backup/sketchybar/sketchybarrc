@@ -1,0 +1,707 @@
+source "$CONFIG_DIR/colors.sh"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+rm -f /tmp/bluetooth_pinned
+rm -f /tmp/aerospace_disabled
+
+# Custom Events for event-driven updates
+sketchybar --add event window_focus \
+           --add event window_title_change \
+           --add event space_change \
+           --add event app_switcher_update \
+           --add event aerospace_workspace_change \
+           --add event aerospace_layout_change
+
+##### Core Bar Appearance (Radiant Floating Bar) #####
+
+# Dynamic Notch 1
+sketchybar --add item notch1 center \
+           --set notch1 drawing=off \
+                       background.color=$BAR_COLOR \
+                       background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                       background.border_width=2 \
+                       background.corner_radius=12 \
+                       background.padding_left=5 \
+                       background.padding_right=5 \
+                       background.height=38 \
+                       icon.font="Hack Nerd Font:Bold:18.0" \
+                       icon.color=$WHITE \
+                       label.font="JetBrainsMono Nerd Font:Bold:16.0" \
+                       label.color=$WHITE \
+                       label.padding_left=8 \
+                       label.padding_right=8 \
+                       y_offset=-50 \
+                       topmost=window \
+                       shadow=on
+
+# Dynamic Notch 2
+sketchybar --add item notch2 center \
+           --set notch2 drawing=off \
+                       background.color=$BAR_COLOR \
+                       background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                       background.border_width=2 \
+                       background.corner_radius=12 \
+                       background.padding_left=5 \
+                       background.padding_right=5 \
+                       background.height=38 \
+                       icon.font="Hack Nerd Font:Bold:18.0" \
+                       icon.color=$WHITE \
+                       label.font="JetBrainsMono Nerd Font:Bold:16.0" \
+                       label.color=$WHITE \
+                       label.padding_left=8 \
+                       label.padding_right=8 \
+                       y_offset=-50 \
+                       topmost=window \
+                       shadow=on
+
+
+sketchybar --bar position=top \
+                height=42 \
+                y_offset=38 \
+                margin=12 \
+                blur_radius=30 \
+                color=$DEEP_NIGHT \
+                corner_radius=35 \
+                border_width=1 \
+                border_color=$SAPPHIRE_TRANSLUCENT \
+                topmost=window
+
+##### Global Defaults #####
+sketchybar --default \
+  padding_left=5 \
+  padding_right=5 \
+  icon.font="Hack Nerd Font:Bold:16.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  icon.color=$WHITE \
+  label.color=$WHITE \
+  icon.padding_left=4 \
+  icon.padding_right=4 \
+  label.padding_left=4 \
+  label.padding_right=4 \
+  background.drawing=off \
+  popup.background.color=$POPUP_BG_COLOR \
+  popup.background.border_color=$PRES_GLACIAL \
+  popup.background.border_width=2 \
+  popup.background.corner_radius=12 \
+  popup.blur_radius=30
+
+
+##### LEFT SIDE ITEMS #####
+sketchybar --add item apple left \
+           --set apple icon= \
+                        icon.color=$HONOR_GOLD \
+                        label.drawing=off \
+                        popup.align=left \
+                        click_script="sketchybar --set apple popup.drawing=toggle" \
+                        script="[ \"\$SENDER\" = \"mouse.exited.global\" ] && sketchybar --set apple popup.drawing=off" \
+           --subscribe apple mouse.exited.global \
+  \
+           --add item apple.lock popup.apple \
+           --set apple.lock icon=󰌾 label="Lock" click_script="pmset displaysleepnow; sketchybar --set apple popup.drawing=off" \
+  \
+           --add item apple.sleep popup.apple \
+           --set apple.sleep icon=󰒲 label="Sleep" click_script="pmset sleepnow; sketchybar --set apple popup.drawing=off" \
+  \
+           --add item apple.restart popup.apple \
+           --set apple.restart icon=󰑓 label="Restart Sketchybar" click_script="$PLUGIN_DIR/reload.sh; sketchybar --set apple popup.drawing=off"
+ \
+  \
+  --add item guilt left \
+    --set guilt update_freq=5 \
+                drawing=off \
+                script="$PLUGIN_DIR/guilt.sh" \
+  \
+  --add item tuxedo_tasks left \
+    --set tuxedo_tasks update_freq=120 \
+                drawing=off \
+                icon.color=$HONOR_GOLD \
+                label.max_chars=32 \
+                script="$PLUGIN_DIR/tuxedo_tasks.sh" \
+                popup.align=left \
+                click_script="sketchybar --set tuxedo_tasks popup.drawing=toggle" \
+  \
+  --add item tuxedo_tasks.top popup.tuxedo_tasks \
+    --set tuxedo_tasks.top icon=󰁕 label="Week: none" \
+  \
+  --add item tuxedo_tasks.more popup.tuxedo_tasks \
+    --set tuxedo_tasks.more icon=󰄱 label="Top: none" \
+  \
+  --add bracket apple.pill apple guilt tuxedo_tasks \
+  --set apple.pill background.color=$BAR_COLOR \
+                   background.border_color=$SPREN_HIGH_T \
+                   background.border_width=1 \
+                   background.corner_radius=10 \
+                   background.drawing=on
+
+
+# AeroSpace Toggle (Exam Mode)
+sketchybar --add item aero_toggle left \
+           --set aero_toggle icon=󱂬 \
+                             icon.color=$SPREN_HONOR \
+                             icon.font="Hack Nerd Font:Bold:18.0" \
+                             label.drawing=off \
+                             padding_left=6 \
+                             padding_right=2 \
+                             script="$PLUGIN_DIR/aerospace_toggle.sh" \
+           --subscribe aero_toggle mouse.clicked
+
+# AeroSpace Layout Status
+sketchybar --add item aero_root_layout left \
+           --set aero_root_layout icon=󰒡 \
+                                  icon.font="Hack Nerd Font:Bold:14.0" \
+                                  label.drawing=off \
+                                  padding_left=2 \
+                                  padding_right=2 \
+                                  popup.align=left \
+                                  script="$PLUGIN_DIR/aerospace_layout.sh" \
+           --subscribe aero_root_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked mouse.exited.global \
+  \
+           --add item aero_layout.header popup.aero_root_layout \
+           --set aero_layout.header icon=󰒡 label="LAYOUT CONTROLS" label.font="JetBrainsMono Nerd Font:Bold:13.0" label.color=$HONOR_GOLD icon.color=$HONOR_GOLD \
+  \
+           --add item aero_layout.horiz popup.aero_root_layout \
+           --set aero_layout.horiz icon=󰒡 label="Horizontal Split (Ctrl+Alt+B)" click_script="aerospace layout horizontal; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+  \
+           --add item aero_layout.vert popup.aero_root_layout \
+           --set aero_layout.vert icon=󰕰 label="Vertical Split (Ctrl+Alt+V)" click_script="aerospace layout vertical; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+  \
+           --add item aero_layout.accordion popup.aero_root_layout \
+           --set aero_layout.accordion icon=󰓩 label="Toggle Accordion (Alt+.)" click_script="aerospace layout tiles accordion; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+  \
+           --add item aero_layout.balance popup.aero_root_layout \
+           --set aero_layout.balance icon=󰓢 label="Balance Window Sizes (Ctrl+Alt+E)" click_script="aerospace balance-sizes; sketchybar --set aero_root_layout popup.drawing=off" \
+  \
+           --add item aero_cont_layout left \
+           --set aero_cont_layout icon=󰕰 \
+                                  icon.font="Hack Nerd Font:Bold:14.0" \
+                                  label.drawing=off \
+                                  padding_left=2 \
+                                  padding_right=6 \
+                                  script="$PLUGIN_DIR/aerospace_layout.sh" \
+           --subscribe aero_cont_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked
+
+# Spaces
+AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all)
+for sid in $AEROSPACE_WORKSPACES; do
+  sketchybar --add item space.$sid left \
+             --subscribe space.$sid aerospace_workspace_change \
+             --set space.$sid \
+                   background.drawing=off \
+                   label.drawing=off \
+                   icon.drawing=off \
+                   script="$PLUGIN_DIR/space.sh $sid" \
+                   click_script="aerospace workspace $sid"
+done
+
+sketchybar --add bracket spaces.pill "/space\..*/" \
+           --set spaces.pill background.color=$BAR_COLOR \
+                             background.border_color=$SPACE_ACCENT_T \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
+
+# Front App Switcher (Current Space Apps)
+sketchybar --add item app_switcher_sep left \
+           --set app_switcher_sep icon="│" \
+                                  icon.font="Hack Nerd Font:Bold:12.0" \
+                                  icon.color=$PRES_GLACIAL_TRANSLUCENT \
+                                  label.drawing=off \
+                                  padding_left=2 \
+                                  padding_right=2 \
+  \
+           --add bracket app_switcher '/app\.switcher\..*/' \
+           --set app_switcher background.drawing=off \
+  \
+           --add item app_switcher_trigger left \
+           --set app_switcher_trigger drawing=off \
+                                      script="$PLUGIN_DIR/app_switcher.sh" \
+           --subscribe app_switcher_trigger app_switcher_update aerospace_workspace_change front_app_switched
+
+# Optional Yabai Space Layout Status Item (uncomment to enable)
+# source "$CONFIG_DIR/yabai_status_item.sh"
+
+
+##### CENTER ITEMS (Dynamic Island for Media) #####
+sketchybar --add item music center \
+           --set music icon= \
+                        icon.color=$MUSIC_ACCENT \
+                       label="Lashing..." \
+                       label.color=$WHITE \
+                       script="$PLUGIN_DIR/music.sh" \
+                       update_freq=5 \
+                       click_script="sketchybar --set music popup.drawing=toggle" \
+                       popup.align=center \
+                       popup.y_offset=12 \
+                       scroll_texts=on \
+                       label.max_chars=25 \
+                       label.scroll_duration=250 \
+                       background.color=$BAR_COLOR \
+                       background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                       background.border_width=2 \
+                       background.corner_radius=12 \
+                       background.padding_left=5 \
+                       background.padding_right=5 \
+                       background.height=38 \
+                       background.drawing=on \
+                       y_offset=-2 \
+           --subscribe music media_change system_woke front_app_switched mouse.clicked mouse.exited.global
+
+sketchybar --add item media.header popup.music \
+           --set media.header icon=󰎈 label="THE RADIANT SONG" click_script="$PLUGIN_DIR/music_click.sh" \
+                               label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                               label.color=$RADIANT_GOLD \
+                               icon.color=$RADIANT_GOLD \
+  \
+           --add item media.prev popup.music \
+           --set media.prev icon=󰒮 label="Retreat" click_script="$PLUGIN_DIR/media_control.sh prev" \
+  \
+           --add item media.play popup.music \
+           --set media.play icon=󰐊 label="Lash/Rest" click_script="$PLUGIN_DIR/media_control.sh toggle" \
+  \
+           --add item media.next popup.music \
+           --set media.next icon=󰒭 label="Lash Forward" click_script="$PLUGIN_DIR/media_control.sh next"
+
+# Control Center: Spren Bond (Wifi)
+sketchybar --add item control_center right \
+           --set control_center icon=󰤨 \
+                       padding_left=8 \
+                       padding_right=8 \
+                       drawing=off \
+                       script="$PLUGIN_DIR/network.sh" \
+                       update_freq=120 \
+                       popup.align=right \
+           click_script="sketchybar --set control_center popup.drawing=toggle" \
+           --subscribe control_center mouse.clicked mouse.exited.global \
+  \
+           --add item control_center.ssid popup.control_center \
+           --set control_center.ssid icon=󰤨 label="SSID: ..." \
+  \
+           --add item control_center.ip popup.control_center \
+           --set control_center.ip icon=󰩟 label="Local IP: ..." \
+  \
+           --add item control_center.public_ip popup.control_center \
+           --set control_center.public_ip icon=󰇧 label="Public IP: Loading..." \
+  \
+           --add item control_center.down popup.control_center \
+           --set control_center.down icon=󰇚 label="Download: ..." \
+  \
+           --add item control_center.up popup.control_center \
+           --set control_center.up icon=󰕒 label="Upload: ..." \
+  \
+           --add item net_speed right \
+           --set net_speed update_freq=2 script="$PLUGIN_DIR/net_speed.sh" drawing=off
+
+# BWifi: Oathgate Portal (University Auto-Login)
+sketchybar --add item bwifi right \
+           --set bwifi icon=󰛳 \
+                       icon.color=$SPREN_INK \
+                       icon.font="Hack Nerd Font:Bold:18.0" \
+                       label.drawing=off \
+                       padding_left=8 \
+                       padding_right=8 \
+                       script="$PLUGIN_DIR/bwifi.sh" \
+           --subscribe bwifi mouse.clicked mouse.exited.global
+
+# WARP: Preservation Shield (Cloudflare VPN)
+sketchybar --add item warp right \
+           --set warp update_freq=10 \
+                       icon=󰦞 \
+                       icon.color=$RUIN_MAROON \
+                       label.drawing=off \
+                       drawing=off \
+                       padding_left=8 \
+                       padding_right=8 \
+                       script="$PLUGIN_DIR/warp.sh" \
+           --subscribe warp mouse.clicked mouse.exited.global
+
+# GitHub Notification
+sketchybar --add item github right \
+           --set github update_freq=300 \
+                        icon= \
+                        icon.color=$SPREN_CRYPTIC \
+                        label.drawing=off \
+                        drawing=off \
+                        script="$PLUGIN_DIR/github.sh" \
+                        popup.align=right \
+           click_script="sketchybar --set github popup.drawing=toggle" \
+           --subscribe github mouse.clicked mouse.exited.global \
+  \
+           --add item github.notifications popup.github \
+           --set github.notifications icon=󰂚 label="No token"
+
+# Ntfy.sh Notifications: Windspren Whispers
+sketchybar --add item ntfy right \
+           --set ntfy update_freq=60 \
+                       icon=󰵙 \
+                       icon.color=$SPREN_CRYPTIC \
+                       label.drawing=off \
+                       drawing=off \
+                       script="$PLUGIN_DIR/ntfy.sh" \
+                       popup.align=right \
+                       popup.y_offset=12 \
+           --subscribe ntfy mouse.clicked mouse.exited.global \
+  \
+           --add item ntfy.header popup.ntfy \
+           --set ntfy.header \
+                   icon=󰵙 \
+                   icon.color=$NOTIF_ACCENT \
+                   label="WINDSPREN WHISPERS" \
+                   label.font="JetBrainsMono Nerd Font:Bold:13.0" \
+                   label.color=$NOTIF_ACCENT \
+  \
+           --add item ntfy.msg1 popup.ntfy \
+           --add item ntfy.msg2 popup.ntfy \
+           --add item ntfy.msg3 popup.ntfy \
+           --add item ntfy.msg4 popup.ntfy \
+           --add item ntfy.msg5 popup.ntfy \
+  \
+           --add item ntfy.hint popup.ntfy \
+           --set ntfy.hint \
+                   icon.drawing=off \
+                   label="Click icon to mark all read" \
+                   label.font="JetBrainsMono Nerd Font:Bold:11.0" \
+                   label.color=$PRES_MIST
+
+# Slack Notifications: Cryptic Whispers
+# sketchybar --add item slack right \
+#            --set slack update_freq=300 \
+#                         icon=󰒱 \
+#                         icon.color=$SPREN_CRYPTIC \
+#                         label.drawing=off \
+#                         script="$PLUGIN_DIR/slack.sh" \
+#                         click_script="sketchybar --set slack popup.drawing=toggle" \
+#                         popup.align=right \
+#            --subscribe slack mouse.clicked mouse.exited.global \
+#   \
+#            --add item slack.header popup.slack \
+#            --set slack.header label.font="JetBrainsMono Nerd Font:Bold:14.0" click_script="open -a Slack" \
+#   \
+#            --add item slack.status popup.slack \
+#            --add item slack.dnd popup.slack \
+#            --add item slack.unreads popup.slack \
+#            --add item slack.mentions popup.slack \
+#   \
+#            --add item slack.ch1 popup.slack \
+#            --add item slack.ch2 popup.slack \
+#            --add item slack.ch3 popup.slack \
+#            --add item slack.ch4 popup.slack \
+#            --add item slack.ch5 popup.slack
+# 
+# Bluetooth: Spiritweb
+sketchybar --add item bluetooth right \
+           --set bluetooth update_freq=60 \
+                           padding_left=8 \
+                           padding_right=8 \
+                           drawing=off \
+                           script="$PLUGIN_DIR/bluetooth.sh" \
+                           click_script="$PLUGIN_DIR/bluetooth.sh click" \
+                           popup.align=right \
+           --subscribe bluetooth mouse.clicked mouse.exited.global
+
+
+
+# Battery: Stormlight Reserve
+sketchybar --add item battery right \
+           --set battery update_freq=120 \
+                         padding_left=8 \
+                         padding_right=8 \
+                         script="$PLUGIN_DIR/battery.sh" \
+                         popup.align=right \
+                         popup.y_offset=12 \
+           click_script="sketchybar --set battery popup.drawing=toggle" \
+           --subscribe battery power_source_change system_woke mouse.clicked mouse.exited.global \
+  \
+  \
+           --add item battery.status popup.battery \
+           --set battery.status icon=󰁹 \
+                                icon.color=$BATT_ACCENT \
+                                label.color=$WHITE \
+                                label.font="JetBrainsMono Nerd Font:Bold:14.0"
+
+
+
+# Weather Widget
+sketchybar --add item weather right \
+           --set weather update_freq=900 \
+                         script="$PLUGIN_DIR/weather_widget.sh" \
+                         popup.align=right \
+                         popup.y_offset=12 \
+                         click_script="sketchybar --set weather popup.drawing=toggle" \
+           --subscribe weather mouse.clicked mouse.exited.global \
+  \
+           --add item weather.location popup.weather \
+           --set weather.location icon=📍 label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item weather.condition popup.weather \
+           --set weather.condition icon.font="JetBrainsMono Nerd Font:Bold:14.0" label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  \
+           --add item weather.feels popup.weather \
+           --set weather.feels icon=🌡️ \
+  \
+           --add item weather.humidity popup.weather \
+           --set weather.humidity icon=💧 \
+  \
+           --add item weather.wind popup.weather \
+           --set weather.wind icon=💨 \
+  \
+           --add item weather.moon popup.weather \
+           --set weather.moon icon=🌒
+
+sketchybar --add bracket weather.pill weather \
+           --set weather.pill background.color=$BAR_COLOR \
+                              background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on
+
+# Clock: Chronicles
+sketchybar --add item clock right \
+           --set clock update_freq=30 script="$PLUGIN_DIR/clock.sh" click_script="$PLUGIN_DIR/clock.sh" icon=󰃭 \
+           --subscribe clock mouse.clicked mouse.exited.global \
+           popup.align=right \
+  \
+  --add item clock.header popup.clock \
+    --set clock.header icon=󰃤 label="CHRONICLES" label.font="JetBrainsMono Nerd Font:Bold:14.0" label.color=$CLOCK_ACCENT icon.color=$CLOCK_ACCENT \
+  \
+  --add item clock.date popup.clock --set clock.date icon=󰃭 label="Chronicle Loading..." \
+  --add item clock.events popup.clock --set clock.events label="" drawing=off \
+  --add item clock.event.1 popup.clock --set clock.event.1 label="Loading..." drawing=on \
+  --add item clock.event.2 popup.clock --set clock.event.2 label="" drawing=off \
+  --add item clock.event.3 popup.clock --set clock.event.3 label="" drawing=off \
+  --add item clock.event.4 popup.clock --set clock.event.4 label="" drawing=off \
+  --add item clock.event.5 popup.clock --set clock.event.5 label="" drawing=off \
+  --add item clock.event.6 popup.clock --set clock.event.6 label="" drawing=off \
+  --add item clock.event.7 popup.clock --set clock.event.7 label="" drawing=off \
+  --add item clock.event.8 popup.clock --set clock.event.8 label="" drawing=off
+
+# Calendar Lines Removed
+
+sketchybar --add bracket clock.pill clock \
+           --set clock.pill background.color=$BAR_COLOR \
+                            background.border_color=$CLOCK_ACCENT_T \
+                            background.border_width=1 \
+                            background.corner_radius=10 \
+                            background.drawing=on
+
+
+
+
+# Volume Toggle Icon & Slider
+sketchybar --add item volume_icon right \
+           --set volume_icon icon=󰕾 \
+                             icon.color=$SPREN_CULTIVATION \
+                             icon.padding_left=8 \
+                             icon.padding_right=8 \
+                             label.drawing=off \
+                             drawing=off \
+                             click_script="$PLUGIN_DIR/volume_toggle.sh" \
+                             script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume_icon volume_change \
+  \
+           --add slider volume right \
+           --set volume script="$PLUGIN_DIR/volume.sh" \
+                        slider.background.height=4 \
+                        slider.background.corner_radius=2 \
+                        slider.background.color=$SPREN_CULTIVATION_T \
+                        slider.highlight_color=$SPREN_CULTIVATION \
+                        slider.knob.drawing=off \
+                        slider.width=0 \
+                        icon.drawing=off \
+                        label.drawing=off \
+           --subscribe volume mouse.clicked \
+  \
+           --add bracket volume.pill volume_icon volume \
+           --set volume.pill background.color=$BAR_COLOR \
+                             background.border_color=$SPREN_CULTIVATION_T \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
+
+# Notification: Spren Message
+# sketchybar --add item notif right \
+#            --set notif update_freq=30 \
+#                        padding_left=8 \
+#                        padding_right=8 \
+#                        script="$PLUGIN_DIR/notif.sh" \
+#                        popup.align=right \
+#                        popup.y_offset=12 \
+#            --subscribe notif mouse.entered mouse.exited \
+#   \
+#            --add bracket notif.pill notif \
+#            --set notif.pill background.color=$BAR_COLOR \
+#                            background.border_color=$NOTIF_ACCENT_T \
+#                            background.borderWidth=1 \
+#                            background.corner_radius=10 \
+#                            background.drawing=on \
+#   \
+#            --add item notif.messages popup.notif \
+#            --set notif.messages icon=󰍦 \
+#                                icon.color=$NOTIF_ACCENT \
+#                                label.color=$WHITE \
+#                                label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+#   \
+#            --add item notif.mail popup.notif \
+#            --set notif.mail icon=󰇮 \
+#                             icon.color=$PRES_GLACIAL \
+#                             label.color=$WHITE \
+# Utilities Menu
+sketchybar --add item utilities right \
+           --set utilities icon=󰔡 \
+                           icon.color=$PRES_GLACIAL \
+                           label.drawing=off \
+                           drawing=off \
+                           script="$PLUGIN_DIR/utilities.sh" \
+                           popup.align=right \
+           --subscribe utilities mouse.clicked mouse.exited.global \
+  \
+           --add item utilities.caffeine popup.utilities \
+           --set utilities.caffeine icon=󰅶 label="Caffeine" \
+                          script="$PLUGIN_DIR/caffeine.sh" \
+                          click_script="$PLUGIN_DIR/caffeine.sh click" \
+           --subscribe utilities.caffeine mouse.clicked \
+  \
+           --add item utilities.focus popup.utilities \
+           --set utilities.focus icon=󰈈 label="Focus Mode" \
+                              script="$PLUGIN_DIR/focus.sh" \
+           --subscribe utilities.focus mouse.clicked
+
+# Upcoming Meeting Alert
+#sketchybar --add item upcoming_alert right \
+#           --set upcoming_alert update_freq=120 \
+#                                icon=󰃭 \
+#                                icon.color=$SPREN_GLORY \
+#                                label.color=$SPREN_GLORY \
+#                                drawing=off \
+#                                script="$PLUGIN_DIR/upcoming.sh"
+
+# RunCat
+#sketchybar --add item runcat right \
+#           --set runcat icon.font="Hack Nerd Font:Bold:18.0" \
+#                        icon.color=$WHITE \
+#                        label.drawing=off
+
+# Drawer
+sketchybar --add item drawer right \
+           --set drawer icon= \
+                        icon.color=$WHITE \
+                        icon.font="Hack Nerd Font:Bold:16.0" \
+                        label.drawing=off \
+                        click_script="$PLUGIN_DIR/drawer.sh"
+
+# System Monitor
+sketchybar --add item sysmon right \
+           --set sysmon update_freq=5 \
+                        icon=󰒓 \
+                        icon.color=$PRES_GLACIAL \
+                        label.drawing=off \
+                        drawing=off \
+                        script="$PLUGIN_DIR/sysmon.sh" \
+                        popup.align=right \
+           click_script="sketchybar --set sysmon popup.drawing=toggle" \
+           --subscribe sysmon mouse.clicked mouse.exited.global \
+  \
+           --add graph sysmon.cpu popup.sysmon 120 \
+           --set sysmon.cpu icon=󰍛 label="CPU: ..." \
+                            icon.color=$SYS_CPU_COLOR \
+                            graph.color=$SYS_CPU_COLOR \
+                            graph.fill_color=$SYS_CPU_COLOR \
+  \
+           --add graph sysmon.ram popup.sysmon 120 \
+           --set sysmon.ram icon=󰘚 label="RAM: ..." \
+                            icon.color=$SYS_RAM_COLOR \
+                            graph.color=$SYS_RAM_COLOR \
+                            graph.fill_color=$SYS_RAM_COLOR \
+  \
+           --add item sysmon.disk popup.sysmon \
+           --set sysmon.disk icon=󰋊 label="Disk: ..." \
+                             icon.color=$SYS_DISK_COLOR
+
+# Pomodoro Timer
+sketchybar --add item pomodoro right \
+           --set pomodoro update_freq=1 \
+                          icon=󰔟 \
+                          icon.color=$HONOR_GOLD \
+                          label.drawing=off \
+                          script="$PLUGIN_DIR/pomodoro.sh" \
+           --subscribe pomodoro mouse.clicked mouse.exited.global
+
+# CPKB Snippets
+sketchybar --add item cpkb right \
+           --set cpkb icon="</>" \
+                      icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
+                      icon.color=$FRONTAPP_ACCENT \
+                      label.drawing=off \
+                      script="$PLUGIN_DIR/cpkb_plugin.sh" \
+           --subscribe cpkb mouse.clicked mouse.exited.global
+
+# Microphone Toggle
+sketchybar --add item mic right \
+           --set mic update_freq=3 \
+                     icon=󰍬 \
+                     icon.color=$WARN_COLOR \
+                     label.drawing=off \
+                     drawing=off \
+                     script="$PLUGIN_DIR/mic.sh" \
+           --subscribe mic mouse.clicked
+
+# Clipboard Manager (Cmd+Space, Cmd+4)
+sketchybar --add item clipboard right \
+           --set clipboard icon=󰅍 \
+                           icon.color=$PRES_GLACIAL \
+                           label.drawing=off \
+                           click_script="$PLUGIN_DIR/clipboard_click.sh"
+
+# Audio Toggle
+sketchybar --add item audio_toggle right \
+           --set audio_toggle update_freq=5 \
+                              drawing=off \
+                              script="$PLUGIN_DIR/audio_toggle.sh" \
+           --subscribe audio_toggle mouse.clicked
+
+# Trash Purger
+sketchybar --add item trash right \
+           --set trash update_freq=60 \
+                       icon=󰩹 \
+                       icon.color=$SPREN_ASH \
+                       label.color=$SPREN_ASH \
+                       drawing=off \
+                       script="$PLUGIN_DIR/trash.sh" \
+                       popup.align=right \
+           --subscribe trash mouse.clicked mouse.exited.global \
+  \
+           --add item trash.status popup.trash \
+           --set trash.status icon=󰩹 label="Trash: 0 MB" \
+  \
+           --add item trash.empty popup.trash \
+           --set trash.empty icon=󰃢 label="Empty Trash Now" click_script="rm -rf ~/.Trash/*; sketchybar --set trash popup.drawing=off --set trash drawing=off"
+
+# Network and System Brackets
+sketchybar --add bracket network.pill control_center bwifi warp net_speed \
+           --set network.pill background.color=$BAR_COLOR \
+                              background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                              background.border_width=1 \
+                              background.corner_radius=10 \
+                              background.drawing=on
+
+sketchybar --add bracket system.pill sysmon battery \
+           --set system.pill background.color=$BAR_COLOR \
+                             background.border_color=$PRES_GLACIAL_TRANSLUCENT \
+                             background.border_width=1 \
+                             background.corner_radius=10 \
+                             background.drawing=on
+
+# Reorder right items logically (first is rightmost)
+#sketchybar --reorder music volume battery bluetooth control_center net_speed runcat sysmon pomodoro cpkb slack github utilities clock
+
+sketchybar --reorder volume volume_icon audio_toggle battery bluetooth control_center net_speed warp bwifi drawer sysmon pomodoro cpkb mic clipboard trash ntfy github utilities clock
+##### Finalize #####
+sketchybar --update
+sketchybar --trigger space_windows_change
+sketchybar --trigger volume_change
+sketchybar --trigger wifi_change
+sketchybar --trigger media_change
+sketchybar --trigger app_switcher_update
+sketchybar --trigger window_focus
+
+# Run scripts once on startup/reload to populate values immediately
+#pkill -f runcat.sh
+#NAME=runcat $PLUGIN_DIR/runcat.sh &

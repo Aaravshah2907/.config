@@ -1,0 +1,41 @@
+#!/bin/bash
+source "$HOME/.local/bin/cosmere_colors.sh"
+
+# CPKB SketchyBar Plugin
+# Handles click events (hover is delegated to hover.sh)
+
+if [ "$SENDER" = "mouse.clicked" ]; then
+  # Prompt user for search term
+  SEARCH_TERM=$(osascript -e 'Tell application "System Events" to display dialog "Search snippets:" default answer ""' -e 'text returned of result' 2>/dev/null)
+  
+  if [ $? -eq 0 ]; then
+    # Query database: search by title, tags, or id. Limit to 5 results for sanity.
+    RESULTS=$(cpkb query "$SEARCH_TERM" --limit 5)
+    
+    if [ -z "$RESULTS" ]; then
+      osascript -e 'display notification "No matching snippet found" with title "CPKB Search"'
+      exit 0
+    fi
+    
+    # Format list for AppleScript
+    AS_LIST=""
+    while read -r line; do
+        if [ -n "$AS_LIST" ]; then
+            AS_LIST="$AS_LIST, "
+        fi
+        line_escaped=$(echo "$line" | sed 's/"/\\"/g')
+        AS_LIST="$AS_LIST\"$line_escaped\""
+    done <<< "$RESULTS"
+    
+    # Show choose from list dialog
+    SELECTION=$(osascript -e "choose from list {$AS_LIST} with prompt \"Select a snippet to copy:\"" 2>/dev/null)
+    
+    if [ "$SELECTION" != "false" ] && [ -n "$SELECTION" ]; then
+      # Extract ID (first word before the '|')
+      SNIPPET_ID=$(echo "$SELECTION" | awk '{print $1}')
+      # Copy to clipboard using the python CLI
+      cpkb copy "$SNIPPET_ID"
+      osascript -e "display notification \"Snippet $SNIPPET_ID copied to clipboard!\" with title \"CPKB\""
+    fi
+  fi
+fi

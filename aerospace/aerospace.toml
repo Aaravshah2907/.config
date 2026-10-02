@@ -41,10 +41,9 @@ default-root-container-orientation = 'auto'
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
-# Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
+# Allow macOS "Hide application" (cmd-h) feature so macOS App Nap can sleep background apps
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
-automatically-unhide-macos-hidden-apps = true
+automatically-unhide-macos-hidden-apps = false
 
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
@@ -73,18 +72,17 @@ persistent-workspaces = [
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 on-mode-changed = []
 
-# Notify Sketchybar about workspace changes
+# Notify Sketchybar about workspace changes (passing both focused and prev workspace to avoid updating all 13 spaces)
 exec-on-workspace-change = [
     '/bin/bash',
     '-c',
-    'if [ "$AEROSPACE_FOCUSED_WORKSPACE" = "1" ]; then sketchybar --bar hidden=on; else sketchybar --bar hidden=off; fi; sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+    'if [ "$AEROSPACE_FOCUSED_WORKSPACE" = "1" ]; then sketchybar --bar hidden=on; else sketchybar --bar hidden=off; fi; sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
 ]
 
-# Notify Sketchybar about window focus changes
+# Notify Sketchybar about window focus changes (single consolidated event)
 on-focus-changed = [
     'move-mouse monitor-lazy-center',
     'exec-and-forget sketchybar --trigger window_focus',
-    'exec-and-forget sketchybar --trigger window_title_change',
 ]
 
 focus-follows-mouse.enabled = true

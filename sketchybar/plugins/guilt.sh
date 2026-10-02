@@ -1,5 +1,7 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+# Battery power helper (caches pmset result for 10s)
+source "$(dirname "$0")/battery_power.sh"
 
 STATE_FILE="/tmp/sketchybar_guilt.state"
 
@@ -22,8 +24,13 @@ is_distracting() {
 if ! is_distracting "$CURRENT_APP"; then
   rm -f "$STATE_FILE"
   sketchybar --set guilt drawing=off
+  # On battery, slow down polling when there's nothing to show
+  on_battery && sketchybar --set guilt update_freq=20
   exit 0
 fi
+
+# Distracting app is focused — restore responsive polling and track time
+on_battery && sketchybar --set guilt update_freq=5
 
 if [ -f "$STATE_FILE" ]; then
   SAVED_DATA=$(cat "$STATE_FILE")

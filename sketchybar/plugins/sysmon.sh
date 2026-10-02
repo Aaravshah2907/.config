@@ -1,5 +1,7 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+# Battery power helper (caches pmset result for 10s)
+source "$(dirname "$0")/battery_power.sh"
 
 # Popup close on global exit (toggle handled by click_script in sketchybarrc)
 if [ "$SENDER" = "mouse.exited.global" ]; then
@@ -7,7 +9,13 @@ if [ "$SENDER" = "mouse.exited.global" ]; then
 fi
 
 if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
-  # Calculate CPU, RAM and Disk usage
+  # On battery, slow polling to 15s to reduce bash fork overhead
+  if on_battery; then
+    sketchybar --set sysmon update_freq=15
+  else
+    sketchybar --set sysmon update_freq=5
+  fi
+
   CORES=$(sysctl -n hw.ncpu)
   CPU_RAW=$(ps -A -o %cpu | awk -v cores="$CORES" '{s+=$1} END {printf("%.1f\n", s/cores)}')
   RAM_RAW=$(memory_pressure | grep "System-wide memory free percentage:" | awk '{ printf("%02.0f\n", 100-$5) }')

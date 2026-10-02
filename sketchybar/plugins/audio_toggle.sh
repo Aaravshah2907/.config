@@ -1,5 +1,7 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+# Battery power helper (caches pmset result for 10s)
+source "$(dirname "$0")/battery_power.sh"
 
 if ! command -v SwitchAudioSource &> /dev/null; then
   if [ -x "/opt/homebrew/bin/SwitchAudioSource" ]; then
@@ -10,6 +12,13 @@ if ! command -v SwitchAudioSource &> /dev/null; then
   fi
 else
   SAS="SwitchAudioSource"
+fi
+
+# Throttle polling on battery — audio device changes are infrequent
+if on_battery; then
+  sketchybar --set $NAME update_freq=30
+else
+  sketchybar --set $NAME update_freq=5
 fi
 
 # Check if any external/real output devices are available 

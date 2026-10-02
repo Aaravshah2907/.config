@@ -1,5 +1,7 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+# Battery power helper (caches pmset result for 10s)
+source "$(dirname "$0")/battery_power.sh"
 
 STATE_FILE="/tmp/sketchybar_mic_volume"
 MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
@@ -47,8 +49,21 @@ else
   if [ -n "$IS_RECORDING" ]; then
     # Mode 1: Active Hardware Recording / In Use (Pulsing Neon Red)
     sketchybar --animate sin 15 --set $NAME icon="󰍬" icon.color=0xffFF3B30 label.drawing=off drawing=on
+    # Always poll quickly when recording so indicator stays responsive
+    sketchybar --set $NAME update_freq=3
   else
     # Mode 2: Unmuted Standby / Armed (Electric Cyan)
     sketchybar --set $NAME icon="󰍬" icon.color=0xff00E5FF label.drawing=off drawing=on
+    # Throttle on battery when just standing by (not actively recording)
+    if on_battery; then
+      sketchybar --set $NAME update_freq=10
+    else
+      sketchybar --set $NAME update_freq=3
+    fi
   fi
+fi
+
+# When muted, also throttle — no need to check recording state every 3s
+if [ "$MIC_VOLUME" -eq 0 ] && on_battery; then
+  sketchybar --set $NAME update_freq=10
 fi

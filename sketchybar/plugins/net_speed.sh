@@ -1,7 +1,16 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+# Battery power helper (caches pmset result for 10s)
+source "$(dirname "$0")/battery_power.sh"
 
 if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
+  # On battery throttle net speed polling — values are in popup which is hidden by default
+  if on_battery; then
+    sketchybar --set net_speed update_freq=10
+  else
+    sketchybar --set net_speed update_freq=2
+  fi
+
   WIFI_INTERFACE=$(networksetup -listallhardwareports | awk '/Hardware Port: Wi-Fi/{getline; print $2}')
   [ -z "$WIFI_INTERFACE" ] && WIFI_INTERFACE="en0"
 

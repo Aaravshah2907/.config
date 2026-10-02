@@ -10,6 +10,13 @@ if [ -f /tmp/aerospace_disabled ]; then
 fi
 
 if [ "$SENDER" = "aerospace_workspace_change" ]; then
+  # Optimization: Only re-render the space being focused and the space being left
+  if [ -n "$FOCUSED_WORKSPACE" ] && [ -n "$PREV_WORKSPACE" ]; then
+    if [ "$SPACE" != "$FOCUSED_WORKSPACE" ] && [ "$SPACE" != "$PREV_WORKSPACE" ]; then
+      exit 0
+    fi
+  fi
+
   if [ "$SPACE" = "$FOCUSED_WORKSPACE" ]; then
     SELECTED="true"
   else

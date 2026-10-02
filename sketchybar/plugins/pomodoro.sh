@@ -1,6 +1,8 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 source "$HOME/.config/shell/functions.sh"
+# Battery power helper (caches result 10s to avoid repeated pmset calls)
+source "$(dirname "$0")/battery_power.sh"
 
 STATE_FILE="/tmp/sketchybar_pomodoro.state"
 
@@ -8,14 +10,14 @@ if [ "$SENDER" = "mouse.clicked" ]; then
   if [ -f "$STATE_FILE" ]; then
     # Cancel timer
     rm "$STATE_FILE"
-    sketchybar --set pomodoro icon=󰔟 icon.color=$SPREN_HONOR label.drawing=off
+    sketchybar --set pomodoro icon=󰔟 icon.color=$SPREN_HONOR label.drawing=off update_freq=1
   else
     # Start timer - Prompt for minutes using AppleScript
     MINS=$(osascript -e 'Tell application "System Events" to display dialog "Enter minutes for Pomodoro:" default answer "25"' -e 'text returned of result' 2>/dev/null)
     if [ -n "$MINS" ]; then
       END_TIME=$(($(date +%s) + MINS * 60))
       echo "$END_TIME" > "$STATE_FILE"
-      sketchybar --set pomodoro icon=󰔟 icon.color=$WARN_COLOR label.drawing=on
+      sketchybar --set pomodoro icon=󰔟 icon.color=$WARN_COLOR label.drawing=on update_freq=1
     fi
   fi
   exit 0
@@ -23,6 +25,8 @@ fi
 
 if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
   if [ -f "$STATE_FILE" ]; then
+    # Timer is active — always run at 1s precision regardless of power source
+    sketchybar --set pomodoro update_freq=1
     END_TIME=$(cat "$STATE_FILE")
     NOW=$(date +%s)
     REMAINING=$((END_TIME - NOW))
@@ -44,12 +48,21 @@ if [ "$SENDER" = "routine" ] || [ "$SENDER" = "forced" ]; then
       done
       
       sketchybar --set pomodoro icon=󰔟 icon.color=$SPREN_HONOR label.drawing=off
+      # No active timer — throttle if on battery
+      on_battery && sketchybar --set pomodoro update_freq=30
     else
-      # Update time
+      # Update time display
       MINUTES=$((REMAINING / 60))
       SECONDS=$((REMAINING % 60))
       FORMATTED=$(printf "%02d:%02d" $MINUTES $SECONDS)
       sketchybar --set pomodoro label="$FORMATTED" label.drawing=on
+    fi
+  else
+    # No active timer — throttle polling to save CPU on battery
+    if on_battery; then
+      sketchybar --set pomodoro update_freq=30
+    else
+      sketchybar --set pomodoro update_freq=1
     fi
   fi
 fi

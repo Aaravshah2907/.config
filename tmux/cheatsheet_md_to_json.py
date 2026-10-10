@@ -59,6 +59,18 @@ PREFIX_MAP = {
     "prefix + ]": "tmux paste-buffer",
     "prefix + #": "tmux list-buffers",
     "prefix + =": "tmux choose-buffer",
+    "prefix + i": "tmux display-message",
+    "prefix + r": "tmux refresh-client",
+    "prefix + 0": "tmux select-window -t :0",
+    "prefix + o": "tmux select-pane -t :.+",
+    "prefix + m": "tmux select-pane -m",
+    "prefix + c-o": "tmux rotate-window",
+    "prefix + m-o": "tmux rotate-window -D",
+    "prefix + m-1": "tmux select-layout even-horizontal",
+    "prefix + m-2": "tmux select-layout even-vertical",
+    "prefix + m-3": "tmux select-layout main-horizontal",
+    "prefix + m-4": "tmux select-layout main-vertical",
+    "prefix + m-5": "tmux select-layout tiled",
 }
 
 
@@ -165,6 +177,9 @@ def executable_for(display: str, action: str) -> str | None:
 
     if raw_display == "Prefix + l":
         return "tmux last-window"
+
+    if raw_display == "Prefix + M":
+        return "tmux select-pane -M"
 
     if key == "prefix + s" and "split horizontally" in action_lower:
         return "tmux split-window -v"

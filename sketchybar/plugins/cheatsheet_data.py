@@ -7,9 +7,9 @@ SECTIONS = [
     ("FOCUS & MOVE",[
         ("⌥ HJKL", "Focus Dir"),
         ("⌥⇧ HJKL", "Move Dir"),
-        ("⌥⌃ HJKL", "Join With Dir"),
-        ("⌥ -/=", "Resize ∓50"),
-        ("⌥ ↩", "iTerm"),
+        ("⌃⌥ HJKL", "Join With Dir"),
+        ("⌥ -/=", "Resize ∓10"),
+        ("⌥ ↩", "Ghostty"),
     ]),
     ("LAYOUT & SIZING",[
         ("⌥ /", "Tiles H/V"),
@@ -19,17 +19,21 @@ SECTIONS = [
         ("⌃⌥ F", "Fullscreen"),
         ("⌃⌥ E", "Balance Sizes"),
     ]),
-    ("WORKSPACES",[
-        ("⌥ 1-9", "Focus Space"),
-        ("⌥ A-Z", "Focus Named"),
-        ("⌥⇧ 1-9", "Move to Space"),
-        ("⌥⇧ A-Z", "Move to Named"),
+    ("WORKSPACES (6)",[
+        ("⌥ 1", "1:  Terminal"),
+        ("⌥ 2", "2:  Code"),
+        ("⌥ 3", "3: 󰖟 Web"),
+        ("⌥ 4", "4:  Chat/AI"),
+        ("⌥ 5", "5: 󰎈 Media"),
+        ("⌥ 6", "6:  Spotify"),
+        ("⌥⇧ 1-6", "Move to Space"),
         ("⌥ Tab", "Back & Forth"),
     ]),
-    ("SYSTEM & MODES",[
-        ("⌃⌥ P/N", "Move Prev/Next WS"),
+    ("MODES & TOOLS",[
+        ("⌥ `", "Scratchpad"),
+        ("⌥ R", "Resize Mode"),
         ("⌥⇧ ;", "Service Mode"),
-        ("⌥ '", "Toggle AeroSpace"),
+        ("⌃⌥ P/N", "Move Prev/Next"),
         ("Svc R", "Reset Layout"),
         ("Svc F", "Float ↔ Tile"),
     ]),

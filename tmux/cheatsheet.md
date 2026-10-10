@@ -44,6 +44,8 @@
 | `Prefix + ?` | Show keybindings / popup cheatsheet |
 | `Prefix + ~` | Show Tmux message and window log history |
 | `Prefix + o` | Visual switcher (**tmux-sessionx** with zoxide integration) |
+| `Prefix + i` | Display window/pane info in status line |
+| `Prefix + r` | Force redraw the attached client |
 
 ---
 
@@ -61,6 +63,7 @@
 | `Prefix + f` | Find / search window by text |
 | `Prefix + .` | Move / renumber window index |
 | `Prefix + '` | Select window by index prompt |
+| `Prefix + 0` | Select window 0 |
 
 ---
 
@@ -80,6 +83,9 @@
 | `Prefix + ↑ / ↓ / ← / →` | Select pane in specified direction |
 | `Prefix + Alt + ↑ / ↓ / ← / →` | Resize active pane in steps of 5 cells |
 | `Prefix + Ctrl + ↑ / ↓ / ← / →` | Resize active pane in steps of 1 cell |
+| `Prefix + o` | Rotate through panes (cycle focus) |
+| `Prefix + m` | Mark the current pane (for swap-pane -s) |
+| `Prefix + M` | Clear the current pane mark |
 
 ---
 
@@ -118,6 +124,19 @@
 | `V` | Begin line selection |
 | `y` / `Enter` | **Yank (copy) selection** and exit copy mode |
 | `q` / `Esc` | Exit copy mode without copying |
+
+---
+
+## 🔧 Miscellaneous & Layout Shortcuts
+| Keybinding | Action |
+| --- | --- |
+| `Prefix + M-1` | Set layout: **even-horizontal** |
+| `Prefix + M-2` | Set layout: **even-vertical** |
+| `Prefix + M-3` | Set layout: **main-horizontal** |
+| `Prefix + M-4` | Set layout: **main-vertical** |
+| `Prefix + M-5` | Set layout: **tiled** |
+| `Prefix + C-o` | **Rotate** panes in current window |
+| `Prefix + M-o` | **Rotate** panes in reverse |
 
 ---
 

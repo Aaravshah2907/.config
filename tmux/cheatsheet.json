@@ -290,8 +290,26 @@
     },
     {
       "name": "📋 Session & Client Management: Prefix + o",
-      "command": "tmux display-popup -E 'tmux-sessionx'",
+      "command": "tmux select-pane -t :.+",
       "description": "Visual switcher (tmux-sessionx with zoxide integration)",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + i",
+      "command": "tmux display-message",
+      "description": "Display window/pane info in status line",
+      "tags": [
+        "session-client-management",
+        "generated"
+      ]
+    },
+    {
+      "name": "📋 Session & Client Management: Prefix + r",
+      "command": "tmux refresh-client",
+      "description": "Force redraw the attached client",
       "tags": [
         "session-client-management",
         "generated"
@@ -391,6 +409,15 @@
       "name": "🪟 Window Management (Tabs): Prefix + '",
       "command": "tmux command-prompt \"select-window -t ':%%'\"",
       "description": "Select window by index prompt",
+      "tags": [
+        "window-management-tabs",
+        "generated"
+      ]
+    },
+    {
+      "name": "🪟 Window Management (Tabs): Prefix + 0",
+      "command": "tmux select-window -t :0",
+      "description": "Select window 0",
       "tags": [
         "window-management-tabs",
         "generated"
@@ -550,6 +577,33 @@
       ]
     },
     {
+      "name": "✂️ Pane Management (Splits): Prefix + o",
+      "command": "tmux select-pane -t :.+",
+      "description": "Rotate through panes (cycle focus)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + m",
+      "command": "tmux select-pane -m",
+      "description": "Mark the current pane (for swap-pane -s)",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
+      "name": "✂️ Pane Management (Splits): Prefix + M",
+      "command": "tmux select-pane -M",
+      "description": "Clear the current pane mark",
+      "tags": [
+        "pane-management-splits",
+        "generated"
+      ]
+    },
+    {
       "name": "📜 Copy Mode & Paste Buffers (Vi Keys): Prefix + [",
       "command": "tmux copy-mode",
       "description": "Enter Copy / Scroll mode",
@@ -591,6 +645,69 @@
       "description": "Delete top paste buffer",
       "tags": [
         "copy-mode-paste-buffers-vi-keys",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + M-1",
+      "command": "tmux select-layout even-horizontal",
+      "description": "Set layout: even-horizontal",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + M-2",
+      "command": "tmux select-layout even-vertical",
+      "description": "Set layout: even-vertical",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + M-3",
+      "command": "tmux select-layout main-horizontal",
+      "description": "Set layout: main-horizontal",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + M-4",
+      "command": "tmux select-layout main-vertical",
+      "description": "Set layout: main-vertical",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + M-5",
+      "command": "tmux select-layout tiled",
+      "description": "Set layout: tiled",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + C-o",
+      "command": "tmux rotate-window",
+      "description": "Rotate panes in current window",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
+        "generated"
+      ]
+    },
+    {
+      "name": "🔧 Miscellaneous & Layout Shortcuts: Prefix + M-o",
+      "command": "tmux rotate-window -D",
+      "description": "Rotate panes in reverse",
+      "tags": [
+        "miscellaneous-layout-shortcuts",
         "generated"
       ]
     },

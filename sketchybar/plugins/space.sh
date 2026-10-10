@@ -3,8 +3,8 @@ source "$HOME/.local/bin/cosmere_colors.sh"
 
 SPACE="${NAME#space.}"
 
-# Bail out if Dinky is disabled
-if [ -f /tmp/dinky_disabled ]; then
+# Bail out if AeroSpace is disabled (exam mode)
+if [ -f /tmp/aerospace_disabled ]; then
   sketchybar --set "space.$SPACE" drawing=off
   exit 0
 fi
@@ -12,27 +12,23 @@ fi
 # Handle mouse scrolling across spaces
 if [ "$SENDER" = "mouse.scrolled" ]; then
   if [ "$SCROLL_DELTA" -gt 0 ]; then
-    dinky workspace next 2>/dev/null
+    aerospace workspace next 2>/dev/null
   else
-    dinky workspace prev 2>/dev/null
+    aerospace workspace prev 2>/dev/null
   fi
   exit 0
 fi
 
-# Resolve Focused Workspace
-FW="${FOCUSED_WORKSPACE:-$DINKY_WORKSPACE}"
-PW="${PREV_WORKSPACE:-$DINKY_PREV_WORKSPACE}"
-
-if [ -n "$FW" ]; then
-  if [ "$SENDER" = "dinky_workspace_change" ] || [ "$SENDER" = "aerospace_workspace_change" ]; then
-    if [ -n "$PW" ] && [ "$SPACE" != "$FW" ] && [ "$SPACE" != "$PW" ]; then
+# Identify Focused Workspace
+if [ "$SENDER" = "aerospace_workspace_change" ]; then
+  if [ -n "$FOCUSED_WORKSPACE" ] && [ -n "$PREV_WORKSPACE" ]; then
+    if [ "$SPACE" != "$FOCUSED_WORKSPACE" ] && [ "$SPACE" != "$PREV_WORKSPACE" ]; then
       exit 0
     fi
   fi
-  SELECTED="$([ "$SPACE" = "$FW" ] && echo "true" || echo "false")"
+  SELECTED="$([ "$SPACE" = "$FOCUSED_WORKSPACE" ] && echo "true" || echo "false")"
 else
-  CURRENT_WORKSPACE=$(dinky list-workspaces --focused 2>/dev/null)
-  [ -z "$CURRENT_WORKSPACE" ] && CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
+  CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
   SELECTED="$([ "$SPACE" = "$CURRENT_WORKSPACE" ] && echo "true" || echo "false")"
 fi
 
@@ -44,24 +40,10 @@ IDX=$((SPACE - 1))
 GLYPH="${SPACE_GLYPHS[$IDX]:-$SPACE}"
 SPACE_COLOR="${SPACE_COLORS[$IDX]:-$SPACE_ACCENT}"
 
-# Query Window Count (filtering out menu bar helpers & floating windows with empty title)
-RAW_DATA=$(dinky list-windows --workspace "$SPACE" --format '%{app-name}|%{window-is-floating}|%{window-title}' 2>/dev/null)
+# Query Window Count (filtering out menu bar helpers)
+RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter|Control Center|Raycast|Stats|CleanShot X|Dropover|Ice|Bartender|Hidden Bar|Tuna|Leader-Key|Shortcut Hub")
 
-ACTIVE_APPS=$(echo "$RAW_DATA" | while IFS='|' read -r APP IS_FLOAT TITLE; do
-  [ -z "$APP" ] && continue
-  case "$APP" in
-    "Google Drive"|"LocalSend"|"ControlCenter"|"Control Center"|"Raycast"|"Stats"|"CleanShot X"|"Dropover"|"Ice"|"Bartender"|"Hidden Bar"|"Tuna"|"Leader-Key"|"Shortcut Hub")
-      continue
-      ;;
-  esac
-  # Exclude floating windows with empty titles (invisible menu bar anchor windows)
-  if [ "$IS_FLOAT" = "true" ] && [ -z "$TITLE" ]; then
-    continue
-  fi
-  echo "$APP"
-done)
-
-WINDOW_COUNT=$(echo "$ACTIVE_APPS" | grep -v '^$' | wc -l | tr -d ' ')
+WINDOW_COUNT=$(echo "$RAW_APPS" | grep -v '^$' | wc -l | tr -d ' ')
 [ -z "$WINDOW_COUNT" ] && WINDOW_COUNT=0
 
 # Render based on Selection and Window Count

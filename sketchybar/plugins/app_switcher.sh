@@ -2,43 +2,26 @@
 source "$HOME/.local/bin/cosmere_colors.sh"
 source "$HOME/.config/sketchybar/plugins/icon_map.sh"
 
-# Bail out if Dinky / tiling is disabled
-if [ -f /tmp/dinky_disabled ] || [ -f /tmp/aerospace_disabled ]; then
+# Bail out if AeroSpace is disabled (exam mode)
+if [ -f /tmp/aerospace_disabled ]; then
   sketchybar --remove '/app\.switcher\..*/' 2>/dev/null
   exit 0
 fi
 
 # Query running apps on the focused space, filtering menu bar daemons
-RAW_DATA=$(dinky list-windows --workspace focused --format '%{app-name}|%{window-is-floating}|%{window-title}' 2>/dev/null)
-if [ -z "$RAW_DATA" ]; then
-  RAW_DATA=$(dinky list-windows --format '%{app-name}|%{window-is-floating}|%{window-title}' 2>/dev/null)
-fi
+RAW_DATA=$(aerospace list-windows --workspace focused --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter|Control Center|Raycast|Stats|CleanShot X|Dropover|Ice|Bartender|Hidden Bar|Tuna|Leader-Key|Shortcut Hub")
 
-ACTIVE_APPS=$(echo "$RAW_DATA" | while IFS='|' read -r APP IS_FLOAT TITLE; do
-  [ -z "$APP" ] && continue
-  case "$APP" in
-    "Google Drive"|"LocalSend"|"ControlCenter"|"Control Center"|"Raycast"|"Stats"|"CleanShot X"|"Dropover"|"Ice"|"Bartender"|"Hidden Bar"|"Tuna"|"Leader-Key"|"Shortcut Hub")
-      continue
-      ;;
-  esac
-  if [ "$IS_FLOAT" = "true" ] && [ -z "$TITLE" ]; then
-    continue
-  fi
-  echo "$APP"
-done)
-
-FOCUSED_RAW=$(dinky list-windows --focused --format '%{app-name}' 2>/dev/null)
-FOCUSED_APP=$(echo "$FOCUSED_RAW" | awk NF | head -n 1)
+FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
 
 # Clean up all existing app switcher items
 sketchybar --remove '/app\.switcher\..*/'
 
-if [ -z "$ACTIVE_APPS" ]; then
+if [ -z "$RAW_DATA" ]; then
   exit 0
 fi
 
 # Parse unique apps preserving order
-UNIQUE_APPS=$(echo "$ACTIVE_APPS" | awk '!seen[$0]++')
+UNIQUE_APPS=$(echo "$RAW_DATA" | grep -v '^$' | awk '!seen[$0]++')
 
 ADD_CMD=()
 

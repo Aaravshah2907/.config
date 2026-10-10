@@ -15,17 +15,15 @@ if [ "$SENDER" = "mouse.clicked" ]; then
     # Restore spaces + app switcher
     sketchybar --set spaces.pill drawing=on \
                --set app_switcher_sep drawing=on
-    AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all 2>/dev/null)
-    for sid in $AEROSPACE_WORKSPACES; do
+    for sid in 1 2 3 4 5 6; do
       sketchybar --set "space.$sid" drawing=on
     done
     # Trigger updates to redraw spaces + apps
     sketchybar --trigger aerospace_workspace_change
     sketchybar --trigger app_switcher_update
+    sketchybar --trigger space_windows_change
     # Restore layout indicators
-    sketchybar --set aero_root_layout drawing=on \
-               --set aero_cont_layout drawing=on
-    sketchybar --trigger aerospace_layout_change
+    sketchybar --set aero_root_layout drawing=on
   else
     # Currently enabled → disable
     touch "$STATE_FILE"
@@ -34,8 +32,7 @@ if [ "$SENDER" = "mouse.clicked" ]; then
       --set aero_toggle icon=󱂬 \
                         icon.color=$SPREN_ASH
     # Hide spaces + app switcher
-    AEROSPACE_WORKSPACES="T C B M V S E A 1 2 3 4"
-    for sid in $AEROSPACE_WORKSPACES; do
+    for sid in 1 2 3 4 5 6; do
       sketchybar --set "space.$sid" drawing=off 2>/dev/null
     done
     sketchybar --set spaces.pill drawing=off
@@ -43,8 +40,7 @@ if [ "$SENDER" = "mouse.clicked" ]; then
     # Remove app switcher icons
     sketchybar --remove '/app\.switcher\..*/' 2>/dev/null
     # Hide layout indicators
-    sketchybar --set aero_root_layout drawing=off \
-               --set aero_cont_layout drawing=off
+    sketchybar --set aero_root_layout drawing=off
   fi
   exit 0
 fi
@@ -53,11 +49,9 @@ fi
 if [ -f "$STATE_FILE" ]; then
   sketchybar --set aero_toggle icon=󱂬 \
                       icon.color=$SPREN_ASH
-  sketchybar --set aero_root_layout drawing=off \
-             --set aero_cont_layout drawing=off
+  sketchybar --set aero_root_layout drawing=off
 else
   sketchybar --set aero_toggle icon=󱂬 \
                       icon.color=$SPREN_HONOR
-  sketchybar --set aero_root_layout drawing=on \
-             --set aero_cont_layout drawing=on
+  sketchybar --set aero_root_layout drawing=on
 fi

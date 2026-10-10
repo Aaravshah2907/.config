@@ -1,101 +1,113 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
+source "$HOME/.config/sketchybar/plugins/icon_map.sh"
 
 SPACE="${NAME#space.}"
 
-# Bail out if AeroSpace is disabled (exam mode)
-if [ -f /tmp/aerospace_disabled ]; then
+# Bail out if Dinky is disabled
+if [ -f /tmp/dinky_disabled ]; then
   sketchybar --set "space.$SPACE" drawing=off
   exit 0
 fi
 
-if [ "$SENDER" = "aerospace_workspace_change" ]; then
-  # Optimization: Only re-render the space being focused and the space being left
+# Handle mouse scrolling across spaces
+if [ "$SENDER" = "mouse.scrolled" ]; then
+  if [ "$SCROLL_DELTA" -gt 0 ]; then
+    dinky workspace next 2>/dev/null
+  else
+    dinky workspace prev 2>/dev/null
+  fi
+  exit 0
+fi
+
+# Identify Focused Workspace
+if [ "$SENDER" = "dinky_workspace_change" ] || [ "$SENDER" = "aerospace_workspace_change" ]; then
   if [ -n "$FOCUSED_WORKSPACE" ] && [ -n "$PREV_WORKSPACE" ]; then
     if [ "$SPACE" != "$FOCUSED_WORKSPACE" ] && [ "$SPACE" != "$PREV_WORKSPACE" ]; then
       exit 0
     fi
   fi
-
-  if [ "$SPACE" = "$FOCUSED_WORKSPACE" ]; then
-    SELECTED="true"
-  else
-    SELECTED="false"
-  fi
+  SELECTED="$([ "$SPACE" = "$FOCUSED_WORKSPACE" ] && echo "true" || echo "false")"
 else
-  if [ -z "$SELECTED" ]; then
-    CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
-    if [ "$SPACE" = "$CURRENT_WORKSPACE" ]; then
-      SELECTED="true"
-    else
-      SELECTED="false"
-    fi
-  fi
+  CURRENT_WORKSPACE=$(dinky list-workspaces 2>/dev/null | grep '\*' | awk '{print $1}')
+  [ -z "$CURRENT_WORKSPACE" ] && CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
+  SELECTED="$([ "$SPACE" = "$CURRENT_WORKSPACE" ] && echo "true" || echo "false")"
 fi
 
-# Define Space Colors
+# Spren Colors mapped to Spaces 1-6
 case "$SPACE" in
-  1|T) SPACE_COLOR=$SPREN_HONOR;;
-  2|C) SPACE_COLOR=$SPREN_INK;;
-  3|B) SPACE_COLOR=$SPREN_CULTIVATION;;
-  4|M) SPACE_COLOR=$SPREN_SIBLING;;
-  5|V) SPACE_COLOR=$SPREN_ASH;;
-  6|S) SPACE_COLOR=$SPREN_PEAK;;
-  7|E) SPACE_COLOR=$SPREN_WILL;;
-  8|A) SPACE_COLOR=$SPREN_CRYPTIC;;
-  *)   SPACE_COLOR=$SPACE_ACCENT;;
+  1) SPACE_COLOR=$SPREN_HONOR;;
+  2) SPACE_COLOR=$SPREN_INK;;
+  3) SPACE_COLOR=$SPREN_CULTIVATION;;
+  4) SPACE_COLOR=$SPREN_SIBLING;;
+  5) SPACE_COLOR=$SPREN_ASH;;
+  6) SPACE_COLOR=$SPREN_PEAK;;
+  *) SPACE_COLOR=$SPACE_ACCENT;;
 esac
 
-SPACE_LABELS=("Terminal" "Code" "Browser" "Chat" "Media" "Spotify" "Study" "AI" "Preview")
-SPACE_SIDS=("T" "C" "B" "M" "V" "S" "E" "A" "P")
+SPACE_NAMES=("Terminal" "Code" "Web" "Chat & AI" "Media & Docs" "Spotify")
+IDX=$((SPACE - 1))
+NAME_LABEL="${SPACE_NAMES[$IDX]:-$SPACE}"
 
-IDX=-1
-for i in "${!SPACE_SIDS[@]}"; do
-  if [ "${SPACE_SIDS[$i]}" = "$SPACE" ]; then
-    IDX=$i
-    break
-  fi
-done
-
-if [ $IDX -ne -1 ]; then
-  SPACE_NAME="${SPACE_LABELS[$IDX]}"
-else
-  SPACE_NAME="$SPACE"
+# Query Windows on this Workspace
+RAW_WINDOWS=$(dinky list-windows --workspace "$SPACE" 2>/dev/null)
+if [ -z "$RAW_WINDOWS" ] && command -v aerospace >/dev/null 2>&1; then
+  RAW_WINDOWS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null)
 fi
 
-# Check if space is occupied
-WINDOW_COUNT=$(aerospace list-windows --workspace "$SPACE" --count 2>/dev/null || echo 0)
+FOCUSED_APP=$(dinky list-windows --focused 2>/dev/null | awk -F' \\| ' '{print $2}')
+[ -z "$FOCUSED_APP" ] && command -v aerospace >/dev/null 2>&1 && FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
 
-if [ "$SENDER" = "mouse.scrolled" ]; then
-  if [ "$SCROLL_DELTA" -gt 0 ]; then
-    aerospace workspace next
+if [ -z "$RAW_WINDOWS" ]; then
+  # Empty Workspace: Subtle Space indicator
+  if [ "$SELECTED" = "true" ]; then
+    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
+      icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
+      label="$NAME_LABEL" label.drawing=on label.font="JetBrainsMono Nerd Font:Bold:12.0" label.color=$BAR_COLOR \
+      background.drawing=on background.color=$SPACE_COLOR background.corner_radius=8 \
+      padding_left=4 padding_right=4 icon.padding_left=6 icon.padding_right=4 label.padding_right=8
   else
-    aerospace workspace prev
+    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
+      icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Regular:12.0" icon.color=0x66607D8B \
+      label.drawing=off \
+      background.drawing=off \
+      padding_left=4 padding_right=4 icon.padding_left=4 icon.padding_right=4
   fi
   exit 0
 fi
 
-# Zen Dots Logic with Window Counter
+# Extract Unique App Names
+APPS=$(echo "$RAW_WINDOWS" | awk -F' \\| ' '{print $2}' | awk NF | awk '!seen[$0]++')
+[ -z "$APPS" ] && APPS=$(echo "$RAW_WINDOWS" | awk '!seen[$0]++')
+
+# Build App Icon Strip
+ICON_STRIP=""
+WINDOW_COUNT=0
+while read -r APP; do
+  [ -z "$APP" ] && continue
+  WINDOW_COUNT=$((WINDOW_COUNT + 1))
+  __icon_map_custom "$APP" || __icon_map "$APP"
+  ICON="$icon_result"
+  [ -z "$ICON" ] && ICON=":default:"
+  ICON_STRIP+="$ICON "
+done <<< "$APPS"
+
+ICON_STRIP=$(echo "$ICON_STRIP" | sed 's/ *$//')
+
+# Render Workspace Pill with App Icons
 if [ "$SELECTED" = "true" ]; then
-  # Selected space: Expand into pill showing label and open window count
-  DISPLAY_LABEL="$SPACE_NAME"
-  if [ "$WINDOW_COUNT" -gt 0 ] 2>/dev/null; then
-    DISPLAY_LABEL="$SPACE_NAME ($WINDOW_COUNT)"
-  fi
+  DISPLAY_LABEL="$ICON_STRIP"
+  [ -n "$NAME_LABEL" ] && DISPLAY_LABEL="$NAME_LABEL $ICON_STRIP"
+  
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon=" " \
-    label="$DISPLAY_LABEL" label.drawing=on \
-    label.color=$BAR_COLOR \
-    background.drawing=on background.color=$SPACE_COLOR background.border_width=0 background.corner_radius=8 \
-    padding_left=4 padding_right=4 label.padding_right=8
-elif [ "$WINDOW_COUNT" -gt 0 ] 2>/dev/null; then
-  # Occupied but Unselected space: Bright dot
-  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="•" icon.color=$SPACE_COLOR \
-    label.drawing=off \
-    background.drawing=off \
-    padding_left=4 padding_right=4
+    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
+    label="$DISPLAY_LABEL" label.drawing=on label.font="sketchybar-app-font:Regular:13.0" label.color=$BAR_COLOR \
+    background.drawing=on background.color=$SPACE_COLOR background.corner_radius=8 \
+    padding_left=4 padding_right=4 icon.padding_left=6 icon.padding_right=4 label.padding_right=8
 else
-  # Empty & Unselected space: Hide completely
-  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=off
+  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
+    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$SPACE_COLOR \
+    label="$ICON_STRIP" label.drawing=on label.font="sketchybar-app-font:Regular:13.0" label.color=$WHITE \
+    background.drawing=on background.color=$PRES_DEEP_TRANSLUCENT background.corner_radius=6 \
+    padding_left=4 padding_right=4 icon.padding_left=4 icon.padding_right=4 label.padding_right=6
 fi

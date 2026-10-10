@@ -2,8 +2,14 @@
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-TITLE=$(aerospace list-windows --focused --format '%{window-title}' 2>/dev/null)
-APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
+FOCUSED_RAW=$(dinky list-windows --focused 2>/dev/null)
+if [ -n "$FOCUSED_RAW" ]; then
+  APP=$(echo "$FOCUSED_RAW" | awk -F' \\| ' '{print $2}')
+  TITLE=$(echo "$FOCUSED_RAW" | awk -F' \\| ' '{print $3}')
+else
+  TITLE=$(aerospace list-windows --focused --format '%{window-title}' 2>/dev/null)
+  APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
+fi
 
 if [ -z "$APP" ] && [ -z "$TITLE" ]; then
   # No active window focused or desktop is selected

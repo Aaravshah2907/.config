@@ -1,6 +1,7 @@
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 rm -f /tmp/bluetooth_pinned
+rm -f /tmp/dinky_disabled
 rm -f /tmp/aerospace_disabled
 
 # Custom Events for event-driven updates
@@ -8,6 +9,10 @@ sketchybar --add event window_focus \
            --add event window_title_change \
            --add event space_change \
            --add event app_switcher_update \
+           --add event dinky_workspace_change \
+           --add event dinky_layout_change \
+           --add event dinky_mode_changed \
+           --add event space_windows_change \
            --add event aerospace_workspace_change \
            --add event aerospace_layout_change
 
@@ -133,63 +138,50 @@ sketchybar --add item apple left \
                    background.drawing=on
 
 
-# AeroSpace Toggle (Exam Mode)
-sketchybar --add item aero_toggle left \
-           --set aero_toggle icon=󱂬 \
-                             icon.color=$SPREN_HONOR \
-                             icon.font="Hack Nerd Font:Bold:18.0" \
-                             label.drawing=off \
-                             padding_left=6 \
-                             padding_right=2 \
-                             script="$PLUGIN_DIR/aerospace_toggle.sh" \
-           --subscribe aero_toggle mouse.clicked
+# Window Manager Toggle (Exam Mode)
+sketchybar --add item wm_toggle left \
+           --set wm_toggle icon=󱂬 \
+                           icon.color=$SPREN_HONOR \
+                           icon.font="Hack Nerd Font:Bold:18.0" \
+                           label.drawing=off \
+                           padding_left=6 \
+                           padding_right=2 \
+                           script="$PLUGIN_DIR/dinky_toggle.sh" \
+           --subscribe wm_toggle mouse.clicked
 
-# AeroSpace Layout Status
-sketchybar --add item aero_root_layout left \
-           --set aero_root_layout icon=󰒡 \
-                                  icon.font="Hack Nerd Font:Bold:14.0" \
-                                  label.drawing=off \
-                                  padding_left=2 \
-                                  padding_right=2 \
-                                  popup.align=left \
-                                  script="$PLUGIN_DIR/aerospace_layout.sh" \
-           --subscribe aero_root_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked mouse.exited.global \
+# Dinky Layout Controls
+sketchybar --add item wm_layout left \
+           --set wm_layout icon=󰒡 \
+                           icon.font="Hack Nerd Font:Bold:14.0" \
+                           label.drawing=off \
+                           padding_left=2 \
+                           padding_right=4 \
+                           popup.align=left \
+                           script="$PLUGIN_DIR/dinky_layout.sh" \
+           --subscribe wm_layout dinky_layout_change dinky_workspace_change aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked mouse.exited.global \
   \
-           --add item aero_layout.header popup.aero_root_layout \
-           --set aero_layout.header icon=󰒡 label="LAYOUT CONTROLS" label.font="JetBrainsMono Nerd Font:Bold:13.0" label.color=$HONOR_GOLD icon.color=$HONOR_GOLD \
+           --add item wm_layout.header popup.wm_layout \
+           --set wm_layout.header icon=󰒡 label="LAYOUT CONTROLS" label.font="JetBrainsMono Nerd Font:Bold:13.0" label.color=$HONOR_GOLD icon.color=$HONOR_GOLD \
   \
-           --add item aero_layout.horiz popup.aero_root_layout \
-           --set aero_layout.horiz icon=󰒡 label="Horizontal Split (Ctrl+Alt+B)" click_script="aerospace layout horizontal; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+           --add item wm_layout.tiles popup.wm_layout \
+           --set wm_layout.tiles icon=󰒡 label="Tiles Layout (Alt+/)" click_script="dinky layout tiles; sketchybar --set wm_layout popup.drawing=off --trigger dinky_layout_change" \
   \
-           --add item aero_layout.vert popup.aero_root_layout \
-           --set aero_layout.vert icon=󰕰 label="Vertical Split (Ctrl+Alt+V)" click_script="aerospace layout vertical; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
+           --add item wm_layout.accordion popup.wm_layout \
+           --set wm_layout.accordion icon=󰓩 label="Accordion Layout (Alt+,)" click_script="dinky layout accordion; sketchybar --set wm_layout popup.drawing=off --trigger dinky_layout_change" \
   \
-           --add item aero_layout.accordion popup.aero_root_layout \
-           --set aero_layout.accordion icon=󰓩 label="Toggle Accordion (Alt+.)" click_script="aerospace layout tiles accordion; sketchybar --set aero_root_layout popup.drawing=off --trigger aerospace_layout_change" \
-  \
-           --add item aero_layout.balance popup.aero_root_layout \
-           --set aero_layout.balance icon=󰓢 label="Balance Window Sizes (Ctrl+Alt+E)" click_script="aerospace balance-sizes; sketchybar --set aero_root_layout popup.drawing=off" \
-  \
-           --add item aero_cont_layout left \
-           --set aero_cont_layout icon=󰕰 \
-                                  icon.font="Hack Nerd Font:Bold:14.0" \
-                                  label.drawing=off \
-                                  padding_left=2 \
-                                  padding_right=6 \
-                                  script="$PLUGIN_DIR/aerospace_layout.sh" \
-           --subscribe aero_cont_layout aerospace_layout_change aerospace_workspace_change window_focus mouse.clicked
+           --add item wm_layout.balance popup.wm_layout \
+           --set wm_layout.balance icon=󰓢 label="Balance Window Sizes (Ctrl+Alt+E)" click_script="dinky balance-sizes; sketchybar --set wm_layout popup.drawing=off"
 
-# Spaces
-AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all)
-for sid in $AEROSPACE_WORKSPACES; do
+# Workspaces (Spaces 1 through 6)
+for sid in 1 2 3 4 5 6; do
   sketchybar --add item space.$sid left \
-             --subscribe space.$sid aerospace_workspace_change \
+             --subscribe space.$sid dinky_workspace_change aerospace_workspace_change space_windows_change window_focus mouse.scrolled \
              --set space.$sid \
                    background.drawing=off \
                    label.drawing=off \
                    icon.drawing=off \
-                   script="$PLUGIN_DIR/space.sh $sid" \
-                   click_script="aerospace workspace $sid"
+                   script="$PLUGIN_DIR/space.sh" \
+                   click_script="dinky workspace $sid"
 done
 
 sketchybar --add bracket spaces.pill "/space\..*/" \
@@ -214,7 +206,7 @@ sketchybar --add item app_switcher_sep left \
            --add item app_switcher_trigger left \
            --set app_switcher_trigger drawing=off \
                                       script="$PLUGIN_DIR/app_switcher.sh" \
-           --subscribe app_switcher_trigger app_switcher_update aerospace_workspace_change front_app_switched
+           --subscribe app_switcher_trigger app_switcher_update dinky_workspace_change aerospace_workspace_change front_app_switched window_focus space_windows_change
 
 # Optional Yabai Space Layout Status Item (uncomment to enable)
 # source "$CONFIG_DIR/yabai_status_item.sh"

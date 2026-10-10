@@ -1,15 +1,22 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
 
-# Bail out if AeroSpace is disabled (exam mode)
-if [ -f /tmp/aerospace_disabled ]; then
+# Bail out if Dinky / tiling is disabled
+if [ -f /tmp/dinky_disabled ] || [ -f /tmp/aerospace_disabled ]; then
   sketchybar --remove '/app\.switcher\..*/' 2>/dev/null
   exit 0
 fi
 
-# Query the running apps
-APPS_IN_SPACE=$(aerospace list-windows --workspace focused --format '%{app-name}' 2>/dev/null)
-FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
+# Query the running apps on focused workspace
+APPS_IN_SPACE=$(dinky list-windows 2>/dev/null | awk -F' \\| ' '{print $2}')
+if [ -z "$APPS_IN_SPACE" ] && command -v aerospace >/dev/null 2>&1; then
+  APPS_IN_SPACE=$(aerospace list-windows --workspace focused --format '%{app-name}' 2>/dev/null)
+fi
+
+FOCUSED_APP=$(dinky list-windows --focused 2>/dev/null | awk -F' \\| ' '{print $2}')
+if [ -z "$FOCUSED_APP" ] && command -v aerospace >/dev/null 2>&1; then
+  FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
+fi
 
 # Clean up all existing app switcher items
 sketchybar --remove '/app\.switcher\..*/'
@@ -19,7 +26,7 @@ if [ -z "$APPS_IN_SPACE" ]; then
 fi
 
 # Parse unique apps preserving order
-UNIQUE_APPS=$(echo "$APPS_IN_SPACE" | awk '!seen[$0]++')
+UNIQUE_APPS=$(echo "$APPS_IN_SPACE" | awk NF | awk '!seen[$0]++')
 
 # Source the icon map once
 source "$HOME/.config/sketchybar/plugins/icon_map.sh"

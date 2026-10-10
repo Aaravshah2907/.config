@@ -51,33 +51,29 @@ RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>
 WINDOW_COUNT=$(echo "$RAW_APPS" | grep -v '^$' | wc -l | tr -d ' ')
 [ -z "$WINDOW_COUNT" ] && WINDOW_COUNT=0
 
+# Format: <window_number> <window_icon> (<number_of_apps_opened>)
+DISPLAY_TEXT="$GLYPH ($WINDOW_COUNT)"
+
 # Render based on Selection and Window Count
 if [ "$SELECTED" = "true" ]; then
-  # Selected space: Focused Pill with Icon + Count
-  if [ "$WINDOW_COUNT" -gt 0 ]; then
-    DISPLAY_LABEL="($WINDOW_COUNT)"
-  else
-    DISPLAY_LABEL=""
-  fi
-  
+  # Selected space: Focused Pill with Number + Icon + Count
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Bold:14.0" icon.color=$BAR_COLOR \
-    label="$DISPLAY_LABEL" label.drawing="$([ -n "$DISPLAY_LABEL" ] && echo "on" || echo "off")" \
-    label.font="JetBrainsMono Nerd Font:Bold:11.0" label.color=$BAR_COLOR \
+    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
+    label="$DISPLAY_TEXT" label.drawing=on label.font="Hack Nerd Font:Bold:12.0" label.color=$BAR_COLOR \
     background.drawing=on background.color=$SPACE_COLOR background.corner_radius=8 \
-    padding_left=3 padding_right=3 icon.padding_left=6 icon.padding_right=4 label.padding_right=6
+    padding_left=3 padding_right=3 icon.padding_left=6 icon.padding_right=2 label.padding_right=6
 elif [ "$WINDOW_COUNT" -gt 0 ]; then
-  # Occupied but Unselected space: Colored Icon with (N) count
+  # Occupied but Unselected space: Colored Number + Icon + Count
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Bold:14.0" icon.color=$SPACE_COLOR \
-    label="($WINDOW_COUNT)" label.drawing=on label.font="JetBrainsMono Nerd Font:Regular:11.0" label.color=$SPACE_COLOR \
+    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$SPACE_COLOR \
+    label="$DISPLAY_TEXT" label.drawing=on label.font="Hack Nerd Font:Regular:12.0" label.color=$SPACE_COLOR \
     background.drawing=on background.color=$PRES_DEEP_TRANSLUCENT background.corner_radius=6 \
     padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=2 label.padding_right=4
 else
-  # Empty & Unselected space: Subtle ghosted icon
+  # Empty & Unselected space: Subtle ghosted Number + Icon + (0)
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Regular:13.0" icon.color=0x44607D8B \
-    label.drawing=off \
+    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Regular:12.0" icon.color=0x66607D8B \
+    label="$DISPLAY_TEXT" label.drawing=on label.font="Hack Nerd Font:Regular:12.0" label.color=0x66607D8B \
     background.drawing=off \
-    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=4
+    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=2 label.padding_right=4
 fi

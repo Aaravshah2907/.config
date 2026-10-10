@@ -40,6 +40,11 @@ IDX=$((SPACE - 1))
 GLYPH="${SPACE_GLYPHS[$IDX]:-$SPACE}"
 SPACE_COLOR="${SPACE_COLORS[$IDX]:-$SPACE_ACCENT}"
 
+# Sync Active Border Color with Active Space Spren Color
+if [ "$SELECTED" = "true" ] && [ ! -f /tmp/battery_saver_active ]; then
+  /Users/aaravshah2975/.local/bin/borders active_color="$SPACE_COLOR" 2>/dev/null &
+fi
+
 # Query Window Count (filtering out menu bar helpers)
 RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter|Control Center|Raycast|Stats|CleanShot X|Dropover|Ice|Bartender|Hidden Bar|Tuna|Leader-Key|Shortcut Hub")
 

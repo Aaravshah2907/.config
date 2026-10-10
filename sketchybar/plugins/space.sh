@@ -41,13 +41,24 @@ IDX=$((SPACE - 1))
 GLYPH="${SPACE_GLYPHS[$IDX]:-$SPACE}"
 SPACE_COLOR="${SPACE_COLORS[$IDX]:-$SPACE_ACCENT}"
 
-# Query Window Count (filtering out background daemons)
-RAW_APPS=$(dinky list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter" | awk NF)
-if [ -z "$RAW_APPS" ] && command -v aerospace >/dev/null 2>&1; then
-  RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter" | awk NF)
-fi
+# Query Window Count (filtering out menu bar helpers & floating windows with empty title)
+RAW_DATA=$(dinky list-windows --workspace "$SPACE" --format '%{app-name}|%{window-is-floating}|%{window-title}' 2>/dev/null)
 
-WINDOW_COUNT=$(echo "$RAW_APPS" | grep -v '^$' | wc -l | tr -d ' ')
+ACTIVE_APPS=$(echo "$RAW_DATA" | while IFS='|' read -r APP IS_FLOAT TITLE; do
+  [ -z "$APP" ] && continue
+  case "$APP" in
+    "Google Drive"|"LocalSend"|"ControlCenter"|"Control Center"|"Raycast"|"Stats"|"CleanShot X"|"Dropover"|"Ice"|"Bartender"|"Hidden Bar"|"Tuna"|"Leader-Key"|"Shortcut Hub")
+      continue
+      ;;
+  esac
+  # Exclude floating windows with empty titles (invisible menu bar anchor windows)
+  if [ "$IS_FLOAT" = "true" ] && [ -z "$TITLE" ]; then
+    continue
+  fi
+  echo "$APP"
+done)
+
+WINDOW_COUNT=$(echo "$ACTIVE_APPS" | grep -v '^$' | wc -l | tr -d ' ')
 [ -z "$WINDOW_COUNT" ] && WINDOW_COUNT=0
 
 # Render based on Selection and Window Count

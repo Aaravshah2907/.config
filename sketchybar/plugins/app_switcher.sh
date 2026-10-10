@@ -8,11 +8,24 @@ if [ -f /tmp/dinky_disabled ] || [ -f /tmp/aerospace_disabled ]; then
   exit 0
 fi
 
-# Query running apps on the focused space
-RAW_APPS=$(dinky list-windows --workspace focused --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter" | awk NF)
-if [ -z "$RAW_APPS" ]; then
-  RAW_APPS=$(dinky list-windows --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter" | awk NF)
+# Query running apps on the focused space, filtering menu bar daemons
+RAW_DATA=$(dinky list-windows --workspace focused --format '%{app-name}|%{window-is-floating}|%{window-title}' 2>/dev/null)
+if [ -z "$RAW_DATA" ]; then
+  RAW_DATA=$(dinky list-windows --format '%{app-name}|%{window-is-floating}|%{window-title}' 2>/dev/null)
 fi
+
+ACTIVE_APPS=$(echo "$RAW_DATA" | while IFS='|' read -r APP IS_FLOAT TITLE; do
+  [ -z "$APP" ] && continue
+  case "$APP" in
+    "Google Drive"|"LocalSend"|"ControlCenter"|"Control Center"|"Raycast"|"Stats"|"CleanShot X"|"Dropover"|"Ice"|"Bartender"|"Hidden Bar"|"Tuna"|"Leader-Key"|"Shortcut Hub")
+      continue
+      ;;
+  esac
+  if [ "$IS_FLOAT" = "true" ] && [ -z "$TITLE" ]; then
+    continue
+  fi
+  echo "$APP"
+done)
 
 FOCUSED_RAW=$(dinky list-windows --focused --format '%{app-name}' 2>/dev/null)
 FOCUSED_APP=$(echo "$FOCUSED_RAW" | awk NF | head -n 1)
@@ -20,12 +33,12 @@ FOCUSED_APP=$(echo "$FOCUSED_RAW" | awk NF | head -n 1)
 # Clean up all existing app switcher items
 sketchybar --remove '/app\.switcher\..*/'
 
-if [ -z "$RAW_APPS" ]; then
+if [ -z "$ACTIVE_APPS" ]; then
   exit 0
 fi
 
 # Parse unique apps preserving order
-UNIQUE_APPS=$(echo "$RAW_APPS" | awk '!seen[$0]++')
+UNIQUE_APPS=$(echo "$ACTIVE_APPS" | awk '!seen[$0]++')
 
 ADD_CMD=()
 

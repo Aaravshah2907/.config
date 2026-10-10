@@ -18,10 +18,10 @@ placeholders = true
 
 [gaps]
 inner = 8
-outer = { top = 50, bottom = 12, left = 8, right = 8 }
+outer = { top = 56, bottom = 12, left = 8, right = 8 }
 
-[display.built-in]
-gaps.outer.top = 50
+[display.main]
+gaps.outer = { top = 56, bottom = 12, left = 8, right = 8 }
 
 # Space 6 automatically lives on secondary monitor if attached
 [workspace-to-display]
@@ -45,10 +45,12 @@ accordion-edges = true
 [hooks]
 workspace-changed = [
   'exec-and-forget sketchybar --trigger dinky_workspace_change FOCUSED_WORKSPACE=$DINKY_WORKSPACE PREV_WORKSPACE=$DINKY_PREV_WORKSPACE',
+  'exec-and-forget sketchybar --trigger app_switcher_update',
   'exec-and-forget sketchybar --trigger space_windows_change',
 ]
 focus-changed = [
   'exec-and-forget sketchybar --trigger window_focus',
+  'exec-and-forget sketchybar --trigger app_switcher_update',
   'exec-and-forget sketchybar --trigger space_windows_change',
 ]
 mode-changed = [

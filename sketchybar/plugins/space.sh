@@ -1,6 +1,5 @@
 #!/bin/bash
 source "$HOME/.local/bin/cosmere_colors.sh"
-source "$HOME/.config/sketchybar/plugins/icon_map.sh"
 
 SPACE="${NAME#space.}"
 
@@ -34,80 +33,50 @@ else
   SELECTED="$([ "$SPACE" = "$CURRENT_WORKSPACE" ] && echo "true" || echo "false")"
 fi
 
-# Spren Colors mapped to Spaces 1-6
-case "$SPACE" in
-  1) SPACE_COLOR=$SPREN_HONOR;;
-  2) SPACE_COLOR=$SPREN_INK;;
-  3) SPACE_COLOR=$SPREN_CULTIVATION;;
-  4) SPACE_COLOR=$SPREN_SIBLING;;
-  5) SPACE_COLOR=$SPREN_ASH;;
-  6) SPACE_COLOR=$SPREN_PEAK;;
-  *) SPACE_COLOR=$SPACE_ACCENT;;
-esac
+# Glyphs and Spren Colors mapped to Spaces 1-6
+SPACE_GLYPHS=("" "" "󰖟" "󰭻" "󰈦" "󰓇")
+SPACE_COLORS=($SPREN_HONOR $SPREN_INK $SPREN_CULTIVATION $SPREN_SIBLING $SPREN_ASH $SPREN_PEAK)
 
-SPACE_NAMES=("Terminal" "Code" "Web" "Chat & AI" "Media & Docs" "Spotify")
 IDX=$((SPACE - 1))
-NAME_LABEL="${SPACE_NAMES[$IDX]:-$SPACE}"
+GLYPH="${SPACE_GLYPHS[$IDX]:-$SPACE}"
+SPACE_COLOR="${SPACE_COLORS[$IDX]:-$SPACE_ACCENT}"
 
-# Query Windows on this Workspace
-RAW_WINDOWS=$(dinky list-windows --workspace "$SPACE" 2>/dev/null)
-if [ -z "$RAW_WINDOWS" ] && command -v aerospace >/dev/null 2>&1; then
-  RAW_WINDOWS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null)
+# Query Window Count (filtering out background daemons)
+RAW_APPS=$(dinky list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter" | awk NF)
+if [ -z "$RAW_APPS" ] && command -v aerospace >/dev/null 2>&1; then
+  RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>/dev/null | grep -v -E "Google Drive|LocalSend|ControlCenter" | awk NF)
 fi
 
-FOCUSED_APP=$(dinky list-windows --focused 2>/dev/null | awk -F' \\| ' '{print $2}')
-[ -z "$FOCUSED_APP" ] && command -v aerospace >/dev/null 2>&1 && FOCUSED_APP=$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)
+WINDOW_COUNT=$(echo "$RAW_APPS" | grep -v '^$' | wc -l | tr -d ' ')
+[ -z "$WINDOW_COUNT" ] && WINDOW_COUNT=0
 
-if [ -z "$RAW_WINDOWS" ]; then
-  # Empty Workspace: Subtle Space indicator
-  if [ "$SELECTED" = "true" ]; then
-    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-      icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
-      label="$NAME_LABEL" label.drawing=on label.font="JetBrainsMono Nerd Font:Bold:12.0" label.color=$BAR_COLOR \
-      background.drawing=on background.color=$SPACE_COLOR background.corner_radius=8 \
-      padding_left=4 padding_right=4 icon.padding_left=6 icon.padding_right=4 label.padding_right=8
-  else
-    sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-      icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Regular:12.0" icon.color=0x66607D8B \
-      label.drawing=off \
-      background.drawing=off \
-      padding_left=4 padding_right=4 icon.padding_left=4 icon.padding_right=4
-  fi
-  exit 0
-fi
-
-# Extract Unique App Names
-APPS=$(echo "$RAW_WINDOWS" | awk -F' \\| ' '{print $2}' | awk NF | awk '!seen[$0]++')
-[ -z "$APPS" ] && APPS=$(echo "$RAW_WINDOWS" | awk '!seen[$0]++')
-
-# Build App Icon Strip
-ICON_STRIP=""
-WINDOW_COUNT=0
-while read -r APP; do
-  [ -z "$APP" ] && continue
-  WINDOW_COUNT=$((WINDOW_COUNT + 1))
-  __icon_map_custom "$APP" || __icon_map "$APP"
-  ICON="$icon_result"
-  [ -z "$ICON" ] && ICON=":default:"
-  ICON_STRIP+="$ICON "
-done <<< "$APPS"
-
-ICON_STRIP=$(echo "$ICON_STRIP" | sed 's/ *$//')
-
-# Render Workspace Pill with App Icons
+# Render based on Selection and Window Count
 if [ "$SELECTED" = "true" ]; then
-  DISPLAY_LABEL="$ICON_STRIP"
-  [ -n "$NAME_LABEL" ] && DISPLAY_LABEL="$NAME_LABEL $ICON_STRIP"
+  # Selected space: Focused Pill with Icon + Count
+  if [ "$WINDOW_COUNT" -gt 0 ]; then
+    DISPLAY_LABEL="($WINDOW_COUNT)"
+  else
+    DISPLAY_LABEL=""
+  fi
   
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
-    label="$DISPLAY_LABEL" label.drawing=on label.font="sketchybar-app-font:Regular:13.0" label.color=$BAR_COLOR \
+    icon="$GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Bold:14.0" icon.color=$BAR_COLOR \
+    label="$DISPLAY_LABEL" label.drawing="$([ -n "$DISPLAY_LABEL" ] && echo "on" || echo "off")" \
+    label.font="JetBrainsMono Nerd Font:Bold:11.0" label.color=$BAR_COLOR \
     background.drawing=on background.color=$SPACE_COLOR background.corner_radius=8 \
-    padding_left=4 padding_right=4 icon.padding_left=6 icon.padding_right=4 label.padding_right=8
-else
+    padding_left=3 padding_right=3 icon.padding_left=6 icon.padding_right=4 label.padding_right=6
+elif [ "$WINDOW_COUNT" -gt 0 ]; then
+  # Occupied but Unselected space: Colored Icon with (N) count
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$SPACE_COLOR \
-    label="$ICON_STRIP" label.drawing=on label.font="sketchybar-app-font:Regular:13.0" label.color=$WHITE \
+    icon="$GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Bold:14.0" icon.color=$SPACE_COLOR \
+    label="($WINDOW_COUNT)" label.drawing=on label.font="JetBrainsMono Nerd Font:Regular:11.0" label.color=$SPACE_COLOR \
     background.drawing=on background.color=$PRES_DEEP_TRANSLUCENT background.corner_radius=6 \
-    padding_left=4 padding_right=4 icon.padding_left=4 icon.padding_right=4 label.padding_right=6
+    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=2 label.padding_right=4
+else
+  # Empty & Unselected space: Subtle ghosted icon
+  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
+    icon="$GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Regular:13.0" icon.color=0x44607D8B \
+    label.drawing=off \
+    background.drawing=off \
+    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=4
 fi

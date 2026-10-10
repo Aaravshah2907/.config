@@ -19,16 +19,19 @@ if [ "$SENDER" = "mouse.scrolled" ]; then
   exit 0
 fi
 
-# Identify Focused Workspace
-if [ "$SENDER" = "dinky_workspace_change" ] || [ "$SENDER" = "aerospace_workspace_change" ]; then
-  if [ -n "$FOCUSED_WORKSPACE" ] && [ -n "$PREV_WORKSPACE" ]; then
-    if [ "$SPACE" != "$FOCUSED_WORKSPACE" ] && [ "$SPACE" != "$PREV_WORKSPACE" ]; then
+# Resolve Focused Workspace
+FW="${FOCUSED_WORKSPACE:-$DINKY_WORKSPACE}"
+PW="${PREV_WORKSPACE:-$DINKY_PREV_WORKSPACE}"
+
+if [ -n "$FW" ]; then
+  if [ "$SENDER" = "dinky_workspace_change" ] || [ "$SENDER" = "aerospace_workspace_change" ]; then
+    if [ -n "$PW" ] && [ "$SPACE" != "$FW" ] && [ "$SPACE" != "$PW" ]; then
       exit 0
     fi
   fi
-  SELECTED="$([ "$SPACE" = "$FOCUSED_WORKSPACE" ] && echo "true" || echo "false")"
+  SELECTED="$([ "$SPACE" = "$FW" ] && echo "true" || echo "false")"
 else
-  CURRENT_WORKSPACE=$(dinky list-workspaces 2>/dev/null | grep '\*' | awk '{print $1}')
+  CURRENT_WORKSPACE=$(dinky list-workspaces --focused 2>/dev/null)
   [ -z "$CURRENT_WORKSPACE" ] && CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
   SELECTED="$([ "$SPACE" = "$CURRENT_WORKSPACE" ] && echo "true" || echo "false")"
 fi

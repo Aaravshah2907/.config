@@ -2,7 +2,7 @@
 # Streamlined 6-Workspace Cosmere Setup
 
 config-version = 2
-after-startup-command = []
+after-startup-command = ['exec-and-forget ~/.config/borders/bordersrc']
 start-at-login = true
 auto-reload-config = true
 

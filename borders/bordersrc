@@ -1,13 +1,14 @@
 #!/bin/bash
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 source "$HOME/.local/bin/cosmere_colors.sh" 2>/dev/null
 
 ACTIVE_BORDER="${SPREN_HONOR:-0xff00A8E8}"
 INACTIVE_BORDER="${PRES_DEEP_TRANSLUCENT:-0x441A2A3A}"
 
-borders \
+exec borders \
   style=round \
-  width=3.0 \
+  width=4.0 \
+  hidpi=on \
   active_color="$ACTIVE_BORDER" \
   inactive_color="$INACTIVE_BORDER" \
-  radius=12.0 \
-  ax_focus=on
+  ax_focus=off

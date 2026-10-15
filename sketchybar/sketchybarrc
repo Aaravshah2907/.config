@@ -175,9 +175,8 @@ sketchybar --add item aero_root_layout left \
            --add item aero_layout.balance popup.aero_root_layout \
            --set aero_layout.balance icon=󰓢 label="Balance Window Sizes (Ctrl+Alt+E)" click_script="aerospace balance-sizes; sketchybar --set aero_root_layout popup.drawing=off"
 
-# Workspaces
-AEROSPACE_WORKSPACES=$(aerospace list-workspaces --all 2>/dev/null)
-[ -z "$AEROSPACE_WORKSPACES" ] && AEROSPACE_WORKSPACES="1 2 3 4 A B C E M P S T V"
+# Workspaces (Workflow Order: Terminal, Code, Browser, Chat, Spotify, Media, Study, AI, Preview)
+AEROSPACE_WORKSPACES="T C B M S V E A P"
 for sid in $AEROSPACE_WORKSPACES; do
   sketchybar --add item space.$sid left \
              --subscribe space.$sid aerospace_workspace_change space_windows_change window_focus mouse.scrolled \

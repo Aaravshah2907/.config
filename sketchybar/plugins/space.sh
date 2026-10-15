@@ -9,6 +9,12 @@ if [ -f /tmp/aerospace_disabled ]; then
   exit 0
 fi
 
+# Handle clicking on any workspace item
+if [ "$SENDER" = "mouse.clicked" ]; then
+  aerospace workspace "$SPACE" 2>/dev/null
+  exit 0
+fi
+
 # Handle mouse scrolling across spaces
 if [ "$SENDER" = "mouse.scrolled" ]; then
   if [ "$SCROLL_DELTA" -gt 0 ]; then
@@ -19,40 +25,61 @@ if [ "$SENDER" = "mouse.scrolled" ]; then
   exit 0
 fi
 
-# Optimization: Only re-render the space being focused and the space being left
+# Identify Focused Workspace
 if [ "$SENDER" = "aerospace_workspace_change" ]; then
   if [ -n "$FOCUSED_WORKSPACE" ] && [ -n "$PREV_WORKSPACE" ]; then
     if [ "$SPACE" != "$FOCUSED_WORKSPACE" ] && [ "$SPACE" != "$PREV_WORKSPACE" ]; then
       exit 0
     fi
   fi
-
-  if [ "$SPACE" = "$FOCUSED_WORKSPACE" ]; then
-    SELECTED="true"
-  else
-    SELECTED="false"
-  fi
+  SELECTED="$([ "$SPACE" = "$FOCUSED_WORKSPACE" ] && echo "true" || echo "false")"
 else
   CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
-  if [ "$SPACE" = "$CURRENT_WORKSPACE" ]; then
-    SELECTED="true"
-  else
-    SELECTED="false"
-  fi
+  SELECTED="$([ "$SPACE" = "$CURRENT_WORKSPACE" ] && echo "true" || echo "false")"
 fi
 
-# Define Space Colors and Names
+# Distinct Cosmere Colors & Standard Functional Icons
 case "$SPACE" in
-  1|T) SPACE_COLOR=$SPREN_HONOR;       SPACE_NAME="Terminal";;
-  2|C) SPACE_COLOR=$SPREN_INK;         SPACE_NAME="Code";;
-  3|B) SPACE_COLOR=$SPREN_CULTIVATION; SPACE_NAME="Browser";;
-  4|M) SPACE_COLOR=$SPREN_SIBLING;     SPACE_NAME="Chat";;
-  5|V) SPACE_COLOR=$SPREN_ASH;         SPACE_NAME="Media";;
-  6|S) SPACE_COLOR=$SPREN_PEAK;        SPACE_NAME="Spotify";;
-  7|E) SPACE_COLOR=$SPREN_WILL;        SPACE_NAME="Study";;
-  8|A) SPACE_COLOR=$SPREN_CRYPTIC;     SPACE_NAME="AI";;
-  P)   SPACE_COLOR=$SPREN_STORM;       SPACE_NAME="Preview";;
-  *)   SPACE_COLOR=$SPACE_ACCENT;      SPACE_NAME="$SPACE";;
+  T) 
+    SPACE_COLOR=$SPREN_HONOR       # Sky Blue (0xff00A8E8)
+    GLYPH=""                      # Standard Terminal Prompt
+    ;;
+  C) 
+    SPACE_COLOR=$SPREN_INK         # Indigo Violet (0xff8A2BE2)
+    GLYPH=""                      # Standard Code Brackets
+    ;;
+  B) 
+    SPACE_COLOR=$SPREN_CULTIVATION # Emerald Green (0xff3CB371)
+    GLYPH="󰖟"                      # Standard Web Globe
+    ;;
+  M) 
+    SPACE_COLOR=$HONOR_GOLD        # Radiant Gold (0xffFFD700)
+    GLYPH="󰭻"                      # Standard Chat Message Bubble
+    ;;
+  S) 
+    SPACE_COLOR=$SPREN_SIBLING     # Warm Amber (0xffFFAB40)
+    GLYPH="󰓇"                      # Spotify Logo
+    ;;
+  V) 
+    SPACE_COLOR=$SPREN_ASH         # Crimson Red (0xffFF4500)
+    GLYPH=""                      # Media Play Button
+    ;;
+  E) 
+    SPACE_COLOR=$SPREN_WILL        # Electric Magenta (0xffE040FB)
+    GLYPH="󰈦"                      # Study Book
+    ;;
+  A) 
+    SPACE_COLOR=$PRES_MIST         # Icy Cyan (0xffC8E8F5)
+    GLYPH="󱚣"                      # AI Sparkle / Bot
+    ;;
+  P) 
+    SPACE_COLOR=$PRES_GLACIAL      # Glacial Teal (0xff5DA8CC)
+    GLYPH="󰈙"                      # Preview Document
+    ;;
+  *) 
+    SPACE_COLOR=$SPACE_ACCENT
+    GLYPH="󰒡"
+    ;;
 esac
 
 # Sync Active Border Color with Active Space Spren Color
@@ -66,28 +93,31 @@ RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>
 WINDOW_COUNT=$(echo "$RAW_APPS" | grep -v '^$' | wc -l | tr -d ' ')
 [ -z "$WINDOW_COUNT" ] && WINDOW_COUNT=0
 
-# Zen Dots Logic with Window Counter
+# Render based on Selection and Window Count
 if [ "$SELECTED" = "true" ]; then
-  # Selected space: Expand into pill showing label and open window count
-  DISPLAY_LABEL="$SPACE_NAME"
+  # Active (focused) space: Solid Spren-colored pill with high-contrast text/icon
+  DISPLAY_COUNT=""
   if [ "$WINDOW_COUNT" -gt 0 ]; then
-    DISPLAY_LABEL="$SPACE_NAME ($WINDOW_COUNT)"
+    DISPLAY_COUNT="($WINDOW_COUNT)"
   fi
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon=" " \
-    label="$DISPLAY_LABEL" label.drawing=on \
-    label.font="Hack Nerd Font:Bold:12.0" \
-    label.color=$BAR_COLOR \
-    background.drawing=on background.color=$SPACE_COLOR background.border_width=0 background.corner_radius=8 \
-    padding_left=4 padding_right=4 label.padding_right=8
+    icon="$SPACE $GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
+    label="$DISPLAY_COUNT" label.drawing="$([ -n "$DISPLAY_COUNT" ] && echo "on" || echo "off")" \
+    label.font="JetBrainsMono Nerd Font:Bold:11.0" label.color=$BAR_COLOR \
+    background.drawing=on background.color=$SPACE_COLOR background.corner_radius=7 \
+    padding_left=3 padding_right=3 icon.padding_left=5 icon.padding_right=2 label.padding_right=5
 elif [ "$WINDOW_COUNT" -gt 0 ]; then
-  # Occupied but Unselected space: Bright dot
+  # Occupied space (has windows): Colored according to space with translucent background
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="•" icon.color=$SPACE_COLOR \
+    icon="$SPACE $GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Bold:12.0" icon.color=$SPACE_COLOR \
+    label="($WINDOW_COUNT)" label.drawing=on label.font="JetBrainsMono Nerd Font:Regular:11.0" label.color=$SPACE_COLOR \
+    background.drawing=on background.color=$PRES_DEEP_TRANSLUCENT background.corner_radius=6 \
+    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=2 label.padding_right=4
+else
+  # Empty space: Greyed out, no background, clickable to switch
+  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
+    icon="$SPACE $GLYPH" icon.drawing=on icon.font="Hack Nerd Font:Regular:12.0" icon.color=0x448899a8 \
     label.drawing=off \
     background.drawing=off \
-    padding_left=4 padding_right=4
-else
-  # Empty & Unselected space: Hide completely
-  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=off
+    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=4
 fi

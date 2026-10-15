@@ -179,7 +179,7 @@ sketchybar --add item aero_root_layout left \
 AEROSPACE_WORKSPACES="T C B M S V E A P"
 for sid in $AEROSPACE_WORKSPACES; do
   sketchybar --add item space.$sid left \
-             --subscribe space.$sid aerospace_workspace_change space_windows_change window_focus mouse.scrolled \
+             --subscribe space.$sid aerospace_workspace_change space_windows_change window_focus mouse.scrolled mouse.clicked \
              --set space.$sid \
                    background.drawing=off \
                    label.drawing=off \

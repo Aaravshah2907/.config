@@ -19,26 +19,41 @@ if [ "$SENDER" = "mouse.scrolled" ]; then
   exit 0
 fi
 
-# Identify Focused Workspace
+# Optimization: Only re-render the space being focused and the space being left
 if [ "$SENDER" = "aerospace_workspace_change" ]; then
   if [ -n "$FOCUSED_WORKSPACE" ] && [ -n "$PREV_WORKSPACE" ]; then
     if [ "$SPACE" != "$FOCUSED_WORKSPACE" ] && [ "$SPACE" != "$PREV_WORKSPACE" ]; then
       exit 0
     fi
   fi
-  SELECTED="$([ "$SPACE" = "$FOCUSED_WORKSPACE" ] && echo "true" || echo "false")"
+
+  if [ "$SPACE" = "$FOCUSED_WORKSPACE" ]; then
+    SELECTED="true"
+  else
+    SELECTED="false"
+  fi
 else
   CURRENT_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
-  SELECTED="$([ "$SPACE" = "$CURRENT_WORKSPACE" ] && echo "true" || echo "false")"
+  if [ "$SPACE" = "$CURRENT_WORKSPACE" ]; then
+    SELECTED="true"
+  else
+    SELECTED="false"
+  fi
 fi
 
-# Glyphs and Spren Colors mapped to Spaces 1-6
-SPACE_GLYPHS=("" "" "󰖟" "󰭻" "󰈦" "󰓇")
-SPACE_COLORS=($SPREN_HONOR $SPREN_INK $SPREN_CULTIVATION $SPREN_SIBLING $SPREN_ASH $SPREN_PEAK)
-
-IDX=$((SPACE - 1))
-GLYPH="${SPACE_GLYPHS[$IDX]:-$SPACE}"
-SPACE_COLOR="${SPACE_COLORS[$IDX]:-$SPACE_ACCENT}"
+# Define Space Colors and Names
+case "$SPACE" in
+  1|T) SPACE_COLOR=$SPREN_HONOR;       SPACE_NAME="Terminal";;
+  2|C) SPACE_COLOR=$SPREN_INK;         SPACE_NAME="Code";;
+  3|B) SPACE_COLOR=$SPREN_CULTIVATION; SPACE_NAME="Browser";;
+  4|M) SPACE_COLOR=$SPREN_SIBLING;     SPACE_NAME="Chat";;
+  5|V) SPACE_COLOR=$SPREN_ASH;         SPACE_NAME="Media";;
+  6|S) SPACE_COLOR=$SPREN_PEAK;        SPACE_NAME="Spotify";;
+  7|E) SPACE_COLOR=$SPREN_WILL;        SPACE_NAME="Study";;
+  8|A) SPACE_COLOR=$SPREN_CRYPTIC;     SPACE_NAME="AI";;
+  P)   SPACE_COLOR=$SPREN_STORM;       SPACE_NAME="Preview";;
+  *)   SPACE_COLOR=$SPACE_ACCENT;      SPACE_NAME="$SPACE";;
+esac
 
 # Sync Active Border Color with Active Space Spren Color
 if [ "$SELECTED" = "true" ] && [ ! -f /tmp/battery_saver_active ]; then
@@ -51,29 +66,28 @@ RAW_APPS=$(aerospace list-windows --workspace "$SPACE" --format '%{app-name}' 2>
 WINDOW_COUNT=$(echo "$RAW_APPS" | grep -v '^$' | wc -l | tr -d ' ')
 [ -z "$WINDOW_COUNT" ] && WINDOW_COUNT=0
 
-# Format: <window_number> <window_icon> (<number_of_apps_opened>)
-DISPLAY_TEXT="$GLYPH ($WINDOW_COUNT)"
-
-# Render based on Selection and Window Count
+# Zen Dots Logic with Window Counter
 if [ "$SELECTED" = "true" ]; then
-  # Selected space: Focused Pill with Number + Icon + Count
+  # Selected space: Expand into pill showing label and open window count
+  DISPLAY_LABEL="$SPACE_NAME"
+  if [ "$WINDOW_COUNT" -gt 0 ]; then
+    DISPLAY_LABEL="$SPACE_NAME ($WINDOW_COUNT)"
+  fi
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$BAR_COLOR \
-    label="$DISPLAY_TEXT" label.drawing=on label.font="Hack Nerd Font:Bold:12.0" label.color=$BAR_COLOR \
-    background.drawing=on background.color=$SPACE_COLOR background.corner_radius=8 \
-    padding_left=3 padding_right=3 icon.padding_left=6 icon.padding_right=2 label.padding_right=6
+    icon=" " \
+    label="$DISPLAY_LABEL" label.drawing=on \
+    label.font="Hack Nerd Font:Bold:12.0" \
+    label.color=$BAR_COLOR \
+    background.drawing=on background.color=$SPACE_COLOR background.border_width=0 background.corner_radius=8 \
+    padding_left=4 padding_right=4 label.padding_right=8
 elif [ "$WINDOW_COUNT" -gt 0 ]; then
-  # Occupied but Unselected space: Colored Number + Icon + Count
+  # Occupied but Unselected space: Bright dot
   sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Bold:12.0" icon.color=$SPACE_COLOR \
-    label="$DISPLAY_TEXT" label.drawing=on label.font="Hack Nerd Font:Regular:12.0" label.color=$SPACE_COLOR \
-    background.drawing=on background.color=$PRES_DEEP_TRANSLUCENT background.corner_radius=6 \
-    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=2 label.padding_right=4
-else
-  # Empty & Unselected space: Subtle ghosted Number + Icon + (0)
-  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=on \
-    icon="$SPACE" icon.drawing=on icon.font="JetBrainsMono Nerd Font:Regular:12.0" icon.color=0x66607D8B \
-    label="$DISPLAY_TEXT" label.drawing=on label.font="Hack Nerd Font:Regular:12.0" label.color=0x66607D8B \
+    icon="•" icon.color=$SPACE_COLOR \
+    label.drawing=off \
     background.drawing=off \
-    padding_left=3 padding_right=3 icon.padding_left=4 icon.padding_right=2 label.padding_right=4
+    padding_left=4 padding_right=4
+else
+  # Empty & Unselected space: Hide completely
+  sketchybar --animate tanh 15 --set "space.$SPACE" drawing=off
 fi

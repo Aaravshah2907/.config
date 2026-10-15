@@ -1,43 +1,85 @@
-# AeroSpace Configuration
-# Streamlined 6-Workspace Cosmere Setup
+# Place a copy of this config to ~/.aerospace.toml
+# After that, you can edit ~/.aerospace.toml to your liking
 
+# Config version for compatibility and deprecations
+# See: https://nikitabobko.github.io/AeroSpace/guide#config-version
+# Fallback value (if you omit the key): config-version = 1
 config-version = 2
+
+# You can use it to add commands that run after AeroSpace startup.
+# Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = ['exec-and-forget ~/.config/borders/bordersrc']
+
+# Start AeroSpace at login
 start-at-login = true
+
+# Automatically reload the config when the config file is saved
+# After setting this to true, reload once manually to start the auto-reloading
 auto-reload-config = true
 
-# Normalizations
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
+# See: https://nikitabobko.github.io/AeroSpace/guide#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
 accordion-padding = 30
+
+# Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
+
+# Possible values: horizontal|vertical|auto
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
-# Mouse follows focus
+# Mouse follows focus when focused monitor changes
+# Drop it from your config, if you don't like this behavior
+# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+# See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
+# Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 # Allow macOS "Hide application" (cmd-h) feature so macOS App Nap can sleep background apps
+# Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
-# Persistent Workspaces (1: Term, 2: Code, 3: Web, 4: Chat/AI, 5: Media/Docs, 6: Spotify)
+# List of workspaces that should stay alive even when they contain no windows,
+# even when they are invisible.
+# This config option is only available since 'config-version = 2'
+# Fallback value (if you omit the key): persistent-workspaces = []
+# Active: T(erm) C(ode) B(rowser) M(sg) S(potify) V(ideo) E(du) A(I) P(review)
+# Spare:  1-4 for ad-hoc use
 persistent-workspaces = [
     "1",
     "2",
     "3",
     "4",
-    "5",
-    "6",
+    "A",
+    "B",
+    "C",
+    "E",
+    "M",
+    "P",
+    "S",
+    "T",
+    "V",
 ]
 
-# Notify Sketchybar about workspace changes
+# A callback that runs every time binding mode changes
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/commands#mode
+on-mode-changed = []
+
+# Notify Sketchybar about workspace changes (passing both focused and prev workspace to avoid updating all spaces)
 exec-on-workspace-change = [
     '/bin/bash',
     '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',
+    'if [ "$AEROSPACE_FOCUSED_WORKSPACE" = "1" ]; then sketchybar --bar hidden=on; else sketchybar --bar hidden=off; fi; sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',
 ]
 
-# Notify Sketchybar about window focus changes
+# Notify Sketchybar about window focus changes (single consolidated event)
 on-focus-changed = [
     'move-mouse monitor-lazy-center',
     'exec-and-forget sketchybar --trigger window_focus',
@@ -47,19 +89,19 @@ on-focus-changed = [
 focus-follows-mouse.enabled = true
 key-mapping.preset = 'qwerty'
 
-# Gaps
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# See: https://nikitabobko.github.io/AeroSpace/guide#gaps
 gaps.inner.horizontal = 8
-gaps.inner.vertical = 8
-gaps.outer.left = 8
-gaps.outer.bottom = 12
-gaps.outer.top = 50
-gaps.outer.right = 8
+gaps.inner.vertical =   8
+gaps.outer.left =       8
+gaps.outer.bottom =     12
+gaps.outer.top =        50
+gaps.outer.right =      8
 
-# Space 6 automatically lives on secondary monitor if attached
-[workspace-to-monitor-force-assignment]
-6 = 'secondary'
-
-# ── Main Mode Keybindings ──
+# 'main' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+# 'main' binding mode must be always presented
+# Fallback value (if you omit the key): mode.main.binding = {}
 [mode.main.binding]
 
 # Launch Terminal (Ghostty)
@@ -67,12 +109,6 @@ alt-enter = 'exec-and-forget open -a Ghostty'
 
 # Floating Scratchpad Terminal
 alt-backtick = 'exec-and-forget open -na Ghostty --args --title="Quick Terminal"'
-
-# Enter Resize Mode
-alt-r = [
-    'mode resize',
-    'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$RADIANT_PURPLE"',
-]
 
 # Layout & Orientation Switching
 alt-slash = [
@@ -88,6 +124,7 @@ alt-period = [
     'exec-and-forget sketchybar --trigger aerospace_layout_change',
 ]
 
+# Explicit orientation splits (horizontal / vertical split for next window)
 ctrl-alt-b = [
     'layout horizontal',
     'exec-and-forget sketchybar --trigger aerospace_layout_change',
@@ -132,21 +169,71 @@ ctrl-alt-f = 'fullscreen'
 ctrl-alt-t = 'layout floating tiling'
 ctrl-alt-e = 'balance-sizes'
 
-# Workspace Switching (1..6)
+# Workspace Switching (1..9 and A..Z)
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
 alt-5 = 'workspace 5'
 alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-a = 'workspace A'
+alt-b = 'workspace B'
+alt-c = 'workspace C'
+alt-d = 'workspace D'
+alt-e = 'workspace E'
+alt-f = 'workspace F'
+alt-g = 'workspace G'
+alt-i = 'workspace I'
+alt-m = 'workspace M'
+alt-n = 'workspace N'
+alt-o = 'workspace O'
+alt-p = 'workspace P'
+alt-q = 'workspace Q'
+alt-r = 'workspace R'
+alt-s = 'workspace S'
+alt-t = 'workspace T'
+alt-u = 'workspace U'
+alt-v = 'workspace V'
+alt-w = 'workspace W'
+alt-x = 'workspace X'
+alt-y = 'workspace Y'
+alt-z = 'workspace Z'
 
-# Move Node to Workspace (1..6)
+# Move Node to Workspace
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
 alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-a = 'move-node-to-workspace A'
+alt-shift-b = 'move-node-to-workspace B'
+alt-shift-c = 'move-node-to-workspace C'
+alt-shift-d = 'move-node-to-workspace D'
+alt-shift-e = 'move-node-to-workspace E'
+alt-shift-f = 'move-node-to-workspace F'
+alt-shift-g = 'move-node-to-workspace G'
+alt-shift-i = 'move-node-to-workspace I'
+alt-shift-m = 'move-node-to-workspace M'
+alt-shift-n = 'move-node-to-workspace N'
+alt-shift-o = 'move-node-to-workspace O'
+alt-shift-p = 'move-node-to-workspace P'
+alt-shift-q = 'move-node-to-workspace Q'
+alt-shift-r = 'move-node-to-workspace R'
+alt-shift-s = 'move-node-to-workspace S'
+alt-shift-t = 'move-node-to-workspace T'
+alt-shift-u = 'move-node-to-workspace U'
+alt-shift-v = 'move-node-to-workspace V'
+alt-shift-w = 'move-node-to-workspace W'
+alt-shift-x = 'move-node-to-workspace X'
+alt-shift-y = 'move-node-to-workspace Y'
+alt-shift-z = 'move-node-to-workspace Z'
 
 # Service Mode (Cosmere Gold Accent Flash)
 alt-shift-semicolon = [
@@ -154,29 +241,8 @@ alt-shift-semicolon = [
     'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$HONOR_GOLD"',
 ]
 
-# ── Resize Mode Keybindings ──
-[mode.resize.binding]
-h = 'resize width -50'
-l = 'resize width +50'
-j = 'resize height +50'
-k = 'resize height -50'
-minus = 'resize smart -50'
-equal = 'resize smart +50'
-e = [
-    'balance-sizes',
-    'mode main',
-    'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"',
-]
-esc = [
-    'mode main',
-    'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"',
-]
-enter = [
-    'mode main',
-    'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"',
-]
-
-# ── Service Mode Keybindings ──
+# 'service' binding mode declaration.
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
 esc = [
     'reload-config',
@@ -198,6 +264,7 @@ backspace = [
     'mode main',
     'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"',
 ]
+
 alt-shift-h = [
     'join-with left',
     'mode main',
@@ -221,41 +288,56 @@ alt-shift-l = [
 
 # ── App Routing Rules ──
 
-# Space 1: Terminal & CLI
+# Space T: Terminal & CLI
 [[on-window-detected]]
 if.app-name-regex-substring = 'iTerm2|iTerm|Terminal|Alacritty|kitty|Ghostty'
 if.window-title-regex-substring = '^(?!.*(Quick Terminal|Scratchpad)).*$'
-run = 'move-node-to-workspace 1'
+run = 'move-node-to-workspace T'
 
 # Floating Scratchpad
 [[on-window-detected]]
 if.window-title-regex-substring = 'Quick Terminal|Scratchpad'
 run = ['layout floating']
 
-# Space 2: Code & Development
+# Space C: Code & Development
 [[on-window-detected]]
 if.app-name-regex-substring = 'Code|VS Code|Cursor|Antigravity IDE|Claude|Xcode|Codeforces|LeetCode|takeUforward|Overleaf'
-run = 'move-node-to-workspace 2'
+run = 'move-node-to-workspace C'
 
-# Space 3: Web & Research
+# Space B: Web & Research
 [[on-window-detected]]
-if.app-name-regex-substring = 'Brave Browser|Google Chrome|Safari|Firefox|Colab|Calendar|Helium'
-run = 'move-node-to-workspace 3'
+if.app-name-regex-substring = 'Brave Browser|Google Chrome|Safari|Firefox|Colab|Calendar'
+run = 'move-node-to-workspace B'
 
-# Space 4: Communication, Chat & AI
+# Space M: Communication, Chat & AI
 [[on-window-detected]]
-if.app-name-regex-substring = 'ChatGPT|Gemini|Slack|Discord|WhatsApp|Gmail|Messages|Instagram|LinkedIn|Reddit|Pinterest|Meet|Perplexity'
-run = 'move-node-to-workspace 4'
+if.app-name-regex-substring = 'ChatGPT|Gemini|Slack|Discord|WhatsApp|Gmail|Messages|Instagram|LinkedIn|Reddit|Pinterest|Meet'
+run = 'move-node-to-workspace M'
 
-# Space 5: Media, Docs & Study
-[[on-window-detected]]
-if.app-name-regex-substring = 'Music|VLC|mpv|YouTube|Prime Video|Twitch|Netflix|Classroom|Nalanda|StudyDeck|NotebookLM|Preview'
-run = 'move-node-to-workspace 5'
-
-# Space 6: Spotify (Isolated)
+# Space S: Spotify (Floating)
 [[on-window-detected]]
 if.app-name-regex-substring = 'Spotify'
-run = 'move-node-to-workspace 6'
+run = ['move-node-to-workspace S', 'layout floating']
+
+# Space V: Media & Streaming
+[[on-window-detected]]
+if.app-name-regex-substring = 'Music|VLC|mpv|YouTube|Prime Video|Twitch|Netflix'
+run = 'move-node-to-workspace V'
+
+# Space E: Study & Academics
+[[on-window-detected]]
+if.app-name-regex-substring = 'Classroom|Nalanda|StudyDeck|NotebookLM'
+run = 'move-node-to-workspace E'
+
+# Space A: AI Research
+[[on-window-detected]]
+if.app-name-regex-substring = 'Perplexity'
+run = 'move-node-to-workspace A'
+
+# Space P: Preview & Documents
+[[on-window-detected]]
+if.app-name-regex-substring = 'Preview'
+run = 'move-node-to-workspace P'
 
 # Floating Utilities
 [[on-window-detected]]
@@ -265,3 +347,7 @@ run = 'layout floating'
 [[on-window-detected]]
 if.window-title-regex-substring = '⌨️ Shortcut Hub|Picture-in-Picture|PIP'
 run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Helium'
+run = ['move-node-to-workspace B', 'layout floating']

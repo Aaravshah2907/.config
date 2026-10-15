@@ -14,10 +14,8 @@ if [ "$SENDER" = "mouse.clicked" ]; then
                         icon.color=$SPREN_HONOR
     # Restore spaces + app switcher
     sketchybar --set spaces.pill drawing=on \
-               --set app_switcher_sep drawing=on
-    for sid in 1 2 3 4 5 6; do
-      sketchybar --set "space.$sid" drawing=on
-    done
+               --set app_switcher_sep drawing=on \
+               --set '/space\..*/' drawing=on
     # Trigger updates to redraw spaces + apps
     sketchybar --trigger aerospace_workspace_change
     sketchybar --trigger app_switcher_update
@@ -32,9 +30,7 @@ if [ "$SENDER" = "mouse.clicked" ]; then
       --set aero_toggle icon=󱂬 \
                         icon.color=$SPREN_ASH
     # Hide spaces + app switcher
-    for sid in 1 2 3 4 5 6; do
-      sketchybar --set "space.$sid" drawing=off 2>/dev/null
-    done
+    sketchybar --set '/space\..*/' drawing=off 2>/dev/null
     sketchybar --set spaces.pill drawing=off
     sketchybar --set app_switcher_sep drawing=off
     # Remove app switcher icons

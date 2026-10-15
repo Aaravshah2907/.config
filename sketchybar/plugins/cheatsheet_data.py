@@ -19,14 +19,11 @@ SECTIONS = [
         ("⌃⌥ F", "Fullscreen"),
         ("⌃⌥ E", "Balance Sizes"),
     ]),
-    ("WORKSPACES (6)",[
-        ("⌥ 1", "1:  Terminal"),
-        ("⌥ 2", "2:  Code"),
-        ("⌥ 3", "3: 󰖟 Web"),
-        ("⌥ 4", "4:  Chat/AI"),
-        ("⌥ 5", "5: 󰎈 Media"),
-        ("⌥ 6", "6:  Spotify"),
-        ("⌥⇧ 1-6", "Move to Space"),
+    ("WORKSPACES",[
+        ("⌥ 1-9", "Focus Space"),
+        ("⌥ A-Z", "Focus Named"),
+        ("⌥⇧ 1-9", "Move to Space"),
+        ("⌥⇧ A-Z", "Move to Named"),
         ("⌥ Tab", "Back & Forth"),
     ]),
     ("MODES & TOOLS",[

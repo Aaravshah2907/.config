@@ -100,7 +100,7 @@ gaps.outer.right =      8
 [mode.main.binding]
 
 # Launch Terminal (Ghostty)
-alt-enter = 'exec-and-forget open -a Ghostty'
+alt-enter = 'exec-and-forget open -na Ghostty'
 
 # Floating Scratchpad Terminal
 alt-backtick = 'exec-and-forget open -na Ghostty --args --title="Quick Terminal"'

@@ -402,21 +402,13 @@
         
         <div class="menu-title">Main Views</div>
         <ul class="nav-list">
-            <li class="nav-item active" id="tab-active-app" onclick="switchTab('active-app')">
-                <span id="active-app-name-label">Current App</span>
-                <span class="badge" id="badge-active-app">0</span>
-            </li>
-            <li class="nav-item" id="tab-global" onclick="switchTab('Global')">
-                <span>Global Keys</span>
-                <span class="badge" id="badge-global">0</span>
-            </li>
-            <li class="nav-item" id="tab-all" onclick="switchTab('all')">
+            <li class="nav-item active" id="tab-all" onclick="switchTab('all')">
                 <span>All Shortcuts</span>
                 <span class="badge" id="badge-all">0</span>
             </li>
         </ul>
 
-        <div class="menu-title">Other Applications</div>
+        <div class="menu-title">Keybinding Systems</div>
         <ul class="nav-list" id="other-apps-list">
             <!-- Dynamic application list -->
         </ul>
@@ -462,7 +454,7 @@
         const shortcuts = {{SHORTCUTS_JSON}};
         const activeApp = "{{ACTIVE_APP}}";
         
-        let currentTab = 'active-app';
+        let currentTab = 'all';
         let searchQuery = '';
         let selectedIndex = -1;
         let visibleItems = [];
@@ -471,6 +463,11 @@
         let lastInsertPressTime = 0;
 
         document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                pywebview.api.close();
+                e.preventDefault();
+                return;
+            }
             // Check for Insert key (e.key === 'Insert' or keyCode === 45)
             if (e.key === 'Insert' || e.keyCode === 45) {
                 const now = Date.now();

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 
 export CHEATSHEET_FRONT_APP="$(
   /opt/homebrew/bin/aerospace list-windows --focused --format '%{app-name}' 2>/dev/null

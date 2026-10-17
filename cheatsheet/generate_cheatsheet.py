@@ -278,7 +278,9 @@ def get_all_shortcuts_data():
 
 
 def build_html():
-    shortcuts, active_app = get_all_shortcuts_data()
+    from parse_configs import build_all
+    shortcuts = build_all()
+    active_app = get_frontmost_app_name()
     template = HTML.read_text()
     
     # Inject shortcuts JSON and active app name
@@ -288,7 +290,6 @@ def build_html():
     OUTPUT.write_text(final)
 
 def main():
-    toggle_lock()
     build_html()
 
 if __name__ == "__main__":

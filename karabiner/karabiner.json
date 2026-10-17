@@ -1875,6 +1875,29 @@
                                         "shell_command": "/opt/homebrew/bin/aerospace close"
                                     }
                                 ]
+                            },
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "slash",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh"
+                                    }
+                                ]
                             }
                         ]
                     }

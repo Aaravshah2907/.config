@@ -312,6 +312,13 @@ const directHyperNav = {
       conditions: [{ type: "variable_if", name: "hyper_mode", value: 1 }],
       from: { key_code: "q", modifiers: { optional: ["any"] } },
       to: [{ shell_command: "/opt/homebrew/bin/aerospace close" }]
+    },
+    // Shortcut Hub (Hyper + ? / Hyper + /)
+    {
+      type: "basic",
+      conditions: [{ type: "variable_if", name: "hyper_mode", value: 1 }],
+      from: { key_code: "slash", modifiers: { optional: ["any"] } },
+      to: [{ shell_command: "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh" }]
     }
   ]
 };

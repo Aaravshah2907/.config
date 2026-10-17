@@ -285,7 +285,7 @@ run = 'move-node-to-workspace C'
 
 # Space B: Web & Research
 [[on-window-detected]]
-if.app-name-regex-substring = 'Brave Browser|Google Chrome|Safari|Firefox|Colab|Calendar'
+if.app-name-regex-substring = 'Helium|Brave Browser|Google Chrome|Safari|Firefox|Colab|Calendar'
 run = 'move-node-to-workspace B'
 
 # Space M: Communication, Chat & AI
@@ -327,6 +327,3 @@ run = 'layout floating'
 if.window-title-regex-substring = '⌨️ Shortcut Hub|Picture-in-Picture|PIP'
 run = 'layout floating'
 
-[[on-window-detected]]
-if.app-name-regex-substring = 'Helium'
-run = ['move-node-to-workspace B', 'layout floating']

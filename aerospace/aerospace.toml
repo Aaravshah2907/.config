@@ -18,7 +18,7 @@ start-at-login = true
 auto-reload-config = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
-enable-normalization-flatten-containers = true
+enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = true
 
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
@@ -265,7 +265,10 @@ alt-shift-l = [
     'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"',
 ]
 
-# ── App Routing Rules ──
+# Auto-spiral: alternate split direction for subsequent windows
+[[on-window-detected]]
+run = ['split opposite']
+check-further-callbacks = true
 
 # Space T: Terminal & CLI
 [[on-window-detected]]

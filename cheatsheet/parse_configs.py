@@ -277,6 +277,32 @@ def get_karabiner_shortcuts():
 
     return items
 
+CACHE_PATH = Path("/Users/aaravshah2975/.config/cheatsheet/shortcuts_cache.json")
+
+def get_cached_shortcuts():
+    source_files = [
+        AEROSPACE_PATH,
+        KARABINER_PATH,
+        Path(__file__),
+    ]
+    if CACHE_PATH.exists():
+        cache_mtime = CACHE_PATH.stat().st_mtime
+        if all(f.exists() and f.stat().st_mtime <= cache_mtime for f in source_files):
+            try:
+                with open(CACHE_PATH, "r") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+
+    # Rebuild when configs change
+    shortcuts = build_all()
+    try:
+        with open(CACHE_PATH, "w") as f:
+            json.dump(shortcuts, f)
+    except Exception:
+        pass
+    return shortcuts
+
 def build_all():
     aero = get_aero_shortcuts()
     karabiner = get_karabiner_shortcuts()
@@ -285,7 +311,7 @@ def build_all():
     return all_shortcuts
 
 if __name__ == "__main__":
-    shortcuts = build_all()
+    shortcuts = get_cached_shortcuts()
     with open("/tmp/shortcut_db.json", "w") as f:
         json.dump({"global": shortcuts, "apps": {}}, f, indent=2)
     print("Saved to /tmp/shortcut_db.json successfully!")

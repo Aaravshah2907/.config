@@ -49,7 +49,11 @@ class API:
             print(f"Execution failed: {e}")
             sys.exit(1)
 
-html = open("/tmp/shortcut_hub.html").read()
+import os
+from generate_cheatsheet import build_html
+
+active_app = os.environ.get("CHEATSHEET_FRONT_APP", "")
+html = build_html(active_app)
 
 api = API()
 window = webview.create_window(

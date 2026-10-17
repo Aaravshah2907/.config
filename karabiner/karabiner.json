@@ -525,6 +525,39 @@
                                             "name": "hyper_mode",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ],
                                 "to_if_alone": [
@@ -562,6 +595,39 @@
                                             "name": "hyper_mode",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ],
                                 "to_if_alone": [
@@ -602,6 +668,39 @@
                                             "name": "hyper_mode",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ],
                                 "to_if_alone": [
@@ -613,11 +712,74 @@
                         ]
                     },
                     {
+                        "description": "Escape Sublayer Mode",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "escape",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
                         "description": "Hyper Sublayer O (Open Applications)",
                         "manipulators": [
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -637,6 +799,12 @@
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -644,6 +812,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -663,6 +836,12 @@
                                         "shell_command": "open -na Ghostty"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -670,6 +849,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -689,6 +873,12 @@
                                         "shell_command": "open -a \"VLC\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -696,6 +886,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -715,6 +910,12 @@
                                         "shell_command": "open -a \"Visual Studio Code\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -722,6 +923,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -741,6 +947,12 @@
                                         "shell_command": "open -a \"Obsidian\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -748,6 +960,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -767,6 +984,12 @@
                                         "shell_command": "open -a \"Spotify\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -774,6 +997,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -793,6 +1021,12 @@
                                         "shell_command": "open ~"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -800,6 +1034,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_o",
@@ -817,6 +1056,12 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a \"Activity Monitor\""
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_o",
+                                            "value": 0
+                                        }
                                     },
                                     {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
@@ -848,18 +1093,31 @@
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=O"
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    {
                                         "set_variable": {
-                                            "name": "hyper_sublayer_o",
+                                            "name": "hyper_sublayer_b",
                                             "value": 0
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=O"
                                     }
                                 ]
                             }
@@ -871,6 +1129,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_b",
@@ -890,6 +1153,12 @@
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://github.com\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -897,6 +1166,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_b",
@@ -916,6 +1190,12 @@
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://codeforces.com\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -923,6 +1203,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_b",
@@ -942,6 +1227,12 @@
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://mail.google.com\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -949,6 +1240,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_b",
@@ -966,6 +1262,12 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://youtube.com\""
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
                                     },
                                     {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
@@ -997,18 +1299,31 @@
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=B"
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    {
                                         "set_variable": {
-                                            "name": "hyper_sublayer_b",
+                                            "name": "hyper_sublayer_o",
                                             "value": 0
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=B"
                                     }
                                 ]
                             }
@@ -1020,6 +1335,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_s",
@@ -1039,6 +1359,12 @@
                                         "shell_command": "~/.local/bin/toggle_dnd.sh"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1046,6 +1372,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_s",
@@ -1065,6 +1396,12 @@
                                         "shell_command": "~/.local/bin/lock-screen.sh"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1072,6 +1409,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_s",
@@ -1091,6 +1433,12 @@
                                         "shell_command": "~/.local/bin/study-mode"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1098,6 +1446,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_s",
@@ -1117,6 +1470,12 @@
                                         "shell_command": "~/.local/bin/panic-mode"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1124,6 +1483,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_s",
@@ -1141,6 +1505,12 @@
                                 "to": [
                                     {
                                         "shell_command": "screencapture -i -c"
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
                                     },
                                     {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
@@ -1172,18 +1542,31 @@
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=S"
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    {
                                         "set_variable": {
-                                            "name": "hyper_sublayer_s",
+                                            "name": "hyper_sublayer_o",
                                             "value": 0
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=S"
                                     }
                                 ]
                             }
@@ -1195,6 +1578,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1216,15 +1604,17 @@
                                             "left_command",
                                             "left_option"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1246,15 +1636,17 @@
                                             "left_command",
                                             "left_option"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1275,15 +1667,17 @@
                                         "modifiers": [
                                             "left_command"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1304,15 +1698,17 @@
                                         "modifiers": [
                                             "left_command"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1334,15 +1730,17 @@
                                             "left_command",
                                             "left_shift"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1364,15 +1762,17 @@
                                             "left_command",
                                             "left_shift"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_t",
@@ -1394,9 +1794,6 @@
                                             "left_command",
                                             "left_option"
                                         ]
-                                    },
-                                    {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1425,18 +1822,31 @@
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=T"
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    {
                                         "set_variable": {
-                                            "name": "hyper_sublayer_t",
+                                            "name": "hyper_sublayer_o",
                                             "value": 0
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=T"
                                     }
                                 ]
                             }
@@ -1448,6 +1858,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_c",
@@ -1467,6 +1882,12 @@
                                         "shell_command": "open -na Ghostty --args --title=\"Quick Terminal\" -e \"zsh -l -c todo\""
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1474,6 +1895,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_c",
@@ -1493,6 +1919,12 @@
                                         "shell_command": "open -a Calculator"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1500,6 +1932,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_c",
@@ -1519,6 +1956,12 @@
                                         "shell_command": "~/.local/bin/fv.sh"
                                     },
                                     {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
@@ -1526,6 +1969,11 @@
                             {
                                 "type": "basic",
                                 "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "hyper_mode",
+                                        "value": 1
+                                    },
                                     {
                                         "type": "variable_if",
                                         "name": "hyper_sublayer_c",
@@ -1543,6 +1991,12 @@
                                 "to": [
                                     {
                                         "shell_command": "bash ~/.config/skhd/control_center.sh"
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_c",
+                                            "value": 0
+                                        }
                                     },
                                     {
                                         "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
@@ -1574,18 +2028,31 @@
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=C"
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    {
                                         "set_variable": {
-                                            "name": "hyper_sublayer_c",
+                                            "name": "hyper_sublayer_o",
                                             "value": 0
                                         }
                                     },
                                     {
-                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_b",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_s",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "hyper_sublayer_t",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=C"
                                     }
                                 ]
                             }

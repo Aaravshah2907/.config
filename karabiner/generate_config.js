@@ -18,15 +18,22 @@ const preservedRules = orig.profiles[0].complex_modifications.rules.filter(r =>
   preservedRuleDescs.includes(r.description)
 );
 
+const ALL_SUBLAYERS = ["o", "b", "s", "t", "c"];
+
 // Helper for sublayer actions
-function createSublayer(leaderKey, sublayerName, description, mappings) {
+function createSublayer(leaderKey, sublayerName, description, mappings, persistent = false) {
   const manipulators = [];
 
-  // Target key actions (when sublayer variable is active)
+  // Target key actions (active when hyper_mode == 1 AND this sublayer variable == 1)
   for (const [key, action] of Object.entries(mappings)) {
     const manip = {
       type: "basic",
       conditions: [
+        {
+          type: "variable_if",
+          name: "hyper_mode",
+          value: 1
+        },
         {
           type: "variable_if",
           name: "hyper_sublayer_" + sublayerName,
@@ -39,24 +46,56 @@ function createSublayer(leaderKey, sublayerName, description, mappings) {
       }
     };
 
+    const toList = [];
     if (action.shell_command) {
-      manip.to = [
-        { shell_command: action.shell_command },
-        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
-      ];
+      toList.push({ shell_command: action.shell_command });
     } else if (action.key_code) {
       const toObj = { key_code: action.key_code };
       if (action.modifiers) toObj.modifiers = action.modifiers;
-      manip.to = [
-        toObj,
-        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
-      ];
+      toList.push(toObj);
     }
 
+    // For one-shot sublayers (apps, browse, system, tools), reset sublayer on execution
+    if (!persistent) {
+      toList.push({
+        set_variable: {
+          name: "hyper_sublayer_" + sublayerName,
+          value: 0
+        }
+      });
+      toList.push({
+        shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+      });
+    }
+
+    manip.to = toList;
     manipulators.push(manip);
   }
 
-  // Leader key manipulator (activates sublayer variable when Hyper is held)
+  // Leader key manipulator (arms sublayer variable when Hyper is held; modal, does not reset on leader key release)
+  const leaderTo = [
+    {
+      set_variable: {
+        name: "hyper_sublayer_" + sublayerName,
+        value: 1
+      }
+    }
+  ];
+  // Reset other sublayers when switching
+  for (const other of ALL_SUBLAYERS) {
+    if (other !== sublayerName) {
+      leaderTo.push({
+        set_variable: {
+          name: "hyper_sublayer_" + other,
+          value: 0
+        }
+      });
+    }
+  }
+  leaderTo.push({
+    shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=" + leaderKey.toUpperCase()
+  });
+
   manipulators.push({
     type: "basic",
     conditions: [
@@ -70,28 +109,7 @@ function createSublayer(leaderKey, sublayerName, description, mappings) {
       key_code: leaderKey,
       modifiers: { optional: ["any"] }
     },
-    to: [
-      {
-        set_variable: {
-          name: "hyper_sublayer_" + sublayerName,
-          value: 1
-        }
-      },
-      {
-        shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=" + leaderKey.toUpperCase()
-      }
-    ],
-    to_after_key_up: [
-      {
-        set_variable: {
-          name: "hyper_sublayer_" + sublayerName,
-          value: 0
-        }
-      },
-      {
-        shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
-      }
-    ]
+    to: leaderTo
   });
 
   return {
@@ -99,6 +117,13 @@ function createSublayer(leaderKey, sublayerName, description, mappings) {
     manipulators: manipulators
   };
 }
+
+// Actions to execute when Hyper key is released
+const hyperReleaseActions = [
+  { set_variable: { name: "hyper_mode", value: 0 } },
+  ...ALL_SUBLAYERS.map(s => ({ set_variable: { name: "hyper_sublayer_" + s, value: 0 } })),
+  { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
+];
 
 // 1. Dual-Role Hyper Sources
 const hyperSources = [
@@ -114,9 +139,7 @@ const hyperSources = [
         to: [
           { set_variable: { name: "hyper_mode", value: 1 } }
         ],
-        to_after_key_up: [
-          { set_variable: { name: "hyper_mode", value: 0 } }
-        ],
+        to_after_key_up: hyperReleaseActions,
         to_if_alone: [
           { key_code: "escape" }
         ]
@@ -135,9 +158,7 @@ const hyperSources = [
         to: [
           { set_variable: { name: "hyper_mode", value: 1 } }
         ],
-        to_after_key_up: [
-          { set_variable: { name: "hyper_mode", value: 0 } }
-        ],
+        to_after_key_up: hyperReleaseActions,
         to_if_alone: [
           {
             key_code: "spacebar",
@@ -159,9 +180,7 @@ const hyperSources = [
         to: [
           { set_variable: { name: "hyper_mode", value: 1 } }
         ],
-        to_after_key_up: [
-          { set_variable: { name: "hyper_mode", value: 0 } }
-        ],
+        to_after_key_up: hyperReleaseActions,
         to_if_alone: [
           { key_code: "escape" }
         ]
@@ -169,6 +188,27 @@ const hyperSources = [
     ]
   }
 ];
+
+// Escape key cancellation while Hyper is active
+const escapeSublayers = {
+  description: "Escape Sublayer Mode",
+  manipulators: [
+    {
+      type: "basic",
+      conditions: [
+        { type: "variable_if", name: "hyper_mode", value: 1 }
+      ],
+      from: {
+        key_code: "escape",
+        modifiers: { optional: ["any"] }
+      },
+      to: [
+        ...ALL_SUBLAYERS.map(s => ({ set_variable: { name: "hyper_sublayer_" + s, value: 0 } })),
+        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
+      ]
+    }
+  ]
+};
 
 // 2. Sublayers
 const sublayerO = createSublayer("o", "o", "Hyper Sublayer O (Open Applications)", {
@@ -205,7 +245,7 @@ const sublayerT = createSublayer("t", "t", "Hyper Sublayer T (Tabs Navigation)",
   r: { key_code: "r", modifiers: ["left_command", "left_shift"] },
   u: { key_code: "t", modifiers: ["left_command", "left_shift"] },
   d: { key_code: "i", modifiers: ["left_command", "left_option"] }
-});
+}, true);
 
 const sublayerC = createSublayer("c", "c", "Hyper Sublayer C (Scratchpads & Tools)", {
   t: { shell_command: 'open -na Ghostty --args --title="Quick Terminal" -e "zsh -l -c todo"' },
@@ -327,6 +367,7 @@ const directHyperNav = {
 const newRules = [
   ...preservedRules,
   ...hyperSources,
+  escapeSublayers,
   sublayerO,
   sublayerB,
   sublayerS,
@@ -337,5 +378,5 @@ const newRules = [
 
 orig.profiles[0].complex_modifications.rules = newRules;
 
-fs.writeFileSync('/Users/aaravshah2975/.config/karabiner/karabiner.json.new', JSON.stringify(orig, null, 4));
-console.log('Successfully generated karabiner.json.new with ' + newRules.length + ' rules.');
+fs.writeFileSync('/Users/aaravshah2975/.config/karabiner/karabiner.json', JSON.stringify(orig, null, 4));
+console.log('Successfully generated karabiner.json with ' + newRules.length + ' rules.');

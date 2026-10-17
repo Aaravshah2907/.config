@@ -14,9 +14,14 @@ const preservedRuleDescs = [
   "Button5: Forward / Next Space"
 ];
 
-const preservedRules = orig.profiles[0].complex_modifications.rules.filter(r => 
-  preservedRuleDescs.includes(r.description)
-);
+const seenDescs = new Set();
+const preservedRules = orig.profiles[0].complex_modifications.rules.filter(r => {
+  if (preservedRuleDescs.includes(r.description) && !seenDescs.has(r.description)) {
+    seenDescs.add(r.description);
+    return true;
+  }
+  return false;
+});
 
 const ALL_SUBLAYERS = ["o", "b", "s", "t", "c"];
 
@@ -43,23 +48,29 @@ function createSublayer(leaderKey, sublayerName, description, mappings, persiste
 
     const toList = [];
     if (action.shell_command) {
-      toList.push({ shell_command: action.shell_command });
+      let cmd = action.shell_command;
+      if (!persistent) {
+        cmd += " ; /opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF";
+      }
+      toList.push({ shell_command: cmd });
     } else if (action.key_code) {
       const toObj = { key_code: action.key_code };
       if (action.modifiers) toObj.modifiers = action.modifiers;
       toList.push(toObj);
+      if (!persistent) {
+        toList.push({
+          shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
+        });
+      }
     }
 
-    // For one-shot sublayers (apps, browse, system, tools), reset sublayer on execution
+    // For one-shot sublayers (apps, browse, system, tools), reset sublayer variable on execution
     if (!persistent) {
       toList.push({
         set_variable: {
           name: "hyper_sublayer_" + sublayerName,
           value: 0
         }
-      });
-      toList.push({
-        shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
       });
     }
 
@@ -183,23 +194,14 @@ const hyperSources = [
   }
 ];
 
-// Cancel sublayers via Escape or Spacebar
+// Cancel sublayers via Escape
 const cancelSublayers = {
-  description: "Cancel Sublayer Mode via Escape or Space",
+  description: "Cancel Sublayer Mode via Escape",
   manipulators: [
     ...ALL_SUBLAYERS.map(s => ({
       type: "basic",
       conditions: [{ type: "variable_if", name: "hyper_sublayer_" + s, value: 1 }],
       from: { key_code: "escape", modifiers: { optional: ["any"] } },
-      to: [
-        ...ALL_SUBLAYERS.map(sub => ({ set_variable: { name: "hyper_sublayer_" + sub, value: 0 } })),
-        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
-      ]
-    })),
-    ...ALL_SUBLAYERS.map(s => ({
-      type: "basic",
-      conditions: [{ type: "variable_if", name: "hyper_sublayer_" + s, value: 1 }],
-      from: { key_code: "spacebar", modifiers: { optional: ["any"] } },
       to: [
         ...ALL_SUBLAYERS.map(sub => ({ set_variable: { name: "hyper_sublayer_" + sub, value: 0 } })),
         { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }

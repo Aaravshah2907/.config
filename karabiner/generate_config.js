@@ -24,16 +24,11 @@ const ALL_SUBLAYERS = ["o", "b", "s", "t", "c"];
 function createSublayer(leaderKey, sublayerName, description, mappings, persistent = false) {
   const manipulators = [];
 
-  // Target key actions (active when hyper_mode == 1 AND this sublayer variable == 1)
+  // Target key actions (active whenever this sublayer variable == 1, whether Hyper is still held or released)
   for (const [key, action] of Object.entries(mappings)) {
     const manip = {
       type: "basic",
       conditions: [
-        {
-          type: "variable_if",
-          name: "hyper_mode",
-          value: 1
-        },
         {
           type: "variable_if",
           name: "hyper_sublayer_" + sublayerName,
@@ -118,11 +113,10 @@ function createSublayer(leaderKey, sublayerName, description, mappings, persiste
   };
 }
 
-// Actions to execute when Hyper key is released
+// Actions to execute when Hyper key is released (only resets hyper_mode, leaves armed modal sublayers active)
 const hyperReleaseActions = [
   { set_variable: { name: "hyper_mode", value: 0 } },
-  ...ALL_SUBLAYERS.map(s => ({ set_variable: { name: "hyper_sublayer_" + s, value: 0 } })),
-  { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
+  { set_variable: { name: "hyper_sublayer_t", value: 0 } }
 ];
 
 // 1. Dual-Role Hyper Sources
@@ -189,44 +183,48 @@ const hyperSources = [
   }
 ];
 
-// Escape key cancellation while Hyper is active
-const escapeSublayers = {
-  description: "Escape Sublayer Mode",
+// Cancel sublayers via Escape or Spacebar
+const cancelSublayers = {
+  description: "Cancel Sublayer Mode via Escape or Space",
   manipulators: [
-    {
+    ...ALL_SUBLAYERS.map(s => ({
       type: "basic",
-      conditions: [
-        { type: "variable_if", name: "hyper_mode", value: 1 }
-      ],
-      from: {
-        key_code: "escape",
-        modifiers: { optional: ["any"] }
-      },
+      conditions: [{ type: "variable_if", name: "hyper_sublayer_" + s, value: 1 }],
+      from: { key_code: "escape", modifiers: { optional: ["any"] } },
       to: [
-        ...ALL_SUBLAYERS.map(s => ({ set_variable: { name: "hyper_sublayer_" + s, value: 0 } })),
+        ...ALL_SUBLAYERS.map(sub => ({ set_variable: { name: "hyper_sublayer_" + sub, value: 0 } })),
         { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
       ]
-    }
+    })),
+    ...ALL_SUBLAYERS.map(s => ({
+      type: "basic",
+      conditions: [{ type: "variable_if", name: "hyper_sublayer_" + s, value: 1 }],
+      from: { key_code: "spacebar", modifiers: { optional: ["any"] } },
+      to: [
+        ...ALL_SUBLAYERS.map(sub => ({ set_variable: { name: "hyper_sublayer_" + sub, value: 0 } })),
+        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
+      ]
+    }))
   ]
 };
 
 // 2. Sublayers
 const sublayerO = createSublayer("o", "o", "Hyper Sublayer O (Open Applications)", {
-  h: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default"' },
-  t: { shell_command: 'open -na Ghostty' },
-  v: { shell_command: 'open -a "VLC"' },
-  c: { shell_command: 'open -a "Visual Studio Code"' },
-  o: { shell_command: 'open -a "Obsidian"' },
-  s: { shell_command: 'open -a "Spotify"' },
-  f: { shell_command: 'open ~' },
+  h: { shell_command: 'open -a "/Applications/Helium.app" && /opt/homebrew/bin/aerospace workspace B' },
+  t: { shell_command: '/opt/homebrew/bin/aerospace workspace T && open -na Ghostty' },
+  v: { shell_command: 'open -a "VLC" && /opt/homebrew/bin/aerospace workspace V' },
+  c: { shell_command: 'open -a "Visual Studio Code" && /opt/homebrew/bin/aerospace workspace C' },
+  o: { shell_command: 'open -a "Obsidian" && /opt/homebrew/bin/aerospace workspace O' },
+  s: { shell_command: 'open -a "Spotify" && /opt/homebrew/bin/aerospace workspace S' },
+  f: { shell_command: 'open ~ && /opt/homebrew/bin/aerospace workspace F' },
   a: { shell_command: 'open -a "Activity Monitor"' }
 });
 
 const sublayerB = createSublayer("b", "b", "Hyper Sublayer B (Browse Web Jumps)", {
-  g: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://github.com"' },
-  c: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://codeforces.com"' },
-  m: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://mail.google.com"' },
-  y: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://youtube.com"' }
+  g: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://github.com" && /opt/homebrew/bin/aerospace workspace B' },
+  c: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://codeforces.com" && /opt/homebrew/bin/aerospace workspace B' },
+  m: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://mail.google.com" && /opt/homebrew/bin/aerospace workspace B' },
+  y: { shell_command: 'open -na "/Applications/Helium.app" --args --profile-directory="Default" "https://youtube.com" && /opt/homebrew/bin/aerospace workspace B' }
 });
 
 const sublayerS = createSublayer("s", "s", "Hyper Sublayer S (System & Workspace Control)", {
@@ -248,7 +246,7 @@ const sublayerT = createSublayer("t", "t", "Hyper Sublayer T (Tabs Navigation)",
 }, true);
 
 const sublayerC = createSublayer("c", "c", "Hyper Sublayer C (Scratchpads & Tools)", {
-  t: { shell_command: 'open -na Ghostty --args --title="Quick Terminal" -e "zsh -l -c todo"' },
+  t: { shell_command: '/opt/homebrew/bin/aerospace workspace T && open -na Ghostty --args --title="Quick Terminal" -e "zsh -l -c todo"' },
   c: { shell_command: 'open -a Calculator' },
   f: { shell_command: '~/.local/bin/fv.sh' },
   semicolon: { shell_command: 'bash ~/.config/skhd/control_center.sh' }
@@ -367,7 +365,7 @@ const directHyperNav = {
 const newRules = [
   ...preservedRules,
   ...hyperSources,
-  escapeSublayers,
+  cancelSublayers,
   sublayerO,
   sublayerB,
   sublayerS,

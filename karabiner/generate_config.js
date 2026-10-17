@@ -40,11 +40,17 @@ function createSublayer(leaderKey, sublayerName, description, mappings) {
     };
 
     if (action.shell_command) {
-      manip.to = [{ shell_command: action.shell_command }];
+      manip.to = [
+        { shell_command: action.shell_command },
+        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
+      ];
     } else if (action.key_code) {
       const toObj = { key_code: action.key_code };
       if (action.modifiers) toObj.modifiers = action.modifiers;
-      manip.to = [toObj];
+      manip.to = [
+        toObj,
+        { shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF" }
+      ];
     }
 
     manipulators.push(manip);
@@ -70,6 +76,9 @@ function createSublayer(leaderKey, sublayerName, description, mappings) {
           name: "hyper_sublayer_" + sublayerName,
           value: 1
         }
+      },
+      {
+        shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=" + leaderKey.toUpperCase()
       }
     ],
     to_after_key_up: [
@@ -78,6 +87,9 @@ function createSublayer(leaderKey, sublayerName, description, mappings) {
           name: "hyper_sublayer_" + sublayerName,
           value: 0
         }
+      },
+      {
+        shell_command: "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
       }
     ]
   });

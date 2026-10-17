@@ -212,6 +212,14 @@ sketchybar --add item app_switcher_sep left \
                                       script="$PLUGIN_DIR/app_switcher.sh" \
            --subscribe app_switcher_trigger app_switcher_update aerospace_workspace_change front_app_switched window_focus space_windows_change
 
+# Karabiner Hyper Sublayer Mode Indicator
+sketchybar --add event hyper_sublayer_change \
+           --add item hyper_sublayer left \
+           --set hyper_sublayer drawing=off \
+                                click_script="/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh" \
+                                script="$PLUGIN_DIR/hyper_sublayer.sh" \
+           --subscribe hyper_sublayer hyper_sublayer_change
+
 # Optional Yabai Space Layout Status Item (uncomment to enable)
 # source "$CONFIG_DIR/yabai_status_item.sh"
 

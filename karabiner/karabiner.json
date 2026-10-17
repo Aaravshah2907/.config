@@ -656,6 +656,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -679,6 +682,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na Ghostty"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -702,6 +708,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a \"VLC\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -725,6 +734,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a \"Visual Studio Code\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -748,6 +760,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a \"Obsidian\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -771,6 +786,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a \"Spotify\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -794,6 +812,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open ~"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -817,6 +838,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a \"Activity Monitor\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -843,6 +867,9 @@
                                             "name": "hyper_sublayer_o",
                                             "value": 1
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=O"
                                     }
                                 ],
                                 "to_after_key_up": [
@@ -851,6 +878,9 @@
                                             "name": "hyper_sublayer_o",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             }
@@ -879,6 +909,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://github.com\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -902,6 +935,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://codeforces.com\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -925,6 +961,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://mail.google.com\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -948,6 +987,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://youtube.com\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -974,6 +1016,9 @@
                                             "name": "hyper_sublayer_b",
                                             "value": 1
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=B"
                                     }
                                 ],
                                 "to_after_key_up": [
@@ -982,6 +1027,9 @@
                                             "name": "hyper_sublayer_b",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             }
@@ -1010,6 +1058,9 @@
                                 "to": [
                                     {
                                         "shell_command": "~/.local/bin/toggle_dnd.sh"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1033,6 +1084,9 @@
                                 "to": [
                                     {
                                         "shell_command": "~/.local/bin/lock-screen.sh"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1056,6 +1110,9 @@
                                 "to": [
                                     {
                                         "shell_command": "~/.local/bin/study-mode"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1079,6 +1136,9 @@
                                 "to": [
                                     {
                                         "shell_command": "~/.local/bin/panic-mode"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1102,6 +1162,9 @@
                                 "to": [
                                     {
                                         "shell_command": "screencapture -i -c"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1128,6 +1191,9 @@
                                             "name": "hyper_sublayer_s",
                                             "value": 1
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=S"
                                     }
                                 ],
                                 "to_after_key_up": [
@@ -1136,6 +1202,9 @@
                                             "name": "hyper_sublayer_s",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             }
@@ -1168,6 +1237,9 @@
                                             "left_command",
                                             "left_option"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1195,6 +1267,9 @@
                                             "left_command",
                                             "left_option"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1221,6 +1296,9 @@
                                         "modifiers": [
                                             "left_command"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1247,6 +1325,9 @@
                                         "modifiers": [
                                             "left_command"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1274,6 +1355,9 @@
                                             "left_command",
                                             "left_shift"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1301,6 +1385,9 @@
                                             "left_command",
                                             "left_shift"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1328,6 +1415,9 @@
                                             "left_command",
                                             "left_option"
                                         ]
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1354,6 +1444,9 @@
                                             "name": "hyper_sublayer_t",
                                             "value": 1
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=T"
                                     }
                                 ],
                                 "to_after_key_up": [
@@ -1362,6 +1455,9 @@
                                             "name": "hyper_sublayer_t",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             }
@@ -1390,6 +1486,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -na Ghostty --args --title=\"Quick Terminal\" -e \"zsh -l -c todo\""
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1413,6 +1512,9 @@
                                 "to": [
                                     {
                                         "shell_command": "open -a Calculator"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1436,6 +1538,9 @@
                                 "to": [
                                     {
                                         "shell_command": "~/.local/bin/fv.sh"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1459,6 +1564,9 @@
                                 "to": [
                                     {
                                         "shell_command": "bash ~/.config/skhd/control_center.sh"
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             },
@@ -1485,6 +1593,9 @@
                                             "name": "hyper_sublayer_c",
                                             "value": 1
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=C"
                                     }
                                 ],
                                 "to_after_key_up": [
@@ -1493,6 +1604,9 @@
                                             "name": "hyper_sublayer_c",
                                             "value": 0
                                         }
+                                    },
+                                    {
+                                        "shell_command": "/opt/homebrew/bin/sketchybar --trigger hyper_sublayer_change SUBLAYER=OFF"
                                     }
                                 ]
                             }

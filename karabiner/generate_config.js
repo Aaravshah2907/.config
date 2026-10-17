@@ -124,16 +124,10 @@ const hyperSources = [
     ]
   },
   {
-    description: "Hyper Key: Apple Internal Right Command (Hold: Hyper, Tap: Spotlight)",
+    description: "Hyper Key: Right Command (Hold: Hyper, Tap: Spotlight)",
     manipulators: [
       {
         type: "basic",
-        conditions: [
-          {
-            type: "device_if",
-            identifiers: [{ is_built_in_keyboard: true }]
-          }
-        ],
         from: {
           key_code: "right_command",
           modifiers: { optional: ["any"] }
@@ -154,16 +148,10 @@ const hyperSources = [
     ]
   },
   {
-    description: "Hyper Key: Pebble Keyboard Right Ctrl (Hold: Hyper, Tap: Escape)",
+    description: "Hyper Key: Right Ctrl (Hold: Hyper, Tap: Escape)",
     manipulators: [
       {
         type: "basic",
-        conditions: [
-          {
-            type: "device_if",
-            identifiers: [{ vendor_id: 1578, product_id: 16641 }]
-          }
-        ],
         from: {
           key_code: "right_control",
           modifiers: { optional: ["any"] }

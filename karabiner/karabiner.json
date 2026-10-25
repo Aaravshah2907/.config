@@ -8,6 +8,66 @@
                 },
                 "rules": [
                     {
+                        "description": "Hardware Media Keys to Sketchybar Media Control",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "consumer_key_code": "play_or_pause"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh toggle"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "consumer_key_code": "rewind"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh prev"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "consumer_key_code": "fast_forward"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh next"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "consumer_key_code": "scan_previous_track"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh prev"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "consumer_key_code": "scan_next_track"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh next"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Toggle AeroSpace (Option + ')",
                         "enabled": false,
                         "manipulators": [
@@ -2294,7 +2354,7 @@
                             },
                             "to": [
                                 {
-                                    "consumer_key_code": "play_or_pause"
+                                    "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh toggle"
                                 }
                             ]
                         },
@@ -2304,7 +2364,7 @@
                             },
                             "to": [
                                 {
-                                    "consumer_key_code": "rewind"
+                                    "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh prev"
                                 }
                             ]
                         },
@@ -2314,7 +2374,7 @@
                             },
                             "to": [
                                 {
-                                    "consumer_key_code": "fast_forward"
+                                    "shell_command": "/Users/aaravshah2975/.config/sketchybar/plugins/media_control.sh next"
                                 }
                             ]
                         },

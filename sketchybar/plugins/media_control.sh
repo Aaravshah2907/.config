@@ -1,5 +1,6 @@
 #!/bin/bash
 # ~/.config/sketchybar/plugins/media_control.sh
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 ACTION=$1 # toggle, next, prev
 YAZI_SCRIPT="/Users/aaravshah2975/.config/radiant-player/queue.py"
 

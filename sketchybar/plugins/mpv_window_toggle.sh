@@ -26,11 +26,11 @@ else
 
   sleep 0.3
 
-  # AeroSpace integration: bring window to the active workspace as a floating window
+  # AeroSpace integration: bring window to the active workspace as a tiled window so it is selectable
   WIN_ID=$(aerospace list-windows --all --format '%{window-id} %{app-name}' 2>/dev/null | awk '$2=="mpv"{print $1}')
   if [ -n "$WIN_ID" ]; then
     [ -n "$CURRENT_WS" ] && aerospace move-node-to-workspace --window-id "$WIN_ID" "$CURRENT_WS" 2>/dev/null
-    aerospace layout --window-id "$WIN_ID" floating 2>/dev/null
+    aerospace layout --window-id "$WIN_ID" tiling 2>/dev/null
     aerospace focus --window-id "$WIN_ID" 2>/dev/null
   fi
 

@@ -262,6 +262,22 @@ def ensure_mpv():
         time.sleep(0.1)
 
 
+def kill_mpv():
+    """Cleanly terminates mpv and cleans up socket."""
+    try:
+        mpv_send(["quit"])
+    except Exception:
+        pass
+    time.sleep(0.1)
+    if is_mpv_running():
+        subprocess.run(["pkill", "-x", "mpv"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if os.path.exists(SOCKET_PATH):
+        try:
+            os.remove(SOCKET_PATH)
+        except OSError:
+            pass
+
+
 def shell_ok(cmd):
     return subprocess.run(["bash", "-lc", cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
 
@@ -1249,8 +1265,7 @@ def refresh_live_status(state):
                 debug_log(f"EOF detected for local track at index {idx}, advancing queue")
                 state["last_auto_next_id"] = track_sig
                 save_state(state)
-                subprocess.Popen([sys.executable, sys.argv[0], "next"],
-                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                cmd_auto_advance()
             return
         title = mpv_send(["get_property", "media-title"])
         paused = mpv_send(["get_property", "pause"])
@@ -1568,16 +1583,13 @@ def signal_refresh():
 
 
 def cmd_replace(files):
-    """Replace queue and play immediately, or append if mpv is already active."""
+    """Replace queue and play immediately."""
     if not files:
-        return
-    # If mpv is already playing something, just enqueue instead of interrupting.
-    if is_mpv_active():
-        cmd_play(files)
         return
     state = load_state()
     state["queue"] = []
     state["current_index"] = -1
+    state["last_auto_next_id"] = None
     for f in files:
         ap = os.path.abspath(os.path.expanduser(f))
         meta = extract_local_metadata(ap)
@@ -1833,10 +1845,12 @@ def _step(delta):
         if state.get("loop_mode") == "playlist":
             state["current_index"] = 0
         else:
-            # End of queue with loop off: stop playback instead of replaying last track
+            # End of queue with loop off: stop playback and autokill mpv instance
             state["current_index"] = len(q) - 1
             update_last_status(state, running=False, paused=True, title="Queue Ended", source="local")
             save_state(state)
+            kill_mpv()
+            subprocess.run(["sketchybar", "--trigger", "media_change"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return
     if state["current_index"] < 0:
         if state.get("loop_mode") == "playlist":
@@ -1845,6 +1859,32 @@ def _step(delta):
             state["current_index"] = 0
     play_current(state, resume=False)
     save_state(state)
+
+
+def cmd_auto_advance():
+    """Advances queue upon track completion, accounting for loop modes, or kills mpv if ended."""
+    state = load_state()
+    q = state.get("queue", [])
+    if not q:
+        kill_mpv()
+        return
+
+    loop = state.get("loop_mode", "off")
+    if loop == "single":
+        play_current(state, resume=False)
+        save_state(state)
+        return
+
+    idx = state.get("current_index", -1)
+    if idx + 1 >= len(q) and loop != "playlist":
+        state["current_index"] = len(q) - 1
+        update_last_status(state, running=False, paused=True, title="Queue Ended", source="local")
+        save_state(state)
+        kill_mpv()
+        subprocess.run(["sketchybar", "--trigger", "media_change"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return
+
+    _step(1)
 
 
 def cmd_next():
@@ -1890,8 +1930,11 @@ def cmd_clear():
     state["queue"] = []
     state["current_index"] = -1
     state["active_source"] = None
+    state["last_auto_next_id"] = None
     update_last_status(state)
     save_state(state)
+    kill_mpv()
+    subprocess.run(["sketchybar", "--trigger", "media_change"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def _resolve_playlist_path(name):
@@ -2558,6 +2601,8 @@ def main():
             cmd_short_status_fast()
         elif cmd == "status_json":
             cmd_status_json()
+        elif cmd == "auto_advance":
+            cmd_auto_advance()
         elif cmd == "toggle":
             cmd_toggle()
             signal_refresh()

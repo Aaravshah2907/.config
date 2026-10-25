@@ -1583,10 +1583,27 @@ def signal_refresh():
 
 
 def cmd_replace(files):
-    """Replace queue and play immediately."""
+    """Replace queue and play immediately, or append if a queue is currently playing."""
     if not files:
         return
     state = load_state()
+    # If a queue is currently active and playing, append to preserve the queue
+    if is_mpv_active() and state.get("queue") and state.get("last_status", {}).get("running"):
+        cmd_play(files)
+        return
+
+    _do_replace(state, files)
+
+
+def cmd_force_replace(files):
+    """Explicitly wipe queue and play immediately even if something is playing."""
+    if not files:
+        return
+    state = load_state()
+    _do_replace(state, files)
+
+
+def _do_replace(state, files):
     state["queue"] = []
     state["current_index"] = -1
     state["last_auto_next_id"] = None
@@ -1610,19 +1627,23 @@ def cmd_replace(files):
     state["current_index"] = 0
     play_current(state, resume=False)
     save_state(state)
+    signal_refresh()
 
 
 def cmd_play(files):
     state = load_state()
     was_empty = len(state["queue"]) == 0
+    added_titles = []
     for f in files:
         ap = os.path.abspath(os.path.expanduser(f))
         meta = extract_local_metadata(ap)
+        title = meta.get("title") or Path(ap).name
+        added_titles.append(title)
         state["queue"].append(
             {
                 "id": str(uuid.uuid4()),
                 "source": "local",
-                "title": meta.get("title"),
+                "title": title,
                 "artist": meta.get("artist"),
                 "album": meta.get("album"),
                 "local_path": ap,
@@ -1639,6 +1660,22 @@ def cmd_play(files):
         state["current_index"] = 0
         play_current(state, resume=False)
     save_state(state)
+    signal_refresh()
+
+    # User feedback via Syl notification
+    count = len(added_titles)
+    if count == 1:
+        msg = f"Added '{added_titles[0]}' to queue"
+    elif count > 1:
+        msg = f"Added {count} tracks to queue"
+    else:
+        msg = ""
+    if msg:
+        try:
+            subprocess.run(["ya", "pub", "plugin", "--str", f"syl-notify custom '󰎆 Radiant Queue' \"{msg}\""],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
 
 
 def cmd_add_spotify_search(query):
@@ -2524,6 +2561,9 @@ def main():
     try:
         if cmd == "replace":
             cmd_replace(sys.argv[2:])
+            signal_refresh()
+        elif cmd == "force_replace":
+            cmd_force_replace(sys.argv[2:])
             signal_refresh()
         elif cmd == "play":
             cmd_play(sys.argv[2:])

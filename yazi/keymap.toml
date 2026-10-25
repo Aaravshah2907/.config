@@ -440,18 +440,20 @@ keymap = [
 [cmp]
 
 keymap = [
-	{ on = "<C-c>",   run = "close",                                      desc = "Cancel completion" },
-	{ on = "<Tab>",   run = "close --submit",                             desc = "Submit the completion" },
-	{ on = "<Enter>", run = [ "close --submit", "close_input --submit" ], desc = "Complete and submit the input" },
+	{ on = "<C-c>",     run = "close",                                      desc = "Cancel completion" },
+	{ on = "<Tab>",     run = "close --submit",                             desc = "Submit the completion" },
+	{ on = "<Right>",   run = "close --submit",                             desc = "Submit the completion" },
+	{ on = "<Enter>",   run = [ "close", "input:close --submit" ],          desc = "Submit current input" },
+	{ on = "<S-Enter>", run = [ "close --submit", "input:close --submit" ], desc = "Complete and submit candidate" },
 
-	{ on = "<A-k>", run = "arrow prev", desc = "Previous item" },
-	{ on = "<A-j>", run = "arrow next", desc = "Next item" },
+	{ on = "<A-k>", run = "arrow -1", desc = "Previous item" },
+	{ on = "<A-j>", run = "arrow 1",  desc = "Next item" },
 
-	{ on = "<Up>",   run = "arrow prev", desc = "Previous item" },
-	{ on = "<Down>", run = "arrow next", desc = "Next item" },
+	{ on = "<Up>",   run = "arrow -1", desc = "Previous item" },
+	{ on = "<Down>", run = "arrow 1",  desc = "Next item" },
 
-	{ on = "<C-p>", run = "arrow prev", desc = "Previous item" },
-	{ on = "<C-n>", run = "arrow next", desc = "Next item" },
+	{ on = "<C-p>", run = "arrow -1", desc = "Previous item" },
+	{ on = "<C-n>", run = "arrow 1",  desc = "Next item" },
 
 	# Help
 	{ on = "~",    run = "help", desc = "Open help" },

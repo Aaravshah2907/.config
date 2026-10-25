@@ -79,6 +79,7 @@ update_bar() {
 hide_bar() {
   # Default View: idle / nothing playing
   sketchybar --set "$NAME" drawing=off
+  sketchybar --set music.mpv_window drawing=off
   exit 0
 }
 
@@ -129,6 +130,27 @@ if [[ -n "$MPV_STATUS" && $(echo "$MPV_STATUS" | jq -r '.running') == "true" ]];
   update_bar "$LICON$DISPLAY" "$APP"
   # Override icon after update_bar sets it default
   safe_set "$NAME" icon="$ICON"
+
+  # Update popup header to reflect current source (prevents stale VLC label)
+  if [ "$APP" == "Spotify" ]; then
+    sketchybar --set media.header icon="" label="THE RADIANT SONG" icon.color="$SPREN_CULTIVATION" label.color="$SPREN_CULTIVATION"
+  else
+    sketchybar --set media.header icon="󰎈" label="THE RADIANT SONG" icon.color="$RADIANT_GOLD" label.color="$RADIANT_GOLD"
+  fi
+
+  # Show the mpv window-toggle button only for local radiant-player mpv
+  if [ "$APP" == "mpv" ]; then
+    # Reflect current windowed state on the button icon
+    WIN_STATE=$(echo '{"command": ["get_property", "force-window"]}' | socat - UNIX-CONNECT:/tmp/mpv-yazi.sock 2>/dev/null | jq -r '.data // false')
+    if [ "$WIN_STATE" == "true" ]; then
+      sketchybar --set music.mpv_window drawing=on icon="󱂬" icon.color="$PRES_GLACIAL"
+    else
+      sketchybar --set music.mpv_window drawing=on icon="󰹙" icon.color="$PRES_GLACIAL"
+    fi
+  else
+    sketchybar --set music.mpv_window drawing=off
+  fi
+
   exit 0
 fi
 
@@ -242,6 +264,9 @@ if [ "$UPDATED" -eq 0 ]; then
   rm -f /tmp/syl_paused_time
   hide_bar
 fi
+
+# Fallback paths don't use radiant-player, so mpv window toggle doesn't apply
+sketchybar --set music.mpv_window drawing=off
 
 # Check if currently paused by looking at the set icon
 CURRENT_ICON=$(sketchybar --query "$NAME" | jq -r '.icon.value')

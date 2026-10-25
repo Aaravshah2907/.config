@@ -1567,6 +1567,35 @@ def signal_refresh():
         pass
 
 
+def cmd_replace(files):
+    """Clear the queue, add files as a new playlist, and start playback immediately."""
+    if not files:
+        return
+    state = load_state()
+    state["queue"] = []
+    state["current_index"] = -1
+    for f in files:
+        ap = os.path.abspath(os.path.expanduser(f))
+        meta = extract_local_metadata(ap)
+        state["queue"].append(
+            {
+                "id": str(uuid.uuid4()),
+                "source": "local",
+                "title": meta.get("title"),
+                "artist": meta.get("artist"),
+                "album": meta.get("album"),
+                "local_path": ap,
+                "spotify_uri": "",
+                "duration_sec": meta.get("duration_sec"),
+                "added_at": now_iso(),
+                "last_pos": 0,
+            }
+        )
+    state["current_index"] = 0
+    play_current(state, resume=False)
+    save_state(state)
+
+
 def cmd_play(files):
     state = load_state()
     was_empty = len(state["queue"]) == 0
@@ -2419,6 +2448,7 @@ def main():
 
     # Read-only commands should never block the whole player stack.
     lock_needed = cmd in {
+        "replace",
         "play",
         "add_spotify",
         "add_spotify_search",
@@ -2445,7 +2475,10 @@ def main():
         print("Lock busy, please retry.")
         return
     try:
-        if cmd == "play":
+        if cmd == "replace":
+            cmd_replace(sys.argv[2:])
+            signal_refresh()
+        elif cmd == "play":
             cmd_play(sys.argv[2:])
             signal_refresh()
         elif cmd == "add_spotify":

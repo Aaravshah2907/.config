@@ -1568,8 +1568,12 @@ def signal_refresh():
 
 
 def cmd_replace(files):
-    """Clear the queue, add files as a new playlist, and start playback immediately."""
+    """Replace queue and play immediately, or append if mpv is already active."""
     if not files:
+        return
+    # If mpv is already playing something, just enqueue instead of interrupting.
+    if is_mpv_active():
+        cmd_play(files)
         return
     state = load_state()
     state["queue"] = []

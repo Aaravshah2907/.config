@@ -1,6 +1,6 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "58c4f4e"
+rev = "e0bbd20"
 hash = "87472b05a8c420100f6a2b9cde1e7746"
 
 [[plugin.deps]]

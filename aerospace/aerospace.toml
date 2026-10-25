@@ -49,17 +49,7 @@ automatically-unhide-macos-hidden-apps = false
 # This config option is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
 # Active: T(erm) C(ode) B(rowser) M(sg) S(potify) V(ideo) E(du) A(I) P(review)
-persistent-workspaces = [
-    "T",
-    "C",
-    "B",
-    "M",
-    "S",
-    "V",
-    "E",
-    "A",
-    "P",
-]
+persistent-workspaces = ["T", "C", "B", "M", "S", "V", "E", "A", "P"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -86,11 +76,11 @@ key-mapping.preset = 'qwerty'
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # See: https://nikitabobko.github.io/AeroSpace/guide#gaps
 gaps.inner.horizontal = 8
-gaps.inner.vertical =   8
-gaps.outer.left =       8
-gaps.outer.bottom =     12
-gaps.outer.top =        50
-gaps.outer.right =      8
+gaps.inner.vertical = 8
+gaps.outer.left = 8
+gaps.outer.bottom = 12
+gaps.outer.top = 50
+gaps.outer.right = 8
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -264,9 +254,9 @@ alt-shift-l = [
     'exec-and-forget /bin/bash -c "source ~/.local/bin/cosmere_colors.sh && sketchybar --animate tanh 15 --bar color=\$BAR_COLOR"',
 ]
 
-# Auto-spiral: alternate split direction for subsequent windows
+# Auto-spiral: ensure first split is horizontal (left/right), then spiral subsequent windows
 [[on-window-detected]]
-run = ['split opposite']
+run = ['exec-and-forget /Users/aaravshah2975/.config/aerospace/auto-spiral.sh']
 check-further-callbacks = true
 
 # Space T: Terminal & CLI
@@ -328,4 +318,3 @@ run = 'layout floating'
 [[on-window-detected]]
 if.window-title-regex-substring = '⌨️ Shortcut Hub|Picture-in-Picture|PIP'
 run = 'layout floating'
-

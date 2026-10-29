@@ -33,6 +33,7 @@ return {
           "vim",
           "vimdoc",
           "bash",
+          "rust",
           "regex",
           "latex",
           "bibtex",

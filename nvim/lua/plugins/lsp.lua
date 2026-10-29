@@ -95,6 +95,7 @@ return {
 					"clangd", -- C/C++
 					"texlab", -- LaTeX LSP
 					"bashls", -- Bash/Shell Scripting LSP
+					"rust_analyzer", -- Rust LSP
 				},
 				automatic_installation = true,
 				handlers = {
@@ -198,8 +199,38 @@ return {
 							},
 						})
 					end,
+
+					-- Special config for Rust (rust_analyzer)
+					["rust_analyzer"] = function()
+						lspconfig.rust_analyzer.setup({
+							on_attach = on_attach,
+							capabilities = capabilities,
+							settings = {
+								["rust-analyzer"] = {
+									check = {
+										command = "clippy",
+									},
+								},
+							},
+						})
+					end,
 				},
 			})
+
+			-- Fallback: If rust-analyzer exists on PATH (e.g. via rustup) but not Mason, initialize it directly
+			if vim.fn.executable("rust-analyzer") == 1 then
+				lspconfig.rust_analyzer.setup({
+					on_attach = on_attach,
+					capabilities = capabilities,
+					settings = {
+						["rust-analyzer"] = {
+							check = {
+								command = "clippy",
+							},
+						},
+					},
+				})
+			end
 
 			-- ── Diagnostic Display Settings ──────────────────────────────────
 			-- How errors/warnings appear in the editor

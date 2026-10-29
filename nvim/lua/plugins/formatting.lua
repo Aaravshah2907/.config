@@ -36,6 +36,7 @@ return {
           sh = { "shfmt" },
           bash = { "shfmt" },
           zsh = { "shfmt" },
+          rust = { "rustfmt", lsp_format = "fallback" },
         },
         format_on_save = {
           timeout_ms = 1000,

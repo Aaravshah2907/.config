@@ -6,14 +6,15 @@ APP="Bitwarden"
 if ! pgrep -xq "$APP"; then
   open -a "$APP"
 else
-  # Check if the app is currently visible
   VISIBLE=$(osascript -e 'tell app "System Events" to get visible of process "Bitwarden"' 2>/dev/null)
   if [ "$VISIBLE" = "true" ]; then
-    # Bring to front then Cmd+H
+    # Click the "Hide Bitwarden" menu item directly — no focus race
     osascript -e '
       tell app "Bitwarden" to activate
-      delay 0.3
-      tell app "System Events" to keystroke "h" using command down
+      delay 0.5
+      tell app "System Events" to tell process "Bitwarden"
+        click menu item "Hide Bitwarden" of menu "Bitwarden" of menu bar 1
+      end tell
     '
   else
     open -a "$APP"

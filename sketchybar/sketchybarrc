@@ -672,7 +672,14 @@ sketchybar --add item clipboard right \
                            label.drawing=off \
                            click_script="$PLUGIN_DIR/clipboard_click.sh"
 
-# Audio Toggle
+# Bitwarden: Vault Toggle
+sketchybar --add item bitwarden right \
+            --set bitwarden icon=:bit_warden: \
+                         icon.font="sketchybar-app-font:Regular:16.0" \
+                         icon.color=$HONOR_GOLD \
+                         label.drawing=off \
+                         click_script="$PLUGIN_DIR/bitwarden_toggle.sh"
+
 sketchybar --add item audio_toggle right \
            --set audio_toggle update_freq=5 \
                               drawing=off \
@@ -731,7 +738,7 @@ sketchybar --add item battery_saver right \
            --subscribe battery_saver mouse.clicked
 
 # Reorder right items logically (first is rightmost)
-sketchybar --reorder battery_saver volume volume_icon audio_toggle battery bluetooth control_center net_speed warp bwifi drawer sysmon pomodoro cpkb mic clipboard trash ntfy github utilities clock
+sketchybar --reorder battery_saver volume volume_icon audio_toggle battery bluetooth control_center net_speed warp bwifi drawer sysmon pomodoro cpkb mic bitwarden clipboard trash ntfy github utilities clock
 ##### Finalize #####
 sketchybar --update
 sketchybar --trigger space_windows_change
@@ -744,3 +751,4 @@ sketchybar --trigger window_focus
 # Run scripts once on startup/reload to populate values immediately
 #pkill -f runcat.sh
 #NAME=runcat $PLUGIN_DIR/runcat.sh &
+

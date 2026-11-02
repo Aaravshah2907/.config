@@ -1,0 +1,82 @@
+{
+  "commands": [
+    {
+      "name": "Templates: Rust Template Picker",
+      "command": "nvim +RustTemplate",
+      "description": "Interactive selector for Rust starter templates (CP, Project, Learning)",
+      "tags": ["templates", "rust", "neovim"]
+    },
+    {
+      "name": "Templates: Competitive Programming Template",
+      "command": "nvim +'RustTemplate cp'",
+      "description": "Insert high-speed Rust CP template (zero-copy Scanner, BufWriter, multi-testcase)",
+      "tags": ["templates", "rust", "cp", "neovim"]
+    },
+    {
+      "name": "Templates: Personal Project Template",
+      "command": "nvim +'RustTemplate project'",
+      "description": "Insert structured Rust project template (ExitCode, Result, tests)",
+      "tags": ["templates", "rust", "project", "neovim"]
+    },
+    {
+      "name": "Templates: Learning & Playground Template",
+      "command": "nvim +'RustTemplate learning'",
+      "description": "Insert Rust sandbox template (dbg!, concept notes, embedded tests)",
+      "tags": ["templates", "rust", "learning", "neovim"]
+    },
+    {
+      "name": "Code Runner: Run Current File",
+      "command": "Space rc",
+      "description": "Run current file in split terminal (Cargo run if inside crate, or rustc/g++/python)",
+      "tags": ["runner", "neovim"]
+    },
+    {
+      "name": "Code Runner: Run with input.txt",
+      "command": "Space ri",
+      "description": "Run current file with input redirected from input.txt",
+      "tags": ["runner", "cp", "neovim"]
+    },
+    {
+      "name": "Code Runner: Run CPOS Test Cases",
+      "command": "Space rj",
+      "description": "Run all test cases from <filename>.samples.json and compare output",
+      "tags": ["runner", "cp", "cpos", "neovim"]
+    },
+    {
+      "name": "Code Runner: Toggle Test Cases",
+      "command": "Space rt",
+      "description": "Toggle multi/single test case mode (cin >> T for C++, let t = 1 for Rust)",
+      "tags": ["runner", "cp", "neovim"]
+    },
+    {
+      "name": "Code Runner: Edit input.txt",
+      "command": "Space re",
+      "description": "Quick edit input.txt in current directory",
+      "tags": ["runner", "cp", "neovim"]
+    },
+    {
+      "name": "Code Runner: View Samples JSON",
+      "command": "Space rv",
+      "description": "View the .samples.json test cases in a split window",
+      "tags": ["runner", "cp", "neovim"]
+    },
+    {
+      "name": "Navigation: Find Files",
+      "command": "Space ff",
+      "description": "Find files with Telescope",
+      "tags": ["navigation", "telescope", "neovim"]
+    },
+    {
+      "name": "Navigation: Live Grep",
+      "command": "Space fg",
+      "description": "Live grep workspace with Telescope",
+      "tags": ["navigation", "telescope", "neovim"]
+    },
+    {
+      "name": "Snippets: CPKB Snippets Picker",
+      "command": "Space cs",
+      "description": "Search and insert competitive programming snippets from CPKB",
+      "tags": ["snippets", "cp", "cpkb", "neovim"]
+    }
+  ]
+}

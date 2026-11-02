@@ -3480,6 +3480,54 @@
     "source": "app"
   },
   {
+    "keys": "Space c t",
+    "action": "Rust / Starter Template Picker",
+    "category": "Neovim: Templates",
+    "app": "nvim",
+    "command": ":RustTemplate",
+    "source": "app"
+  },
+  {
+    "keys": "Space r c",
+    "action": "Run Current File (C++, Rust, Python, etc.)",
+    "category": "Neovim: Code Runner",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space r i",
+    "action": "Run with input.txt (CP Mode)",
+    "category": "Neovim: Code Runner",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space r j",
+    "action": "Run CPOS Samples JSON Tests",
+    "category": "Neovim: Code Runner",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space r t",
+    "action": "Toggle Test Cases (cin >> T / let t = 1)",
+    "category": "Neovim: Code Runner",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": ":RustTemplate",
+    "action": "Insert Rust Starter Template (cp/project/learning)",
+    "category": "Neovim: Templates",
+    "app": "nvim",
+    "command": ":RustTemplate",
+    "source": "app"
+  },
+  {
     "keys": "\u2318 T",
     "action": "New Tab",
     "category": "Helium: Tabs",

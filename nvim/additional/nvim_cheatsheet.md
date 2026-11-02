@@ -163,14 +163,30 @@ _Combine these objects with actions like `d` (delete), `c` (change), `y` (yank),
 
 ---
 
-## ▶️ Code Runner (Competitive Programming)
+## ▶️ Code Runner (Competitive Programming & Projects)
 
-- **`Space rc`** - Run current file (C++/Python/Java/JS)
+- **`Space rc`** - Run current file (C++, Rust, Python, Java, JS; runs `cargo run` if inside Cargo project, else `rustc -O`)
 - **`Space ri`** - Run with input from `input.txt` (CP mode!)
 - **`Space rj`** - Run all test cases from CPOS `.samples.json` (shows PASS/FAIL, press `q` to close)
 - **`Space rv`** - View the `.samples.json` test cases in a split
-- **`Space rt`** - Toggle multi/single test case mode (comments out `cin >> T` for C++)
+- **`Space rt`** - Toggle multi/single test case mode (toggles `cin >> T` for C++ or `let t = 1;` for Rust)
 - **`Space re`** - Edit `input.txt` in the same directory
+
+---
+
+## 🦀 Templates & Rust Workflow
+
+- **`Space ct`** - Starter Template Picker (Rust CP, Personal Project, Learning/Playground)
+- **`:RustTemplate [cp|project|learning]`** - Manually insert a Rust starter template
+- **Automatic Rule Heuristics (on opening new/empty `*.rs` files):**
+  - **CP (`skeleton_cp.rs`):** Auto-detected if inside `CodeForces/`, `Leetcode/`, `cpos/`, `/cp/`, or if sibling `input.txt` / `.samples.json` exists.
+  - **Project (`skeleton_project.rs`):** Auto-detected if an ancestor directory contains `Cargo.toml`.
+  - **Learning (`skeleton_learning.rs`):** Auto-detected if directory contains `learn`, `playground`, or `practice`.
+  - **Ambiguous files:** Neovim prompts an interactive picker to choose the template.
+- **LuaSnip Triggers (Insert Mode + Tab):**
+  - `cprs` - Expand complete Rust Competitive Programming template (with zero-allocation `Scanner`)
+  - `learnrs` - Expand Rust Playground & Learning template
+  - `tests` - Expand `#[cfg(test)] mod tests` module
 
 ---
 

@@ -368,6 +368,12 @@ def get_neovim_shortcuts():
         {"keys": "[ b / ] b", "action": "Previous / Next Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
         {"keys": "Space b d", "action": "Delete / Close Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
         {"keys": "Space w", "action": "Save Current Buffer", "category": "Neovim: Operations", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space c t", "action": "Rust / Starter Template Picker", "category": "Neovim: Templates", "app": "nvim", "command": ":RustTemplate", "source": "app"},
+        {"keys": "Space r c", "action": "Run Current File (C++, Rust, Python, etc.)", "category": "Neovim: Code Runner", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space r i", "action": "Run with input.txt (CP Mode)", "category": "Neovim: Code Runner", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space r j", "action": "Run CPOS Samples JSON Tests", "category": "Neovim: Code Runner", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space r t", "action": "Toggle Test Cases (cin >> T / let t = 1)", "category": "Neovim: Code Runner", "app": "nvim", "command": "", "source": "app"},
+        {"keys": ":RustTemplate", "action": "Insert Rust Starter Template (cp/project/learning)", "category": "Neovim: Templates", "app": "nvim", "command": ":RustTemplate", "source": "app"},
     ]
 
 def get_helium_shortcuts():
@@ -511,18 +517,6 @@ def get_ghostty_shortcuts():
         {"keys": "⌘ 0", "action": "Reset Font Size", "category": "Ghostty: View", "app": "Ghostty", "command": "", "source": "app"},
         {"keys": "⌘ ⌥ I", "action": "Toggle Terminal Inspector", "category": "Ghostty: Tools", "app": "Ghostty", "command": "", "source": "app"},
         {"keys": "⌘ ⇧ ,", "action": "Reload Configuration", "category": "Ghostty: Tools", "app": "Ghostty", "command": "", "source": "app"},
-    ]
-
-def get_neovim_shortcuts():
-    return [
-        {"keys": "Space f f", "action": "Find Files (Telescope)", "category": "Neovim: Navigation", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "Space f g", "action": "Live Grep Workspace", "category": "Neovim: Navigation", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "Space e", "action": "Toggle File Tree (Neotree/NvimTree)", "category": "Neovim: Files", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "⌃ W h / j / k / l", "action": "Navigate Window Splits", "category": "Neovim: Windows", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "⌃ W s / v", "action": "Split Horizontal / Vertical", "category": "Neovim: Windows", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "[ b / ] b", "action": "Previous / Next Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "Space b d", "action": "Delete / Close Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
-        {"keys": "Space w", "action": "Save Current Buffer", "category": "Neovim: Operations", "app": "nvim", "command": "", "source": "app"},
     ]
 
 CACHE_PATH = Path("/Users/aaravshah2975/.config/cheatsheet/shortcuts_cache.json")

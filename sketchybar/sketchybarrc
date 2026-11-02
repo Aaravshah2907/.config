@@ -107,8 +107,7 @@ sketchybar --add item apple left \
            --set apple.sleep icon=󰒲 label="Sleep" click_script="pmset sleepnow; sketchybar --set apple popup.drawing=off" \
   \
            --add item apple.restart popup.apple \
-           --set apple.restart icon=󰑓 label="Restart Sketchybar" click_script="$PLUGIN_DIR/reload.sh; sketchybar --set apple popup.drawing=off"
- \
+           --set apple.restart icon=󰑓 label="Restart Sketchybar" click_script="$PLUGIN_DIR/reload.sh; sketchybar --set apple popup.drawing=off" \
   \
   --add item guilt left \
     --set guilt update_freq=5 \
@@ -644,7 +643,7 @@ sketchybar --add item pomodoro right \
                           icon.color=$HONOR_GOLD \
                           label.drawing=off \
                           script="$PLUGIN_DIR/pomodoro.sh" \
-           --subscribe pomodoro mouse.clicked mouse.exited.global
+                          click_script="$PLUGIN_DIR/pomodoro.sh click"
 
 # CPKB Snippets
 sketchybar --add item cpkb right \
@@ -652,8 +651,7 @@ sketchybar --add item cpkb right \
                       icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
                       icon.color=$FRONTAPP_ACCENT \
                       label.drawing=off \
-                      script="$PLUGIN_DIR/cpkb_plugin.sh" \
-           --subscribe cpkb mouse.clicked mouse.exited.global
+                      click_script="$PLUGIN_DIR/cpkb_plugin.sh"
 
 # Microphone Toggle
 sketchybar --add item mic right \

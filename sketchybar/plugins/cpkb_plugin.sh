@@ -1,41 +1,69 @@
-#!/bin/bash
-source "$HOME/.local/bin/cosmere_colors.sh"
+#!/usr/bin/env bash
+set -u
 
-# CPKB SketchyBar Plugin
-# Handles click events (hover is delegated to hover.sh)
+DIALOG=/usr/local/bin/dialog
+CPKB=/opt/homebrew/bin/cpkb
+JQ=/opt/homebrew/bin/jq
 
-if [ "$SENDER" = "mouse.clicked" ]; then
-  # Prompt user for search term
-  SEARCH_TERM=$(osascript -e 'Tell application "System Events" to display dialog "Search snippets:" default answer ""' -e 'text returned of result' 2>/dev/null)
-  
-  if [ $? -eq 0 ]; then
-    # Query database: search by title, tags, or id. Limit to 5 results for sanity.
-    RESULTS=$(cpkb query "$SEARCH_TERM" --limit 5)
-    
-    if [ -z "$RESULTS" ]; then
-      osascript -e 'display notification "No matching snippet found" with title "CPKB Search"'
-      exit 0
-    fi
-    
-    # Format list for AppleScript
-    AS_LIST=""
-    while read -r line; do
-        if [ -n "$AS_LIST" ]; then
-            AS_LIST="$AS_LIST, "
-        fi
-        line_escaped=$(echo "$line" | sed 's/"/\\"/g')
-        AS_LIST="$AS_LIST\"$line_escaped\""
-    done <<< "$RESULTS"
-    
-    # Show choose from list dialog
-    SELECTION=$(osascript -e "choose from list {$AS_LIST} with prompt \"Select a snippet to copy:\"" 2>/dev/null)
-    
-    if [ "$SELECTION" != "false" ] && [ -n "$SELECTION" ]; then
-      # Extract ID (first word before the '|')
-      SNIPPET_ID=$(echo "$SELECTION" | awk '{print $1}')
-      # Copy to clipboard using the python CLI
-      cpkb copy "$SNIPPET_ID"
-      osascript -e "display notification \"Snippet $SNIPPET_ID copied to clipboard!\" with title \"CPKB\""
-    fi
-  fi
+notify() {
+  "$DIALOG" --notification --style pseudo-banner --title "$1" --message "$2" >/dev/null 2>&1 || true
+}
+
+SEARCH_JSON=$("$DIALOG" --title "CPKB Search" \
+  --message "" --hideicon \
+  --textfield '{"title":"Search term","name":"query","required":true}' \
+  --json --button1text "Search" --button2text "Cancel" --hideicon --small --width 420 --height 180 --ontop) || {
+    exit 0
+  }
+
+SEARCH_TERM=$(printf '%s' "$SEARCH_JSON" | "$JQ" -r '.query // empty')
+if [[ -z "$SEARCH_TERM" ]]; then
+  exit 0
+fi
+
+if ! RESULTS=$("$CPKB" query "$SEARCH_TERM" --limit 5 2>&1); then
+  notify "CPKB" "Search failed. Check CPKB database access."
+  exit 1
+fi
+
+if [[ -z "$RESULTS" ]]; then
+  notify "CPKB Search" "No matching snippet found"
+  exit 0
+fi
+
+RESULT_IDS=()
+DISPLAY_VALUES=()
+while IFS='|' read -r raw_id title; do
+  id=$(printf '%s' "$raw_id" | tr -d '[:space:]')
+  title=${title# }
+  [[ -z "$id" ]] && continue
+  RESULT_IDS+=("$id")
+  DISPLAY_VALUES+=("$id | $title")
+done <<< "$RESULTS"
+
+if [[ ${#RESULT_IDS[@]} -eq 0 ]]; then
+  notify "CPKB Search" "No matching snippet found"
+  exit 0
+fi
+
+SELECT_CONFIG=$(printf '%s\n' "${DISPLAY_VALUES[@]}" | /usr/bin/python3 -c 'import json,sys; values=[line.rstrip("\n") for line in sys.stdin]; print(json.dumps({"title":"Select a snippet to copy","name":"snippet","values":values,"style":"list","required":True}, ensure_ascii=False))')
+SELECTION_JSON=$("$DIALOG" --title "CPKB Search" \
+  --message "" --hideicon \
+  --selectitem "$SELECT_CONFIG" --json \
+  --button1text "Copy" --button2text "Cancel" --hideicon --small --width 520 --height 330 --ontop) || {
+    exit 0
+  }
+
+SELECTION=$(printf '%s' "$SELECTION_JSON" | "$JQ" -r '.SelectedOption // .snippet // empty')
+SNIPPET_ID=${SELECTION%% |*}
+if [[ -z "$SNIPPET_ID" || "$SNIPPET_ID" == "$SELECTION" ]]; then
+  notify "CPKB" "Could not read the selected snippet"
+  exit 1
+fi
+
+if "$CPKB" copy "$SNIPPET_ID"; then
+  notify "CPKB" "Snippet $SNIPPET_ID copied to clipboard"
+else
+  notify "CPKB" "Could not copy snippet $SNIPPET_ID"
+  exit 1
 fi

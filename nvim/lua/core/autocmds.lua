@@ -252,3 +252,123 @@ autocmd({ "BufNewFile", "BufRead" }, {
 	desc = "Interactive LaTeX Template Selector",
 })
 
+-- ─── Rust Template Selector & Auto-Detection ──────────────────────────────
+-- Automatically selects CP, Project, or Learning template based on directory heuristics.
+-- Prompts with interactive picker if ambiguous.
+local rust_templates = {
+	cp = { label = "⚡ Competitive Programming (Fast I/O, Scanner)", file = "skeleton_cp.rs" },
+	project = { label = "📦 Personal Project (Structured CLI / App)", file = "skeleton_project.rs" },
+	learning = { label = "🧪 Learning & Playground (Tests & Scratchpad)", file = "skeleton_learning.rs" },
+}
+
+local function apply_rust_template(template_key, bufnr)
+	bufnr = (bufnr and bufnr ~= 0) and bufnr or vim.api.nvim_get_current_buf()
+	local entry = rust_templates[template_key]
+	if not entry then
+		return
+	end
+	local full_path = vim.fn.expand("~/.config/nvim/templates/" .. entry.file)
+	if vim.fn.filereadable(full_path) == 1 then
+		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {})
+		vim.cmd("0r " .. full_path)
+		vim.api.nvim_win_set_cursor(0, { 1, 0 })
+		vim.bo[bufnr].modified = true
+		vim.notify("Loaded Rust template: " .. entry.label, vim.log.levels.INFO)
+	end
+end
+
+local function detect_rust_template(filepath)
+	if not filepath or filepath == "" then
+		return nil
+	end
+	local full_path = vim.fs.normalize(filepath)
+	local dir = vim.fs.dirname(full_path)
+	local lower = full_path:lower()
+
+	-- Rule 1: Competitive Programming (CodeForces, Leetcode, cpos, or sibling input.txt/.samples.json)
+	local is_cp_dir = lower:match("codeforces") or lower:match("leetcode") or lower:match("cpos") or lower:match("/cp/")
+	local has_cp_siblings = vim.fn.filereadable(dir .. "/input.txt") == 1
+		or vim.fn.filereadable(full_path .. ".samples.json") == 1
+		or #vim.fn.glob(dir .. "/*.samples.json", false, true) > 0
+
+	if is_cp_dir or has_cp_siblings then
+		return "cp"
+	end
+
+	-- Rule 2: Cargo Project (Cargo.toml exists in this or parent directory)
+	local cargo_root = vim.fs.find("Cargo.toml", { upward = true, path = dir })[1]
+	if cargo_root then
+		return "project"
+	end
+
+	-- Rule 3: Learning / Playground directory
+	if lower:match("learn") or lower:match("playground") or lower:match("practice") then
+		return "learning"
+	end
+
+	return nil
+end
+
+local function select_rust_template(bufnr)
+	local choices = {
+		{ label = "⚡ Competitive Programming (Fast I/O, Scanner)", key = "cp" },
+		{ label = "📦 Personal Project (Structured CLI / App)", key = "project" },
+		{ label = "🧪 Learning & Playground (Tests & Scratchpad)", key = "learning" },
+		{ label = "❌ Empty File (No Template)", key = nil },
+	}
+
+	vim.ui.select(choices, {
+		prompt = "Select Rust Starter Template:",
+		format_item = function(item)
+			return item.label
+		end,
+	}, function(choice)
+		if choice and choice.key then
+			apply_rust_template(choice.key, bufnr)
+		end
+	end)
+end
+
+autocmd({ "BufNewFile", "BufRead" }, {
+	group = "Templates",
+	pattern = { "*.rs" },
+	callback = function(args)
+		-- Only run if buffer is completely empty
+		if vim.api.nvim_buf_line_count(args.buf) == 1 and vim.api.nvim_buf_get_lines(args.buf, 0, 1, false)[1] == "" then
+			local filepath = vim.api.nvim_buf_get_name(args.buf)
+			local auto_choice = detect_rust_template(filepath)
+			if auto_choice then
+				apply_rust_template(auto_choice, args.buf)
+			elseif #vim.api.nvim_list_uis() > 0 then
+				vim.defer_fn(function()
+					if
+						vim.api.nvim_buf_is_valid(args.buf)
+						and vim.api.nvim_buf_line_count(args.buf) == 1
+						and vim.api.nvim_buf_get_lines(args.buf, 0, 1, false)[1] == ""
+					then
+						select_rust_template(args.buf)
+					end
+				end, 50)
+			end
+		end
+	end,
+	desc = "Auto-detect or select Rust starter template",
+})
+
+-- User Command: :RustTemplate [cp|project|learning]
+vim.api.nvim_create_user_command("RustTemplate", function(opts)
+	local arg = opts.args and vim.trim(opts.args):lower()
+	if arg ~= "" and rust_templates[arg] then
+		apply_rust_template(arg)
+	else
+		select_rust_template(vim.api.nvim_get_current_buf())
+	end
+end, {
+	nargs = "?",
+	complete = function()
+		return { "cp", "project", "learning" }
+	end,
+	desc = "Insert a Rust starter template",
+})
+
+

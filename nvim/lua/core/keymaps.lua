@@ -117,6 +117,9 @@ map("n", "<leader>Y", '"+Y', { desc = "[Y]ank line to system clipboard" })
 -- Select code, then Space+ca for code actions on just the selection.
 map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode [A]ction" })
 
+-- ─── Code Templates ────────────────────────────────────────────────────────
+map("n", "<leader>ct", "<cmd>RustTemplate<cr>", { desc = "[C]ode [T]emplate (Rust / CP)" })
+
 -- =============================================================================
 -- 🚀 Pro-Tier Keybindings (Advanced QoL)
 -- =============================================================================

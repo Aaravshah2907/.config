@@ -23,6 +23,7 @@ return {
 			cpp = "cd '%:p:h' && g++ -std=c++17 -O2 -I$HOME/.local/include -o /tmp/nvim_run '%:p' && /tmp/nvim_run",
 			c = "cd '%:p:h' && gcc -std=c11 -O2 -I$HOME/.local/include -o /tmp/nvim_run '%:p' && /tmp/nvim_run",
 			python = "cd '%:p:h' && python3 '%:p'",
+			rust = "cd '%:p:h' && if [ -f Cargo.toml ] || [ -f ../Cargo.toml ]; then cargo run; else rustc -O -o /tmp/nvim_run '%:p' && /tmp/nvim_run; fi",
 			java = "cd '%:p:h' && javac '%:p' && java -cp '%:p:h' '%:t:r'",
 			javascript = "cd '%:p:h' && node '%:p'",
 			typescript = "cd '%:p:h' && npx ts-node '%:p'",
@@ -47,6 +48,8 @@ return {
 				)
 			elseif ft == "python" then
 				return nil -- No compile step needed
+			elseif ft == "rust" then
+				return string.format("cd '%s' && rustc -O -o /tmp/nvim_run '%s'", dir, filepath)
 			elseif ft == "java" then
 				return string.format("cd '%s' && javac '%s'", dir, filepath)
 			end
@@ -55,7 +58,7 @@ return {
 
 		-- ── Helper: get run command for a filetype ──────────────────────────
 		local function get_run_cmd(ft, filepath, dir)
-			if ft == "cpp" or ft == "c" then
+			if ft == "cpp" or ft == "c" or ft == "rust" then
 				return "/tmp/nvim_run"
 			elseif ft == "python" then
 				return string.format("python3 '%s'", filepath)
@@ -103,6 +106,13 @@ return {
 				)
 			elseif ft == "python" then
 				cmd = string.format("cd '%s' && python3 '%s' < '%s'", dir, vim.fn.expand("%:p"), input_file)
+			elseif ft == "rust" then
+				cmd = string.format(
+					"cd '%s' && rustc -O -o /tmp/nvim_run '%s' && /tmp/nvim_run < '%s'",
+					dir,
+					vim.fn.expand("%:p"),
+					input_file
+				)
 			elseif ft == "c" then
 				cmd = string.format(
 					"cd '%s' && gcc -std=c11 -O2 -I$HOME/.local/include -o /tmp/nvim_run '%s' && /tmp/nvim_run < '%s'",
@@ -355,31 +365,47 @@ return {
 
 		-- ── Quick test-case toggle ──────────────────────────────────────────
 		vim.keymap.set("n", "<leader>rt", function()
-			if vim.bo.filetype ~= "cpp" then
-				vim.notify("Test-case toggle is only supported for C++", vim.log.levels.WARN)
+			local ft = vim.bo.filetype
+			if ft ~= "cpp" and ft ~= "rust" then
+				vim.notify("Test-case toggle is supported for C++ and Rust", vim.log.levels.WARN)
 				return
 			end
 
-			-- Find the line with 'cin >> T'
 			local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 			local found = false
-			for i, line in ipairs(lines) do
-				if line:match("cin%s*>>%s*T") then
-					-- Toggle comment
-					if line:match("^%s*//") then
-						-- Uncomment
-						lines[i] = line:gsub("^%s*//%s*", "")
-						vim.notify("Multi-test mode ENABLED", vim.log.levels.INFO)
-					else
-						-- Comment
-						-- preserve indentation
-						local indent = line:match("^%s*")
-						lines[i] = indent .. "// " .. line:gsub("^%s*", "")
-						vim.notify("Single-test mode ENABLED", vim.log.levels.INFO)
+
+			if ft == "cpp" then
+				for i, line in ipairs(lines) do
+					if line:match("cin%s*>>%s*T") then
+						if line:match("^%s*//") then
+							lines[i] = line:gsub("^%s*//%s*", "")
+							vim.notify("Multi-test mode ENABLED (C++)", vim.log.levels.INFO)
+						else
+							local indent = line:match("^%s*")
+							lines[i] = indent .. "// " .. line:gsub("^%s*", "")
+							vim.notify("Single-test mode ENABLED (C++)", vim.log.levels.INFO)
+						end
+						vim.api.nvim_buf_set_lines(0, i - 1, i, false, { lines[i] })
+						found = true
+						break
 					end
-					vim.api.nvim_buf_set_lines(0, i - 1, i, false, { lines[i] })
-					found = true
-					break
+				end
+			elseif ft == "rust" then
+				for i, line in ipairs(lines) do
+					if line:match("let%s+t%s*=%s*1;") then
+						if line:match("^%s*//") then
+							local indent = line:match("^%s*//%s*") or "    "
+							lines[i] = line:gsub("^%s*//%s*", "    ")
+							vim.notify("Single-test mode ENABLED (Rust: let t = 1)", vim.log.levels.INFO)
+						else
+							local indent = line:match("^%s*")
+							lines[i] = indent .. "// " .. line:gsub("^%s*", "")
+							vim.notify("Multi-test mode ENABLED (Rust: dynamic t)", vim.log.levels.INFO)
+						end
+						vim.api.nvim_buf_set_lines(0, i - 1, i, false, { lines[i] })
+						found = true
+						break
+					end
 				end
 			end
 

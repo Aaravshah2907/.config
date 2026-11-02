@@ -491,16 +491,20 @@
         
         <div class="menu-title">Main Views</div>
         <ul class="nav-list">
-            <li class="nav-item active" id="tab-all" onclick="switchTab('all')">
-                <span>All Shortcuts</span>
-                <span class="badge" id="badge-all">0</span>
-            </li>
-            <li class="nav-item" id="tab-active-app" onclick="switchTab('active-app')">
+            <li class="nav-item" id="tab-active-app" onclick="switchTab('active-app')" title="Cmd+1">
                 <span id="active-app-name-label">Current App</span>
                 <span class="badge" id="badge-active-app">0</span>
             </li>
-            <li class="nav-item" id="tab-global" onclick="switchTab('Global')">
-                <span>Global System</span>
+            <li class="nav-item" id="tab-terminal" onclick="switchTab('terminal')" title="Cmd+2">
+                <span>💻 Terminal Stack</span>
+                <span class="badge" id="badge-terminal">0</span>
+            </li>
+            <li class="nav-item" id="tab-all" onclick="switchTab('all')" title="Cmd+3">
+                <span>🌐 All Shortcuts</span>
+                <span class="badge" id="badge-all">0</span>
+            </li>
+            <li class="nav-item" id="tab-global" onclick="switchTab('Global')" title="Cmd+4">
+                <span>⚙️ Global System</span>
                 <span class="badge" id="badge-global">0</span>
             </li>
         </ul>
@@ -526,8 +530,10 @@
                 <button id="btn-refresh" class="refresh-btn" onclick="triggerRefresh()" title="Rebuild and refresh preloaded shortcuts (Cmd+R)">
                     <span class="refresh-icon">🔄</span> Rebuild
                 </button>
-                <span>Navigate</span>
-                <span class="key-hint">↑↓</span>
+                <span>Views</span>
+                <span class="key-hint">⌘1-4</span>
+                <span>Cycle</span>
+                <span class="key-hint">Tab</span>
                 <span>Execute</span>
                 <span class="key-hint">↵</span>
                 <span>Quit</span>
@@ -545,9 +551,10 @@
                 <div class="dropdown-wrapper">
                     <label for="hub-view-dropdown" class="dropdown-label">View / System:</label>
                     <select id="hub-view-dropdown" class="hub-select-dropdown" onchange="switchTab(this.value)">
-                        <option value="all">🌐 All Shortcuts</option>
-                        <option value="active-app" id="opt-active-app">📱 Current App</option>
-                        <option value="Global">⚙️ Global System</option>
+                        <option value="active-app" id="opt-active-app">📱 Current App (⌘1)</option>
+                        <option value="terminal" id="opt-terminal">💻 Terminal Stack (⌘2)</option>
+                        <option value="all" id="opt-all">🌐 All Shortcuts (⌘3)</option>
+                        <option value="Global" id="opt-global">⚙️ Global System (⌘4)</option>
                     </select>
                 </div>
             </div>

@@ -277,41 +277,125 @@ def get_karabiner_shortcuts():
 
     return items
 
+TMUX_PATH = Path("/Users/aaravshah2975/.config/tmux/cheatsheet.json")
+YAZI_PATH = Path("/Users/aaravshah2975/.config/yazi/keymap.toml")
+
+def get_tmux_shortcuts():
+    items = []
+    if not TMUX_PATH.exists():
+        return items
+    try:
+        with open(TMUX_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        for c in data.get("commands", []):
+            name = c.get("name", "")
+            cmd = c.get("command", "")
+            desc = c.get("description", "")
+            cat = "Tmux"
+            if ":" in name:
+                cat = name.split(":")[0].strip()
+            items.append({
+                "keys": cmd,
+                "action": desc or name,
+                "category": cat,
+                "app": "tmux",
+                "command": cmd,
+                "source": "shell"
+            })
+    except Exception as e:
+        print(f"Error parsing tmux shortcuts: {e}")
+    return items
+
+def get_yazi_shortcuts():
+    items = []
+    if not YAZI_PATH.exists():
+        return items
+    try:
+        import tomllib
+        with open(YAZI_PATH, "rb") as f:
+            data = tomllib.load(f)
+        for m in data.get("mgr", {}).get("keymap", []):
+            on = m.get("on", "")
+            if isinstance(on, list):
+                keys = " ".join(on)
+            else:
+                keys = str(on)
+            keys = keys.replace("<Space>", "Space").replace("<Esc>", "Esc").replace("<Enter>", "↵").replace("<C-", "⌃ ").replace("<S-", "⇧ ").replace("<A-", "⌥ ").replace(">", "")
+            desc = m.get("desc", m.get("run", ""))
+            run_cmd = m.get("run", "")
+            if isinstance(run_cmd, list):
+                run_cmd = "; ".join(run_cmd)
+            items.append({
+                "keys": keys,
+                "action": desc,
+                "category": "Yazi File Manager",
+                "app": "yazi",
+                "command": run_cmd,
+                "source": "app"
+            })
+    except Exception as e:
+        print(f"Error parsing yazi shortcuts: {e}")
+    return items
+
+def get_ghostty_shortcuts():
+    return [
+        {"keys": "⌘ T", "action": "New Tab", "category": "Ghostty: Tabs & Windows", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ W", "action": "Close Surface / Tab", "category": "Ghostty: Tabs & Windows", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ D", "action": "Split Right", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ D", "action": "Split Down", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ [ / ⌘ ]", "action": "Previous / Next Split", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ ↵", "action": "Toggle Split Zoom", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ + / ⌘ -", "action": "Increase / Decrease Font Size", "category": "Ghostty: View", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ 0", "action": "Reset Font Size", "category": "Ghostty: View", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ I", "action": "Toggle Terminal Inspector", "category": "Ghostty: Tools", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ ,", "action": "Reload Configuration", "category": "Ghostty: Tools", "app": "Ghostty", "command": "", "source": "app"},
+    ]
+
+def get_neovim_shortcuts():
+    return [
+        {"keys": "Space f f", "action": "Find Files (Telescope)", "category": "Neovim: Navigation", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space f g", "action": "Live Grep Workspace", "category": "Neovim: Navigation", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space e", "action": "Toggle File Tree (Neotree/NvimTree)", "category": "Neovim: Files", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "⌃ W h / j / k / l", "action": "Navigate Window Splits", "category": "Neovim: Windows", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "⌃ W s / v", "action": "Split Horizontal / Vertical", "category": "Neovim: Windows", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "[ b / ] b", "action": "Previous / Next Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space b d", "action": "Delete / Close Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space w", "action": "Save Current Buffer", "category": "Neovim: Operations", "app": "nvim", "command": "", "source": "app"},
+    ]
+
 CACHE_PATH = Path("/Users/aaravshah2975/.config/cheatsheet/shortcuts_cache.json")
 
-def get_cached_shortcuts():
-    source_files = [
-        AEROSPACE_PATH,
-        KARABINER_PATH,
-        Path(__file__),
-    ]
-    if CACHE_PATH.exists():
-        cache_mtime = CACHE_PATH.stat().st_mtime
-        if all(f.exists() and f.stat().st_mtime <= cache_mtime for f in source_files):
-            try:
-                with open(CACHE_PATH, "r") as f:
-                    return json.load(f)
-            except Exception:
-                pass
+def get_cached_shortcuts(force=False):
+    # Fast path: load pre-parsed JSON instantly without filesystem checks
+    if not force and CACHE_PATH.exists():
+        try:
+            with open(CACHE_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
 
-    # Rebuild when configs change
-    shortcuts = build_all()
-    try:
-        with open(CACHE_PATH, "w") as f:
-            json.dump(shortcuts, f)
-    except Exception:
-        pass
-    return shortcuts
+    # Rebuild only when requested or missing
+    return build_all()
 
-def build_all():
+def build_all(force=True):
     aero = get_aero_shortcuts()
     karabiner = get_karabiner_shortcuts()
-    all_shortcuts = aero + karabiner
-    print(f"Loaded {len(aero)} AeroSpace shortcuts and {len(karabiner)} Karabiner shortcuts ({len(all_shortcuts)} total).")
+    tmux = get_tmux_shortcuts()
+    yazi = get_yazi_shortcuts()
+    ghostty = get_ghostty_shortcuts()
+    nvim = get_neovim_shortcuts()
+
+    all_shortcuts = aero + karabiner + tmux + yazi + ghostty + nvim
+    print(f"Loaded {len(aero)} AeroSpace, {len(karabiner)} Karabiner, {len(tmux)} Tmux, {len(yazi)} Yazi, {len(ghostty)} Ghostty, {len(nvim)} Neovim ({len(all_shortcuts)} total).")
+    try:
+        with open(CACHE_PATH, "w", encoding="utf-8") as f:
+            json.dump(all_shortcuts, f, indent=2)
+    except Exception as e:
+        print(f"Error writing cache: {e}")
     return all_shortcuts
 
 if __name__ == "__main__":
-    shortcuts = get_cached_shortcuts()
+    shortcuts = build_all()
     with open("/tmp/shortcut_db.json", "w") as f:
         json.dump({"global": shortcuts, "apps": {}}, f, indent=2)
     print("Saved to /tmp/shortcut_db.json successfully!")

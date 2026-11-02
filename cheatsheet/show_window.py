@@ -11,6 +11,14 @@ class API:
             self._window.destroy()
         sys.exit(0)
 
+    def refresh_shortcuts(self):
+        try:
+            import parse_configs
+            new_shortcuts = parse_configs.build_all(force=True)
+            return {"status": "ok", "count": len(new_shortcuts), "shortcuts": new_shortcuts}
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+
     def execute(self, cmd_type, command):
         try:
             if cmd_type == "menubar":

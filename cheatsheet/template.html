@@ -3,9 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>⌨️ Shortcut Hub</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0b0b0e;
@@ -390,6 +387,57 @@
         .empty-state svg {
             color: rgba(255, 255, 255, 0.1);
         }
+
+        /* Refresh button & toast */
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .refresh-btn:hover {
+            background: rgba(93, 160, 255, 0.16);
+            border-color: var(--accent-color);
+            color: var(--text-main);
+        }
+        .refresh-btn.spinning .refresh-icon {
+            display: inline-block;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #14141d;
+            color: #5da0ff;
+            border: 1px solid rgba(93, 160, 255, 0.35);
+            padding: 10px 18px;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -406,9 +454,17 @@
                 <span>All Shortcuts</span>
                 <span class="badge" id="badge-all">0</span>
             </li>
+            <li class="nav-item" id="tab-active-app" onclick="switchTab('active-app')">
+                <span id="active-app-name-label">Current App</span>
+                <span class="badge" id="badge-active-app">0</span>
+            </li>
+            <li class="nav-item" id="tab-global" onclick="switchTab('Global')">
+                <span>Global System</span>
+                <span class="badge" id="badge-global">0</span>
+            </li>
         </ul>
 
-        <div class="menu-title">Keybinding Systems</div>
+        <div class="menu-title">Tools & Applications</div>
         <ul class="nav-list" id="other-apps-list">
             <!-- Dynamic application list -->
         </ul>
@@ -426,19 +482,22 @@
                 <input type="text" class="search-input" id="search-box" placeholder="Search shortcuts or commands..." oninput="handleSearch()" autocomplete="off">
             </div>
             <div class="search-hint">
+                <button id="btn-refresh" class="refresh-btn" onclick="triggerRefresh()" title="Rebuild and refresh preloaded shortcuts (Cmd+R)">
+                    <span class="refresh-icon">🔄</span> Rebuild
+                </button>
                 <span>Navigate</span>
                 <span class="key-hint">↑↓</span>
                 <span>Execute</span>
-                <span class="key-hint">Enter</span>
+                <span class="key-hint">↵</span>
                 <span>Quit</span>
-                <span class="key-hint">Insert twice</span>
+                <span class="key-hint">Esc</span>
             </div>
         </div>
 
         <!-- Scrolling Content -->
         <div class="content-scrollable">
             <div class="app-title-section">
-                <h1 id="content-title">Current Application</h1>
+                <h1 id="content-title">All Shortcuts</h1>
                 <span class="badge" id="content-subtitle-badge">0 shortcuts</span>
             </div>
 
@@ -451,7 +510,7 @@
 
     <script>
         // Shortcuts injected by python
-        const shortcuts = {{SHORTCUTS_JSON}};
+        let shortcuts = {{SHORTCUTS_JSON}};
         const activeApp = "{{ACTIVE_APP}}";
         
         let currentTab = 'all';
@@ -466,6 +525,11 @@
             if (e.key === 'Escape') {
                 pywebview.api.close();
                 e.preventDefault();
+                return;
+            }
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'r') {
+                e.preventDefault();
+                triggerRefresh();
                 return;
             }
             // Check for Insert key (e.key === 'Insert' or keyCode === 45)
@@ -499,6 +563,43 @@
             }
         });
 
+        function triggerRefresh() {
+            const btn = document.getElementById('btn-refresh');
+            if (btn) btn.classList.add('spinning');
+            showToast('Rebuilding preloaded shortcuts...');
+
+            if (window.pywebview && window.pywebview.api && window.pywebview.api.refresh_shortcuts) {
+                window.pywebview.api.refresh_shortcuts().then(res => {
+                    if (btn) btn.classList.remove('spinning');
+                    if (res && res.status === 'ok') {
+                        shortcuts = res.shortcuts;
+                        initUI();
+                        showToast(`✓ Preloaded ${res.count} shortcuts!`);
+                    } else {
+                        showToast(`Refresh error: ${res ? res.message : 'Unknown'}`);
+                    }
+                }).catch(err => {
+                    if (btn) btn.classList.remove('spinning');
+                    showToast(`Refresh failed: ${err}`);
+                });
+            }
+        }
+
+        function showToast(msg) {
+            let toast = document.getElementById('hub-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'hub-toast';
+                toast.className = 'toast';
+                document.body.appendChild(toast);
+            }
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
         function highlightItem(index) {
             document.querySelectorAll('.shortcut-item').forEach((el, idx) => {
                 if (idx === index) {
@@ -519,33 +620,47 @@
         }
 
         function getAppDisplayName(app) {
-            if (app === 'vscode') return 'Visual Studio Code';
-            if (app === 'cursor') return 'Cursor Editor';
-            if (app === 'brave') return 'Brave Browser';
-            if (app === 'chrome') return 'Google Chrome';
-            if (app === 'safari') return 'Safari';
-            if (app === 'iterm') return 'iTerm Terminal';
-            if (app === 'vlc') return 'VLC Player';
+            if (!app) return '';
+            const lower = app.toLowerCase();
+            if (lower === 'vscode') return 'Visual Studio Code';
+            if (lower === 'cursor') return 'Cursor Editor';
+            if (lower === 'brave') return 'Brave Browser';
+            if (lower === 'chrome') return 'Google Chrome';
+            if (lower === 'safari') return 'Safari';
+            if (lower === 'iterm') return 'iTerm Terminal';
+            if (lower === 'vlc') return 'VLC Player';
+            if (lower === 'tmux') return 'Tmux';
+            if (lower === 'yazi') return 'Yazi';
+            if (lower === 'nvim' || lower === 'neovim') return 'Neovim';
+            if (lower === 'ghostty') return 'Ghostty';
+            if (lower === 'aerospace') return 'AeroSpace';
+            if (lower === 'karabiner') return 'Karabiner';
             return app;
         }
 
         // Setup Sidebar Badges & Apps List
         function initUI() {
-            document.getElementById('active-app-name-label').innerText = activeApp || 'Current App';
+            const activeLabel = document.getElementById('active-app-name-label');
+            if (activeLabel) {
+                activeLabel.innerText = getAppDisplayName(activeApp) || 'Current App';
+            }
             
-            // Count badges
+            // Count badges safely
             const activeCount = shortcuts.filter(s => s.app === activeApp).length;
-            const globalCount = shortcuts.filter(s => s.app === 'Global').length;
+            const globalCount = shortcuts.filter(s => s.app === 'Global' || s.app === 'Karabiner' || s.app === 'AeroSpace').length;
             const totalCount = shortcuts.length;
 
-            document.getElementById('badge-active-app').innerText = activeCount;
-            document.getElementById('badge-global').innerText = globalCount;
-            document.getElementById('badge-all').innerText = totalCount;
+            const badgeActive = document.getElementById('badge-active-app');
+            if (badgeActive) badgeActive.innerText = activeCount;
+            const badgeGlobal = document.getElementById('badge-global');
+            if (badgeGlobal) badgeGlobal.innerText = globalCount;
+            const badgeAll = document.getElementById('badge-all');
+            if (badgeAll) badgeAll.innerText = totalCount;
 
             // List other applications in sidebar
             const appsSet = new Set();
             shortcuts.forEach(s => {
-                if (s.app && s.app !== activeApp && s.app !== 'Global' && s.app !== 'all') {
+                if (s.app && s.app !== 'Global' && s.app !== 'all') {
                     appsSet.add(s.app);
                 }
             });

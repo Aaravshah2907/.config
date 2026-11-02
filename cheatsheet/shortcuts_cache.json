@@ -1,1 +1,3394 @@
-[{"keys": "Config Version", "action": "2", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 2", "source": "shell"}, {"keys": "After Startup Command", "action": "exec-and-forget ~/.config/borders/bordersrc", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace exec-and-forget ~/.config/borders/bordersrc", "source": "shell"}, {"keys": "Start At Login", "action": "true", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace true", "source": "shell"}, {"keys": "Auto Reload Config", "action": "true", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace true", "source": "shell"}, {"keys": "Enable Normalization Flatten Containers", "action": "false", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace false", "source": "shell"}, {"keys": "Enable Normalization Opposite Orientation For Nested Containers", "action": "true", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace true", "source": "shell"}, {"keys": "Accordion Padding", "action": "30", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 30", "source": "shell"}, {"keys": "Default Root Container Layout", "action": "tiles", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace tiles", "source": "shell"}, {"keys": "Default Root Container Orientation", "action": "horizontal", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace horizontal", "source": "shell"}, {"keys": "On Focused Monitor Changed", "action": "move-mouse monitor-lazy-center", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-mouse monitor-lazy-center", "source": "shell"}, {"keys": "Automatically Unhide Macos Hidden Apps", "action": "false", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace false", "source": "shell"}, {"keys": "Persistent Workspaces", "action": "T", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace T", "source": "shell"}, {"keys": "On Mode Changed", "action": "", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace ", "source": "shell"}, {"keys": "Exec On Workspace Change", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'sketchybar   Trigger aerospace_workspace_change focused_workspace", "action": "$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace $AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',", "source": "shell"}, {"keys": "On Focus Changed", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "Focus Follows Mouse.enabled", "action": "true", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace true", "source": "shell"}, {"keys": "Key Mapping.preset", "action": "qwerty", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace qwerty", "source": "shell"}, {"keys": "Gaps.inner.horizontal", "action": "8", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 8", "source": "shell"}, {"keys": "Gaps.inner.vertical", "action": "8", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 8", "source": "shell"}, {"keys": "Gaps.outer.left", "action": "8", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 8", "source": "shell"}, {"keys": "Gaps.outer.bottom", "action": "12", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 12", "source": "shell"}, {"keys": "Gaps.outer.top", "action": "50", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 50", "source": "shell"}, {"keys": "Gaps.outer.right", "action": "8", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace 8", "source": "shell"}, {"keys": "\u2325 \u21b5", "action": "Launch Ghostty (New Window)", "category": "Apps & Launchers", "app": "AeroSpace", "command": "open -na Ghostty", "source": "shell"}, {"keys": "\u2325 `", "action": "Floating Scratchpad Terminal", "category": "Apps & Launchers", "app": "AeroSpace", "command": "open -na Ghostty --args --title='Quick Terminal'", "source": "shell"}, {"keys": "\u2325 /", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "\u2325 ,", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "\u2325 .", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "\u2303 \u2325 B", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "\u2303 \u2325 V", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "\u2325 H", "action": "Focus Window Left", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace focus left", "source": "shell"}, {"keys": "\u2325 J", "action": "Focus Window Down", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace focus down", "source": "shell"}, {"keys": "\u2325 K", "action": "Focus Window Up", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace focus up", "source": "shell"}, {"keys": "\u2325 L", "action": "Focus Window Right", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace focus right", "source": "shell"}, {"keys": "\u2325 \u21e7 H", "action": "Move Window Left", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move left", "source": "shell"}, {"keys": "\u2325 \u21e7 J", "action": "Move Window Down", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move down", "source": "shell"}, {"keys": "\u2325 \u21e7 K", "action": "Move Window Up", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move up", "source": "shell"}, {"keys": "\u2325 \u21e7 L", "action": "Move Window Right", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move right", "source": "shell"}, {"keys": "\u2325 -", "action": "resize smart -10", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize smart -10", "source": "shell"}, {"keys": "\u2325 =", "action": "resize smart +10", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize smart +10", "source": "shell"}, {"keys": "\u2303 \u2325 H", "action": "Join Window Left (Warp)", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace join-with left", "source": "shell"}, {"keys": "\u2303 \u2325 J", "action": "Join Window Down (Warp)", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace join-with down", "source": "shell"}, {"keys": "\u2303 \u2325 K", "action": "Join Window Up (Warp)", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace join-with up", "source": "shell"}, {"keys": "\u2303 \u2325 L", "action": "Join Window Right (Warp)", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace join-with right", "source": "shell"}, {"keys": "\u2325 \u21e5", "action": "Workspace Back and Forth", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace-back-and-forth", "source": "shell"}, {"keys": "\u2325 \u21e7 \u21e5", "action": "Move Workspace to Next Monitor", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-workspace-to-monitor --wrap-around next", "source": "shell"}, {"keys": "\u2303 \u2325 P", "action": "Move Window to Workspace prev", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace prev", "source": "shell"}, {"keys": "\u2303 \u2325 N", "action": "Move Window to Workspace next", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace next", "source": "shell"}, {"keys": "\u2303 \u2325 S", "action": "move-node-to-monitor left", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-monitor left", "source": "shell"}, {"keys": "\u2303 \u2325 G", "action": "move-node-to-monitor right", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-monitor right", "source": "shell"}, {"keys": "\u2303 \u2325 F", "action": "Toggle Fullscreen", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace fullscreen", "source": "shell"}, {"keys": "\u2303 \u2325 T", "action": "Toggle Floating / Tiling", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace layout floating tiling", "source": "shell"}, {"keys": "\u2303 \u2325 E", "action": "Balance Window Sizes", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace balance-sizes", "source": "shell"}, {"keys": "\u2325 T", "action": "Switch to Workspace T", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace T", "source": "shell"}, {"keys": "\u2325 C", "action": "Switch to Workspace C", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace C", "source": "shell"}, {"keys": "\u2325 B", "action": "Switch to Workspace B", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace B", "source": "shell"}, {"keys": "\u2325 M", "action": "Switch to Workspace M", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace M", "source": "shell"}, {"keys": "\u2325 S", "action": "Switch to Workspace S", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace S", "source": "shell"}, {"keys": "\u2325 V", "action": "Switch to Workspace V", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace V", "source": "shell"}, {"keys": "\u2325 E", "action": "Switch to Workspace E", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace E", "source": "shell"}, {"keys": "\u2325 A", "action": "Switch to Workspace A", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace A", "source": "shell"}, {"keys": "\u2325 P", "action": "Switch to Workspace P", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace workspace P", "source": "shell"}, {"keys": "\u2325 \u21e7 T", "action": "Move Window to Workspace T", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace T", "source": "shell"}, {"keys": "\u2325 \u21e7 C", "action": "Move Window to Workspace C", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace C", "source": "shell"}, {"keys": "\u2325 \u21e7 B", "action": "Move Window to Workspace B", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace B", "source": "shell"}, {"keys": "\u2325 \u21e7 M", "action": "Move Window to Workspace M", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace M", "source": "shell"}, {"keys": "\u2325 \u21e7 S", "action": "Move Window to Workspace S", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace S", "source": "shell"}, {"keys": "\u2325 \u21e7 V", "action": "Move Window to Workspace V", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace V", "source": "shell"}, {"keys": "\u2325 \u21e7 E", "action": "Move Window to Workspace E", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace E", "source": "shell"}, {"keys": "\u2325 \u21e7 A", "action": "Move Window to Workspace A", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace A", "source": "shell"}, {"keys": "\u2325 \u21e7 P", "action": "Move Window to Workspace P", "category": "AeroSpace: Workspaces", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace move-node-to-workspace P", "source": "shell"}, {"keys": "\u2325 R", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "\\$RADIANT_PURPLE\"',", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$RADIANT_PURPLE\"',", "source": "shell"}, {"keys": "\u2325 \u21e7 ;", "action": "[", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "\\$HONOR_GOLD\"',", "category": "AeroSpace: Windows", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$HONOR_GOLD\"',", "source": "shell"}, {"keys": "H", "action": "[Resize] resize width -50", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize width -50", "source": "shell"}, {"keys": "L", "action": "[Resize] resize width +50", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize width +50", "source": "shell"}, {"keys": "J", "action": "[Resize] resize height +50", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize height +50", "source": "shell"}, {"keys": "K", "action": "[Resize] resize height -50", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize height -50", "source": "shell"}, {"keys": "-", "action": "[Resize] resize smart -50", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize smart -50", "source": "shell"}, {"keys": "=", "action": "[Resize] resize smart +50", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace resize smart +50", "source": "shell"}, {"keys": "E", "action": "[Resize] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Resize] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u238b", "action": "[Resize] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Resize] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u21b5", "action": "[Resize] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Resize] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u238b", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "R", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "F", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u232b", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u2325 \u21e7 H", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u2325 \u21e7 J", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u2325 \u21e7 K", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "\u2325 \u21e7 L", "action": "[Service] [", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace [", "source": "shell"}, {"keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color", "action": "[Service] \\$BAR_COLOR\"',", "category": "AeroSpace: Modes", "app": "AeroSpace", "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',", "source": "shell"}, {"keys": "Caps Lock (Tap / Hold)", "action": "Tap: Escape | Hold: Hyper Mode", "category": "Hyper: Dual-Role", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Right \u2318 (Tap / Hold)", "action": "Tap: Spotlight Search | Hold: Hyper Mode", "category": "Hyper: Dual-Role", "app": "Karabiner", "command": "open -a 'Spotlight'", "source": "shell"}, {"keys": "Right Ctrl (Pebble)", "action": "Tap: Escape | Hold: Hyper Mode", "category": "Hyper: Dual-Role", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + O > H", "action": "Open Helium (Default Profile)", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\"", "source": "shell"}, {"keys": "Hyper + O > T", "action": "Open Ghostty (New Window)", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -na Ghostty", "source": "shell"}, {"keys": "Hyper + O > V", "action": "Open VLC Player", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -a \"VLC\"", "source": "shell"}, {"keys": "Hyper + O > C", "action": "Open VS Code / Cursor", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -a \"Visual Studio Code\"", "source": "shell"}, {"keys": "Hyper + O > O", "action": "Open Obsidian", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -a \"Obsidian\"", "source": "shell"}, {"keys": "Hyper + O > S", "action": "Open Spotify", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -a \"Spotify\"", "source": "shell"}, {"keys": "Hyper + O > F", "action": "Open Finder", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open ~", "source": "shell"}, {"keys": "Hyper + O > A", "action": "Open Activity Monitor", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -a \"Activity Monitor\"", "source": "shell"}, {"keys": "Hyper + O > O", "action": "Open Obsidian", "category": "Hyper Sublayer O", "app": "Karabiner", "command": "open -a \"Obsidian\"", "source": "shell"}, {"keys": "Hyper + B > G", "action": "Browse: GitHub", "category": "Hyper Sublayer B", "app": "Karabiner", "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://github.com\"", "source": "shell"}, {"keys": "Hyper + B > C", "action": "Browse: Codeforces", "category": "Hyper Sublayer B", "app": "Karabiner", "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://codeforces.com\"", "source": "shell"}, {"keys": "Hyper + B > M", "action": "Browse: Gmail", "category": "Hyper Sublayer B", "app": "Karabiner", "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://mail.google.com\"", "source": "shell"}, {"keys": "Hyper + B > Y", "action": "Browse: YouTube", "category": "Hyper Sublayer B", "app": "Karabiner", "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://youtube.com\"", "source": "shell"}, {"keys": "Hyper + S > D", "action": "Toggle Do Not Disturb", "category": "Hyper Sublayer S", "app": "Karabiner", "command": "~/.local/bin/toggle_dnd.sh", "source": "shell"}, {"keys": "Hyper + S > X", "action": "Lock Screen", "category": "Hyper Sublayer S", "app": "Karabiner", "command": "~/.local/bin/lock-screen.sh", "source": "shell"}, {"keys": "Hyper + S > S", "action": "Study Mode", "category": "Hyper Sublayer S", "app": "Karabiner", "command": "~/.local/bin/study-mode", "source": "shell"}, {"keys": "Hyper + S > P", "action": "Panic Mode", "category": "Hyper Sublayer S", "app": "Karabiner", "command": "~/.local/bin/panic-mode", "source": "shell"}, {"keys": "Hyper + S > O", "action": "Screen OCR Text Capture", "category": "Hyper Sublayer S", "app": "Karabiner", "command": "screencapture -i -c", "source": "shell"}, {"keys": "Hyper + S > S", "action": "Study Mode", "category": "Hyper Sublayer S", "app": "Karabiner", "command": "~/.local/bin/study-mode", "source": "shell"}, {"keys": "Hyper + T > H", "action": "Previous Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > L", "action": "Next Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > W", "action": "Close Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > T", "action": "New Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > R", "action": "Hard Reload Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > U", "action": "Reopen Closed Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > D", "action": "Toggle Developer Tools", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + T > T", "action": "New Tab", "category": "Hyper Sublayer T", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + C > T", "action": "Ghostty Todo Scratchpad", "category": "Hyper Sublayer C", "app": "Karabiner", "command": "open -na Ghostty --args --title=\"Quick Terminal\" -e \"zsh -l -c todo\"", "source": "shell"}, {"keys": "Hyper + C > C", "action": "Calculator Scratchpad", "category": "Hyper Sublayer C", "app": "Karabiner", "command": "open -a Calculator", "source": "shell"}, {"keys": "Hyper + C > F", "action": "Fuzzy Finder (fv)", "category": "Hyper Sublayer C", "app": "Karabiner", "command": "~/.local/bin/fv.sh", "source": "shell"}, {"keys": "Hyper + C > ;", "action": "Control Center", "category": "Hyper Sublayer C", "app": "Karabiner", "command": "bash ~/.config/skhd/control_center.sh", "source": "shell"}, {"keys": "Hyper + C > C", "action": "Calculator Scratchpad", "category": "Hyper Sublayer C", "app": "Karabiner", "command": "open -a Calculator", "source": "shell"}, {"keys": "Hyper + H / J / K / L", "action": "Vim Cursor Navigation (\u2190 \u2193 \u2191 \u2192)", "category": "Hyper: Direct", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + Y / P", "action": "Word Jump Left / Right", "category": "Hyper: Direct", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + 0 / $", "action": "Line Start / End", "category": "Hyper: Direct", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + I / .", "action": "Delete Word Backward / Forward", "category": "Hyper: Direct", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + M", "action": "Kill Line Forward (Ctrl+K)", "category": "Hyper: Direct", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + Shift + M", "action": "Delete Line Backward (Cmd+Backspace)", "category": "Hyper: Direct", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Hyper + \u2190 / \u2192", "action": "AeroSpace Workspace Prev / Next", "category": "Hyper: Direct", "app": "Karabiner", "command": "/opt/homebrew/bin/aerospace workspace prev", "source": "shell"}, {"keys": "Hyper + Q", "action": "AeroSpace Close Window", "category": "Hyper: Direct", "app": "Karabiner", "command": "/opt/homebrew/bin/aerospace close", "source": "shell"}, {"keys": "Hyper + ?", "action": "Open Shortcut Hub (This Dashboard)", "category": "Hyper: Direct", "app": "Karabiner", "command": "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh", "source": "shell"}, {"keys": "Pebble F11", "action": "Lock Screen (Ctrl+Cmd+Q)", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/lock-screen.sh", "source": "shell"}, {"keys": "Pebble PrintScreen", "action": "Screenshot (Cmd+Shift+5)", "category": "Pebble Keys", "app": "Karabiner", "command": "screencapture -i", "source": "shell"}, {"keys": "Pebble ScrollLock", "action": "Toggle Do Not Disturb", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/toggle_dnd.sh", "source": "shell"}, {"keys": "Pebble Pause", "action": "Panic Mode", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/panic-mode", "source": "shell"}, {"keys": "Pebble App + A", "action": "Toggle AirDrop", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/toggle-airdrop", "source": "shell"}, {"keys": "Pebble App + L", "action": "Toggle LocalSend", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/toggle-localsend", "source": "shell"}, {"keys": "Pebble App + N", "action": "Toggle NearDrop", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/toggle-neardrop", "source": "shell"}, {"keys": "Pebble NumLock", "action": "Keybee Cockpit", "category": "Pebble Keys", "app": "Karabiner", "command": "~/.local/bin/keybee-status", "source": "shell"}, {"keys": "Pebble Insert", "action": "Open Shortcut Hub", "category": "Pebble Keys", "app": "Karabiner", "command": "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh", "source": "shell"}, {"keys": "Mouse Middle Click", "action": "Tap: Escape | Hold: Mission Control", "category": "Mouse Buttons", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Mouse Button 4", "action": "Tap: Back | Hold: Previous Space", "category": "Mouse Buttons", "app": "Karabiner", "command": "", "source": "shell"}, {"keys": "Mouse Button 5", "action": "Tap: Forward | Hold: Next Space", "category": "Mouse Buttons", "app": "Karabiner", "command": "", "source": "shell"}]
+[
+  {
+    "keys": "Config Version",
+    "action": "2",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 2",
+    "source": "shell"
+  },
+  {
+    "keys": "After Startup Command",
+    "action": "exec-and-forget ~/.config/borders/bordersrc",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace exec-and-forget ~/.config/borders/bordersrc",
+    "source": "shell"
+  },
+  {
+    "keys": "Start At Login",
+    "action": "true",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace true",
+    "source": "shell"
+  },
+  {
+    "keys": "Auto Reload Config",
+    "action": "true",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace true",
+    "source": "shell"
+  },
+  {
+    "keys": "Enable Normalization Flatten Containers",
+    "action": "false",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace false",
+    "source": "shell"
+  },
+  {
+    "keys": "Enable Normalization Opposite Orientation For Nested Containers",
+    "action": "true",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace true",
+    "source": "shell"
+  },
+  {
+    "keys": "Accordion Padding",
+    "action": "30",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 30",
+    "source": "shell"
+  },
+  {
+    "keys": "Default Root Container Layout",
+    "action": "tiles",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace tiles",
+    "source": "shell"
+  },
+  {
+    "keys": "Default Root Container Orientation",
+    "action": "horizontal",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace horizontal",
+    "source": "shell"
+  },
+  {
+    "keys": "On Focused Monitor Changed",
+    "action": "move-mouse monitor-lazy-center",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-mouse monitor-lazy-center",
+    "source": "shell"
+  },
+  {
+    "keys": "Automatically Unhide Macos Hidden Apps",
+    "action": "false",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace false",
+    "source": "shell"
+  },
+  {
+    "keys": "Persistent Workspaces",
+    "action": "T",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace T",
+    "source": "shell"
+  },
+  {
+    "keys": "On Mode Changed",
+    "action": "",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace ",
+    "source": "shell"
+  },
+  {
+    "keys": "Exec On Workspace Change",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'sketchybar   Trigger aerospace_workspace_change focused_workspace",
+    "action": "$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace $AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',",
+    "source": "shell"
+  },
+  {
+    "keys": "On Focus Changed",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "Focus Follows Mouse.enabled",
+    "action": "true",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace true",
+    "source": "shell"
+  },
+  {
+    "keys": "Key Mapping.preset",
+    "action": "qwerty",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace qwerty",
+    "source": "shell"
+  },
+  {
+    "keys": "Gaps.inner.horizontal",
+    "action": "8",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 8",
+    "source": "shell"
+  },
+  {
+    "keys": "Gaps.inner.vertical",
+    "action": "8",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 8",
+    "source": "shell"
+  },
+  {
+    "keys": "Gaps.outer.left",
+    "action": "8",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 8",
+    "source": "shell"
+  },
+  {
+    "keys": "Gaps.outer.bottom",
+    "action": "12",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 12",
+    "source": "shell"
+  },
+  {
+    "keys": "Gaps.outer.top",
+    "action": "50",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 50",
+    "source": "shell"
+  },
+  {
+    "keys": "Gaps.outer.right",
+    "action": "8",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace 8",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21b5",
+    "action": "Launch Ghostty (New Window)",
+    "category": "Apps & Launchers",
+    "app": "AeroSpace",
+    "command": "open -na Ghostty",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 `",
+    "action": "Floating Scratchpad Terminal",
+    "category": "Apps & Launchers",
+    "app": "AeroSpace",
+    "command": "open -na Ghostty --args --title='Quick Terminal'",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 /",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 ,",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 .",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 B",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 V",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 H",
+    "action": "Focus Window Left",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace focus left",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 J",
+    "action": "Focus Window Down",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace focus down",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 K",
+    "action": "Focus Window Up",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace focus up",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 L",
+    "action": "Focus Window Right",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace focus right",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 H",
+    "action": "Move Window Left",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move left",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 J",
+    "action": "Move Window Down",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move down",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 K",
+    "action": "Move Window Up",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move up",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 L",
+    "action": "Move Window Right",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move right",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 -",
+    "action": "resize smart -10",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize smart -10",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 =",
+    "action": "resize smart +10",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize smart +10",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 H",
+    "action": "Join Window Left (Warp)",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace join-with left",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 J",
+    "action": "Join Window Down (Warp)",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace join-with down",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 K",
+    "action": "Join Window Up (Warp)",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace join-with up",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 L",
+    "action": "Join Window Right (Warp)",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace join-with right",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e5",
+    "action": "Workspace Back and Forth",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace-back-and-forth",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 \u21e5",
+    "action": "Move Workspace to Next Monitor",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-workspace-to-monitor --wrap-around next",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 P",
+    "action": "Move Window to Workspace prev",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace prev",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 N",
+    "action": "Move Window to Workspace next",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace next",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 S",
+    "action": "move-node-to-monitor left",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-monitor left",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 G",
+    "action": "move-node-to-monitor right",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-monitor right",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 F",
+    "action": "Toggle Fullscreen",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace fullscreen",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 T",
+    "action": "Toggle Floating / Tiling",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace layout floating tiling",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2303 \u2325 E",
+    "action": "Balance Window Sizes",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace balance-sizes",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 T",
+    "action": "Switch to Workspace T",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace T",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 C",
+    "action": "Switch to Workspace C",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace C",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 B",
+    "action": "Switch to Workspace B",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace B",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 M",
+    "action": "Switch to Workspace M",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace M",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 S",
+    "action": "Switch to Workspace S",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace S",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 V",
+    "action": "Switch to Workspace V",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace V",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 E",
+    "action": "Switch to Workspace E",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace E",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 A",
+    "action": "Switch to Workspace A",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace A",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 P",
+    "action": "Switch to Workspace P",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace workspace P",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 T",
+    "action": "Move Window to Workspace T",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace T",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 C",
+    "action": "Move Window to Workspace C",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace C",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 B",
+    "action": "Move Window to Workspace B",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace B",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 M",
+    "action": "Move Window to Workspace M",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace M",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 S",
+    "action": "Move Window to Workspace S",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace S",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 V",
+    "action": "Move Window to Workspace V",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace V",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 E",
+    "action": "Move Window to Workspace E",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace E",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 A",
+    "action": "Move Window to Workspace A",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace A",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 P",
+    "action": "Move Window to Workspace P",
+    "category": "AeroSpace: Workspaces",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace move-node-to-workspace P",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 R",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "\\$RADIANT_PURPLE\"',",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$RADIANT_PURPLE\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 ;",
+    "action": "[",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "\\$HONOR_GOLD\"',",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$HONOR_GOLD\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "H",
+    "action": "[Resize] resize width -50",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize width -50",
+    "source": "shell"
+  },
+  {
+    "keys": "L",
+    "action": "[Resize] resize width +50",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize width +50",
+    "source": "shell"
+  },
+  {
+    "keys": "J",
+    "action": "[Resize] resize height +50",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize height +50",
+    "source": "shell"
+  },
+  {
+    "keys": "K",
+    "action": "[Resize] resize height -50",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize height -50",
+    "source": "shell"
+  },
+  {
+    "keys": "-",
+    "action": "[Resize] resize smart -50",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize smart -50",
+    "source": "shell"
+  },
+  {
+    "keys": "=",
+    "action": "[Resize] resize smart +50",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace resize smart +50",
+    "source": "shell"
+  },
+  {
+    "keys": "E",
+    "action": "[Resize] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Resize] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u238b",
+    "action": "[Resize] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Resize] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u21b5",
+    "action": "[Resize] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Resize] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u238b",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "R",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "F",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u232b",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 H",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 J",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 K",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 \u21e7 L",
+    "action": "[Service] [",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace [",
+    "source": "shell"
+  },
+  {
+    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
+    "action": "[Service] \\$BAR_COLOR\"',",
+    "category": "AeroSpace: Modes",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "source": "shell"
+  },
+  {
+    "keys": "Caps Lock (Tap / Hold)",
+    "action": "Tap: Escape | Hold: Hyper Mode",
+    "category": "Hyper: Dual-Role",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Right \u2318 (Tap / Hold)",
+    "action": "Tap: Spotlight Search | Hold: Hyper Mode",
+    "category": "Hyper: Dual-Role",
+    "app": "Karabiner",
+    "command": "open -a 'Spotlight'",
+    "source": "shell"
+  },
+  {
+    "keys": "Right Ctrl (Pebble)",
+    "action": "Tap: Escape | Hold: Hyper Mode",
+    "category": "Hyper: Dual-Role",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > H",
+    "action": "Open Helium (Default Profile)",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > T",
+    "action": "Open Ghostty (New Window)",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -na Ghostty",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > V",
+    "action": "Open VLC Player",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -a \"VLC\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > C",
+    "action": "Open VS Code / Cursor",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -a \"Visual Studio Code\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > O",
+    "action": "Open Obsidian",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -a \"Obsidian\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > S",
+    "action": "Open Spotify",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -a \"Spotify\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > F",
+    "action": "Open Finder",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open ~",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > A",
+    "action": "Open Activity Monitor",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -a \"Activity Monitor\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + O > O",
+    "action": "Open Obsidian",
+    "category": "Hyper Sublayer O",
+    "app": "Karabiner",
+    "command": "open -a \"Obsidian\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + B > G",
+    "action": "Browse: GitHub",
+    "category": "Hyper Sublayer B",
+    "app": "Karabiner",
+    "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://github.com\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + B > C",
+    "action": "Browse: Codeforces",
+    "category": "Hyper Sublayer B",
+    "app": "Karabiner",
+    "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://codeforces.com\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + B > M",
+    "action": "Browse: Gmail",
+    "category": "Hyper Sublayer B",
+    "app": "Karabiner",
+    "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://mail.google.com\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + B > Y",
+    "action": "Browse: YouTube",
+    "category": "Hyper Sublayer B",
+    "app": "Karabiner",
+    "command": "open -na \"/Applications/Helium.app\" --args --profile-directory=\"Default\" \"https://youtube.com\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + S > D",
+    "action": "Toggle Do Not Disturb",
+    "category": "Hyper Sublayer S",
+    "app": "Karabiner",
+    "command": "~/.local/bin/toggle_dnd.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + S > X",
+    "action": "Lock Screen",
+    "category": "Hyper Sublayer S",
+    "app": "Karabiner",
+    "command": "~/.local/bin/lock-screen.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + S > S",
+    "action": "Study Mode",
+    "category": "Hyper Sublayer S",
+    "app": "Karabiner",
+    "command": "~/.local/bin/study-mode",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + S > P",
+    "action": "Panic Mode",
+    "category": "Hyper Sublayer S",
+    "app": "Karabiner",
+    "command": "~/.local/bin/panic-mode",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + S > O",
+    "action": "Screen OCR Text Capture",
+    "category": "Hyper Sublayer S",
+    "app": "Karabiner",
+    "command": "screencapture -i -c",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + S > S",
+    "action": "Study Mode",
+    "category": "Hyper Sublayer S",
+    "app": "Karabiner",
+    "command": "~/.local/bin/study-mode",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > H",
+    "action": "Previous Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > L",
+    "action": "Next Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > W",
+    "action": "Close Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > T",
+    "action": "New Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > R",
+    "action": "Hard Reload Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > U",
+    "action": "Reopen Closed Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > D",
+    "action": "Toggle Developer Tools",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + T > T",
+    "action": "New Tab",
+    "category": "Hyper Sublayer T",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + C > T",
+    "action": "Ghostty Todo Scratchpad",
+    "category": "Hyper Sublayer C",
+    "app": "Karabiner",
+    "command": "open -na Ghostty --args --title=\"Quick Terminal\" -e \"zsh -l -c todo\"",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + C > C",
+    "action": "Calculator Scratchpad",
+    "category": "Hyper Sublayer C",
+    "app": "Karabiner",
+    "command": "open -a Calculator",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + C > F",
+    "action": "Fuzzy Finder (fv)",
+    "category": "Hyper Sublayer C",
+    "app": "Karabiner",
+    "command": "~/.local/bin/fv.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + C > ;",
+    "action": "Control Center",
+    "category": "Hyper Sublayer C",
+    "app": "Karabiner",
+    "command": "bash ~/.config/skhd/control_center.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + C > C",
+    "action": "Calculator Scratchpad",
+    "category": "Hyper Sublayer C",
+    "app": "Karabiner",
+    "command": "open -a Calculator",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + H / J / K / L",
+    "action": "Vim Cursor Navigation (\u2190 \u2193 \u2191 \u2192)",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + Y / P",
+    "action": "Word Jump Left / Right",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + 0 / $",
+    "action": "Line Start / End",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + I / .",
+    "action": "Delete Word Backward / Forward",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + M",
+    "action": "Kill Line Forward (Ctrl+K)",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + Shift + M",
+    "action": "Delete Line Backward (Cmd+Backspace)",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + \u2190 / \u2192",
+    "action": "AeroSpace Workspace Prev / Next",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "/opt/homebrew/bin/aerospace workspace prev",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + Q",
+    "action": "AeroSpace Close Window",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "/opt/homebrew/bin/aerospace close",
+    "source": "shell"
+  },
+  {
+    "keys": "Hyper + ?",
+    "action": "Open Shortcut Hub (This Dashboard)",
+    "category": "Hyper: Direct",
+    "app": "Karabiner",
+    "command": "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble F11",
+    "action": "Lock Screen (Ctrl+Cmd+Q)",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/lock-screen.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble PrintScreen",
+    "action": "Screenshot (Cmd+Shift+5)",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "screencapture -i",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble ScrollLock",
+    "action": "Toggle Do Not Disturb",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/toggle_dnd.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble Pause",
+    "action": "Panic Mode",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/panic-mode",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble App + A",
+    "action": "Toggle AirDrop",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/toggle-airdrop",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble App + L",
+    "action": "Toggle LocalSend",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/toggle-localsend",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble App + N",
+    "action": "Toggle NearDrop",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/toggle-neardrop",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble NumLock",
+    "action": "Keybee Cockpit",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "~/.local/bin/keybee-status",
+    "source": "shell"
+  },
+  {
+    "keys": "Pebble Insert",
+    "action": "Open Shortcut Hub",
+    "category": "Pebble Keys",
+    "app": "Karabiner",
+    "command": "/Users/aaravshah2975/.config/cheatsheet/show-cheatsheet.sh",
+    "source": "shell"
+  },
+  {
+    "keys": "Mouse Middle Click",
+    "action": "Tap: Escape | Hold: Mission Control",
+    "category": "Mouse Buttons",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Mouse Button 4",
+    "action": "Tap: Back | Hold: Previous Space",
+    "category": "Mouse Buttons",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "Mouse Button 5",
+    "action": "Tap: Forward | Hold: Next Space",
+    "category": "Mouse Buttons",
+    "app": "Karabiner",
+    "command": "",
+    "source": "shell"
+  },
+  {
+    "keys": "todo",
+    "action": "Open Tuxedo TUI in dedicated Tuxedo session (auto-kills on exit)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "todo",
+    "source": "shell"
+  },
+  {
+    "keys": "tux",
+    "action": "Open Tuxedo TUI in dedicated Tuxedo session (auto-kills on exit)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "tux",
+    "source": "shell"
+  },
+  {
+    "keys": "t todo",
+    "action": "Dispatch Tuxedo session via t command center",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t todo",
+    "source": "shell"
+  },
+  {
+    "keys": "t tux",
+    "action": "Dispatch Tuxedo session via t command center",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t tux",
+    "source": "shell"
+  },
+  {
+    "keys": "t",
+    "action": "Attach to last session (or create new default)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t",
+    "source": "shell"
+  },
+  {
+    "keys": "t ",
+    "action": "Attach to session by name (creates if missing)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t ",
+    "source": "shell"
+  },
+  {
+    "keys": "t ls",
+    "action": "List all active sessions",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t ls",
+    "source": "shell"
+  },
+  {
+    "keys": "t new ",
+    "action": "Create a new named session",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t new ",
+    "source": "shell"
+  },
+  {
+    "keys": "t kill ",
+    "action": "Kill a specific session",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t kill ",
+    "source": "shell"
+  },
+  {
+    "keys": "t kill-all",
+    "action": "Kill ALL sessions (server kill)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t kill-all",
+    "source": "shell"
+  },
+  {
+    "keys": "t vs",
+    "action": "Split pane vertically (left/right)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t vs",
+    "source": "shell"
+  },
+  {
+    "keys": "t hs",
+    "action": "Split pane horizontally (top/bottom)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t hs",
+    "source": "shell"
+  },
+  {
+    "keys": "t win ",
+    "action": "Open a new window",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t win ",
+    "source": "shell"
+  },
+  {
+    "keys": "t wins",
+    "action": "List all windows in current session",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t wins",
+    "source": "shell"
+  },
+  {
+    "keys": "t next",
+    "action": "Switch to next window",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t next",
+    "source": "shell"
+  },
+  {
+    "keys": "t prev",
+    "action": "Switch to previous window",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t prev",
+    "source": "shell"
+  },
+  {
+    "keys": "t float",
+    "action": "Open a floating popup shell",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t float",
+    "source": "shell"
+  },
+  {
+    "keys": "t save",
+    "action": "Manually save session (resurrect)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t save",
+    "source": "shell"
+  },
+  {
+    "keys": "t restore",
+    "action": "Manually restore last saved session",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t restore",
+    "source": "shell"
+  },
+  {
+    "keys": "t cheat",
+    "action": "Show this cheatsheet",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "t cheat",
+    "source": "shell"
+  },
+  {
+    "keys": "chtm",
+    "action": "Interactive fuzzy search tmux cheatsheet (bat + fzf)",
+    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "app": "tmux",
+    "command": "chtm",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux detach-client",
+    "action": "Detach from current session (leaves background running)",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux detach-client",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux choose-client",
+    "action": "Choose client to detach interactively",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux choose-client",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux choose-tree -s",
+    "action": "Session tree: Interactively switch between active sessions",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux choose-tree -s",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux command-prompt -I \"#S\" \"rename-session -- '%%'\"",
+    "action": "Rename session",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux command-prompt -I \"#S\" \"rename-session -- '%%'\"",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux switch-client -p",
+    "action": "Switch to previous session",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux switch-client -p",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux switch-client -n",
+    "action": "Switch to next session",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux switch-client -n",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux switch-client -l",
+    "action": "Switch to the last active session",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux switch-client -l",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux clock-mode",
+    "action": "Display digital clock in current pane",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux clock-mode",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux command-prompt",
+    "action": "Open Tmux command prompt (:)",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux command-prompt",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux list-keys",
+    "action": "Show keybindings / popup cheatsheet",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux list-keys",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux show-messages",
+    "action": "Show Tmux message and window log history",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux show-messages",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-pane -t :.+",
+    "action": "Visual switcher (tmux-sessionx with zoxide integration)",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux select-pane -t :.+",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux display-message",
+    "action": "Display window/pane info in status line",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux display-message",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux refresh-client",
+    "action": "Force redraw the attached client",
+    "category": "\ud83d\udccb Session & Client Management",
+    "app": "tmux",
+    "command": "tmux refresh-client",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux new-window",
+    "action": "Create new window",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux new-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux command-prompt -I \"#W\" \"rename-window -- '%%'\"",
+    "action": "Rename current window",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux command-prompt -I \"#W\" \"rename-window -- '%%'\"",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux kill-window",
+    "action": "Kill / close current window (prompts for confirmation)",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux kill-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux next-window",
+    "action": "Select next window",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux next-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux previous-window",
+    "action": "Select previous window",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux previous-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux last-window",
+    "action": "Select last active window (toggle back and forth)",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux last-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux command-prompt \"select-window -t ':%%'\"",
+    "action": "Select window by number (1 through 9)",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux command-prompt \"select-window -t ':%%'\"",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux choose-tree -w",
+    "action": "Choose window from interactive tree",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux choose-tree -w",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux find-window",
+    "action": "Find / search window by text",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux find-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux command-prompt \"move-window -t '%%'\"",
+    "action": "Move / renumber window index",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux command-prompt \"move-window -t '%%'\"",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux command-prompt \"select-window -t ':%%'\"",
+    "action": "Select window by index prompt",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux command-prompt \"select-window -t ':%%'\"",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-window -t :0",
+    "action": "Select window 0",
+    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "app": "tmux",
+    "command": "tmux select-window -t :0",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux split-window -h",
+    "action": "Split vertically (left / right)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux split-window -h",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux split-window -h",
+    "action": "Split vertically (left / right)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux split-window -h",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux split-window -h",
+    "action": "Split vertically (left / right)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux split-window -h",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux split-window -v",
+    "action": "Split horizontally (top / bottom)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux split-window -v",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux split-window -v",
+    "action": "Split horizontally (top / bottom)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux split-window -v",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux split-window -v",
+    "action": "Split horizontally (top / bottom)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux split-window -v",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux kill-pane",
+    "action": "Kill current pane (prompts confirmation)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux kill-pane",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux resize-pane -Z",
+    "action": "Zoom / unzoom current pane (toggle full screen)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux resize-pane -Z",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux swap-pane -U",
+    "action": "Swap current pane with previous pane",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux swap-pane -U",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux swap-pane -D",
+    "action": "Swap current pane with next pane",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux swap-pane -D",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux display-panes",
+    "action": "Display pane numbers (type number 1..9 to jump immediately)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux display-panes",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux break-pane",
+    "action": "Break pane out into a new standalone window",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux break-pane",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux last-pane",
+    "action": "Move to previously active pane",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux last-pane",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux next-layout",
+    "action": "Cycle pane layout presets (even-horiz, even-vert, main-horiz, main-vert, tiled)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux next-layout",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-pane -U",
+    "action": "Select pane in specified direction",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux select-pane -U",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux resize-pane -U 5",
+    "action": "Resize active pane in steps of 5 cells",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux resize-pane -U 5",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux resize-pane -U 1",
+    "action": "Resize active pane in steps of 1 cell",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux resize-pane -U 1",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-pane -t :.+",
+    "action": "Rotate through panes (cycle focus)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux select-pane -t :.+",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-pane -m",
+    "action": "Mark the current pane (for swap-pane -s)",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux select-pane -m",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-pane -M",
+    "action": "Clear the current pane mark",
+    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "app": "tmux",
+    "command": "tmux select-pane -M",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux copy-mode",
+    "action": "Enter Copy / Scroll mode",
+    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "tmux copy-mode",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux paste-buffer",
+    "action": "Paste most recently copied buffer",
+    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "tmux paste-buffer",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux list-buffers",
+    "action": "List all paste buffers",
+    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "tmux list-buffers",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux choose-buffer",
+    "action": "Interactively choose and paste from paste buffer history",
+    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "tmux choose-buffer",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux delete-buffer",
+    "action": "Delete top paste buffer",
+    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "tmux delete-buffer",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-layout even-horizontal",
+    "action": "Set layout: even-horizontal",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux select-layout even-horizontal",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-layout even-vertical",
+    "action": "Set layout: even-vertical",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux select-layout even-vertical",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-layout main-horizontal",
+    "action": "Set layout: main-horizontal",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux select-layout main-horizontal",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-layout main-vertical",
+    "action": "Set layout: main-vertical",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux select-layout main-vertical",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux select-layout tiled",
+    "action": "Set layout: tiled",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux select-layout tiled",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux rotate-window",
+    "action": "Rotate panes in current window",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux rotate-window",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux rotate-window -D",
+    "action": "Rotate panes in reverse",
+    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "app": "tmux",
+    "command": "tmux rotate-window -D",
+    "source": "shell"
+  },
+  {
+    "keys": "t save",
+    "action": "Manually save active layout and sessions (tmux-resurrect)",
+    "category": "\ud83d\udcbe Persistence & Automated Session Recovery",
+    "app": "tmux",
+    "command": "t save",
+    "source": "shell"
+  },
+  {
+    "keys": "t restore",
+    "action": "Manually restore last saved layout (tmux-resurrect)",
+    "category": "\ud83d\udcbe Persistence & Automated Session Recovery",
+    "app": "tmux",
+    "command": "t restore",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux ls",
+    "action": "List active sessions",
+    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "app": "tmux",
+    "command": "tmux ls",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux attach -t ",
+    "action": "Attach to a specific session",
+    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "app": "tmux",
+    "command": "tmux attach -t ",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux new -s ",
+    "action": "Create a new session",
+    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "app": "tmux",
+    "command": "tmux new -s ",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux kill-session -t ",
+    "action": "Kill specific session",
+    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "app": "tmux",
+    "command": "tmux kill-session -t ",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux kill-server",
+    "action": "Kill entire tmux server and all sessions",
+    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "app": "tmux",
+    "command": "tmux kill-server",
+    "source": "shell"
+  },
+  {
+    "keys": "tmux source ~/.tmux.conf",
+    "action": "Reload configuration",
+    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "app": "tmux",
+    "command": "tmux source ~/.tmux.conf",
+    "source": "shell"
+  },
+  {
+    "keys": "Esc",
+    "action": "Exit visual mode, clear selection, or cancel search",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "escape",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 [",
+    "action": "Exit visual mode, clear selection, or cancel search",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "escape",
+    "source": "app"
+  },
+  {
+    "keys": "q",
+    "action": "Quit the process",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "quit",
+    "source": "app"
+  },
+  {
+    "keys": "Q",
+    "action": "Quit without outputting cwd-file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "quit --no-cwd-file",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 c",
+    "action": "Close the current tab, or quit if it's last",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "close",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 z",
+    "action": "Suspend the process",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "suspend",
+    "source": "app"
+  },
+  {
+    "keys": "k",
+    "action": "Previous file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow prev",
+    "source": "app"
+  },
+  {
+    "keys": "j",
+    "action": "Next file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow next",
+    "source": "app"
+  },
+  {
+    "keys": "<Up",
+    "action": "Previous file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow prev",
+    "source": "app"
+  },
+  {
+    "keys": "<Down",
+    "action": "Next file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow next",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 u",
+    "action": "Move cursor up half page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow -50%",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 d",
+    "action": "Move cursor down half page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow 50%",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 b",
+    "action": "Move cursor up one page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow -100%",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 f",
+    "action": "Move cursor down one page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow 100%",
+    "source": "app"
+  },
+  {
+    "keys": "\u21e7 PageUp",
+    "action": "Move cursor up half page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow -50%",
+    "source": "app"
+  },
+  {
+    "keys": "\u21e7 PageDown",
+    "action": "Move cursor down half page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow 50%",
+    "source": "app"
+  },
+  {
+    "keys": "<PageUp",
+    "action": "Move cursor up one page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow -100%",
+    "source": "app"
+  },
+  {
+    "keys": "<PageDown",
+    "action": "Move cursor down one page",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow 100%",
+    "source": "app"
+  },
+  {
+    "keys": "g g",
+    "action": "Go to top",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow top",
+    "source": "app"
+  },
+  {
+    "keys": "G",
+    "action": "Go to bottom",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "arrow bot",
+    "source": "app"
+  },
+  {
+    "keys": "h",
+    "action": "Back to the parent directory",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "leave",
+    "source": "app"
+  },
+  {
+    "keys": "l",
+    "action": "Enter the child directory, or open file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin smart-enter",
+    "source": "app"
+  },
+  {
+    "keys": "<Left",
+    "action": "Back to the parent directory",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "leave",
+    "source": "app"
+  },
+  {
+    "keys": "<Right",
+    "action": "Enter the child directory, or open file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin smart-enter",
+    "source": "app"
+  },
+  {
+    "keys": "H",
+    "action": "Back to previous directory",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "back",
+    "source": "app"
+  },
+  {
+    "keys": "L",
+    "action": "Forward to next directory",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "forward",
+    "source": "app"
+  },
+  {
+    "keys": "Space",
+    "action": "Toggle the current selection state",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "toggle; arrow 1",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 a",
+    "action": "Select all files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "toggle_all --state=on",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 r",
+    "action": "Invert selection of all files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "toggle_all",
+    "source": "app"
+  },
+  {
+    "keys": "v",
+    "action": "Enter visual mode (selection mode)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "visual_mode",
+    "source": "app"
+  },
+  {
+    "keys": "V",
+    "action": "Enter visual mode (unset mode)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "visual_mode --unset",
+    "source": "app"
+  },
+  {
+    "keys": "K",
+    "action": "Seek up 5 units in the preview",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "seek -5",
+    "source": "app"
+  },
+  {
+    "keys": "J",
+    "action": "Seek down 5 units in the preview",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "seek 5",
+    "source": "app"
+  },
+  {
+    "keys": "<Tab",
+    "action": "Spot hovered file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "spot",
+    "source": "app"
+  },
+  {
+    "keys": "o",
+    "action": "Open selected files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "open",
+    "source": "app"
+  },
+  {
+    "keys": "O",
+    "action": "Open selected files interactively",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "open --interactive",
+    "source": "app"
+  },
+  {
+    "keys": "\u21b5",
+    "action": "Enter child directory or open file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin smart-enter",
+    "source": "app"
+  },
+  {
+    "keys": "\u21e7 Enter",
+    "action": "Open selected files interactively",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "open --interactive",
+    "source": "app"
+  },
+  {
+    "keys": "y",
+    "action": "Yank selected files (copy)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "yank; plugin syl-notify -- \"custom\" \"\udb80\udf35 Sylphrena\" \"I'll keep this pattern safe for you.\"",
+    "source": "app"
+  },
+  {
+    "keys": "x",
+    "action": "Yank selected files (cut)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "yank --cut; plugin syl-notify -- \"custom\" \"\udb80\udf35 Sylphrena\" \"I've gathered these for moving!\"",
+    "source": "app"
+  },
+  {
+    "keys": "p",
+    "action": "Paste yanked files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "paste; plugin syl-notify -- \"custom\" \"\udb80\udf35 Sylphrena\" \"Pattern reconstructed!\"",
+    "source": "app"
+  },
+  {
+    "keys": "P",
+    "action": "Paste yanked files (overwrite if the destination exists)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "paste --force; plugin syl-notify -- \"custom\" \"\udb80\udf35 Sylphrena\" \"Overwriting the old patterns!\"",
+    "source": "app"
+  },
+  {
+    "keys": "-",
+    "action": "Symlink the absolute path of yanked files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "link",
+    "source": "app"
+  },
+  {
+    "keys": "_",
+    "action": "Symlink the relative path of yanked files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "link --relative",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 -",
+    "action": "Hardlink yanked files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "hardlink",
+    "source": "app"
+  },
+  {
+    "keys": "Y",
+    "action": "Cancel the yank status",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "unyank",
+    "source": "app"
+  },
+  {
+    "keys": "X",
+    "action": "Cancel the yank status",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "unyank",
+    "source": "app"
+  },
+  {
+    "keys": "d",
+    "action": "Trash selected files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "remove; plugin syl-notify -- \"custom\" \"\udb80\udf35 Sylphrena\" \"Gone! Like ash in a highstorm.\"",
+    "source": "app"
+  },
+  {
+    "keys": "D",
+    "action": "Permanently delete selected files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "remove --permanently",
+    "source": "app"
+  },
+  {
+    "keys": "a",
+    "action": "Create a file (ends with / for directories)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "create",
+    "source": "app"
+  },
+  {
+    "keys": "r n",
+    "action": "Rename selected file(s)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "rename --cursor=before_ext",
+    "source": "app"
+  },
+  {
+    "keys": "r s",
+    "action": "Run Shell Files in Batch",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin run-with",
+    "source": "app"
+  },
+  {
+    "keys": ";",
+    "action": "Run a shell command",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell --interactive",
+    "source": "app"
+  },
+  {
+    "keys": ":",
+    "action": "Run a shell command (block until finishes)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell --block --interactive",
+    "source": "app"
+  },
+  {
+    "keys": ".",
+    "action": "Toggle the visibility of hidden files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "hidden toggle",
+    "source": "app"
+  },
+  {
+    "keys": "s",
+    "action": "Search files by name via fd",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "search --via=fd",
+    "source": "app"
+  },
+  {
+    "keys": "S",
+    "action": "Search files by content via ripgrep",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "search --via=rg",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 s",
+    "action": "Cancel the ongoing search",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "escape --search",
+    "source": "app"
+  },
+  {
+    "keys": "z",
+    "action": "Jump to a file/directory via fzf",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin fzf",
+    "source": "app"
+  },
+  {
+    "keys": "Z",
+    "action": "Jump to a directory via zoxide",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin zoxide",
+    "source": "app"
+  },
+  {
+    "keys": "m S",
+    "action": "Linemode: size",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "linemode size",
+    "source": "app"
+  },
+  {
+    "keys": "m P",
+    "action": "Linemode: permissions",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "linemode permissions",
+    "source": "app"
+  },
+  {
+    "keys": "m B",
+    "action": "Linemode: btime",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "linemode btime",
+    "source": "app"
+  },
+  {
+    "keys": "m M",
+    "action": "Linemode: mtime",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "linemode mtime",
+    "source": "app"
+  },
+  {
+    "keys": "m O",
+    "action": "Linemode: owner",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "linemode owner",
+    "source": "app"
+  },
+  {
+    "keys": "m N",
+    "action": "Linemode: none",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "linemode none",
+    "source": "app"
+  },
+  {
+    "keys": "m q",
+    "action": "Enter the Highstorm Dashboard",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell --block \"/Users/aaravshah2975/.config/radiant-player/dashboard.sh\"",
+    "source": "app"
+  },
+  {
+    "keys": "m a a",
+    "action": "Add selected track(s) to queue",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py play %s\"",
+    "source": "app"
+  },
+  {
+    "keys": "m +",
+    "action": "Add to Queue",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py play %s\"",
+    "source": "app"
+  },
+  {
+    "keys": "m a s",
+    "action": "Add Spotify URI to queue",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell --block \"/Users/aaravshah2975/.config/radiant-player/add_spotify_prompt.sh\"",
+    "source": "app"
+  },
+  {
+    "keys": "m R",
+    "action": "Force Replace Queue",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/opt/homebrew/bin/python3 /Users/aaravshah2975/.config/radiant-player/queue.py force_replace %s\"",
+    "source": "app"
+  },
+  {
+    "keys": "m s",
+    "action": "Refresh Stormlight",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "redraw",
+    "source": "app"
+  },
+  {
+    "keys": "m p",
+    "action": "Infuse/Extinguish Stormlight",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/Users/aaravshah2975/.config/radiant-player/control.sh toggle\"",
+    "source": "app"
+  },
+  {
+    "keys": "m n",
+    "action": "Lash Forward",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/Users/aaravshah2975/.config/radiant-player/control.sh next\"",
+    "source": "app"
+  },
+  {
+    "keys": "m b",
+    "action": "Lash Backward",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/Users/aaravshah2975/.config/radiant-player/control.sh prev\"",
+    "source": "app"
+  },
+  {
+    "keys": "m r",
+    "action": "Swear New Loop Oath",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"/Users/aaravshah2975/.config/radiant-player/queue.py loop\"",
+    "source": "app"
+  },
+  {
+    "keys": "c c",
+    "action": "Copy the file path",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "copy path",
+    "source": "app"
+  },
+  {
+    "keys": "c d",
+    "action": "Copy the directory path",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "copy dirname",
+    "source": "app"
+  },
+  {
+    "keys": "c f",
+    "action": "Copy the filename",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "copy filename",
+    "source": "app"
+  },
+  {
+    "keys": "c n",
+    "action": "Copy the filename without extension",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "copy name_without_ext",
+    "source": "app"
+  },
+  {
+    "keys": "c m",
+    "action": "Chmod on files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin chmod",
+    "source": "app"
+  },
+  {
+    "keys": "f",
+    "action": "Filter files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "filter --smart",
+    "source": "app"
+  },
+  {
+    "keys": "F",
+    "action": "Filter files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "filter --smart",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 f",
+    "action": "Filter files",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "filter --smart",
+    "source": "app"
+  },
+  {
+    "keys": "/",
+    "action": "Find next file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "find --smart",
+    "source": "app"
+  },
+  {
+    "keys": "?",
+    "action": "Find previous file",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "find --previous --smart",
+    "source": "app"
+  },
+  {
+    "keys": "n",
+    "action": "Next found",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "find_arrow",
+    "source": "app"
+  },
+  {
+    "keys": "N",
+    "action": "Previous found",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "find_arrow --previous",
+    "source": "app"
+  },
+  {
+    "keys": ", m",
+    "action": "Sort by modified time",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort mtime --reverse=no; linemode mtime",
+    "source": "app"
+  },
+  {
+    "keys": ", M",
+    "action": "Sort by modified time (reverse)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort mtime --reverse=yes; linemode mtime",
+    "source": "app"
+  },
+  {
+    "keys": ", b",
+    "action": "Sort by birth time",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort btime --reverse=no; linemode btime",
+    "source": "app"
+  },
+  {
+    "keys": ", B",
+    "action": "Sort by birth time (reverse)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort btime --reverse=yes; linemode btime",
+    "source": "app"
+  },
+  {
+    "keys": ", e",
+    "action": "Sort by extension",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort extension --reverse=no",
+    "source": "app"
+  },
+  {
+    "keys": ", E",
+    "action": "Sort by extension (reverse)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort extension --reverse=yes",
+    "source": "app"
+  },
+  {
+    "keys": ", a",
+    "action": "Sort alphabetically",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort alphabetical --reverse=no",
+    "source": "app"
+  },
+  {
+    "keys": ", A",
+    "action": "Sort alphabetically (reverse)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort alphabetical --reverse=yes",
+    "source": "app"
+  },
+  {
+    "keys": ", n",
+    "action": "Sort naturally",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort natural --reverse=no",
+    "source": "app"
+  },
+  {
+    "keys": ", N",
+    "action": "Sort naturally (reverse)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort natural --reverse=yes",
+    "source": "app"
+  },
+  {
+    "keys": ", s",
+    "action": "Sort by size",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort size --reverse=no; linemode size",
+    "source": "app"
+  },
+  {
+    "keys": ", S",
+    "action": "Sort by size (reverse)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort size --reverse=yes; linemode size",
+    "source": "app"
+  },
+  {
+    "keys": ", r",
+    "action": "Sort randomly",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "sort random --reverse=no",
+    "source": "app"
+  },
+  {
+    "keys": "g A",
+    "action": "Go Audiobooks",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd \"~/Documents/Personal/Audiobooks\"",
+    "source": "app"
+  },
+  {
+    "keys": "g a",
+    "action": "Go AS",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd \"~/aaravshah0011@gmail.com - Google Drive\"",
+    "source": "app"
+  },
+  {
+    "keys": "g B",
+    "action": "Go BITS",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd \"~/f20231325@pilani.bits-pilani.ac.in - Google Drive\"",
+    "source": "app"
+  },
+  {
+    "keys": "g b",
+    "action": "Go Books",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd \"~/Documents/Personal/Books\"",
+    "source": "app"
+  },
+  {
+    "keys": "g c",
+    "action": "Go ~/.config",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd ~/.config",
+    "source": "app"
+  },
+  {
+    "keys": "g D",
+    "action": "Go ~/Downloads",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd ~/Downloads",
+    "source": "app"
+  },
+  {
+    "keys": "g d",
+    "action": "Go ~/Documents",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd ~/Documents",
+    "source": "app"
+  },
+  {
+    "keys": "g f",
+    "action": "Follow hovered symlink",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "follow",
+    "source": "app"
+  },
+  {
+    "keys": "g G",
+    "action": "Open lazygit",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"lazygit\" --block",
+    "source": "app"
+  },
+  {
+    "keys": "g h",
+    "action": "Go home",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd ~",
+    "source": "app"
+  },
+  {
+    "keys": "g k",
+    "action": "Kill all media processes",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"pkill -9 mpv; pkill -9 VLC\" --block",
+    "source": "app"
+  },
+  {
+    "keys": "g L",
+    "action": "fzf for LazyGit",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"~/.local/bin/lazyGit-lister.sh\" --block --confirm",
+    "source": "app"
+  },
+  {
+    "keys": "g l",
+    "action": "Go ~/.local/bin",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd ~/.local/bin",
+    "source": "app"
+  },
+  {
+    "keys": "g m",
+    "action": "Go Yt-Music",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd \"~/Documents/Personal/Yt-Music\"",
+    "source": "app"
+  },
+  {
+    "keys": "g v",
+    "action": "Go Yt-Videos",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd \"~/Documents/Personal/Yt-Videos\"",
+    "source": "app"
+  },
+  {
+    "keys": "g ?",
+    "action": "Peek at keymap",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"bat ~/.config/yazi/keymap.toml | fzf --height 40% --reverse\" --block",
+    "source": "app"
+  },
+  {
+    "keys": "g Space",
+    "action": "Jump interactively",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "cd --interactive",
+    "source": "app"
+  },
+  {
+    "keys": "T",
+    "action": "Create a new tab with CWD",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_create --current",
+    "source": "app"
+  },
+  {
+    "keys": "M",
+    "action": "Maximize or restore the preview pane",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin max-preview",
+    "source": "app"
+  },
+  {
+    "keys": "N",
+    "action": "Seek wisdom from Sylphrena",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin syl-notify",
+    "source": "app"
+  },
+  {
+    "keys": "1",
+    "action": "Switch to first tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 0",
+    "source": "app"
+  },
+  {
+    "keys": "2",
+    "action": "Switch to second tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 1",
+    "source": "app"
+  },
+  {
+    "keys": "3",
+    "action": "Switch to third tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 2",
+    "source": "app"
+  },
+  {
+    "keys": "4",
+    "action": "Switch to fourth tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 3",
+    "source": "app"
+  },
+  {
+    "keys": "5",
+    "action": "Switch to fifth tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 4",
+    "source": "app"
+  },
+  {
+    "keys": "6",
+    "action": "Switch to sixth tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 5",
+    "source": "app"
+  },
+  {
+    "keys": "7",
+    "action": "Switch to seventh tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 6",
+    "source": "app"
+  },
+  {
+    "keys": "8",
+    "action": "Switch to eighth tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 7",
+    "source": "app"
+  },
+  {
+    "keys": "9",
+    "action": "Switch to ninth tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 8",
+    "source": "app"
+  },
+  {
+    "keys": "[",
+    "action": "Switch to previous tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch -1 --relative",
+    "source": "app"
+  },
+  {
+    "keys": "]",
+    "action": "Switch to next tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_switch 1 --relative",
+    "source": "app"
+  },
+  {
+    "keys": "{",
+    "action": "Swap current tab with previous tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_swap -1",
+    "source": "app"
+  },
+  {
+    "keys": "}",
+    "action": "Swap current tab with next tab",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tab_swap 1",
+    "source": "app"
+  },
+  {
+    "keys": "t t k",
+    "action": "Toggle a tag",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- toggle-tag",
+    "source": "app"
+  },
+  {
+    "keys": "t t i",
+    "action": "Toggle tag(s) input box",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- toggle-tag --input",
+    "source": "app"
+  },
+  {
+    "keys": "t a k",
+    "action": "Add a tag",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- add-tag",
+    "source": "app"
+  },
+  {
+    "keys": "t a i",
+    "action": "Add tag(s) input box",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- add-tag --input",
+    "source": "app"
+  },
+  {
+    "keys": "t d k",
+    "action": "Remove a tag",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- remove-tag",
+    "source": "app"
+  },
+  {
+    "keys": "t d i",
+    "action": "Remove tag(s) input box",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- remove-tag --input",
+    "source": "app"
+  },
+  {
+    "keys": "t f",
+    "action": "Filter files/folders by a tag",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- filter",
+    "source": "app"
+  },
+  {
+    "keys": "t F",
+    "action": "Filter files/folders by tag(s) (input box)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- filter --input",
+    "source": "app"
+  },
+  {
+    "keys": "t s t",
+    "action": "Select a selection action then select a tag key (toggle-select)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- toggle-select",
+    "source": "app"
+  },
+  {
+    "keys": "t s r",
+    "action": "replace-select",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- replace-select",
+    "source": "app"
+  },
+  {
+    "keys": "t s u",
+    "action": "unite-select",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- unite-select",
+    "source": "app"
+  },
+  {
+    "keys": "t s i",
+    "action": "intersect-select",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- intersect-select",
+    "source": "app"
+  },
+  {
+    "keys": "t s s",
+    "action": "subtract-select",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- subtract-select",
+    "source": "app"
+  },
+  {
+    "keys": "t s e",
+    "action": "exclude-select",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- exclude-select",
+    "source": "app"
+  },
+  {
+    "keys": "t s R",
+    "action": "replace-select --input",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- replace-select --input",
+    "source": "app"
+  },
+  {
+    "keys": "t s U",
+    "action": "unite-select --input",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- unite-select --input",
+    "source": "app"
+  },
+  {
+    "keys": "t s I",
+    "action": "intersect-select --input",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- intersect-select --input",
+    "source": "app"
+  },
+  {
+    "keys": "t s S",
+    "action": "subtract-select --input",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- subtract-select --input",
+    "source": "app"
+  },
+  {
+    "keys": "t s E",
+    "action": "exclude-select --input",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin simple-tag -- exclude-select --input",
+    "source": "app"
+  },
+  {
+    "keys": "e l",
+    "action": "LocalSend (Send/Receive)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "plugin localsend-dashboard",
+    "source": "app"
+  },
+  {
+    "keys": "e a",
+    "action": "Share selected file via AirDrop (macOS)",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell 'osascript -e \"set fileAlias to POSIX file \\\"%s1\\\" as alias\" -e \"tell application \\\"Finder\\\" to reveal fileAlias\" -e \"tell application \\\"System Events\\\" to keystroke \\\"R\\\" using {command down, shift down}\"' ",
+    "source": "app"
+  },
+  {
+    "keys": "e n",
+    "action": "Share selected files via NearDrop",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "shell \"open -a NearDrop %s\" --block",
+    "source": "app"
+  },
+  {
+    "keys": "w",
+    "action": "Show task manager",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "tasks:show",
+    "source": "app"
+  },
+  {
+    "keys": "~",
+    "action": "Open help",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "help",
+    "source": "app"
+  },
+  {
+    "keys": "<F1",
+    "action": "Open help",
+    "category": "Yazi File Manager",
+    "app": "yazi",
+    "command": "help",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 T",
+    "action": "New Tab",
+    "category": "Ghostty: Tabs & Windows",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 W",
+    "action": "Close Surface / Tab",
+    "category": "Ghostty: Tabs & Windows",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 D",
+    "action": "Split Right",
+    "category": "Ghostty: Splits",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 D",
+    "action": "Split Down",
+    "category": "Ghostty: Splits",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 [ / \u2318 ]",
+    "action": "Previous / Next Split",
+    "category": "Ghostty: Splits",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 \u21b5",
+    "action": "Toggle Split Zoom",
+    "category": "Ghostty: Splits",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 + / \u2318 -",
+    "action": "Increase / Decrease Font Size",
+    "category": "Ghostty: View",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 0",
+    "action": "Reset Font Size",
+    "category": "Ghostty: View",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 I",
+    "action": "Toggle Terminal Inspector",
+    "category": "Ghostty: Tools",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 ,",
+    "action": "Reload Configuration",
+    "category": "Ghostty: Tools",
+    "app": "Ghostty",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space f f",
+    "action": "Find Files (Telescope)",
+    "category": "Neovim: Navigation",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space f g",
+    "action": "Live Grep Workspace",
+    "category": "Neovim: Navigation",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space e",
+    "action": "Toggle File Tree (Neotree/NvimTree)",
+    "category": "Neovim: Files",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 W h / j / k / l",
+    "action": "Navigate Window Splits",
+    "category": "Neovim: Windows",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 W s / v",
+    "action": "Split Horizontal / Vertical",
+    "category": "Neovim: Windows",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "[ b / ] b",
+    "action": "Previous / Next Buffer",
+    "category": "Neovim: Buffers",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space b d",
+    "action": "Delete / Close Buffer",
+    "category": "Neovim: Buffers",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space w",
+    "action": "Save Current Buffer",
+    "category": "Neovim: Operations",
+    "app": "nvim",
+    "command": "",
+    "source": "app"
+  }
+]

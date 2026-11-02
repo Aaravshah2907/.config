@@ -1280,81 +1280,65 @@
     "source": "shell"
   },
   {
-    "keys": "todo",
-    "action": "Open Tuxedo TUI in dedicated Tuxedo session (auto-kills on exit)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "keys": "todo / tux",
+    "action": "Open Tuxedo TUI in dedicated `Tuxedo` session (auto-kills on exit)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "todo",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tux",
-    "action": "Open Tuxedo TUI in dedicated Tuxedo session (auto-kills on exit)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "keys": "t todo / t tux",
+    "action": "Dispatch Tuxedo session via `t` command center",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "tux",
-    "source": "shell"
-  },
-  {
-    "keys": "t todo",
-    "action": "Dispatch Tuxedo session via t command center",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
-    "app": "tmux",
-    "command": "t todo",
-    "source": "shell"
-  },
-  {
-    "keys": "t tux",
-    "action": "Dispatch Tuxedo session via t command center",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
-    "app": "tmux",
-    "command": "t tux",
+    "command": "t todo / t tux",
     "source": "shell"
   },
   {
     "keys": "t",
     "action": "Attach to last session (or create new default)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "t",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "t ",
+    "keys": "t <name>",
     "action": "Attach to session by name (creates if missing)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "t ",
+    "command": "t <name>",
     "source": "shell"
   },
   {
     "keys": "t ls",
     "action": "List all active sessions",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t ls",
     "source": "shell"
   },
   {
-    "keys": "t new ",
+    "keys": "t new [name]",
     "action": "Create a new named session",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "t new ",
+    "command": "t new [name]",
     "source": "shell"
   },
   {
-    "keys": "t kill ",
+    "keys": "t kill <name>",
     "action": "Kill a specific session",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "t kill ",
+    "command": "t kill <name>",
     "source": "shell"
   },
   {
     "keys": "t kill-all",
     "action": "Kill ALL sessions (server kill)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t kill-all",
     "source": "shell"
@@ -1362,7 +1346,7 @@
   {
     "keys": "t vs",
     "action": "Split pane vertically (left/right)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t vs",
     "source": "shell"
@@ -1370,23 +1354,23 @@
   {
     "keys": "t hs",
     "action": "Split pane horizontally (top/bottom)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t hs",
     "source": "shell"
   },
   {
-    "keys": "t win ",
+    "keys": "t win [name]",
     "action": "Open a new window",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "t win ",
+    "command": "t win [name]",
     "source": "shell"
   },
   {
     "keys": "t wins",
     "action": "List all windows in current session",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t wins",
     "source": "shell"
@@ -1394,7 +1378,7 @@
   {
     "keys": "t next",
     "action": "Switch to next window",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t next",
     "source": "shell"
@@ -1402,7 +1386,7 @@
   {
     "keys": "t prev",
     "action": "Switch to previous window",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t prev",
     "source": "shell"
@@ -1410,7 +1394,7 @@
   {
     "keys": "t float",
     "action": "Open a floating popup shell",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t float",
     "source": "shell"
@@ -1418,7 +1402,7 @@
   {
     "keys": "t save",
     "action": "Manually save session (resurrect)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t save",
     "source": "shell"
@@ -1426,7 +1410,7 @@
   {
     "keys": "t restore",
     "action": "Manually restore last saved session",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t restore",
     "source": "shell"
@@ -1434,7 +1418,7 @@
   {
     "keys": "t cheat",
     "action": "Show this cheatsheet",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
     "command": "t cheat",
     "source": "shell"
@@ -1442,479 +1426,575 @@
   {
     "keys": "chtm",
     "action": "Interactive fuzzy search tmux cheatsheet (bat + fzf)",
-    "category": "\ud83d\udc1a Shell t Command & Helpers (Prefix-Free!)",
+    "category": "Tmux: Shell `t` Command & Helpers (Prefix-Free!)",
     "app": "tmux",
-    "command": "chtm",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux detach-client",
+    "keys": "Prefix + d",
     "action": "Detach from current session (leaves background running)",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux detach-client",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux choose-client",
+    "keys": "Prefix + D",
     "action": "Choose client to detach interactively",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux choose-client",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux choose-tree -s",
+    "keys": "Prefix + s",
     "action": "Session tree: Interactively switch between active sessions",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux choose-tree -s",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux command-prompt -I \"#S\" \"rename-session -- '%%'\"",
+    "keys": "Prefix + $",
     "action": "Rename session",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux command-prompt -I \"#S\" \"rename-session -- '%%'\"",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux switch-client -p",
+    "keys": "Prefix + (",
     "action": "Switch to previous session",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux switch-client -p",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux switch-client -n",
+    "keys": "Prefix + )",
     "action": "Switch to next session",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux switch-client -n",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux switch-client -l",
+    "keys": "Prefix + L",
     "action": "Switch to the last active session",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux switch-client -l",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux clock-mode",
+    "keys": "Prefix + t",
     "action": "Display digital clock in current pane",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux clock-mode",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux command-prompt",
-    "action": "Open Tmux command prompt (:)",
-    "category": "\ud83d\udccb Session & Client Management",
+    "keys": "Prefix + :",
+    "action": "Open Tmux command prompt (`:`)",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux command-prompt",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux list-keys",
+    "keys": "Prefix + ?",
     "action": "Show keybindings / popup cheatsheet",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux list-keys",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux show-messages",
+    "keys": "Prefix + ~",
     "action": "Show Tmux message and window log history",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux show-messages",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-pane -t :.+",
+    "keys": "Prefix + o",
     "action": "Visual switcher (tmux-sessionx with zoxide integration)",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux select-pane -t :.+",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux display-message",
+    "keys": "Prefix + i",
     "action": "Display window/pane info in status line",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux display-message",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux refresh-client",
+    "keys": "Prefix + r",
     "action": "Force redraw the attached client",
-    "category": "\ud83d\udccb Session & Client Management",
+    "category": "Tmux: Session & Client Management",
     "app": "tmux",
-    "command": "tmux refresh-client",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux new-window",
+    "keys": "Prefix + c",
     "action": "Create new window",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux new-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux command-prompt -I \"#W\" \"rename-window -- '%%'\"",
+    "keys": "Prefix + ,",
     "action": "Rename current window",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux command-prompt -I \"#W\" \"rename-window -- '%%'\"",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux kill-window",
+    "keys": "Prefix + &",
     "action": "Kill / close current window (prompts for confirmation)",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux kill-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux next-window",
+    "keys": "Prefix + n",
     "action": "Select next window",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux next-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux previous-window",
+    "keys": "Prefix + p",
     "action": "Select previous window",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux previous-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux last-window",
+    "keys": "Prefix + l",
     "action": "Select last active window (toggle back and forth)",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux last-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux command-prompt \"select-window -t ':%%'\"",
+    "keys": "Prefix + 1 .. 9",
     "action": "Select window by number (1 through 9)",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux command-prompt \"select-window -t ':%%'\"",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux choose-tree -w",
+    "keys": "Prefix + w",
     "action": "Choose window from interactive tree",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux choose-tree -w",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux find-window",
+    "keys": "Prefix + f",
     "action": "Find / search window by text",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux find-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux command-prompt \"move-window -t '%%'\"",
+    "keys": "Prefix + .",
     "action": "Move / renumber window index",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux command-prompt \"move-window -t '%%'\"",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux command-prompt \"select-window -t ':%%'\"",
+    "keys": "Prefix + '",
     "action": "Select window by index prompt",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux command-prompt \"select-window -t ':%%'\"",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-window -t :0",
+    "keys": "Prefix + 0",
     "action": "Select window 0",
-    "category": "\ud83e\ude9f Window Management (Tabs)",
+    "category": "Tmux: Window Management (Tabs)",
     "app": "tmux",
-    "command": "tmux select-window -t :0",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux split-window -h",
-    "action": "Split vertically (left / right)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "keys": "Prefix + \\",
+    "action": "` or `Prefix + %` or `Prefix + v`",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux split-window -h",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux split-window -h",
-    "action": "Split vertically (left / right)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
-    "app": "tmux",
-    "command": "tmux split-window -h",
-    "source": "shell"
-  },
-  {
-    "keys": "tmux split-window -h",
-    "action": "Split vertically (left / right)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
-    "app": "tmux",
-    "command": "tmux split-window -h",
-    "source": "shell"
-  },
-  {
-    "keys": "tmux split-window -v",
+    "keys": "Prefix + - or Prefix + \" or Prefix + s",
     "action": "Split horizontally (top / bottom)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux split-window -v",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux split-window -v",
-    "action": "Split horizontally (top / bottom)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
-    "app": "tmux",
-    "command": "tmux split-window -v",
-    "source": "shell"
-  },
-  {
-    "keys": "tmux split-window -v",
-    "action": "Split horizontally (top / bottom)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
-    "app": "tmux",
-    "command": "tmux split-window -v",
-    "source": "shell"
-  },
-  {
-    "keys": "tmux kill-pane",
+    "keys": "Prefix + x",
     "action": "Kill current pane (prompts confirmation)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux kill-pane",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux resize-pane -Z",
+    "keys": "Prefix + z",
     "action": "Zoom / unzoom current pane (toggle full screen)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux resize-pane -Z",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux swap-pane -U",
+    "keys": "Prefix + {",
     "action": "Swap current pane with previous pane",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux swap-pane -U",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux swap-pane -D",
+    "keys": "Prefix + }",
     "action": "Swap current pane with next pane",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux swap-pane -D",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux display-panes",
+    "keys": "Prefix + q",
     "action": "Display pane numbers (type number 1..9 to jump immediately)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux display-panes",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux break-pane",
+    "keys": "Prefix + !",
     "action": "Break pane out into a new standalone window",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux break-pane",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux last-pane",
+    "keys": "Prefix + ;",
     "action": "Move to previously active pane",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux last-pane",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux next-layout",
+    "keys": "Prefix + Space",
     "action": "Cycle pane layout presets (even-horiz, even-vert, main-horiz, main-vert, tiled)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux next-layout",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-pane -U",
+    "keys": "Prefix + \u2191 / \u2193 / \u2190 / \u2192",
     "action": "Select pane in specified direction",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux select-pane -U",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux resize-pane -U 5",
+    "keys": "Prefix + Alt + \u2191 / \u2193 / \u2190 / \u2192",
     "action": "Resize active pane in steps of 5 cells",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux resize-pane -U 5",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux resize-pane -U 1",
+    "keys": "Prefix + Ctrl + \u2191 / \u2193 / \u2190 / \u2192",
     "action": "Resize active pane in steps of 1 cell",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux resize-pane -U 1",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-pane -t :.+",
+    "keys": "Prefix + o",
     "action": "Rotate through panes (cycle focus)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux select-pane -t :.+",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-pane -m",
+    "keys": "Prefix + m",
     "action": "Mark the current pane (for swap-pane -s)",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux select-pane -m",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-pane -M",
+    "keys": "Prefix + M",
     "action": "Clear the current pane mark",
-    "category": "\u2702\ufe0f Pane Management (Splits)",
+    "category": "Tmux: Pane Management (Splits)",
     "app": "tmux",
-    "command": "tmux select-pane -M",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux copy-mode",
+    "keys": "Ctrl + h",
+    "action": "Focus Left (pane / vim split)",
+    "category": "Tmux: Seamless Neovim \u2194 Tmux Navigation",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Ctrl + j",
+    "action": "Focus Down (pane / vim split)",
+    "category": "Tmux: Seamless Neovim \u2194 Tmux Navigation",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Ctrl + k",
+    "action": "Focus Up (pane / vim split)",
+    "category": "Tmux: Seamless Neovim \u2194 Tmux Navigation",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Ctrl + l",
+    "action": "Focus Right (pane / vim split)",
+    "category": "Tmux: Seamless Neovim \u2194 Tmux Navigation",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Prefix + [",
     "action": "Enter Copy / Scroll mode",
-    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
     "app": "tmux",
-    "command": "tmux copy-mode",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux paste-buffer",
+    "keys": "Prefix + ]",
     "action": "Paste most recently copied buffer",
-    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
     "app": "tmux",
-    "command": "tmux paste-buffer",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux list-buffers",
+    "keys": "Prefix + #",
     "action": "List all paste buffers",
-    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
     "app": "tmux",
-    "command": "tmux list-buffers",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux choose-buffer",
+    "keys": "Prefix + =",
     "action": "Interactively choose and paste from paste buffer history",
-    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
     "app": "tmux",
-    "command": "tmux choose-buffer",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux delete-buffer",
+    "keys": "Prefix + -",
     "action": "Delete top paste buffer",
-    "category": "\ud83d\udcdc Copy Mode & Paste Buffers (Vi Keys)",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
     "app": "tmux",
-    "command": "tmux delete-buffer",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-layout even-horizontal",
+    "keys": "h / j / k / l",
+    "action": "Move cursor left, down, up, right",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "w / b / e",
+    "action": "Word forward, backward, end of word",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "0 / ^ / $",
+    "action": "Start of line, first non-blank char, end of line",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "g / G",
+    "action": "Jump to top of buffer / bottom of buffer",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Ctrl + u / Ctrl + d",
+    "action": "Scroll half-page Up / Down",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Ctrl + b / Ctrl + f",
+    "action": "Scroll full-page Up / Down",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "/ / ?",
+    "action": "Search forward / Search backward",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "n / N",
+    "action": "Next search match / Previous search match",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "v / Space",
+    "action": "Begin character selection",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "V",
+    "action": "Begin line selection",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "y / Enter",
+    "action": "Yank (copy) selection and exit copy mode",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "q / Esc",
+    "action": "Exit copy mode without copying",
+    "category": "Tmux: Copy Mode & Paste Buffers (Vi Keys)",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
+    "keys": "Prefix + M-1",
     "action": "Set layout: even-horizontal",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux select-layout even-horizontal",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-layout even-vertical",
+    "keys": "Prefix + M-2",
     "action": "Set layout: even-vertical",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux select-layout even-vertical",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-layout main-horizontal",
+    "keys": "Prefix + M-3",
     "action": "Set layout: main-horizontal",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux select-layout main-horizontal",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-layout main-vertical",
+    "keys": "Prefix + M-4",
     "action": "Set layout: main-vertical",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux select-layout main-vertical",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux select-layout tiled",
+    "keys": "Prefix + M-5",
     "action": "Set layout: tiled",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux select-layout tiled",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux rotate-window",
+    "keys": "Prefix + C-o",
     "action": "Rotate panes in current window",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux rotate-window",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
-    "keys": "tmux rotate-window -D",
+    "keys": "Prefix + M-o",
     "action": "Rotate panes in reverse",
-    "category": "\ud83d\udd27 Miscellaneous & Layout Shortcuts",
+    "category": "Tmux: Miscellaneous & Layout Shortcuts",
     "app": "tmux",
-    "command": "tmux rotate-window -D",
-    "source": "shell"
+    "command": "",
+    "source": "tmux"
   },
   {
     "keys": "t save",
     "action": "Manually save active layout and sessions (tmux-resurrect)",
-    "category": "\ud83d\udcbe Persistence & Automated Session Recovery",
+    "category": "Tmux: Persistence & Automated Session Recovery",
     "app": "tmux",
     "command": "t save",
     "source": "shell"
@@ -1922,57 +2002,65 @@
   {
     "keys": "t restore",
     "action": "Manually restore last saved layout (tmux-resurrect)",
-    "category": "\ud83d\udcbe Persistence & Automated Session Recovery",
+    "category": "Tmux: Persistence & Automated Session Recovery",
     "app": "tmux",
     "command": "t restore",
     "source": "shell"
   },
   {
+    "keys": "tmux-continuum",
+    "action": "Auto-saves session state every 15 minutes in background",
+    "category": "Tmux: Persistence & Automated Session Recovery",
+    "app": "tmux",
+    "command": "",
+    "source": "tmux"
+  },
+  {
     "keys": "tmux ls",
     "action": "List active sessions",
-    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "category": "Tmux: Raw Native Tmux Commands (Shell Under the Hood)",
     "app": "tmux",
-    "command": "tmux ls",
+    "command": "",
     "source": "shell"
   },
   {
-    "keys": "tmux attach -t ",
+    "keys": "tmux attach -t <name>",
     "action": "Attach to a specific session",
-    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "category": "Tmux: Raw Native Tmux Commands (Shell Under the Hood)",
     "app": "tmux",
-    "command": "tmux attach -t ",
+    "command": "",
     "source": "shell"
   },
   {
-    "keys": "tmux new -s ",
+    "keys": "tmux new -s <name>",
     "action": "Create a new session",
-    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "category": "Tmux: Raw Native Tmux Commands (Shell Under the Hood)",
     "app": "tmux",
-    "command": "tmux new -s ",
+    "command": "",
     "source": "shell"
   },
   {
-    "keys": "tmux kill-session -t ",
+    "keys": "tmux kill-session -t <name>",
     "action": "Kill specific session",
-    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "category": "Tmux: Raw Native Tmux Commands (Shell Under the Hood)",
     "app": "tmux",
-    "command": "tmux kill-session -t ",
+    "command": "",
     "source": "shell"
   },
   {
     "keys": "tmux kill-server",
     "action": "Kill entire tmux server and all sessions",
-    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "category": "Tmux: Raw Native Tmux Commands (Shell Under the Hood)",
     "app": "tmux",
-    "command": "tmux kill-server",
+    "command": "",
     "source": "shell"
   },
   {
     "keys": "tmux source ~/.tmux.conf",
     "action": "Reload configuration",
-    "category": "\ud83d\udcbb Raw Native Tmux Commands (Shell Under the Hood)",
+    "category": "Tmux: Raw Native Tmux Commands (Shell Under the Hood)",
     "app": "tmux",
-    "command": "tmux source ~/.tmux.conf",
+    "command": "",
     "source": "shell"
   },
   {
@@ -3388,6 +3476,630 @@
     "action": "Save Current Buffer",
     "category": "Neovim: Operations",
     "app": "nvim",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 T",
+    "action": "New Tab",
+    "category": "Helium: Tabs",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 W",
+    "action": "Close Tab",
+    "category": "Helium: Tabs",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 T",
+    "action": "Reopen Last Closed Tab",
+    "category": "Helium: Tabs",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 L",
+    "action": "Focus Address Bar / URL Search",
+    "category": "Helium: Navigation",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 R",
+    "action": "Reload Current Page",
+    "category": "Helium: Navigation",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 R",
+    "action": "Hard Reload (Ignore Cache)",
+    "category": "Helium: Navigation",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 [ / \u2318 ]",
+    "action": "Navigate Back / Forward in History",
+    "category": "Helium: Navigation",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 \u2190 / \u2192",
+    "action": "Switch to Previous / Next Tab",
+    "category": "Helium: Tabs",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 1 .. 9",
+    "action": "Jump Directly to Tab 1 through 9",
+    "category": "Helium: Tabs",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 + / \u2318 -",
+    "action": "Zoom In / Out",
+    "category": "Helium: View",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 0",
+    "action": "Reset Zoom to 100%",
+    "category": "Helium: View",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 F",
+    "action": "Find in Page",
+    "category": "Helium: Navigation",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 I",
+    "action": "Toggle Web Developer Tools / Inspector",
+    "category": "Helium: Tools",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 B",
+    "action": "Toggle Bookmarks Bar",
+    "category": "Helium: View",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 N",
+    "action": "New Private / Incognito Window",
+    "category": "Helium: Tabs",
+    "app": "helium",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space",
+    "action": "Play / Pause Toggle",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2192",
+    "action": "Next Track",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2190",
+    "action": "Previous Track",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2191 / \u2318 \u2193",
+    "action": "Volume Up / Volume Down",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 \u2193",
+    "action": "Mute Volume",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 \u2191",
+    "action": "Set Maximum Volume",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 L",
+    "action": "Focus Search Field",
+    "category": "Spotify: Navigation",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 S",
+    "action": "Toggle Shuffle On / Off",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 R",
+    "action": "Toggle Repeat Mode",
+    "category": "Spotify: Playback",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 N",
+    "action": "Create New Playlist",
+    "category": "Spotify: Library",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 1",
+    "action": "Go to Your Library",
+    "category": "Spotify: Navigation",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 2",
+    "action": "Go to Home View",
+    "category": "Spotify: Navigation",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 3",
+    "action": "Go to Search View",
+    "category": "Spotify: Navigation",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 F",
+    "action": "Toggle Full Screen Now Playing",
+    "category": "Spotify: View",
+    "app": "spotify",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space",
+    "action": "Play / Pause Toggle",
+    "category": "VLC: Playback",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2192 / \u2318 \u2190",
+    "action": "Short Jump Forward / Backward (10s)",
+    "category": "VLC: Navigation",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 \u2192 / \u2318 \u2325 \u2190",
+    "action": "Medium Jump Forward / Backward (1m)",
+    "category": "VLC: Navigation",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2303 \u2192 / \u2318 \u2303 \u2190",
+    "action": "Long Jump Forward / Backward (5m)",
+    "category": "VLC: Navigation",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2191 / \u2318 \u2193",
+    "action": "Volume Up / Volume Down",
+    "category": "VLC: Audio",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 M",
+    "action": "Mute Audio",
+    "category": "VLC: Audio",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 F",
+    "action": "Toggle Fullscreen",
+    "category": "VLC: View",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "E",
+    "action": "Step Frame by Frame (Next Frame)",
+    "category": "VLC: Playback",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "[ / ]",
+    "action": "Decrease / Increase Playback Speed",
+    "category": "VLC: Playback",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "=",
+    "action": "Reset Playback Speed to Normal (1.0x)",
+    "category": "VLC: Playback",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "S",
+    "action": "Stop Playback",
+    "category": "VLC: Playback",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u21e7 O",
+    "action": "Open Media File Dialog",
+    "category": "VLC: Media",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 D",
+    "action": "Open Disc Source",
+    "category": "VLC: Media",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 N",
+    "action": "Open Network Stream",
+    "category": "VLC: Media",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 V",
+    "action": "Cycle Subtitle Tracks",
+    "category": "VLC: Subtitles",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 A",
+    "action": "Cycle Audio Tracks",
+    "category": "VLC: Audio",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "J / K",
+    "action": "Adjust Audio Delay (Sync Offset)",
+    "category": "VLC: Audio",
+    "app": "vlc",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space",
+    "action": "Play / Pause Toggle",
+    "category": "MPV: Playback",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2192 / \u2190",
+    "action": "Seek 5 Seconds Forward / Backward",
+    "category": "MPV: Navigation",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2191 / \u2193",
+    "action": "Seek 60 Seconds Forward / Backward",
+    "category": "MPV: Navigation",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 \u2192 / \u2303 \u2190",
+    "action": "Seek Exact 1 Second Forward / Backward",
+    "category": "MPV: Navigation",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "[ / ]",
+    "action": "Decrease / Increase Playback Speed by 10%",
+    "category": "MPV: Playback",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "{ / }",
+    "action": "Halve / Double Playback Speed",
+    "category": "MPV: Playback",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Backspace",
+    "action": "Reset Playback Speed to 1.0x",
+    "category": "MPV: Playback",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "9 / 0",
+    "action": "Volume Down / Up",
+    "category": "MPV: Audio",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "m",
+    "action": "Mute / Unmute Audio",
+    "category": "MPV: Audio",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "f",
+    "action": "Toggle Fullscreen Mode",
+    "category": "MPV: View",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "s",
+    "action": "Take Video Screenshot",
+    "category": "MPV: Media",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u21e7 S",
+    "action": "Take Screenshot Without Subtitles",
+    "category": "MPV: Media",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "v",
+    "action": "Toggle Subtitle Visibility",
+    "category": "MPV: Subtitles",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "j / \u21e7 J",
+    "action": "Cycle Subtitle Tracks Forward / Backward",
+    "category": "MPV: Subtitles",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "#",
+    "action": "Cycle Audio Tracks",
+    "category": "MPV: Audio",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": ". / ,",
+    "action": "Step Frame Forward / Backward",
+    "category": "MPV: Playback",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "q",
+    "action": "Quit and Save Resume Position",
+    "category": "MPV: General",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u21e7 Q",
+    "action": "Quit Immediately Without Saving Position",
+    "category": "MPV: General",
+    "app": "mpv",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2192 / \u2190",
+    "action": "Next / Previous Page",
+    "category": "Books: Reading",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "Space / \u21e7 Space",
+    "action": "Scroll Down / Scroll Up",
+    "category": "Books: Reading",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 + / \u2318 -",
+    "action": "Increase / Decrease Text Size",
+    "category": "Books: Appearance",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 0",
+    "action": "Reset to Default Font Size",
+    "category": "Books: Appearance",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 F",
+    "action": "Search within Book",
+    "category": "Books: Navigation",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 D",
+    "action": "Add / Remove Bookmark on Page",
+    "category": "Books: Navigation",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 B",
+    "action": "Show / Hide Bookmarks Panel",
+    "category": "Books: Navigation",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 T",
+    "action": "Show Table of Contents",
+    "category": "Books: Navigation",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 N",
+    "action": "Show Notes & Highlights Panel",
+    "category": "Books: Navigation",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 T",
+    "action": "Change Theme (Light, Sepia, Gray, Night)",
+    "category": "Books: Appearance",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 1",
+    "action": "Switch to Single Page View",
+    "category": "Books: Layout",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 \u2325 2",
+    "action": "Switch to Two-Page Spread View",
+    "category": "Books: Layout",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2303 \u2318 F",
+    "action": "Enter / Exit Full Screen Mode",
+    "category": "Books: Layout",
+    "app": "books",
+    "command": "",
+    "source": "app"
+  },
+  {
+    "keys": "\u2318 W",
+    "action": "Close Current Book",
+    "category": "Books: General",
+    "app": "books",
     "command": "",
     "source": "app"
   }

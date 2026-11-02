@@ -277,34 +277,196 @@ def get_karabiner_shortcuts():
 
     return items
 
-TMUX_PATH = Path("/Users/aaravshah2975/.config/tmux/cheatsheet.json")
+TMUX_MD_PATH = Path("/Users/aaravshah2975/.config/tmux/cheatsheet.md")
 YAZI_PATH = Path("/Users/aaravshah2975/.config/yazi/keymap.toml")
 
 def get_tmux_shortcuts():
     items = []
-    if not TMUX_PATH.exists():
+    if not TMUX_MD_PATH.exists():
         return items
     try:
-        with open(TMUX_PATH, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        for c in data.get("commands", []):
-            name = c.get("name", "")
-            cmd = c.get("command", "")
-            desc = c.get("description", "")
-            cat = "Tmux"
-            if ":" in name:
-                cat = name.split(":")[0].strip()
+        text = TMUX_MD_PATH.read_text(encoding="utf-8")
+        current_cat = "Tmux"
+        for line in text.splitlines():
+            line = line.strip()
+            if line.startswith("## "):
+                header = line[3:].strip()
+                clean_name = re.sub(r"^[^\w]+", "", header).strip()
+                current_cat = f"Tmux: {clean_name}" if clean_name else "Tmux"
+            elif line.startswith("|") and not line.startswith("| ---"):
+                parts = [p.strip() for p in line.split("|")[1:-1]]
+                if len(parts) >= 2:
+                    key_raw, act_raw = parts[0], parts[1]
+                    if key_raw.lower() in ("command", "keybinding", "key", "command / key") or not key_raw:
+                        continue
+                    clean_keys = key_raw.replace("`", "")
+                    clean_act = re.sub(r"\*\*(.*?)\*\*", r"\1", act_raw)
+                    items.append({
+                        "keys": clean_keys,
+                        "action": clean_act,
+                        "category": current_cat,
+                        "app": "tmux",
+                        "command": clean_keys if clean_keys.startswith("t ") or clean_keys in ("todo", "tux") else "",
+                        "source": "shell" if clean_keys.startswith("t ") or clean_keys.startswith("tmux ") else "tmux"
+                    })
+    except Exception as e:
+        print(f"Error parsing tmux cheatsheet.md: {e}")
+    return items
+
+def get_yazi_shortcuts():
+    items = []
+    if not YAZI_PATH.exists():
+        return items
+    try:
+        import tomllib
+        with open(YAZI_PATH, "rb") as f:
+            data = tomllib.load(f)
+        for m in data.get("mgr", {}).get("keymap", []):
+            on = m.get("on", "")
+            if isinstance(on, list):
+                keys = " ".join(on)
+            else:
+                keys = str(on)
+            keys = keys.replace("<Space>", "Space").replace("<Esc>", "Esc").replace("<Enter>", "↵").replace("<C-", "⌃ ").replace("<S-", "⇧ ").replace("<A-", "⌥ ").replace(">", "")
+            desc = m.get("desc", m.get("run", ""))
+            run_cmd = m.get("run", "")
+            if isinstance(run_cmd, list):
+                run_cmd = "; ".join(run_cmd)
             items.append({
-                "keys": cmd,
-                "action": desc or name,
-                "category": cat,
-                "app": "tmux",
-                "command": cmd,
-                "source": "shell"
+                "keys": keys,
+                "action": desc,
+                "category": "Yazi File Manager",
+                "app": "yazi",
+                "command": run_cmd,
+                "source": "app"
             })
     except Exception as e:
-        print(f"Error parsing tmux shortcuts: {e}")
+        print(f"Error parsing yazi shortcuts: {e}")
     return items
+
+def get_ghostty_shortcuts():
+    return [
+        {"keys": "⌘ T", "action": "New Tab", "category": "Ghostty: Tabs & Windows", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ W", "action": "Close Surface / Tab", "category": "Ghostty: Tabs & Windows", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ D", "action": "Split Right", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ D", "action": "Split Down", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ [ / ⌘ ]", "action": "Previous / Next Split", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ ↵", "action": "Toggle Split Zoom", "category": "Ghostty: Splits", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ + / ⌘ -", "action": "Increase / Decrease Font Size", "category": "Ghostty: View", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ 0", "action": "Reset Font Size", "category": "Ghostty: View", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ I", "action": "Toggle Terminal Inspector", "category": "Ghostty: Tools", "app": "Ghostty", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ ,", "action": "Reload Configuration", "category": "Ghostty: Tools", "app": "Ghostty", "command": "", "source": "app"},
+    ]
+
+def get_neovim_shortcuts():
+    return [
+        {"keys": "Space f f", "action": "Find Files (Telescope)", "category": "Neovim: Navigation", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space f g", "action": "Live Grep Workspace", "category": "Neovim: Navigation", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space e", "action": "Toggle File Tree (Neotree/NvimTree)", "category": "Neovim: Files", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "⌃ W h / j / k / l", "action": "Navigate Window Splits", "category": "Neovim: Windows", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "⌃ W s / v", "action": "Split Horizontal / Vertical", "category": "Neovim: Windows", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "[ b / ] b", "action": "Previous / Next Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space b d", "action": "Delete / Close Buffer", "category": "Neovim: Buffers", "app": "nvim", "command": "", "source": "app"},
+        {"keys": "Space w", "action": "Save Current Buffer", "category": "Neovim: Operations", "app": "nvim", "command": "", "source": "app"},
+    ]
+
+def get_helium_shortcuts():
+    return [
+        {"keys": "⌘ T", "action": "New Tab", "category": "Helium: Tabs", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ W", "action": "Close Tab", "category": "Helium: Tabs", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ T", "action": "Reopen Last Closed Tab", "category": "Helium: Tabs", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ L", "action": "Focus Address Bar / URL Search", "category": "Helium: Navigation", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ R", "action": "Reload Current Page", "category": "Helium: Navigation", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ R", "action": "Hard Reload (Ignore Cache)", "category": "Helium: Navigation", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ [ / ⌘ ]", "action": "Navigate Back / Forward in History", "category": "Helium: Navigation", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ ← / →", "action": "Switch to Previous / Next Tab", "category": "Helium: Tabs", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ 1 .. 9", "action": "Jump Directly to Tab 1 through 9", "category": "Helium: Tabs", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ + / ⌘ -", "action": "Zoom In / Out", "category": "Helium: View", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ 0", "action": "Reset Zoom to 100%", "category": "Helium: View", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ F", "action": "Find in Page", "category": "Helium: Navigation", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ I", "action": "Toggle Web Developer Tools / Inspector", "category": "Helium: Tools", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ B", "action": "Toggle Bookmarks Bar", "category": "Helium: View", "app": "helium", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ N", "action": "New Private / Incognito Window", "category": "Helium: Tabs", "app": "helium", "command": "", "source": "app"},
+    ]
+
+def get_spotify_shortcuts():
+    return [
+        {"keys": "Space", "action": "Play / Pause Toggle", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ →", "action": "Next Track", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ←", "action": "Previous Track", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ↑ / ⌘ ↓", "action": "Volume Up / Volume Down", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ ↓", "action": "Mute Volume", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ ↑", "action": "Set Maximum Volume", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ L", "action": "Focus Search Field", "category": "Spotify: Navigation", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ S", "action": "Toggle Shuffle On / Off", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ R", "action": "Toggle Repeat Mode", "category": "Spotify: Playback", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ N", "action": "Create New Playlist", "category": "Spotify: Library", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ 1", "action": "Go to Your Library", "category": "Spotify: Navigation", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ 2", "action": "Go to Home View", "category": "Spotify: Navigation", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ 3", "action": "Go to Search View", "category": "Spotify: Navigation", "app": "spotify", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ F", "action": "Toggle Full Screen Now Playing", "category": "Spotify: View", "app": "spotify", "command": "", "source": "app"},
+    ]
+
+def get_vlc_shortcuts():
+    return [
+        {"keys": "Space", "action": "Play / Pause Toggle", "category": "VLC: Playback", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ → / ⌘ ←", "action": "Short Jump Forward / Backward (10s)", "category": "VLC: Navigation", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ → / ⌘ ⌥ ←", "action": "Medium Jump Forward / Backward (1m)", "category": "VLC: Navigation", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ⌃ → / ⌘ ⌃ ←", "action": "Long Jump Forward / Backward (5m)", "category": "VLC: Navigation", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ↑ / ⌘ ↓", "action": "Volume Up / Volume Down", "category": "VLC: Audio", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ M", "action": "Mute Audio", "category": "VLC: Audio", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ F", "action": "Toggle Fullscreen", "category": "VLC: View", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "E", "action": "Step Frame by Frame (Next Frame)", "category": "VLC: Playback", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "[ / ]", "action": "Decrease / Increase Playback Speed", "category": "VLC: Playback", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "=", "action": "Reset Playback Speed to Normal (1.0x)", "category": "VLC: Playback", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "S", "action": "Stop Playback", "category": "VLC: Playback", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ⇧ O", "action": "Open Media File Dialog", "category": "VLC: Media", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ D", "action": "Open Disc Source", "category": "VLC: Media", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ N", "action": "Open Network Stream", "category": "VLC: Media", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ V", "action": "Cycle Subtitle Tracks", "category": "VLC: Subtitles", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ A", "action": "Cycle Audio Tracks", "category": "VLC: Audio", "app": "vlc", "command": "", "source": "app"},
+        {"keys": "J / K", "action": "Adjust Audio Delay (Sync Offset)", "category": "VLC: Audio", "app": "vlc", "command": "", "source": "app"},
+    ]
+
+def get_mpv_shortcuts():
+    return [
+        {"keys": "Space", "action": "Play / Pause Toggle", "category": "MPV: Playback", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "→ / ←", "action": "Seek 5 Seconds Forward / Backward", "category": "MPV: Navigation", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "↑ / ↓", "action": "Seek 60 Seconds Forward / Backward", "category": "MPV: Navigation", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "⌃ → / ⌃ ←", "action": "Seek Exact 1 Second Forward / Backward", "category": "MPV: Navigation", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "[ / ]", "action": "Decrease / Increase Playback Speed by 10%", "category": "MPV: Playback", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "{ / }", "action": "Halve / Double Playback Speed", "category": "MPV: Playback", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "Backspace", "action": "Reset Playback Speed to 1.0x", "category": "MPV: Playback", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "9 / 0", "action": "Volume Down / Up", "category": "MPV: Audio", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "m", "action": "Mute / Unmute Audio", "category": "MPV: Audio", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "f", "action": "Toggle Fullscreen Mode", "category": "MPV: View", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "s", "action": "Take Video Screenshot", "category": "MPV: Media", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "⇧ S", "action": "Take Screenshot Without Subtitles", "category": "MPV: Media", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "v", "action": "Toggle Subtitle Visibility", "category": "MPV: Subtitles", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "j / ⇧ J", "action": "Cycle Subtitle Tracks Forward / Backward", "category": "MPV: Subtitles", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "#", "action": "Cycle Audio Tracks", "category": "MPV: Audio", "app": "mpv", "command": "", "source": "app"},
+        {"keys": ". / ,", "action": "Step Frame Forward / Backward", "category": "MPV: Playback", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "q", "action": "Quit and Save Resume Position", "category": "MPV: General", "app": "mpv", "command": "", "source": "app"},
+        {"keys": "⇧ Q", "action": "Quit Immediately Without Saving Position", "category": "MPV: General", "app": "mpv", "command": "", "source": "app"},
+    ]
+
+def get_books_shortcuts():
+    return [
+        {"keys": "→ / ←", "action": "Next / Previous Page", "category": "Books: Reading", "app": "books", "command": "", "source": "app"},
+        {"keys": "Space / ⇧ Space", "action": "Scroll Down / Scroll Up", "category": "Books: Reading", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ + / ⌘ -", "action": "Increase / Decrease Text Size", "category": "Books: Appearance", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ 0", "action": "Reset to Default Font Size", "category": "Books: Appearance", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ F", "action": "Search within Book", "category": "Books: Navigation", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ D", "action": "Add / Remove Bookmark on Page", "category": "Books: Navigation", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ B", "action": "Show / Hide Bookmarks Panel", "category": "Books: Navigation", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ T", "action": "Show Table of Contents", "category": "Books: Navigation", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ N", "action": "Show Notes & Highlights Panel", "category": "Books: Navigation", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ T", "action": "Change Theme (Light, Sepia, Gray, Night)", "category": "Books: Appearance", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ 1", "action": "Switch to Single Page View", "category": "Books: Layout", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ ⌥ 2", "action": "Switch to Two-Page Spread View", "category": "Books: Layout", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌃ ⌘ F", "action": "Enter / Exit Full Screen Mode", "category": "Books: Layout", "app": "books", "command": "", "source": "app"},
+        {"keys": "⌘ W", "action": "Close Current Book", "category": "Books: General", "app": "books", "command": "", "source": "app"},
+    ]
 
 def get_yazi_shortcuts():
     items = []
@@ -384,9 +546,14 @@ def build_all(force=True):
     yazi = get_yazi_shortcuts()
     ghostty = get_ghostty_shortcuts()
     nvim = get_neovim_shortcuts()
+    helium = get_helium_shortcuts()
+    spotify = get_spotify_shortcuts()
+    vlc = get_vlc_shortcuts()
+    mpv = get_mpv_shortcuts()
+    books = get_books_shortcuts()
 
-    all_shortcuts = aero + karabiner + tmux + yazi + ghostty + nvim
-    print(f"Loaded {len(aero)} AeroSpace, {len(karabiner)} Karabiner, {len(tmux)} Tmux, {len(yazi)} Yazi, {len(ghostty)} Ghostty, {len(nvim)} Neovim ({len(all_shortcuts)} total).")
+    all_shortcuts = aero + karabiner + tmux + yazi + ghostty + nvim + helium + spotify + vlc + mpv + books
+    print(f"Loaded {len(aero)} AeroSpace, {len(karabiner)} Karabiner, {len(tmux)} Tmux, {len(yazi)} Yazi, {len(ghostty)} Ghostty, {len(nvim)} Neovim, {len(helium)} Helium, {len(spotify)} Spotify, {len(vlc)} VLC, {len(mpv)} MPV, {len(books)} Books ({len(all_shortcuts)} total).")
     try:
         with open(CACHE_PATH, "w", encoding="utf-8") as f:
             json.dump(all_shortcuts, f, indent=2)

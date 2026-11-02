@@ -201,6 +201,47 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .dropdown-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hub-select-dropdown {
+            background: #15151e;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            min-width: 200px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .hub-select-dropdown:hover {
+            border-color: var(--accent-color);
+            background: #1b1b26;
+        }
+
+        .hub-select-dropdown:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(93, 160, 255, 0.25);
         }
 
         .app-title-section h1 {
@@ -497,8 +538,18 @@
         <!-- Scrolling Content -->
         <div class="content-scrollable">
             <div class="app-title-section">
-                <h1 id="content-title">All Shortcuts</h1>
-                <span class="badge" id="content-subtitle-badge">0 shortcuts</span>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <h1 id="content-title">All Shortcuts</h1>
+                    <span class="badge" id="content-subtitle-badge">0 shortcuts</span>
+                </div>
+                <div class="dropdown-wrapper">
+                    <label for="hub-view-dropdown" class="dropdown-label">View / System:</label>
+                    <select id="hub-view-dropdown" class="hub-select-dropdown" onchange="switchTab(this.value)">
+                        <option value="all">🌐 All Shortcuts</option>
+                        <option value="active-app" id="opt-active-app">📱 Current App</option>
+                        <option value="Global">⚙️ Global System</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Shortcuts Cards Grid -->
@@ -622,6 +673,7 @@
         function getAppDisplayName(app) {
             if (!app) return '';
             const lower = app.toLowerCase();
+            if (lower === 'helium') return 'Helium Browser';
             if (lower === 'vscode') return 'Visual Studio Code';
             if (lower === 'cursor') return 'Cursor Editor';
             if (lower === 'brave') return 'Brave Browser';
@@ -681,6 +733,26 @@
                 otherAppsList.appendChild(li);
             });
 
+            // Sync startpage dropdown
+            const dropdown = document.getElementById('hub-view-dropdown');
+            if (dropdown) {
+                while (dropdown.options.length > 3) {
+                    dropdown.remove(3);
+                }
+                const optActive = document.getElementById('opt-active-app');
+                if (optActive) {
+                    optActive.text = `📱 Current App (${getAppDisplayName(activeApp) || 'None'})`;
+                }
+                appsSet.forEach(app => {
+                    const count = shortcuts.filter(s => s.app === app).length;
+                    const opt = document.createElement('option');
+                    opt.value = app;
+                    opt.text = `${getAppDisplayName(app)} (${count})`;
+                    dropdown.add(opt);
+                });
+                dropdown.value = currentTab;
+            }
+
             renderContent();
             
             // Auto focus search box
@@ -696,14 +768,20 @@
             });
             
             if (tabName === 'active-app') {
-                document.getElementById('tab-active-app').classList.add('active');
+                document.getElementById('tab-active-app')?.classList.add('active');
             } else if (tabName === 'Global') {
-                document.getElementById('tab-global').classList.add('active');
+                document.getElementById('tab-global')?.classList.add('active');
             } else if (tabName === 'all') {
-                document.getElementById('tab-all').classList.add('active');
+                document.getElementById('tab-all')?.classList.add('active');
             } else {
                 const target = document.getElementById(`tab-${tabName}`);
                 if (target) target.classList.add('active');
+            }
+
+            // Sync dropdown value
+            const dropdown = document.getElementById('hub-view-dropdown');
+            if (dropdown && dropdown.value !== tabName) {
+                dropdown.value = tabName;
             }
 
             // Clear search when switching tabs

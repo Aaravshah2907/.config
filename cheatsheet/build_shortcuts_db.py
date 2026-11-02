@@ -34,11 +34,13 @@ MODIFIER_REMAP_KEYS = {
 
 
 APP_MAP_REVERSE = {
+    "net.imput.helium": "helium",
     "com.microsoft.VSCode": "vscode",
     "com.todesktop.230313mzl4w4u92": "cursor",
     "com.brave.Browser": "brave",
     "com.google.Chrome": "chrome",
     "com.apple.Safari": "safari",
+    "com.mitchellh.ghostty": "ghostty",
     "com.apple.Terminal": "iterm",
     "com.googlecode.iterm2": "iterm",
     "org.videolan.vlc": "vlc",

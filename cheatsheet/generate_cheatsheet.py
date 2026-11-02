@@ -22,11 +22,13 @@ LOCK = Path("/tmp/shortcut_hub.lock")
 OUTPUT = Path("/tmp/shortcut_hub.html")
 
 APP_MAP = {
+    "Helium": "helium",
     "Visual Studio Code": "vscode",
     "Brave Browser": "brave",
     "Google Chrome": "chrome",
     "Safari": "safari",
     "iTerm2": "iterm",
+    "Ghostty": "ghostty",
     "VLC": "vlc",
     "Cursor": "cursor",
 }

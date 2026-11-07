@@ -307,7 +307,7 @@ run = 'move-node-to-workspace A'
 
 # Space P: Preview & Documents
 [[on-window-detected]]
-if.app-name-regex-substring = 'Preview'
+if.app-name-regex-substring = 'Preview|Books'
 run = 'move-node-to-workspace P'
 
 # Floating Utilities

@@ -94,6 +94,9 @@ alt-enter = 'exec-and-forget open -na Ghostty'
 # Floating Scratchpad Terminal
 alt-backtick = 'exec-and-forget open -na Ghostty --args --title="Quick Terminal"'
 
+# Close Focused Window
+alt-q = 'close --quit-if-last-window'
+
 # Layout & Orientation Switching
 alt-slash = [
     'layout tiles horizontal vertical',

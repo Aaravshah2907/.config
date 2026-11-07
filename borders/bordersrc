@@ -5,6 +5,10 @@ source "$HOME/.local/bin/cosmere_colors.sh" 2>/dev/null
 ACTIVE_BORDER="${SPREN_HONOR:-0xff00A8E8}"
 INACTIVE_BORDER="${PRES_DEEP_TRANSLUCENT:-0x441A2A3A}"
 
+# Kill previous instances to avoid duplicate background processes on reload
+pkill -f "/borders" 2>/dev/null || true
+sleep 0.2
+
 exec borders \
   style=round \
   width=4.0 \

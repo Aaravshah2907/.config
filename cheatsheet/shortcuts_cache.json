@@ -1,197 +1,5 @@
 [
   {
-    "keys": "Config Version",
-    "action": "2",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 2",
-    "source": "shell"
-  },
-  {
-    "keys": "After Startup Command",
-    "action": "exec-and-forget ~/.config/borders/bordersrc",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace exec-and-forget ~/.config/borders/bordersrc",
-    "source": "shell"
-  },
-  {
-    "keys": "Start At Login",
-    "action": "true",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace true",
-    "source": "shell"
-  },
-  {
-    "keys": "Auto Reload Config",
-    "action": "true",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace true",
-    "source": "shell"
-  },
-  {
-    "keys": "Enable Normalization Flatten Containers",
-    "action": "false",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace false",
-    "source": "shell"
-  },
-  {
-    "keys": "Enable Normalization Opposite Orientation For Nested Containers",
-    "action": "true",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace true",
-    "source": "shell"
-  },
-  {
-    "keys": "Accordion Padding",
-    "action": "30",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 30",
-    "source": "shell"
-  },
-  {
-    "keys": "Default Root Container Layout",
-    "action": "tiles",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace tiles",
-    "source": "shell"
-  },
-  {
-    "keys": "Default Root Container Orientation",
-    "action": "horizontal",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace horizontal",
-    "source": "shell"
-  },
-  {
-    "keys": "On Focused Monitor Changed",
-    "action": "move-mouse monitor-lazy-center",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace move-mouse monitor-lazy-center",
-    "source": "shell"
-  },
-  {
-    "keys": "Automatically Unhide Macos Hidden Apps",
-    "action": "false",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace false",
-    "source": "shell"
-  },
-  {
-    "keys": "Persistent Workspaces",
-    "action": "T",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace T",
-    "source": "shell"
-  },
-  {
-    "keys": "On Mode Changed",
-    "action": "",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace ",
-    "source": "shell"
-  },
-  {
-    "keys": "Exec On Workspace Change",
-    "action": "[",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'sketchybar   Trigger aerospace_workspace_change focused_workspace",
-    "action": "$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace $AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; sketchybar --trigger app_switcher_update; sketchybar --trigger space_windows_change',",
-    "source": "shell"
-  },
-  {
-    "keys": "On Focus Changed",
-    "action": "[",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "Focus Follows Mouse.enabled",
-    "action": "true",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace true",
-    "source": "shell"
-  },
-  {
-    "keys": "Key Mapping.preset",
-    "action": "qwerty",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace qwerty",
-    "source": "shell"
-  },
-  {
-    "keys": "Gaps.inner.horizontal",
-    "action": "8",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 8",
-    "source": "shell"
-  },
-  {
-    "keys": "Gaps.inner.vertical",
-    "action": "8",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 8",
-    "source": "shell"
-  },
-  {
-    "keys": "Gaps.outer.left",
-    "action": "8",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 8",
-    "source": "shell"
-  },
-  {
-    "keys": "Gaps.outer.bottom",
-    "action": "12",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 12",
-    "source": "shell"
-  },
-  {
-    "keys": "Gaps.outer.top",
-    "action": "50",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 50",
-    "source": "shell"
-  },
-  {
-    "keys": "Gaps.outer.right",
-    "action": "8",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace 8",
-    "source": "shell"
-  },
-  {
     "keys": "\u2325 \u21b5",
     "action": "Launch Ghostty (New Window)",
     "category": "Apps & Launchers",
@@ -208,43 +16,51 @@
     "source": "shell"
   },
   {
-    "keys": "\u2325 /",
-    "action": "[",
+    "keys": "\u2325 Q",
+    "action": "Close Window",
     "category": "AeroSpace: Windows",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
+    "command": "/opt/homebrew/bin/aerospace close --quit-if-last-window",
+    "source": "shell"
+  },
+  {
+    "keys": "\u2325 /",
+    "action": "Toggle Split (Horizontal / Vertical)",
+    "category": "AeroSpace: Windows",
+    "app": "AeroSpace",
+    "command": "/opt/homebrew/bin/aerospace layout tiles horizontal vertical",
     "source": "shell"
   },
   {
     "keys": "\u2325 ,",
-    "action": "[",
+    "action": "Toggle Accordion Layout",
     "category": "AeroSpace: Windows",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
+    "command": "/opt/homebrew/bin/aerospace layout accordion horizontal vertical",
     "source": "shell"
   },
   {
     "keys": "\u2325 .",
-    "action": "[",
+    "action": "Toggle Tiles / Accordion",
     "category": "AeroSpace: Windows",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
+    "command": "/opt/homebrew/bin/aerospace layout tiles accordion",
     "source": "shell"
   },
   {
     "keys": "\u2303 \u2325 B",
-    "action": "[",
+    "action": "Explicit Horizontal Split",
     "category": "AeroSpace: Windows",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
+    "command": "/opt/homebrew/bin/aerospace layout horizontal",
     "source": "shell"
   },
   {
     "keys": "\u2303 \u2325 V",
-    "action": "[",
+    "action": "Explicit Vertical Split",
     "category": "AeroSpace: Windows",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
+    "command": "/opt/homebrew/bin/aerospace layout vertical",
     "source": "shell"
   },
   {
@@ -577,34 +393,18 @@
   },
   {
     "keys": "\u2325 R",
-    "action": "[",
-    "category": "AeroSpace: Windows",
+    "action": "Enter Resize Mode",
+    "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "\\$RADIANT_PURPLE\"',",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$RADIANT_PURPLE\"',",
+    "command": "/opt/homebrew/bin/aerospace mode resize",
     "source": "shell"
   },
   {
     "keys": "\u2325 \u21e7 ;",
-    "action": "[",
-    "category": "AeroSpace: Windows",
+    "action": "Enter Service Mode",
+    "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "\\$HONOR_GOLD\"',",
-    "category": "AeroSpace: Windows",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$HONOR_GOLD\"',",
+    "command": "/opt/homebrew/bin/aerospace mode service",
     "source": "shell"
   },
   {
@@ -657,178 +457,90 @@
   },
   {
     "keys": "E",
-    "action": "[Resize] [",
+    "action": "[Resize] Balance Window Sizes",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Resize] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace balance-sizes",
     "source": "shell"
   },
   {
     "keys": "\u238b",
-    "action": "[Resize] [",
+    "action": "[Resize] Exit to Main Mode",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Resize] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace mode main",
     "source": "shell"
   },
   {
     "keys": "\u21b5",
-    "action": "[Resize] [",
+    "action": "[Resize] Exit to Main Mode",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Resize] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace mode main",
     "source": "shell"
   },
   {
     "keys": "\u238b",
-    "action": "[Service] [",
+    "action": "[Service] Reload AeroSpace Config",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace reload-config",
     "source": "shell"
   },
   {
     "keys": "R",
-    "action": "[Service] [",
+    "action": "[Service] Flatten Workspace Tree",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace flatten-workspace-tree",
     "source": "shell"
   },
   {
     "keys": "F",
-    "action": "[Service] [",
+    "action": "[Service] Toggle Floating / Tiling",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace layout floating tiling",
     "source": "shell"
   },
   {
     "keys": "\u232b",
-    "action": "[Service] [",
+    "action": "[Service] Close All Other Windows",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace close-all-windows-but-current",
     "source": "shell"
   },
   {
     "keys": "\u2325 \u21e7 H",
-    "action": "[Service] [",
+    "action": "[Service] Join Window Left (Warp)",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace join-with left",
     "source": "shell"
   },
   {
     "keys": "\u2325 \u21e7 J",
-    "action": "[Service] [",
+    "action": "[Service] Join Window Down (Warp)",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace join-with down",
     "source": "shell"
   },
   {
     "keys": "\u2325 \u21e7 K",
-    "action": "[Service] [",
+    "action": "[Service] Join Window Up (Warp)",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace join-with up",
     "source": "shell"
   },
   {
     "keys": "\u2325 \u21e7 L",
-    "action": "[Service] [",
+    "action": "[Service] Join Window Right (Warp)",
     "category": "AeroSpace: Modes",
     "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace [",
-    "source": "shell"
-  },
-  {
-    "keys": "'exec And Forget /bin/bash  C \"source ~/.local/bin/cosmere_colors.sh && sketchybar   Animate tanh 15   Bar color",
-    "action": "[Service] \\$BAR_COLOR\"',",
-    "category": "AeroSpace: Modes",
-    "app": "AeroSpace",
-    "command": "/opt/homebrew/bin/aerospace \\$BAR_COLOR\"',",
+    "command": "/opt/homebrew/bin/aerospace join-with right",
     "source": "shell"
   },
   {

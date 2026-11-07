@@ -9,6 +9,7 @@ const preservedRuleDescs = [
   "Application key shortcuts for toggle apps",
   "NumLock -> Keybee Cockpit",
   "Insert -> Cheat Sheet",
+  "Middle button: Escape / Kando Pie Menu",
   "Middle button: Escape / Mission Control",
   "Button4: Back / Previous Space",
   "Button5: Forward / Next Space"

@@ -1,5 +1,6 @@
 import json
 import re
+import tomllib
 from pathlib import Path
 
 AEROSPACE_PATH = Path("/Users/aaravshah2975/.config/aerospace/aerospace.toml")
@@ -35,46 +36,26 @@ def get_aero_shortcuts():
     if not AEROSPACE_PATH.exists():
         return items
 
-    text = AEROSPACE_PATH.read_text()
-    
-    current_mode = "main"
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-            
-        if line == "[mode.main.binding]":
-            current_mode = "main"
-            continue
-        elif line == "[mode.resize.binding]":
-            current_mode = "resize"
-            continue
-        elif line == "[mode.service.binding]":
-            current_mode = "service"
-            continue
-        elif line.startswith("["):
-            current_mode = "other"
-            continue
+    try:
+        data = tomllib.loads(AEROSPACE_PATH.read_text())
+    except Exception as e:
+        print(f"Error parsing AeroSpace config: {e}")
+        return items
 
-        if current_mode in ("main", "resize", "service") and "=" in line:
-            key_part, val_part = line.split("=", 1)
-            raw_key = key_part.strip()
-            val_part = val_part.strip()
-
-            # Parse action string or array
-            actions = []
-            if val_part.startswith("["):
-                try:
-                    # Clean json-like array
-                    clean_arr = re.sub(r"'", '"', val_part)
-                    actions = json.loads(clean_arr)
-                except:
-                    actions = [val_part]
+    modes = data.get("mode", {})
+    for mode_name in ("main", "resize", "service"):
+        mode_data = modes.get(mode_name, {})
+        bindings = mode_data.get("binding", {})
+        for raw_key, raw_action in bindings.items():
+            if isinstance(raw_action, list):
+                actions = raw_action
             else:
-                actions = [val_part.strip("'\"")]
+                actions = [raw_action]
 
             first_act = actions[0] if actions else ""
-            
+            if not first_act:
+                continue
+
             # Categorize and humanize
             desc = first_act
             cat = "AeroSpace: Windows"
@@ -123,16 +104,17 @@ def get_aero_shortcuts():
             elif "move-workspace-to-monitor" in first_act: desc, cmd = "Move Workspace to Next Monitor", "/opt/homebrew/bin/aerospace move-workspace-to-monitor --wrap-around next"
             elif "mode resize" in first_act: desc, cat, cmd = "Enter Resize Mode", "AeroSpace: Modes", "/opt/homebrew/bin/aerospace mode resize"
             elif "mode service" in first_act: desc, cat, cmd = "Enter Service Mode", "AeroSpace: Modes", "/opt/homebrew/bin/aerospace mode service"
+            elif "mode main" in first_act: desc, cat, cmd = "Exit to Main Mode", "AeroSpace: Modes", "/opt/homebrew/bin/aerospace mode main"
             elif "reload-config" in first_act: desc, cat, cmd = "Reload AeroSpace Config", "AeroSpace: Modes", "/opt/homebrew/bin/aerospace reload-config"
             elif "flatten-workspace-tree" in first_act: desc, cat, cmd = "Flatten Workspace Tree", "AeroSpace: Modes", "/opt/homebrew/bin/aerospace flatten-workspace-tree"
             elif "close-all-windows-but-current" in first_act: desc, cat, cmd = "Close All Other Windows", "AeroSpace: Modes", "/opt/homebrew/bin/aerospace close-all-windows-but-current"
-            elif "close" == first_act: desc, cmd = "Close Window", "/opt/homebrew/bin/aerospace close"
+            elif first_act.startswith("close"): desc, cmd = "Close Window", "/opt/homebrew/bin/aerospace " + first_act
 
             prefix = ""
-            if current_mode == "resize":
+            if mode_name == "resize":
                 prefix = "[Resize] "
                 cat = "AeroSpace: Modes"
-            elif current_mode == "service":
+            elif mode_name == "service":
                 prefix = "[Service] "
                 cat = "AeroSpace: Modes"
 
